@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IMFUtilityConfig>
+
+    <!--
+        Path to external executables.
+        May be used in both code and conversion.xml template operations.
+     -->
+    <externalTools>
+        <tool id="ffmpeg">ffmpeg path</tool>
+        <tool id="bmx">bmx path</tool>
+        <tool id="x264">x264 path</tool>
+        <tool id="ttmlToStl">ttmlToStl path</tool>
+        <tool id="photon">photon path</tool>
+    </externalTools>
+
+    <!--
+        Allows/disallows silent conversion to format destination parameters if the input doesn't match.
+        Conversion is allowed by default (if not specified here explicitly)
+     -->
+    <conversion>
+        <video>
+            <size>yes</size>
+            <fps>no</fps>
+            <pixelFormat>yes</pixelFormat>
+            <bitDepth>yes</bitDepth>
+        </video>
+        <audio>
+            <sampleRate>yes</sampleRate>
+            <bitsSample>yes</bitsSample>
+        </audio>
+    </conversion>
+
+    <!--
+        Optional path to alternative conversion.xml.
+        If not specified, default conversion.xml is used.
+    -->
+    <conversionConfig>path to conversion.xml</conversionConfig>
+
+</IMFUtilityConfig>

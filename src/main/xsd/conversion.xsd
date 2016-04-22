@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           targetNamespace="http://conversion.imf.netflix.com"
+           xmlns="http://conversion.imf.netflix.com"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!--
+      root element
+    -->
+    <xs:element name="IMFUtilityConversion" type="IMFUtilityConversionType"/>
+
+    <!--
+      root type
+    -->
+    <xs:complexType name="IMFUtilityConversionType">
+        <xs:sequence>
+            <xs:element type="formatType" name="format"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!--
+      separate section for each supported format (DPP, etc.)
+    -->
+    <xs:complexType name="formatType">
+        <xs:sequence>
+            <xs:element type="tmpContextType" name="tmpContext"/>
+            <xs:element type="conversionType" name="conversion"/>
+            <xs:element type="formatConfigurationType" name="formatConfiguration"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name"/>
+    </xs:complexType>
+
+    <!--
+      tmp context for templates parameters used in Conversion Operations.
+    -->
+    <xs:complexType name="tmpContextType">
+        <xs:sequence>
+            <xs:element type="paramType" name="param" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="paramType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="id" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <!--
+      defines destination format video/audio parameters for conversion.
+    -->
+    <xs:complexType name="conversionType">
+        <xs:sequence>
+            <xs:element type="videoConversionType" name="video"/>
+            <xs:element type="audioConversionType" name="audio"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="videoConversionType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="size"/>
+            <xs:element type="xs:string" name="fps"/>
+            <xs:element type="xs:string" name="pixelFormat"/>
+            <xs:element type="xs:string" name="bitDepth"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="audioConversionType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="sampleRate"/>
+            <xs:element type="xs:string" name="bitsSample"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!--
+      - each format may have several configurations;
+      - a configuration contains Conversion Operations to
+        be executed for transformation;
+      - only one configuration is selected depending on the input.
+    -->
+    <xs:complexType name="formatConfigurationType">
+        <xs:choice maxOccurs="unbounded" minOccurs="1">
+            <xs:element type="pipeType" name="pipe"/>
+            <xs:element type="execOnceType" name="execOnce"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="name"/>
+    </xs:complexType>
+
+    <!--
+        Defines a Conversion Operation that is executed only once.
+    -->
+    <xs:complexType name="execOnceType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <!--
+        Defines a pipeline consisting of several Conversion Operation
+    -->
+    <xs:complexType name="pipeType">
+        <xs:sequence>
+            <xs:element type="sequenceType" name="sequence" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="execOnceType" name="execOnce" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!--
+        The first Conversion Operation in the pipeline may consists of
+        several subsequent sub-operations.
+    -->
+    <xs:complexType name="sequenceType">
+        <xs:choice maxOccurs="unbounded" minOccurs="1">
+            <xs:element type="execEachSegmentType" name="execEachSegment"/>
+            <xs:element type="execOnceType" name="execOnce"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <!--
+        Defines a Conversion Operation for an essence type (audio/video/subtitle)
+        which is executed for each segment in a cycle
+    -->
+    <xs:complexType name="execEachSegmentType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="segmnentType" name="type" use="required"/>
+                <xs:attribute type="xs:string" name="name" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="segmnentType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="video"/>
+            <xs:enumeration value="audio"/>
+            <xs:enumeration value="subtitle"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

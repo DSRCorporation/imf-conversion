@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://config.imf.netflix.com"
+           xmlns="http://config.imf.netflix.com"
+>
+
+    <!--
+      Root element.
+    -->
+    <xs:element name="IMFUtilityConfig" type="IMFUtilityConfigType"/>
+
+    <xs:complexType name="IMFUtilityConfigType">
+        <xs:sequence>
+            <xs:element type="externalToolsType" name="externalTools" maxOccurs="1" minOccurs="1"/>
+            <xs:element type="conversionType" name="conversion" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="xs:string" name="conversionConfig" maxOccurs="1" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!--
+        Path to external executables.
+        May be used in both code and conversion.xml template operations.
+    -->
+    <xs:complexType name="externalToolsType">
+        <xs:sequence>
+            <xs:element type="toolType" name="tool" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="toolType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="id" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <!--
+      Allows/disallows silent conversion to format destination parameters if the input doesn't match.
+      Conversion is allowed by default (if not specified here explicitly)
+    -->
+    <xs:complexType name="conversionType">
+        <xs:sequence>
+            <xs:element type="videoType" name="video"/>
+            <xs:element type="audioType" name="audio"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="allowDisalow">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="yes"/>
+            <xs:enumeration value="no"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="videoType">
+        <xs:sequence>
+            <xs:element type="allowDisalow" name="size"/>
+            <xs:element type="allowDisalow" name="fps"/>
+            <xs:element type="allowDisalow" name="pixelFormat"/>
+            <xs:element type="allowDisalow" name="bitDepth"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="audioType">
+        <xs:sequence>
+            <xs:element type="allowDisalow" name="sampleRate"/>
+            <xs:element type="allowDisalow" name="bitsSample"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+</xs:schema>
