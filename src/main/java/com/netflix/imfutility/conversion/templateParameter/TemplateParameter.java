@@ -20,6 +20,10 @@ public class TemplateParameter {
     public TemplateParameter(String parameterString) {
         Pattern p = Pattern.compile(TEMPLATE_PARAM);
         Matcher m = p.matcher(parameterString);
+        if (!m.matches()) {
+            throw new RuntimeException(
+                    String.format("Incorrect Template Parameter '%s'. Template parameter must have the following form: '%%{context.name}'", parameterString));
+        }
         String contextStr = m.group(1);
         this.name = m.group(2);
 

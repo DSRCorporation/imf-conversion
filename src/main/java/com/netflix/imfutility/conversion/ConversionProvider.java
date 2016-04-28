@@ -1,8 +1,8 @@
 package com.netflix.imfutility.conversion;
 
 import com.netflix.imfutility.Format;
+import com.netflix.imfutility.xsd.conversion.ConversionType;
 import com.netflix.imfutility.xsd.conversion.FormatType;
-import com.netflix.imfutility.xsd.conversion.IMFUtilityConversionType;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -10,8 +10,9 @@ import javax.xml.bind.*;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by Alexander on 4/26/2016.
@@ -21,21 +22,22 @@ public class ConversionProvider {
     private FormatType formatType;
 
     public ConversionProvider(String conversionXml, Format format) throws JAXBException, SAXException {
-        IMFUtilityConversionType conversion = getConversionModel(conversionXml);
-        this.formatType = conversion.getFormats().get(format.getName());
+        ConversionType conversion = getConversionModel(conversionXml);
+        this.formatType = conversion.getFormats().getMap().get(format.getName());
     }
 
-    private IMFUtilityConversionType getConversionModel(String conversionXml) throws JAXBException, SAXException {
+    private ConversionType getConversionModel(String conversionXml) throws JAXBException, SAXException {
         JAXBContext jaxbContext = JAXBContext.newInstance("com.netflix.imfutility.xsd.conversion");
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = sf.newSchema(new File("G:\\Netflix\\dev\\imf-utility\\src\\main\\xsd\\conversion.xsd"));
+        String configXsd = ClassLoader.getSystemClassLoader().getResource("xsd/conversion.xsd").getPath();
+        Schema schema = sf.newSchema(new File(configXsd));
         unmarshaller.setSchema(schema);
         unmarshaller.setEventHandler(new MyValidationEventHandler());
 
-        JAXBElement<IMFUtilityConversionType> conversionElement =
-                (JAXBElement<IMFUtilityConversionType>) unmarshaller.unmarshal(new File(conversionXml));
+        JAXBElement<ConversionType> conversionElement =
+                (JAXBElement<ConversionType>) unmarshaller.unmarshal(new File(conversionXml));
         return conversionElement.getValue();
     }
 
@@ -43,11 +45,11 @@ public class ConversionProvider {
         return formatType;
     }
 
-    public Set<String> getConvertConfiguration(Format format) {
+    public List<String> getConvertConfiguration(Format format) {
         if (formatType == null) {
-            return Collections.EMPTY_SET;
+            return Collections.EMPTY_LIST;
         }
-        return formatType.getFormatConfigurations().keySet();
+        return new ArrayList(formatType.getFormatConfigurations().getMap().keySet());
     }
 
     private static class MyValidationEventHandler implements ValidationEventHandler {

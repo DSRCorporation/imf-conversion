@@ -19,7 +19,7 @@ public class TmpTemplateParameterContext implements ITemplateParameterContext {
         if (format.getTmpContext() == null) {
             return null;
         }
-        return format.getTmpContext().get(templateParameter.getName()).getValue();
+        return format.getTmpContext().getMap().get(templateParameter.getName()).getValue();
     }
 
 }

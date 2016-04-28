@@ -1,7 +1,7 @@
 package com.netflix.imfutility.conversion.templateParameter;
 
 import com.netflix.imfutility.conversion.templateParameter.context.ITemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.ITemplateParameterContextProvider;
+import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.segment.ISegmentTemplateParameterContext;
 import com.netflix.imfutility.xsd.conversion.SegmentType;
 
@@ -10,13 +10,13 @@ import com.netflix.imfutility.xsd.conversion.SegmentType;
  */
 public class TemplateParameterResolver {
 
-    private ITemplateParameterContextProvider contextProvider;
+    private TemplateParameterContextProvider contextProvider;
 
-    public TemplateParameterResolver(ITemplateParameterContextProvider contextProvider) {
+    public TemplateParameterResolver(TemplateParameterContextProvider contextProvider) {
         this.contextProvider = contextProvider;
     }
 
-    public ITemplateParameterContextProvider getContextProvider() {
+    public TemplateParameterContextProvider getContextProvider() {
         return contextProvider;
     }
 

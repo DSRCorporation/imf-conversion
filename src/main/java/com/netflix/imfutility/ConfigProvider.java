@@ -1,8 +1,6 @@
 package com.netflix.imfutility;
 
-import com.netflix.imfutility.Format;
-import com.netflix.imfutility.xsd.config.IMFUtilityConfigType;
-import com.netflix.imfutility.xsd.conversion.IMFUtilityConversionType;
+import com.netflix.imfutility.xsd.config.ConfigType;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -16,23 +14,24 @@ import java.io.File;
  */
 public class ConfigProvider {
 
-    private IMFUtilityConfigType config;
+    private ConfigType config;
 
     public ConfigProvider(String configXml) throws JAXBException, SAXException {
         JAXBContext jaxbContext = JAXBContext.newInstance("com.netflix.imfutility.xsd.config");
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = sf.newSchema(new File("G:\\Netflix\\dev\\imf-utility\\src\\main\\xsd\\config.xsd"));
+        String configXsd = ClassLoader.getSystemClassLoader().getResource("xsd/config.xsd").getPath();
+        Schema schema = sf.newSchema(new File(configXsd));
         unmarshaller.setSchema(schema);
         unmarshaller.setEventHandler(new MyValidationEventHandler());
 
-        JAXBElement<IMFUtilityConfigType> configElement =
-                (JAXBElement<IMFUtilityConfigType>) unmarshaller.unmarshal(new File(configXml));
+        JAXBElement<ConfigType> configElement =
+                (JAXBElement<ConfigType>) unmarshaller.unmarshal(new File(configXml));
         this.config = configElement.getValue();
     }
 
-    public IMFUtilityConfigType getConfig() {
+    public ConfigType getConfig() {
         return config;
     }
 

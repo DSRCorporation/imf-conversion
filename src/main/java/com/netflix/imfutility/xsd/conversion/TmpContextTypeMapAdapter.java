@@ -12,17 +12,17 @@ public class TmpContextTypeMapAdapter extends XmlAdapter<TmpContextType, TmpCont
     public TmpContextTypeMap<String, ParamType> unmarshal(TmpContextType tmpContextTypes) throws Exception {
         TmpContextTypeMap<String, ParamType> map = new TmpContextTypeMap();
         for (ParamType pt : tmpContextTypes.getParam()) {
-            map.put(pt.getId(), pt);
+            map.getMap().put(pt.getId(), pt);
         }
         return map;
     }
 
     @Override
     public TmpContextType marshal(TmpContextTypeMap<String, ParamType> map) throws Exception {
-        TmpContextType tmpContextTypes = new TmpContextType();
-        for (Map.Entry<String, ParamType> entry : map.entrySet()) {
-            tmpContextTypes.getParam().add(entry.getValue());
+        TmpContextType tmpContextType = new TmpContextType();
+        for (Map.Entry<String, ParamType> entry : map.getMap().entrySet()) {
+            tmpContextType.getParam().add(entry.getValue());
         }
-        return tmpContextTypes;
+        return tmpContextType;
     }
 }

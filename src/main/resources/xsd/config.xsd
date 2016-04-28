@@ -7,13 +7,14 @@
     <!--
       Root element.
     -->
-    <xs:element name="IMFUtilityConfig" type="IMFUtilityConfigType"/>
+    <xs:element name="Config" type="ConfigType"/>
 
-    <xs:complexType name="IMFUtilityConfigType">
+    <xs:complexType name="ConfigType">
         <xs:sequence>
             <xs:element type="externalToolsType" name="externalTools" maxOccurs="1" minOccurs="1"/>
-            <xs:element type="conversionType" name="conversion" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="conversionParametersType" name="conversionParameters" maxOccurs="1" minOccurs="0"/>
             <xs:element type="xs:string" name="conversionConfig" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="xs:string" name="workingDirectory" maxOccurs="1" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -39,10 +40,10 @@
       Allows/disallows silent conversion to format destination parameters if the input doesn't match.
       Conversion is allowed by default (if not specified here explicitly)
     -->
-    <xs:complexType name="conversionType">
+    <xs:complexType name="conversionParametersType">
         <xs:sequence>
-            <xs:element type="videoType" name="video"/>
-            <xs:element type="audioType" name="audio"/>
+            <xs:element type="videoConversionParametersType" name="video"/>
+            <xs:element type="audioConversionParametersType" name="audio"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -53,7 +54,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="videoType">
+    <xs:complexType name="videoConversionParametersType">
         <xs:sequence>
             <xs:element type="allowDisalow" name="size"/>
             <xs:element type="allowDisalow" name="fps"/>
@@ -62,7 +63,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="audioType">
+    <xs:complexType name="audioConversionParametersType">
         <xs:sequence>
             <xs:element type="allowDisalow" name="sampleRate"/>
             <xs:element type="allowDisalow" name="bitsSample"/>

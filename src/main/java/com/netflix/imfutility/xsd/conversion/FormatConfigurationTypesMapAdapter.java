@@ -12,7 +12,7 @@ public class FormatConfigurationTypesMapAdapter extends XmlAdapter<FormatConfigu
     public FormatConfigurationTypesMap<String, FormatConfigurationType> unmarshal(FormatConfigurationTypes formatConfigurations) throws Exception {
         FormatConfigurationTypesMap<String, FormatConfigurationType> map = new FormatConfigurationTypesMap();
         for (FormatConfigurationType fct : formatConfigurations.getFormatConfiguration()) {
-            map.put(fct.getName(), fct);
+            map.getMap().put(fct.getName(), fct);
         }
         return map;
     }
@@ -20,7 +20,7 @@ public class FormatConfigurationTypesMapAdapter extends XmlAdapter<FormatConfigu
     @Override
     public FormatConfigurationTypes marshal(FormatConfigurationTypesMap<String, FormatConfigurationType> map) throws Exception {
         FormatConfigurationTypes formatTypes = new FormatConfigurationTypes();
-        for (Map.Entry<String, FormatConfigurationType> entry : map.entrySet()) {
+        for (Map.Entry<String, FormatConfigurationType> entry : map.getMap().entrySet()) {
             formatTypes.getFormatConfiguration().add(entry.getValue());
         }
         return formatTypes;

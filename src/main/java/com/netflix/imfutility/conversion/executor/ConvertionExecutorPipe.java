@@ -35,13 +35,7 @@ public class ConvertionExecutorPipe extends AbstractConvertionExecutor {
         if (seq == null) {
             processNonSeq(tailProcesses);
         } else {
-            for (Object seqOperation : seq.getExecEachSegmentOrExecOnce()) {
-                if (seqOperation instanceof ExecOnceType) {
-                    processSeqExecOnce((ExecOnceType) seqOperation, tailProcesses);
-                } else if (seqOperation instanceof ExecEachSegmentType) {
-                    processSeqSegments((ExecEachSegmentType) seqOperation, tailProcesses);
-                }
-            }
+            processSeq(seq, tailProcesses);
         }
 
         // 3. close all tail processes.
@@ -61,6 +55,16 @@ public class ConvertionExecutorPipe extends AbstractConvertionExecutor {
 
     private void processNonSeq(List<Process> pipeline) throws InterruptedException {
         pipe(pipeline);
+    }
+
+    private void processSeq(SequenceType seq, List<Process> tailProcesses) throws IOException, InterruptedException {
+        for (Object seqOperation : seq.getExecEachSegmentOrExecOnce()) {
+            if (seqOperation instanceof ExecOnceType) {
+                processSeqExecOnce((ExecOnceType) seqOperation, tailProcesses);
+            } else if (seqOperation instanceof ExecEachSegmentType) {
+                processSeqSegments((ExecEachSegmentType) seqOperation, tailProcesses);
+            }
+        }
     }
 
     private void processSeqExecOnce(ExecOnceType execOnce, List<Process> tail) throws IOException, InterruptedException {
@@ -122,8 +126,9 @@ public class ConvertionExecutorPipe extends AbstractConvertionExecutor {
         private boolean closeOutput = false;
 
         public Piper(InputStream input, OutputStream output, boolean closeInput, boolean closeOutput) {
-            this.input = new BufferedInputStream(input);
-            this.output = new BufferedOutputStream(output);
+            // don't use buffered streams!
+            this.input = input; //new BufferedInputStream(input);
+            this.output = output; //new BufferedOutputStream(output);
             this.closeInput = closeInput;
             this.closeOutput = closeOutput;
         }

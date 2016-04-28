@@ -60,10 +60,10 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/main/xsd/config.xsd</source>
+                                <source>src/main/resources/xsd/config.xsd</source>
                             </sources>
                             <xjbSources>
-                                <xjbSource>src/main/xjb/bindings-config.xjb</xjbSource>
+                                <xjbSource>src/main/resources/xjb/bindings-config.xjb</xjbSource>
                             </xjbSources>
                             <packageName>com.netflix.imfutility.xsd.config</packageName>
                         </configuration>
@@ -75,10 +75,10 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/main/xsd/conversion.xsd</source>
+                                <source>src/main/resources/xsd/conversion.xsd</source>
                             </sources>
                             <xjbSources>
-                                <xjbSource>src/main/xjb/bindings-conversion.xjb</xjbSource>
+                                <xjbSource>src/main/resources/xjb/bindings-conversion.xjb</xjbSource>
                             </xjbSources>
                             <packageName>com.netflix.imfutility.xsd.conversion</packageName>
                             <!--

@@ -15,7 +15,7 @@ public class ExternalToolsTypeMapAdapter extends XmlAdapter<ExternalToolsType, E
     public ExternalToolsTypeMap<String, ToolType> unmarshal(ExternalToolsType externalTools) throws Exception {
         ExternalToolsTypeMap<String, ToolType> map = new ExternalToolsTypeMap();
         for (ToolType tt : externalTools.getTool()) {
-            map.put(tt.getId(), tt);
+            map.getMap().put(tt.getId(), tt);
         }
         return map;
     }
@@ -23,7 +23,7 @@ public class ExternalToolsTypeMapAdapter extends XmlAdapter<ExternalToolsType, E
     @Override
     public ExternalToolsType marshal(ExternalToolsTypeMap<String, ToolType> map) throws Exception {
         ExternalToolsType externalTools = new ExternalToolsType();
-        for (Map.Entry<String, ToolType> entry : map.entrySet()) {
+        for (Map.Entry<String, ToolType> entry : map.getMap().entrySet()) {
             externalTools.getTool().add(entry.getValue());
         }
         return externalTools;

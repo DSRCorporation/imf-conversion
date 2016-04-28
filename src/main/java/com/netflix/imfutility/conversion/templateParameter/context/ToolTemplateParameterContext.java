@@ -1,16 +1,16 @@
 package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
-import com.netflix.imfutility.xsd.config.IMFUtilityConfigType;
+import com.netflix.imfutility.xsd.config.ConfigType;
 
 /**
  * Created by Alexander on 4/25/2016.
  */
 public class ToolTemplateParameterContext implements ITemplateParameterContext {
 
-    private IMFUtilityConfigType config;
+    private ConfigType config;
 
-    public ToolTemplateParameterContext(IMFUtilityConfigType config) {
+    public ToolTemplateParameterContext(ConfigType config) {
         this.config = config;
     }
 
@@ -19,7 +19,7 @@ public class ToolTemplateParameterContext implements ITemplateParameterContext {
         if (config.getExternalTools() == null) {
             return null;
         }
-        return "";//config.getExternalTools().get(templateParameter.getName()).getValue();
+        return config.getExternalTools().getMap().get(templateParameter.getName()).getValue();
     }
 
 }

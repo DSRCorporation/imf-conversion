@@ -1,24 +1,13 @@
 package com.netflix.imfutility.conversion;
 
-import com.netflix.imfutility.Format;
 import com.netflix.imfutility.conversion.executor.ConvertionExecutorOnce;
 import com.netflix.imfutility.conversion.executor.ConvertionExecutorPipe;
 import com.netflix.imfutility.conversion.executor.ConvertionExecutorSegment;
-import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
-import com.netflix.imfutility.conversion.templateParameter.context.ITemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.ITemplateParameterContextProvider;
-import com.netflix.imfutility.xsd.config.IMFUtilityConfigType;
+import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.xsd.conversion.*;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * Created by Alexander on 4/22/2016.
@@ -29,9 +18,9 @@ public class ConversionEngine {
     private ConvertionExecutorOnce onceExecutor;
     private ConvertionExecutorSegment segmentExecutor;
 
-    public void convert(FormatType formatType, String configuration, ITemplateParameterContextProvider contextProvider) throws IOException, InterruptedException {
+    public void convert(FormatType formatType, String configuration, TemplateParameterContextProvider contextProvider) throws IOException, InterruptedException {
         // 1. get configuration
-        FormatConfigurationType formatConfigurationType = formatType.getFormatConfigurations().get(configuration);
+        FormatConfigurationType formatConfigurationType = formatType.getFormatConfigurations().getMap().get(configuration);
         if (formatConfigurationType == null) {
             throw new RuntimeException(String.format("No configuration '%s' found for format '%s'.", configuration, formatType.getName()));
         }

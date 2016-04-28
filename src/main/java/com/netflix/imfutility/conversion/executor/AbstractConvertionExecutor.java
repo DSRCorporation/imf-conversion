@@ -4,6 +4,7 @@ import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.xsd.conversion.SegmentType;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public abstract class AbstractConvertionExecutor {
                 param = parameterResolver.resolveTemplateParameter(param);
             }
             param = String.format("\"%s\"", param);
+            execAndParams.add(param);
         }
         return execAndParams;
     }
@@ -39,18 +41,20 @@ public abstract class AbstractConvertionExecutor {
                 param = parameterResolver.resolveSegmentTemplateParameter(param, segment, segmentType);
             }
             param = String.format("\"%s\"", param);
+            execAndParams.add(param);
         }
         return execAndParams;
     }
 
     protected Process startProcess(List<String> resolvedParams) throws IOException {
         ProcessBuilder pb = new ProcessBuilder(resolvedParams);
-        //pb.redirectError(ProcessBuilder.Redirect.);
+        // pb.redirectError(ProcessBuilder.Redirect.to(log));
+        pb.directory(new File(parameterResolver.getContextProvider().getWorkingDir()));
         return pb.start();
     }
 
     private String[] splitParameters(String convertionOperation) {
-        convertionOperation = convertionOperation.trim().replaceAll("\\b", " ");
+        convertionOperation = convertionOperation.replaceFirst("\\s+|\\n+|\\r+", "");
         return convertionOperation.split("\\s+");
     }
 
