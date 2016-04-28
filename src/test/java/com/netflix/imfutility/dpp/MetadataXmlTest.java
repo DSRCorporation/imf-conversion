@@ -13,7 +13,6 @@ public class MetadataXmlTest {
     @org.junit.Test
     public void generateEmptyXml() throws Exception {
         try{
-
             //create a temp file
             File temp = File.createTempFile(UUID.randomUUID().toString(), ".xml");
             assertTrue("Temporary file cannot be deleted.", temp.delete());
