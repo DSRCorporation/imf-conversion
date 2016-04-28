@@ -14,20 +14,26 @@
     -->
     <xs:complexType name="IMFUtilityConversionType">
         <xs:sequence>
-            <xs:element type="formatType" name="format"/>
+            <xs:element type="formatTypes" name="formats" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
     <!--
       separate section for each supported format (DPP, etc.)
     -->
+    <xs:complexType name="formatTypes">
+        <xs:sequence>
+            <xs:element type="formatType" name="format" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="formatType">
         <xs:sequence>
             <xs:element type="tmpContextType" name="tmpContext"/>
             <xs:element type="conversionType" name="conversion"/>
-            <xs:element type="formatConfigurationType" name="formatConfiguration"/>
+            <xs:element type="formatConfigurationTypes" name="formatConfigurations" maxOccurs="1" minOccurs="1"/>
         </xs:sequence>
-        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:complexType>
 
     <!--
@@ -79,12 +85,19 @@
         be executed for transformation;
       - only one configuration is selected depending on the input.
     -->
+    <xs:complexType name="formatConfigurationTypes">
+        <xs:sequence>
+            <xs:element type="formatConfigurationType" name="formatConfiguration" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="formatConfigurationType">
         <xs:choice maxOccurs="unbounded" minOccurs="1">
             <xs:element type="pipeType" name="pipe"/>
             <xs:element type="execOnceType" name="execOnce"/>
+            <xs:element type="execEachSegmentType" name="execEachSegment"/>
         </xs:choice>
-        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:complexType>
 
     <!--
@@ -126,13 +139,13 @@
     <xs:complexType name="execEachSegmentType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute type="segmnentType" name="type" use="required"/>
+                <xs:attribute type="segmentType" name="type" use="required"/>
                 <xs:attribute type="xs:string" name="name" use="optional"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
 
-    <xs:simpleType name="segmnentType">
+    <xs:simpleType name="segmentType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="video"/>
             <xs:enumeration value="audio"/>
