@@ -31,7 +31,7 @@ public class MetadataXml {
             editorial.setProgrammeTitle("");
             editorial.setProductionNumber("");
             editorial.setSynopsis("");
-            editorial.setOriginator("");git 
+            editorial.setOriginator("");
             editorial.setCopyrightYear(Calendar.getInstance().get(Calendar.YEAR));
             editorial.setOtherIdentifier("");
             editorial.setOtherIdentifierType("");
