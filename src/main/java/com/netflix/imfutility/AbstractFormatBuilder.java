@@ -3,6 +3,8 @@ package com.netflix.imfutility;
 import com.netflix.imfutility.conversion.ConversionEngine;
 import com.netflix.imfutility.conversion.ConversionProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.xsd.conversion.ParamType;
+import org.apache.commons.io.FileUtils;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
@@ -29,17 +31,23 @@ public abstract class AbstractFormatBuilder {
             init(configXml, conversionXml);
 
             // 2. clear working dir
-            clearWorkingDir(new File(workingDir));
+            FileUtils.cleanDirectory(new File(workingDir));
 
-            // 3. fill contexts
+            // 3. create logs dir in the working dir
+            createLogsDir();
+
+            // 4. fill contexts
             fillDynamicContext();
             fillSegmentContext();
 
-            // 4. convert
+            // 5. convert
             preConvert();
             new ConversionEngine().convert(
                     conversionProvider.getFormat(), getConversionConfiguration(), contextProvider);
             postConvert();
+
+            // 6. delete tmp files.
+            deleteTmpFiles();
         } catch (Exception e) {
             // TODO
             e.printStackTrace();
@@ -67,15 +75,22 @@ public abstract class AbstractFormatBuilder {
 
     protected abstract String getConversionConfiguration();
 
-    private void clearWorkingDir(File workingDir) {
-        File[] files = workingDir.listFiles();
-        if (files != null) {
-            for (File f : files) {
-                if (f.isDirectory()) {
-                    clearWorkingDir(f);
-                } else {
-                    f.delete();
-                }
+    private void createLogsDir() {
+        File logsDir = new File(workingDir, Constants.LOGS_DIR);
+        logsDir.mkdir();
+    }
+
+    private void deleteTmpFiles() {
+        for (ParamType tmpParam : contextProvider.getTmpContext().getAllParameters()) {
+            File tmpFile = new File(tmpParam.getValue());
+            if (!tmpFile.isAbsolute() || !tmpFile.isFile()) {
+                tmpFile = new File(workingDir, tmpParam.getValue());
+            }
+            if (!tmpFile.isAbsolute() || !tmpFile.isFile()) {
+                tmpFile = null;
+            }
+            if (tmpFile != null) {
+                tmpFile.delete();
             }
         }
     }

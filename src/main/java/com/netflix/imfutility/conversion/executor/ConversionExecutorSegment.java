@@ -31,7 +31,7 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
 
         for (int segment = 0; segment < segmentNum; segment++) {
             List<String> resolvedParams = resolveSegmentParameters(operation.getValue(), segment, operation.getType());
-            startProcess(resolvedParams).waitFor();
+            startProcess(resolvedParams, operation.getName(), operation.getClass()).waitFor();
         }
     }
 

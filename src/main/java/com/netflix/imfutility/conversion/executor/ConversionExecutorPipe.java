@@ -31,16 +31,18 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
         List<Process> tailProcesses = getTailProcesses(operation);
 
         // 2. start all first processes in a sequence subsequently in pipelines
-        SequenceType seq = operation.getSequence();
-        if (seq == null) {
-            processNonSeq(tailProcesses);
-        } else {
-            processSeq(seq, tailProcesses);
-        }
-
-        // 3. close all tail processes.
-        for (Process proc : tailProcesses) {
-            proc.getOutputStream().close();
+        try {
+            SequenceType seq = operation.getSequence();
+            if (seq == null) {
+                processNonSeq(tailProcesses);
+            } else {
+                processSeq(seq, tailProcesses);
+            }
+        } finally {
+            // 3. close all tail processes.
+            for (Process proc : tailProcesses) {
+                proc.getOutputStream().close();
+            }
         }
     }
 
@@ -48,7 +50,7 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
         List<Process> pipeline = new ArrayList<>();
         for (ExecOnceType execOnce : operation.getExecOnce()) {
             List<String> resolvedParams = resolveParameters(execOnce.getValue());
-            pipeline.add(startProcess(resolvedParams));
+            pipeline.add(startProcess(resolvedParams, execOnce.getName(), execOnce.getClass()));
         }
         return pipeline;
     }
@@ -70,7 +72,7 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
     private void processSeqExecOnce(ExecOnceType execOnce, List<Process> tail) throws IOException, InterruptedException {
         // 1. start the first Process
         List<String> resolvedParams = resolveParameters(execOnce.getValue());
-        Process execOnceProc = startProcess(resolvedParams);
+        Process execOnceProc = startProcess(resolvedParams, execOnce.getName(), execOnce.getClass());
 
         // 2. create a pipeline: first + tail
         List<Process> pipeline = new ArrayList<>();
@@ -91,7 +93,7 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
         // 2. for each segment: create a pipeline: segmentProc + tail
         for (int segment = 0; segment < segmentNum; segment++) {
             List<String> resolvedParams = resolveSegmentParameters(execSegm.getValue(), segment, execSegm.getType());
-            Process execSegmProc = startProcess(resolvedParams);
+            Process execSegmProc = startProcess(resolvedParams, execSegm.getName(), execSegm.getClass());
 
             List<Process> pipeline = new ArrayList<>();
             pipeline.add(execSegmProc);
