@@ -1,0 +1,15 @@
+<jaxb:bindings
+  xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  version="2.1">
+
+    <jaxb:bindings schemaLocation="../xsd/config.xsd">
+
+        <jaxb:bindings node="//xs:element[@name='externalTools']">
+            <jaxb:property>
+                <jaxb:baseType name="com.netflix.imfutility.xsd.config.ExternalToolsTypeMap&lt;String,ToolType&gt;" />
+            </jaxb:property>
+        </jaxb:bindings>
+
+    </jaxb:bindings>
+
+</jaxb:bindings>

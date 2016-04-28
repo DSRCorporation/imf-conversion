@@ -1,0 +1,28 @@
+<jaxb:bindings
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+    version="2.1">
+
+    <jaxb:bindings schemaLocation="../xsd/conversion.xsd">
+        <jaxb:bindings node="//xs:element[@name='formats']">
+            <jaxb:property>
+                <jaxb:baseType name="com.netflix.imfutility.xsd.conversion.FormatTypesMap&lt;String,FormatType&gt;" />
+            </jaxb:property>
+        </jaxb:bindings>
+
+        <jaxb:bindings node="//xs:element[@name='formatConfigurations']">
+            <jaxb:property>
+                <jaxb:baseType name="com.netflix.imfutility.xsd.conversion.FormatConfigurationTypesMap&lt;String,FormatConfigurationType&gt;" />
+            </jaxb:property>
+        </jaxb:bindings>
+
+        <jaxb:bindings node="//xs:element[@name='tmpContext']">
+            <jaxb:property>
+                <jaxb:baseType name="com.netflix.imfutility.xsd.conversion.TmpContextTypeMap&lt;String,ParamType&gt;" />
+            </jaxb:property>
+        </jaxb:bindings>
+
+    </jaxb:bindings>
+
+</jaxb:bindings>

@@ -12,6 +12,27 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.21</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+    </dependencies>
+
+
+
     <build>
         <pluginManagement>
             <plugins>
@@ -39,8 +60,11 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/main/xsd/config.xsd</source>
+                                <source>src/main/resources/xsd/config.xsd</source>
                             </sources>
+                            <xjbSources>
+                                <xjbSource>src/main/resources/xjb/bindings-config.xjb</xjbSource>
+                            </xjbSources>
                             <packageName>com.netflix.imfutility.xsd.config</packageName>
                         </configuration>
                     </execution>
@@ -51,8 +75,11 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/main/xsd/conversion.xsd</source>
+                                <source>src/main/resources/xsd/conversion.xsd</source>
                             </sources>
+                            <xjbSources>
+                                <xjbSource>src/main/resources/xjb/bindings-conversion.xjb</xjbSource>
+                            </xjbSources>
                             <packageName>com.netflix.imfutility.xsd.conversion</packageName>
                             <!--
                              Don't clear the output directory before generating the sources.
