@@ -61,6 +61,24 @@
                             <clearOutputDir>false</clearOutputDir>
                         </configuration>
                     </execution>
+
+                    <!-- Generate DPP metadata.xml classes -->
+                    <execution>
+                        <id>xjc-dpp-metadata</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/xsd/dpp/metadata.xsd</source>
+                            </sources>
+                            <xjbSources>
+                                <xjbSource>src/main/xsd/dpp/imfutility.xjb</xjbSource>
+                            </xjbSources>
+                            <packageName>com.netflix.imfutility.dpp.metadata</packageName>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
