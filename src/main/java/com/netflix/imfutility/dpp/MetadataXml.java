@@ -31,7 +31,7 @@ public class MetadataXml {
             editorial.setProgrammeTitle("");
             editorial.setProductionNumber("");
             editorial.setSynopsis("");
-            editorial.setOriginator("");
+            editorial.setOriginator("");git 
             editorial.setCopyrightYear(Calendar.getInstance().get(Calendar.YEAR));
             editorial.setOtherIdentifier("");
             editorial.setOtherIdentifierType("");
@@ -125,9 +125,9 @@ public class MetadataXml {
 
             jaxbMarshaller.marshal(dpp, file);
         } catch (JAXBException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } catch (DatatypeConfigurationException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
