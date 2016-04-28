@@ -10,7 +10,7 @@ public class FormatTypesMapAdapter extends XmlAdapter<FormatTypes, FormatTypesMa
 
     @Override
     public FormatTypesMap<String, FormatType> unmarshal(FormatTypes formatTypes) throws Exception {
-        FormatTypesMap<String, FormatType> map = new FormatTypesMap();
+        FormatTypesMap<String, FormatType> map = new FormatTypesMap<>();
         for (FormatType ft : formatTypes.getFormat()) {
             map.getMap().put(ft.getName(), ft);
         }

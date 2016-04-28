@@ -13,9 +13,9 @@ import java.util.Map;
  */
 public class TemplateParameterContextProvider {
 
-    private FormatType format;
-    private ConfigType config;
-    private String workingDir;
+    private final FormatType format;
+    private final ConfigType config;
+    private final String workingDir;
 
     private Map<TemplateParameterContext, ITemplateParameterContext> contexts = new HashMap<>();
 
@@ -50,7 +50,7 @@ public class TemplateParameterContextProvider {
         return workingDir;
     }
 
-    protected void initContexts() {
+    private void initContexts() {
         for (TemplateParameterContext contextType : TemplateParameterContext.values()) {
             ITemplateParameterContext context = createContext(contextType);
             if (context != null) {
@@ -59,7 +59,7 @@ public class TemplateParameterContextProvider {
         }
     }
 
-    protected ITemplateParameterContext createContext(TemplateParameterContext context) {
+    private ITemplateParameterContext createContext(TemplateParameterContext context) {
         switch (context) {
             case TMP:
                 return new TmpTemplateParameterContext(format);

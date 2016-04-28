@@ -1,8 +1,8 @@
 package com.netflix.imfutility.conversion;
 
-import com.netflix.imfutility.conversion.executor.ConvertionExecutorOnce;
-import com.netflix.imfutility.conversion.executor.ConvertionExecutorPipe;
-import com.netflix.imfutility.conversion.executor.ConvertionExecutorSegment;
+import com.netflix.imfutility.conversion.executor.ConversionExecutorOnce;
+import com.netflix.imfutility.conversion.executor.ConversionExecutorPipe;
+import com.netflix.imfutility.conversion.executor.ConversionExecutorSegment;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.xsd.conversion.*;
@@ -14,9 +14,9 @@ import java.io.IOException;
  */
 public class ConversionEngine {
 
-    private ConvertionExecutorPipe pipeExecutor;
-    private ConvertionExecutorOnce onceExecutor;
-    private ConvertionExecutorSegment segmentExecutor;
+    private ConversionExecutorPipe pipeExecutor;
+    private ConversionExecutorOnce onceExecutor;
+    private ConversionExecutorSegment segmentExecutor;
 
     public void convert(FormatType formatType, String configuration, TemplateParameterContextProvider contextProvider) throws IOException, InterruptedException {
         // 1. get configuration
@@ -29,9 +29,9 @@ public class ConversionEngine {
         TemplateParameterResolver parameterResolver = new TemplateParameterResolver(contextProvider);
 
         // 4. init executors
-        pipeExecutor = new ConvertionExecutorPipe(parameterResolver);
-        onceExecutor = new ConvertionExecutorOnce(parameterResolver);
-        segmentExecutor = new ConvertionExecutorSegment(parameterResolver);
+        pipeExecutor = new ConversionExecutorPipe(parameterResolver);
+        onceExecutor = new ConversionExecutorOnce(parameterResolver);
+        segmentExecutor = new ConversionExecutorSegment(parameterResolver);
 
         // 5. run configuration
         run(formatConfigurationType);

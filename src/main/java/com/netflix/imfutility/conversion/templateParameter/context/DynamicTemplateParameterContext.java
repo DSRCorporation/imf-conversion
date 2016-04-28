@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class DynamicTemplateParameterContext implements ITemplateParameterContext {
 
-    private Map<String, String> params = new HashMap<>();
+    private final Map<String, String> params = new HashMap<>();
 
     public void addParameter(String paramName, String paramValue) {
         params.put(paramName, paramValue);

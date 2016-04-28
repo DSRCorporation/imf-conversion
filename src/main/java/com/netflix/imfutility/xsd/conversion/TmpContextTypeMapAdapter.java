@@ -10,7 +10,7 @@ public class TmpContextTypeMapAdapter extends XmlAdapter<TmpContextType, TmpCont
 
     @Override
     public TmpContextTypeMap<String, ParamType> unmarshal(TmpContextType tmpContextTypes) throws Exception {
-        TmpContextTypeMap<String, ParamType> map = new TmpContextTypeMap();
+        TmpContextTypeMap<String, ParamType> map = new TmpContextTypeMap<>();
         for (ParamType pt : tmpContextTypes.getParam()) {
             map.getMap().put(pt.getId(), pt);
         }

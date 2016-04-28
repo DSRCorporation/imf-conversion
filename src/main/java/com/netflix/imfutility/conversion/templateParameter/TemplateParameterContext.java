@@ -14,9 +14,9 @@ public enum TemplateParameterContext {
 
     SEGMENT("segment");
 
-    private String name;
+    private final String name;
 
-    private TemplateParameterContext(String name) {
+    TemplateParameterContext(String name) {
         this.name = name;
     }
 

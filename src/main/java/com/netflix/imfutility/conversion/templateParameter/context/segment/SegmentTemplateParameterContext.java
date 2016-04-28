@@ -4,9 +4,7 @@ import com.netflix.imfutility.conversion.templateParameter.SegmentTemplateParame
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.xsd.conversion.SegmentType;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

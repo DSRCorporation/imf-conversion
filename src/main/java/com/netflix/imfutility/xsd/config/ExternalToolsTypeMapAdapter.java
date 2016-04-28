@@ -1,8 +1,5 @@
 package com.netflix.imfutility.xsd.config;
 
-import com.netflix.imfutility.xsd.conversion.FormatType;
-import com.netflix.imfutility.xsd.conversion.FormatTypes;
-
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Map;
 
@@ -13,7 +10,7 @@ public class ExternalToolsTypeMapAdapter extends XmlAdapter<ExternalToolsType, E
 
     @Override
     public ExternalToolsTypeMap<String, ToolType> unmarshal(ExternalToolsType externalTools) throws Exception {
-        ExternalToolsTypeMap<String, ToolType> map = new ExternalToolsTypeMap();
+        ExternalToolsTypeMap<String, ToolType> map = new ExternalToolsTypeMap<>();
         for (ToolType tt : externalTools.getTool()) {
             map.getMap().put(tt.getId(), tt);
         }

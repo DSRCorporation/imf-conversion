@@ -2,15 +2,11 @@ package com.netflix.imfutility.format.dpp;
 
 import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.Format;
-import com.netflix.imfutility.conversion.ConversionProvider;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.segment.SegmentContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.segment.SegmentTemplateParameterContext;
 import com.netflix.imfutility.xsd.conversion.SegmentType;
-
-import java.io.File;
 
 /**
  * Created by Alexander on 4/22/2016.

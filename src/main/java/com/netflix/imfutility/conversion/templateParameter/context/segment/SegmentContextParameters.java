@@ -11,9 +11,9 @@ public enum SegmentContextParameters {
 
     DURATION("duration");
 
-    private String name;
+    private final String name;
 
-    private SegmentContextParameters(String name) {
+    SegmentContextParameters(String name) {
         this.name = name;
     }
 

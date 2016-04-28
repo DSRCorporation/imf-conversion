@@ -8,7 +8,7 @@ import com.netflix.imfutility.xsd.config.ConfigType;
  */
 public class ToolTemplateParameterContext implements ITemplateParameterContext {
 
-    private ConfigType config;
+    private final ConfigType config;
 
     public ToolTemplateParameterContext(ConfigType config) {
         this.config = config;

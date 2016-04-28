@@ -12,17 +12,17 @@ import java.util.List;
 /**
  * Created by Alexander on 4/26/2016.
  */
-public abstract class AbstractConvertionExecutor {
+public abstract class AbstractConversionExecutor {
 
-    protected TemplateParameterResolver parameterResolver;
+    protected final TemplateParameterResolver parameterResolver;
 
-    public AbstractConvertionExecutor(TemplateParameterResolver parameterResolver) {
+    public AbstractConversionExecutor(TemplateParameterResolver parameterResolver) {
         this.parameterResolver = parameterResolver;
     }
 
-    protected List<String> resolveParameters(String convertionOperation) {
-        String[] params = splitParameters(convertionOperation);
-        List<String> execAndParams = new ArrayList();
+    protected List<String> resolveParameters(String conversionOperation) {
+        String[] params = splitParameters(conversionOperation);
+        List<String> execAndParams = new ArrayList<>();
         for (String param : params) {
             if (TemplateParameter.isTemplateParameter(param)) {
                 param = parameterResolver.resolveTemplateParameter(param);
@@ -33,9 +33,9 @@ public abstract class AbstractConvertionExecutor {
         return execAndParams;
     }
 
-    protected List<String> resolveSegmentParameters(String convertionOperation, int segment, SegmentType segmentType) {
-        String[] params = splitParameters(convertionOperation);
-        List<String> execAndParams = new ArrayList();
+    protected List<String> resolveSegmentParameters(String conversionOperation, int segment, SegmentType segmentType) {
+        String[] params = splitParameters(conversionOperation);
+        List<String> execAndParams = new ArrayList<>();
         for (String param : params) {
             if (TemplateParameter.isTemplateParameter(param)) {
                 param = parameterResolver.resolveSegmentTemplateParameter(param, segment, segmentType);

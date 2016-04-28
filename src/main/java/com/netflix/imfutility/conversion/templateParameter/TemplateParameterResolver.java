@@ -10,7 +10,7 @@ import com.netflix.imfutility.xsd.conversion.SegmentType;
  */
 public class TemplateParameterResolver {
 
-    private TemplateParameterContextProvider contextProvider;
+    private final TemplateParameterContextProvider contextProvider;
 
     public TemplateParameterResolver(TemplateParameterContextProvider contextProvider) {
         this.contextProvider = contextProvider;

@@ -10,7 +10,7 @@ import java.util.Map;
 @XmlJavaTypeAdapter(TmpContextTypeMapAdapter.class)
 public class TmpContextTypeMap<String, ParamType> {
 
-    private Map<String, ParamType> map = new HashMap<>();
+    private final Map<String, ParamType> map = new HashMap<>();
 
     public Map<String, ParamType> getMap() {
         return map;

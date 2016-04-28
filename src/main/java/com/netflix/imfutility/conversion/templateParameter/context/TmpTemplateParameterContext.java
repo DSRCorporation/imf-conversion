@@ -8,7 +8,7 @@ import com.netflix.imfutility.xsd.conversion.FormatType;
  */
 public class TmpTemplateParameterContext implements ITemplateParameterContext {
 
-    private FormatType format;
+    private final FormatType format;
 
     public TmpTemplateParameterContext(FormatType format) {
         this.format = format;

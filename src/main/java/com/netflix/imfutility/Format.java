@@ -7,9 +7,9 @@ public enum Format {
 
     DPP("dpp");
 
-    private String name;
+    private final String name;
 
-    private Format(String name) {
+    Format(String name) {
         this.name = name;
     }
 

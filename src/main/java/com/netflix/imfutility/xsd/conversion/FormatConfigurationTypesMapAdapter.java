@@ -10,7 +10,7 @@ public class FormatConfigurationTypesMapAdapter extends XmlAdapter<FormatConfigu
 
     @Override
     public FormatConfigurationTypesMap<String, FormatConfigurationType> unmarshal(FormatConfigurationTypes formatConfigurations) throws Exception {
-        FormatConfigurationTypesMap<String, FormatConfigurationType> map = new FormatConfigurationTypesMap();
+        FormatConfigurationTypesMap<String, FormatConfigurationType> map = new FormatConfigurationTypesMap<>();
         for (FormatConfigurationType fct : formatConfigurations.getFormatConfiguration()) {
             map.getMap().put(fct.getName(), fct);
         }

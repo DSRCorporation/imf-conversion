@@ -1,30 +1,24 @@
 package com.netflix.imfutility.conversion.executor;
 
-import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.ITemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.segment.ISegmentTemplateParameterContext;
 import com.netflix.imfutility.xsd.conversion.ExecEachSegmentType;
-import com.netflix.imfutility.xsd.conversion.ExecOnceType;
-import com.netflix.imfutility.xsd.conversion.SegmentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.management.Query;
-import javax.management.RuntimeErrorException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Alexander on 4/26/2016.
  */
-public class ConvertionExecutorSegment extends AbstractConvertionExecutor {
+public class ConversionExecutorSegment extends AbstractConversionExecutor {
 
-    final Logger logger = LoggerFactory.getLogger(ConvertionExecutorSegment.class);
+    final Logger logger = LoggerFactory.getLogger(ConversionExecutorSegment.class);
 
-    public ConvertionExecutorSegment(TemplateParameterResolver parameterResolver) {
+    public ConversionExecutorSegment(TemplateParameterResolver parameterResolver) {
         super(parameterResolver);
     }
 

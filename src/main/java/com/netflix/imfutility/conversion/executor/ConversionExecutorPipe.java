@@ -18,11 +18,11 @@ import java.util.List;
 /**
  * Created by Alexander on 4/27/2016.
  */
-public class ConvertionExecutorPipe extends AbstractConvertionExecutor {
+public class ConversionExecutorPipe extends AbstractConversionExecutor {
 
-    final Logger logger = LoggerFactory.getLogger(ConvertionExecutorPipe.class);
+    final Logger logger = LoggerFactory.getLogger(ConversionExecutorPipe.class);
 
-    public ConvertionExecutorPipe(TemplateParameterResolver parameterResolver) {
+    public ConversionExecutorPipe(TemplateParameterResolver parameterResolver) {
         super(parameterResolver);
     }
 
@@ -46,8 +46,8 @@ public class ConvertionExecutorPipe extends AbstractConvertionExecutor {
 
     private List<Process> getTailProcesses(PipeType operation) throws IOException {
         List<Process> pipeline = new ArrayList<>();
-        for (ExecOnceType exacOnce : operation.getExecOnce()) {
-            List<String> resolvedParams = resolveParameters(exacOnce.getValue());
+        for (ExecOnceType execOnce : operation.getExecOnce()) {
+            List<String> resolvedParams = resolveParameters(execOnce.getValue());
             pipeline.add(startProcess(resolvedParams));
         }
         return pipeline;
@@ -120,10 +120,10 @@ public class ConvertionExecutorPipe extends AbstractConvertionExecutor {
 
     private class Piper implements Runnable {
 
-        private InputStream input;
-        private OutputStream output;
-        private boolean closeInput = false;
-        private boolean closeOutput = false;
+        private final InputStream input;
+        private final OutputStream output;
+        private final boolean closeInput;
+        private final boolean closeOutput;
 
         public Piper(InputStream input, OutputStream output, boolean closeInput, boolean closeOutput) {
             // don't use buffered streams!
