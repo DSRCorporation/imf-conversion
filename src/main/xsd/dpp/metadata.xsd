@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0"
+        elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xs:include schemaLocation="types.xsd"/>
+    <xs:include schemaLocation="iso-639-2-codes.xsd"/>
+
+    <!--
+        Root element.
+    -->
+    <xs:element name="Dpp">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Editorial" type="EditorialType"/>
+                <xs:element name="Technical" type="TechnicalType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="EditorialType">
+        <xs:sequence>
+            <xs:element name="SeriesTitle" type="String127"/>
+            <xs:element name="ProgrammeTitle" type="String127"/>
+            <xs:element name="EpisodeTitleNumber" type="String127"/>
+            <xs:element name="ProductionNumber" type="String127"/>
+            <xs:element name="Synopsis" type="String127"/>
+            <xs:element name="Originator" type="String127"/>
+            <xs:element name="CopyrightYear" type="Uint16Type"/>
+            <xs:element name="OtherIdentifier" type="String127" minOccurs="0"/>
+            <xs:element name="OtherIdentifierType" type="String127" minOccurs="0"/>
+            <xs:element name="Genre" type="String127" minOccurs="0"/>
+            <xs:element name="Distributor" type="String127" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TechnicalType">
+        <xs:sequence>
+            <xs:element name="ShimName" type="ShimNameType"/>
+            <xs:element name="ShimVersion" type="VersionType" default="1.1">
+                <xs:annotation>
+                    <xs:documentation>Shim version is restricted to 1.1 for UK_DPP</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Video" type="VideoType"/>
+            <xs:element name="Audio" type="AudioType"/>
+            <xs:element name="Timecodes" type="TimecodesType"/>
+            <xs:element name="AccessServices" type="AccessServicesType"/>
+            <xs:element name="Additional" type="AdditionalType"/>
+            <xs:element name="ContactInformation" type="ContactInformationType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="VideoType">
+        <xs:sequence>
+            <xs:element name="PictureRatio" type="PictureRatioUkdppEnum" minOccurs="0"/>
+            <xs:element name="ThreeD" type="xs:boolean"/>
+            <xs:element name="ThreeDType" type="ThreeDTypeType" minOccurs="0"/>
+            <xs:element name="ProductPlacement" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="PsePass" type="PsePassType">
+                <xs:annotation>
+                    <xs:documentation>PsePass is required for AS-11 version >= 1.1</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PseManufacturer" type="String127" minOccurs="0"/>
+            <xs:element name="PseVersion" type="String127" minOccurs="0"/>
+            <xs:element name="VideoComments" type="String127" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AudioType">
+        <xs:sequence>
+            <xs:element name="AudioTrackLayout" type="AudioTrackLayoutDmAs11Type"/>
+            <xs:element name="PrimaryAudioLanguage" type="Iso6392CodeType"/>
+            <xs:element name="SecondaryAudioLanguage" type="Iso6392CodeType"/>
+            <xs:element name="TertiaryAudioLanguage" type="Iso6392CodeType"/>
+            <xs:element name="CompliantAudioStandard" type="CompliantAudioStandardType"/>
+            <xs:element name="AudioComments" type="String127" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TimecodesType">
+        <xs:sequence>
+            <xs:element name="LineUpStart" type="TimecodeType"/>
+            <xs:element name="IdentClockStart" type="TimecodeType"/>
+            <xs:element name="Parts" type="SegmentationType"/>
+            <xs:element name="TotalNumberOfParts" type="Uint16Type"/>
+            <xs:element name="TotalProgrammeDuration" type="DurationType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SegmentationType">
+        <xs:complexContent>
+            <xs:extension base="ArrayType">
+                <xs:sequence>
+                    <xs:element name="Parts" type="SegmentType" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="SegmentType">
+        <xs:complexContent>
+            <xs:extension base="ArrayElementType">
+                <xs:sequence>
+                    <xs:element name="PartNumber" type="Uint16Type"/>
+                    <xs:element name="PartTotal" type="Uint16Type"/>
+                    <xs:element name="SOM" type="TimecodeType"/>
+                    <xs:element name="Duration" type="DurationType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="AccessServicesType">
+        <xs:sequence>
+            <xs:element name="AudioDescriptionPresent" type="xs:boolean"/>
+            <xs:element name="AudioDescriptionType" type="AudioDescriptionTypeType" minOccurs="0"/>
+            <xs:element name="ClosedCaptionsPresent" type="xs:boolean"/>
+            <xs:element name="ClosedCaptionsType" type="CaptionsTypeType" minOccurs="0"/>
+            <xs:element name="ClosedCaptionsLanguage" type="Iso6392CodeType" minOccurs="0"/>
+            <xs:element name="OpenCaptionsPresent" type="xs:boolean"/>
+            <xs:element name="OpenCaptionsType" type="CaptionsTypeType" minOccurs="0"/>
+            <xs:element name="OpenCaptionsLanguage" type="Iso6392CodeType" minOccurs="0"/>
+            <xs:element name="SigningPresent" type="SigningPresentType"/>
+            <xs:element name="SignLanguage" type="SignLanguageType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AdditionalType">
+        <xs:sequence>
+            <xs:element name="CompletionDate" type="xs:date"/>
+            <xs:element name="TextlessElementsExist" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="ProgrammeHasText" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="ProgrammeTextLanguage" type="Iso6392CodeType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ContactInformationType">
+        <xs:sequence>
+            <xs:element name="ContactEmail" type="String127"/>
+            <xs:element name="ContactTelephoneNumber" type="String127"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!--
+        Enumerations
+    -->
+    <xs:simpleType name="ShimNameType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="UK DPP HD"/>
+            <xs:enumeration value="UK DPP SD"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="PictureRatioUkdppEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="4:3"/>
+            <xs:enumeration value="14:9"/>
+            <xs:enumeration value="15:9"/>
+            <xs:enumeration value="16:9"/>
+            <xs:enumeration value="37:20"/>
+            <xs:enumeration value="21:9"/>
+            <xs:enumeration value="12:5"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="PsePassType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Yes"/>
+            <xs:enumeration value="No"/>
+            <xs:enumeration value="Not tested"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ThreeDTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Side by side"/>
+            <xs:enumeration value="Dual"/>
+            <xs:enumeration value="Left eye only"/>
+            <xs:enumeration value="Right eye only"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="AudioTrackLayoutDmAs11Type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="EBU R 48: 2a"/>
+            <xs:enumeration value="EBU R 48: 4b"/>
+            <xs:enumeration value="EBU R 48: 4c"/>
+            <xs:enumeration value="EBU R 123: 16c"/>
+            <xs:enumeration value="EBU R 123: 16d"/>
+            <xs:enumeration value="EBU R 123: 16f"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="CompliantAudioStandardType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="None"/>
+            <xs:enumeration value="EBU R 128"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="AudioDescriptionTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Control data / Narration"/>
+            <xs:enumeration value="AD Mix"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="CaptionsTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Hard of Hearing"/>
+            <xs:enumeration value="Translation"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="SigningPresentType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Yes"/>
+            <xs:enumeration value="No"/>
+            <xs:enumeration value="Signer only"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="SignLanguageType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="British Sign Language"/>
+            <xs:enumeration value="Makaton"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>
