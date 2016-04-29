@@ -3,7 +3,6 @@
       xmlns:xs="http://www.w3.org/2001/XMLSchema"
       version="2.1">
     <bindings schemaLocation="iso-639-2-codes.xsd">
-				<globalBindings typesafeEnumMaxMembers="1024" />
+        <globalBindings typesafeEnumMaxMembers="1024" />
     </bindings>
-
 </bindings>
