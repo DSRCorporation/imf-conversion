@@ -1,7 +1,9 @@
 package com.netflix.imfutility.conversion.templateParameter;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by Alexander on 4/25/2016.
@@ -42,14 +44,9 @@ public class TemplateParameter {
     }
 
     private String getSupportedContexts() {
-        StringBuilder supportedContextsBuilder = new StringBuilder();
-        supportedContextsBuilder.append("[ ");
-        for (TemplateParameterContext e : TemplateParameterContext.values()) {
-            supportedContextsBuilder.append(e.getName());
-            supportedContextsBuilder.append(" ");
-        }
-        supportedContextsBuilder.append("]");
-        return supportedContextsBuilder.toString();
+        return Arrays.stream(TemplateParameterContext.values())
+                .map(v -> v.getName())
+                .collect(Collectors.joining(" "));
     }
 
     public String getName() {

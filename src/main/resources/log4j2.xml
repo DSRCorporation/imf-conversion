@@ -6,21 +6,23 @@
         <Property name="LOG_FILE">${LOG_DIR}/imf-utility.log</Property>
         <Property name="ARCHIVE_DIR">${LOG_DIR}/archive</Property>
         <Property name="LOG_FILE_PATTERN">${ARCHIVE_DIR}/imf-utility__%d{yyyy-MM-dd__hh-mm}__%i.log</Property>
-        <Property name="PATTERN">%-5level %d{DEFAULT} [%t] %c:%M(%L): %m%n</Property>
+        <Property name="INFO_PATTERN">%-5level %d{DEFAULT}: %m%n</Property>
+        <Property name="DETAIL_PATTERN">%-5level %d{DEFAULT} [%t] %c:%M(%L): %m%n</Property>
     </Properties>
 
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="${PATTERN}"/>
+            <PatternLayout pattern="${INFO_PATTERN}"/>
         </Console>
 
         <RollingFile name="RollingFile" fileName="${LOG_FILE}"
                      filePattern="${LOG_FILE_PATTERN}">
-            <PatternLayout pattern="${PATTERN}"/>
+            <PatternLayout pattern="${INFO_PATTERN}"/>
             <Policies>
                 <OnStartupTriggeringPolicy/>
             </Policies>
         </RollingFile>
+
     </Appenders>
 
     <Loggers>

@@ -1,6 +1,6 @@
 package com.netflix.imfutility;
 
-import com.netflix.imfutility.format.dpp.DppFormatBuilder;
+import com.netflix.imfutility.dpp.DppFormatBuilder;
 
 /**
  * Created by Alexander on 4/22/2016.
