@@ -29,9 +29,12 @@
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
     </dependencies>
-
-
 
     <build>
         <pluginManagement>
@@ -85,6 +88,24 @@
                              Don't clear the output directory before generating the sources.
                              Clearing the output directory removes the config schema from above.
                             -->
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
+                    <!-- Generate DPP metadata.xml classes -->
+                    <execution>
+                        <id>xjc-dpp-metadata</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/xsd/dpp/metadata.xsd</source>
+                            </sources>
+                            <xjbSources>
+                                <xjbSource>src/main/xsd/dpp/imfutility.xjb</xjbSource>
+                            </xjbSources>
+                            <packageName>com.netflix.imfutility.dpp.metadata</packageName>
                             <clearOutputDir>false</clearOutputDir>
                         </configuration>
                     </execution>
