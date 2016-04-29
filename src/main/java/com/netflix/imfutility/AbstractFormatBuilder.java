@@ -5,6 +5,8 @@ import com.netflix.imfutility.conversion.ConversionProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.xsd.conversion.ParamType;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
@@ -14,6 +16,8 @@ import java.io.File;
  * Created by Alexander on 4/28/2016.
  */
 public abstract class AbstractFormatBuilder {
+
+    final Logger logger = LoggerFactory.getLogger(AbstractFormatBuilder.class);
 
     protected Format format;
     protected ConfigProvider configProvider;
@@ -49,8 +53,7 @@ public abstract class AbstractFormatBuilder {
             // 6. delete tmp files.
             deleteTmpFiles();
         } catch (Exception e) {
-            // TODO
-            e.printStackTrace();
+            logger.error("Conversion aborted", e);
         }
 
     }
