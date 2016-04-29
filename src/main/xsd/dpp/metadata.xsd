@@ -25,7 +25,7 @@
             <xs:element name="ProgrammeTitle" type="String127"/>
             <xs:element name="EpisodeTitleNumber" type="String127"/>
             <xs:element name="ProductionNumber" type="String127"/>
-            <xs:element name="Synopsis" type="String127"/>
+            <xs:element name="Synopsis" type="String250"/>
             <xs:element name="Originator" type="String127"/>
             <xs:element name="CopyrightYear" type="Uint16Type"/>
             <xs:element name="OtherIdentifier" type="String127" minOccurs="0"/>

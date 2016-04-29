@@ -12,6 +12,12 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="String250">
+        <xs:restriction base="xs:string">
+            <xs:length value="250"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:complexType name="ArrayType">
         <xs:attribute name="size" type="xs:nonNegativeInteger" use="required"/>
     </xs:complexType>
