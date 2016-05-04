@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Map;
 
 /**
- * Created by Alexander on 4/25/2016.
+ * Maps generated {@link FormatTypes} to {@link FormatTypesMap}.
  */
 public class FormatTypesMapAdapter extends XmlAdapter<FormatTypes, FormatTypesMap<String, FormatType>> {
 

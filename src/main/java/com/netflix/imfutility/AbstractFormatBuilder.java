@@ -14,13 +14,30 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by Alexander on 4/28/2016.
+ * The base class responsible for conversion to a destination format.
+ * <ul>
+ * <li>Contains logic common for all formats</li>
+ * <li>Designed for inheritance</li>
+ * <li>Provides a common conversion workflow in a {@link #build(String, String)} method</li>
+ * <li>Subclasses must provide logic related to context creation: {@link #fillDynamicContext()} and {@link #fillSegmentContext()}</li>
+ * <li>Subclasses may customize the workflow using {@link #preConvert()} and {@link #postConvert()} methods</li>
+ * <li>Common workflow ({@link #build(String, String)}):
+ * <ul>
+ * <li>Initializing config and conversion (reading, parsing and validating config.xml and conversion,xml)</li>
+ * <li>Clearing the specified working dir</li>
+ * <li>Creating logs dir in the working dir</li>
+ * <li>Filling the context (segment and dynamic)</li>
+ * <li>Perform conversion executing operation from conversion.xml (see {@link ConversionEngine}</li>
+ * <li>Deleting tmp files created during conversion.</li>
+ * </ul>
+ * </li>
+ * </ul>
  */
 public abstract class AbstractFormatBuilder {
 
     private final Logger logger = LoggerFactory.getLogger(AbstractFormatBuilder.class);
 
-    protected Format format;
+    protected final Format format;
     protected ConfigProvider configProvider;
     protected ConversionProvider conversionProvider;
     protected TemplateParameterContextProvider contextProvider;
@@ -88,7 +105,7 @@ public abstract class AbstractFormatBuilder {
     protected void postConvert() {
     }
 
-    protected void convert() throws IOException, InterruptedException {
+    protected void convert() throws IOException {
         logger.info("Starting conversion...");
 
         String conversionConfig = getConversionConfiguration();

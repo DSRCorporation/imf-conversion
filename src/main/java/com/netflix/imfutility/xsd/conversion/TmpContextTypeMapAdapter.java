@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Map;
 
 /**
- * Created by Alexander on 4/25/2016.
+ * Maps generated {@link TmpContextType} to {@link TmpContextTypeMap}.
  */
 public class TmpContextTypeMapAdapter extends XmlAdapter<TmpContextType, TmpContextTypeMap<String, ParamType>> {
 

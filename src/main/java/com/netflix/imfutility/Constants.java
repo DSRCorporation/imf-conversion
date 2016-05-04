@@ -1,7 +1,7 @@
 package com.netflix.imfutility;
 
 /**
- * Created by Alexander on 4/28/2016.
+ * All constants to be used in the application.
  */
 public final class Constants {
 

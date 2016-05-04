@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by Alexander on 5/4/2016.
+ * A wrapper for a started {@link Process} containing information about the process:
+ * process sequence number;  executable name; conversion operation name, conversion operation type, etc.
  */
 public final class ExternalProcess {
 

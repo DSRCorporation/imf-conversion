@@ -2,32 +2,32 @@ package com.netflix.imfutility.conversion.executor;
 
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
-import com.netflix.imfutility.conversion.templateParameter.context.ITemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.segment.ISegmentTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.segment.SegmentTemplateParameterContext;
 import com.netflix.imfutility.xsd.conversion.ExecEachSegmentType;
 import com.netflix.imfutility.xsd.conversion.ExecOnceType;
 import com.netflix.imfutility.xsd.conversion.PipeType;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Alexander on 4/27/2016.
+ * Executor of {@link PipeType} conversion operation.
+ * <ul>
+ * <li>Execute all operations in a pipeline</li>
+ * <li>Supports {@link SequenceType}</li>
+ * </ul>
  */
 public class ConversionExecutorPipe extends AbstractConversionExecutor {
-
-    private final Logger logger = LoggerFactory.getLogger(ConversionExecutorPipe.class);
 
     public ConversionExecutorPipe(TemplateParameterResolver parameterResolver) {
         super(parameterResolver);
     }
 
-    public void execute(PipeType operation) throws IOException, InterruptedException {
+    public void execute(PipeType operation) throws IOException {
         // 1. start all tailing operation
         List<ExternalProcess> tailProcesses = getTailProcesses(operation);
 
@@ -41,9 +41,7 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
             }
         } finally {
             // 3. close all tail processes.
-            for (ExternalProcess proc : tailProcesses) {
-                proc.finishClose();
-            }
+            tailProcesses.forEach(ExternalProcess::finishClose);
         }
     }
 
@@ -56,11 +54,11 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
         return pipeline;
     }
 
-    private void processNonSeq(List<ExternalProcess> pipeline) throws InterruptedException {
+    private void processNonSeq(List<ExternalProcess> pipeline) {
         pipe(pipeline);
     }
 
-    private void processSeq(SequenceType seq, List<ExternalProcess> tailProcesses) throws IOException, InterruptedException {
+    private void processSeq(SequenceType seq, List<ExternalProcess> tailProcesses) throws IOException {
         for (Object seqOperation : seq.getExecEachSegmentOrExecOnce()) {
             if (seqOperation instanceof ExecOnceType) {
                 processSeqExecOnce((ExecOnceType) seqOperation, tailProcesses);
@@ -70,7 +68,7 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
         }
     }
 
-    private void processSeqExecOnce(ExecOnceType execOnce, List<ExternalProcess> tail) throws IOException, InterruptedException {
+    private void processSeqExecOnce(ExecOnceType execOnce, List<ExternalProcess> tail) throws IOException {
         // 1. start the first Process
         List<String> resolvedParams = resolveParameters(execOnce.getValue());
         ExternalProcess execOnceProc = startProcess(resolvedParams, execOnce.getName(), execOnce.getClass());
@@ -80,7 +78,7 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
     }
 
 
-    private void processSeqSegments(ExecEachSegmentType execSegm, List<ExternalProcess> tail) throws InterruptedException, IOException {
+    private void processSeqSegments(ExecEachSegmentType execSegm, List<ExternalProcess> tail) throws IOException {
         // 1. get segments number
         SegmentTemplateParameterContext segmContext = parameterResolver.getContextProvider().getSegmentContext();
         if (segmContext == null) {
@@ -96,14 +94,14 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
         }
     }
 
-    private void pipe(ExternalProcess firstProc, List<ExternalProcess> tail) throws InterruptedException {
+    private void pipe(ExternalProcess firstProc, List<ExternalProcess> tail) {
         List<ExternalProcess> pipeline = new ArrayList<>();
         pipeline.add(firstProc);
         pipeline.addAll(tail);
         pipe(pipeline);
     }
 
-    private void pipe(List<ExternalProcess> pipeline) throws InterruptedException {
+    private void pipe(List<ExternalProcess> pipeline) {
         // 1. start a new thread to copy input - output in a pipeline
         ExternalProcess p1;
         ExternalProcess p2;

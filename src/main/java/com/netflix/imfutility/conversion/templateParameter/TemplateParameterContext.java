@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * Created by Alexander on 4/25/2016.
+ * All supported template parameter contexts.
  */
 public enum TemplateParameterContext {
 
@@ -38,7 +38,7 @@ public enum TemplateParameterContext {
 
     public static String getSupportedContexts() {
         return Arrays.stream(TemplateParameterContext.values())
-                .map(v -> v.getName())
+                .map(TemplateParameterContext::getName)
                 .collect(Collectors.joining(" "));
     }
 

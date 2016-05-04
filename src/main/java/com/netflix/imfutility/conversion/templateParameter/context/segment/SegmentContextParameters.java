@@ -1,7 +1,7 @@
 package com.netflix.imfutility.conversion.templateParameter.context.segment;
 
 /**
- * Created by Alexander on 4/27/2016.
+ * All supported segment template parameter names.
  */
 public enum SegmentContextParameters {
 

@@ -11,11 +11,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 /**
- * Created by Alexander on 4/26/2016.
+ * Base Conversion Operation Executor.
+ * <ul>
+ * <li>Resolves template parameters using Template Parameter Context</li>
+ * <li>Creates a new external process</li>
+ * </ul>
  */
 public abstract class AbstractConversionExecutor {
 
@@ -104,9 +106,9 @@ public abstract class AbstractConversionExecutor {
         return logFile;
     }
 
-    private String[] splitParameters(String convertionOperation) {
-        convertionOperation = convertionOperation.replaceFirst("\\s+|\\n+|\\r+", "");
-        return convertionOperation.split("\\s+");
+    private String[] splitParameters(String conversionOperation) {
+        conversionOperation = conversionOperation.replaceFirst("\\s+|\\n+|\\r+", "");
+        return conversionOperation.split("\\s+");
     }
 
 }

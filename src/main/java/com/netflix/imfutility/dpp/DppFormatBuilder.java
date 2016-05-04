@@ -2,7 +2,6 @@ package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.Format;
-import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.segment.SegmentContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.segment.SegmentTemplateParameterContext;
@@ -11,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by Alexander on 4/22/2016.
+ * DPP format builder (see {@link AbstractFormatBuilder}). It's used for conversion to DPP format.
  */
 public class DppFormatBuilder extends AbstractFormatBuilder {
 
@@ -40,7 +39,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
 
         //FIXME
 
-        SegmentTemplateParameterContext segmentContext = (SegmentTemplateParameterContext) contextProvider.getContext(TemplateParameterContext.SEGMENT);
+        SegmentTemplateParameterContext segmentContext = contextProvider.getSegmentContext();
 
         String pathToMedia = "G:\\Netflix\\test\\encode\\Aladdin_trailer_ATT.ts";
 
@@ -73,6 +72,6 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
 
     @Override
     protected String getConversionConfiguration() {
-        return conversionProvider.getConvertConfiguration(Format.DPP).get(0);
+        return conversionProvider.getConvertConfiguration().get(0);
     }
 }

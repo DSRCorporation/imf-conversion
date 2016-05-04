@@ -1,12 +1,10 @@
 package com.netflix.imfutility.conversion.templateParameter;
 
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
- * Created by Alexander on 4/25/2016.
+ * Represent a template parameter from conversion operation in the following form: ${paramContext.paramName}.
  */
 public class TemplateParameter {
 
@@ -38,15 +36,9 @@ public class TemplateParameter {
         if (this.context == null) {
             throw new RuntimeException(
                     String.format("Unknown context '%s' in Template Parameter '%s'. Supported contexts: %s'",
-                            contextStr, parameterString, getSupportedContexts()));
+                            contextStr, parameterString, TemplateParameterContext.getSupportedContexts()));
 
         }
-    }
-
-    private String getSupportedContexts() {
-        return Arrays.stream(TemplateParameterContext.values())
-                .map(v -> v.getName())
-                .collect(Collectors.joining(" "));
     }
 
     public String getName() {

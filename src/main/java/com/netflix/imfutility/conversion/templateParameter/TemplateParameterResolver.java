@@ -6,7 +6,7 @@ import com.netflix.imfutility.conversion.templateParameter.context.segment.ISegm
 import com.netflix.imfutility.xsd.conversion.SegmentType;
 
 /**
- * Created by Alexander on 4/26/2016.
+ * Resolves a given template parameter using an appropriate template parameter context.
  */
 public class TemplateParameterResolver {
 

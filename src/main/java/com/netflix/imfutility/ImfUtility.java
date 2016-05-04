@@ -3,7 +3,11 @@ package com.netflix.imfutility;
 import com.netflix.imfutility.dpp.DppFormatBuilder;
 
 /**
- * Created by Alexander on 4/22/2016.
+ * The main class.
+ * <ul>
+ * <li>Invokes command line parsing logic</li>
+ * <li>Invokes an appropriate builder depending on the inout format and mode</li>
+ * </ul>
  */
 public class ImfUtility {
 
