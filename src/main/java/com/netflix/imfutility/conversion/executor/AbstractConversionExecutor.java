@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractConversionExecutor {
 
-    final Logger logger = LoggerFactory.getLogger(ConversionExecutorOnce.class);
+    private final Logger logger = LoggerFactory.getLogger(ConversionExecutorOnce.class);
 
     protected final TemplateParameterResolver parameterResolver;
 
@@ -55,41 +55,50 @@ public abstract class AbstractConversionExecutor {
         return execAndParams;
     }
 
-    protected Process startProcess(List<String> resolvedParams, String operationName, Class<?> operationClass) throws IOException {
+    protected ExternalProcess startProcess(List<String> resolvedParams, String operationName, Class<?> operationClass) throws IOException {
         if (resolvedParams.isEmpty()) {
             throw new RuntimeException(String.format("No parameters for process '%s'", operationName));
         }
 
-        logger.info("Starting external process: {}", getProcessString(resolvedParams));
+        int processNum = count++;
+        String operationType = operationClass.getSimpleName();
+        String programPath = resolvedParams.get(0);
+        String programName = new File(programPath.replaceAll("\"", "")).getName();
+        ExternalProcess.ExternalProcessInfo processInfo = new ExternalProcess.ExternalProcessInfo(
+                processNum, operationName, operationType, programName, resolvedParams);
+
+        logger.info("Starting {}", processInfo.toString());
+        logger.info("\t{}", processInfo.getProcessString());
 
         ProcessBuilder pb = new ProcessBuilder(resolvedParams);
         pb.directory(new File(parameterResolver.getContextProvider().getWorkingDir()));
 
-        File logFile = createLogFile(operationName, operationClass.getSimpleName(), resolvedParams.get(0));
+        File logFile = createLogFile(processInfo);
         if (logFile != null) {
             logger.info("\tRedirecting stderr to {}", logFile.getAbsolutePath());
             pb.redirectError(ProcessBuilder.Redirect.to(logFile));
         }
 
         Process process = pb.start();
-        logger.info("\tStared external process");
-        return process;
+        return new ExternalProcess(process, processInfo);
     }
 
-    private String getProcessString(List<String> resolvedParams) {
-        return resolvedParams.stream()
-                .collect(Collectors.joining(" "));
-    }
-
-    private File createLogFile(String operationName, String operationType, String programPath) {
+    private File createLogFile(ExternalProcess.ExternalProcessInfo processInfo) {
         File logsDir = new File(parameterResolver.getContextProvider().getWorkingDir(), Constants.LOGS_DIR);
-        String programName = new File(programPath.replaceAll("\"", "")).getName();
-        String logFileName = String.format(Constants.LOG_TEMPLATE, count++, operationName, operationType, programName);
+        String logFileName = String.format(
+                Constants.LOG_TEMPLATE,
+                processInfo.getProcessNum(), processInfo.getOperationName(), processInfo.getOperationType(), processInfo.getProgramName());
         File logFile = new File(logsDir, logFileName);
+
+        String errorDesc = String.format("Couldn't create log file for %s", toString());
         try {
-            logFile.createNewFile();
+            boolean created = logFile.createNewFile();
+            if (!created) {
+                logger.warn(errorDesc);
+                return null;
+            }
         } catch (IOException e) {
-            logger.warn("Couldn't create log file for external process {} for operation {}", programName, operationName, e);
+            logger.warn(errorDesc, e);
             return null;
         }
         return logFile;

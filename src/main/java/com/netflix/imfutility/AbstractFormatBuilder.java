@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 public abstract class AbstractFormatBuilder {
 
-    final Logger logger = LoggerFactory.getLogger(AbstractFormatBuilder.class);
+    private final Logger logger = LoggerFactory.getLogger(AbstractFormatBuilder.class);
 
     protected Format format;
     protected ConfigProvider configProvider;
@@ -54,8 +54,10 @@ public abstract class AbstractFormatBuilder {
 
             // 6. delete tmp files.
             deleteTmpFiles();
+
+            logger.info("Conversion to '{}' format: OK\n", format.getName());
         } catch (Exception e) {
-            logger.error("Conversion aborted", e);
+            logger.error(String.format("Conversion to '%s' format aborted", format.getName()), e);
         }
 
     }
@@ -65,11 +67,11 @@ public abstract class AbstractFormatBuilder {
 
         logger.info("Reading config.xml: {}", configXml);
         this.configProvider = new ConfigProvider(configXml);
-        logger.info("Config.xml is processed successfully");
+        logger.info("Config.xml is processed: OK");
 
         logger.info("Reading conversion.xml: {}", conversionXml);
         this.conversionProvider = new ConversionProvider(conversionXml, format);
-        logger.info("Conversion.xml is processed successfully");
+        logger.info("Conversion.xml is processed: OK");
 
         this.workingDir = configProvider.getConfig().getWorkingDirectory();
         logger.info("Working directory: {}", this.workingDir);
@@ -77,7 +79,7 @@ public abstract class AbstractFormatBuilder {
         this.contextProvider =
                 new TemplateParameterContextProvider(configProvider.getConfig(), conversionProvider.getFormat(), workingDir);
 
-        logger.info("Initialized successfully\n");
+        logger.info("Initialized: OK\n");
     }
 
     protected void preConvert() {
@@ -90,11 +92,11 @@ public abstract class AbstractFormatBuilder {
         logger.info("Starting conversion...");
 
         String conversionConfig = getConversionConfiguration();
-        logger.info("Conversion config: {}", conversionConfig);
+        logger.info("Conversion config: {}\n", conversionConfig);
         new ConversionEngine().convert(
                 conversionProvider.getFormat(), conversionConfig, contextProvider);
 
-        logger.info("Successfully converted\n");
+        logger.info("Converted: OK\n");
     }
 
     protected abstract void fillDynamicContext();
@@ -106,7 +108,7 @@ public abstract class AbstractFormatBuilder {
     private void cleanWorkingDir() throws IOException {
         logger.info("Cleaning working directory...");
         FileUtils.cleanDirectory(new File(workingDir));
-        logger.info("Cleaned working directory successfully\n");
+        logger.info("Cleaned working directory: OK\n");
     }
 
     private void createLogsDir() {
@@ -118,12 +120,13 @@ public abstract class AbstractFormatBuilder {
             logger.warn("Couldn't create External tools logging directory!");
         }
 
-        logger.info("Created external tools logging directory successfully\n");
+        logger.info("Created external tools logging directory: OK\n");
     }
 
     private void deleteTmpFiles() {
         logger.info("Deleting tmp files created during conversion...");
 
+        boolean success = true;
         for (ParamType tmpParam : contextProvider.getTmpContext().getAllParameters()) {
             File tmpFile = new File(tmpParam.getValue());
             if (!tmpFile.isAbsolute() || !tmpFile.isFile()) {
@@ -133,11 +136,16 @@ public abstract class AbstractFormatBuilder {
                 tmpFile = null;
             }
             if (tmpFile != null) {
-                tmpFile.delete();
+                if (!tmpFile.delete()) {
+                    success = false;
+                    logger.warn("Couldn't delete tmp file {}", tmpFile.getAbsolutePath());
+                }
             }
         }
 
-        logger.info("Deleted tmp files created during conversion successfully\n");
+        if (success) {
+            logger.info("Deleted tmp files created during conversion: OK\n");
+        }
     }
 
 }

@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DppFormatBuilder extends AbstractFormatBuilder {
 
-    final Logger logger = LoggerFactory.getLogger(AbstractFormatBuilder.class);
+    private final Logger logger = LoggerFactory.getLogger(AbstractFormatBuilder.class);
 
     public DppFormatBuilder() {
         super(Format.DPP);
@@ -31,7 +31,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         dynamicContext.addParameter("outputMxf", "output.mxf");
         dynamicContext.addParameter("audioChannels", "2");
 
-        logger.info("Created Dynamic context successfully\n");
+        logger.info("Created Dynamic context: OK\n");
     }
 
     @Override
@@ -68,7 +68,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         segmentContext.addSegmentParameter(2, SegmentType.AUDIO, SegmentContextParameters.START_TIME, "35");
         segmentContext.addSegmentParameter(2, SegmentType.AUDIO, SegmentContextParameters.DURATION, "5");
 
-        logger.info("Created Dynamic context successfully\n");
+        logger.info("Created Segment context: OK\n");
     }
 
     @Override

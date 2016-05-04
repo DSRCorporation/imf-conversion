@@ -21,7 +21,8 @@ public class ConversionExecutorOnce extends AbstractConversionExecutor {
 
     public void execute(ExecOnceType operation) throws IOException, InterruptedException {
         List<String> resolvedParams = resolveParameters(operation.getValue());
-        startProcess(resolvedParams, operation.getName(), operation.getClass()).waitFor();
+        ExternalProcess process = startProcess(resolvedParams, operation.getName(), operation.getClass());
+        process.finishWaitFor();
     }
 
 
