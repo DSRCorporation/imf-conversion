@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
- * Created by Alexandr on 4/28/2016.
+ * Processes metadata.xml for the DPP format.
  */
 public class MetadataXml {
 

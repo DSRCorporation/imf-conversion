@@ -1,17 +1,20 @@
-package com.netflix.imfutility.format.dpp;
+package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.Format;
-import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.segment.SegmentContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.segment.SegmentTemplateParameterContext;
 import com.netflix.imfutility.xsd.conversion.SegmentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Created by Alexander on 4/22/2016.
+ * DPP format builder (see {@link AbstractFormatBuilder}). It's used for conversion to DPP format.
  */
 public class DppFormatBuilder extends AbstractFormatBuilder {
+
+    private final Logger logger = LoggerFactory.getLogger(AbstractFormatBuilder.class);
 
     public DppFormatBuilder() {
         super(Format.DPP);
@@ -19,18 +22,24 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
 
     @Override
     protected void fillDynamicContext() {
+        logger.info("Creating Dynamic context...");
+
         // FIXME
 
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         dynamicContext.addParameter("outputMxf", "output.mxf");
         dynamicContext.addParameter("audioChannels", "2");
+
+        logger.info("Created Dynamic context: OK\n");
     }
 
     @Override
     protected void fillSegmentContext() {
+        logger.info("Creating Segment context...");
+
         //FIXME
 
-        SegmentTemplateParameterContext segmentContext = (SegmentTemplateParameterContext) contextProvider.getContext(TemplateParameterContext.SEGMENT);
+        SegmentTemplateParameterContext segmentContext = contextProvider.getSegmentContext();
 
         String pathToMedia = "G:\\Netflix\\test\\encode\\Aladdin_trailer_ATT.ts";
 
@@ -57,10 +66,12 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         segmentContext.addSegmentParameter(2, SegmentType.AUDIO, SegmentContextParameters.ESSENCE, pathToMedia);
         segmentContext.addSegmentParameter(2, SegmentType.AUDIO, SegmentContextParameters.START_TIME, "35");
         segmentContext.addSegmentParameter(2, SegmentType.AUDIO, SegmentContextParameters.DURATION, "5");
+
+        logger.info("Created Segment context: OK\n");
     }
 
     @Override
     protected String getConversionConfiguration() {
-        return conversionProvider.getConvertConfiguration(Format.DPP).get(0);
+        return conversionProvider.getConvertConfiguration().get(0);
     }
 }

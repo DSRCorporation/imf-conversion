@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Alexander on 4/26/2016.
+ * A holder of all template parameter contexts: tool, tmp, dynamic, segment.
  */
 public class TemplateParameterContextProvider {
 
@@ -17,7 +17,7 @@ public class TemplateParameterContextProvider {
     private final ConfigType config;
     private final String workingDir;
 
-    private Map<TemplateParameterContext, ITemplateParameterContext> contexts = new HashMap<>();
+    private final Map<TemplateParameterContext, ITemplateParameterContext> contexts = new HashMap<>();
 
     public TemplateParameterContextProvider(ConfigType config, FormatType format, String workingDir) {
         this.config = config;

@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Map;
 
 /**
- * Created by Alexander on 4/25/2016.
+ * Maps generated {@link ExternalToolsType} to {@link ExternalToolsTypeMap}.
  */
 public class ExternalToolsTypeMapAdapter extends XmlAdapter<ExternalToolsType, ExternalToolsTypeMap<String, ToolType>> {
 

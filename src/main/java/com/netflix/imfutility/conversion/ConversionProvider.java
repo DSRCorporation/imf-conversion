@@ -1,7 +1,7 @@
 package com.netflix.imfutility.conversion;
 
-import com.netflix.imfutility.AbstractXmlProvider;
 import com.netflix.imfutility.Format;
+import com.netflix.imfutility.xml.AbstractXmlProvider;
 import com.netflix.imfutility.xsd.conversion.ConversionType;
 import com.netflix.imfutility.xsd.conversion.FormatType;
 import org.xml.sax.SAXException;
@@ -13,7 +13,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by Alexander on 4/26/2016.
+ * Conversion.xml parser.
+ * <ul>
+ * <li>Maps conversion.xml to a Java model</li>
+ * <li>Performs XSD validation and throws {@link RuntimeException} if conversion.xml is not a valid XML according to conversion.xsd</li>
+ * </ul>
  */
 public class ConversionProvider extends AbstractXmlProvider {
 
@@ -22,7 +26,7 @@ public class ConversionProvider extends AbstractXmlProvider {
 
     public ConversionProvider(String configXml, Format format) throws JAXBException, SAXException {
         super(configXml, "com.netflix.imfutility.xsd.conversion", "xsd/conversion.xsd");
-        ConversionType conversion = ((JAXBElement<ConversionType>) unmarshalResult).getValue();
+        @SuppressWarnings("unchecked") ConversionType conversion = ((JAXBElement<ConversionType>) unmarshalResult).getValue();
         this.formatType = conversion.getFormats().getMap().get(format.getName());
     }
 
@@ -30,9 +34,9 @@ public class ConversionProvider extends AbstractXmlProvider {
         return formatType;
     }
 
-    public List<String> getConvertConfiguration(Format format) {
+    public List<String> getConvertConfiguration() {
         if (formatType == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return new ArrayList<>(formatType.getFormatConfigurations().getMap().keySet());
     }

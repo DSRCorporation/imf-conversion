@@ -1,13 +1,12 @@
 package com.netflix.imfutility.dpp;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
 
 /**
- * Created by Alexandr on 4/28/2016.
+ * Unit tests for DPP metadata.xml processing.
  */
 public class MetadataXmlTest {
     @org.junit.Test
