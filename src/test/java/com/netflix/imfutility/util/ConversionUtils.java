@@ -1,7 +1,7 @@
 package com.netflix.imfutility.util;
 
 /**
- * Created by Alexander on 5/4/2016.
+ * Test utility for conversion.xml.
  */
 public final class ConversionUtils {
 
