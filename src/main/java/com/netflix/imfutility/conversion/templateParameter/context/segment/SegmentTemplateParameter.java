@@ -1,5 +1,6 @@
-package com.netflix.imfutility.conversion.templateParameter;
+package com.netflix.imfutility.conversion.templateParameter.context.segment;
 
+import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.xsd.conversion.SegmentType;
 
 /**

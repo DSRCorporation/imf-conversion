@@ -1,5 +1,8 @@
 package com.netflix.imfutility.conversion.templateParameter.context.segment;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * All supported segment template parameter names.
  */
@@ -28,6 +31,12 @@ public enum SegmentContextParameters {
             }
         }
         return null;
+    }
+
+    public static String getSupportedContextParameters() {
+        return Arrays.stream(SegmentContextParameters.values())
+                .map(SegmentContextParameters::getName)
+                .collect(Collectors.joining(" ", "[", "]"));
     }
 
 }

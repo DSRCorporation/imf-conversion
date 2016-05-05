@@ -1,5 +1,8 @@
 package com.netflix.imfutility.conversion.templateParameter;
 
+import com.netflix.imfutility.conversion.templateParameter.exception.InvalidTemplateParameterException;
+import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterContextException;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,22 +24,23 @@ public class TemplateParameter {
         Pattern p = Pattern.compile(TEMPLATE_PARAM);
         Matcher m = p.matcher(parameterString);
         if (!m.matches()) {
-            throw new RuntimeException(
-                    String.format("Incorrect Template Parameter '%s'. Template parameter must have the following form: '%%{context.name}'", parameterString));
+            throw new InvalidTemplateParameterException(
+                    parameterString, "Template parameter must have the following form: '%%{context.name}'");
         }
         String contextStr = m.group(1);
         this.name = m.group(2);
 
         if (contextStr == null || this.name == null) {
-            throw new RuntimeException(
-                    String.format("Incorrect Template Parameter '%s'. Template parameter must have the following form: '%%{context.name}'", parameterString));
+            throw new InvalidTemplateParameterException(
+                    parameterString, "Template parameter must have the following form: '%%{context.name}'");
         }
 
         this.context = TemplateParameterContext.fromName(contextStr);
         if (this.context == null) {
-            throw new RuntimeException(
-                    String.format("Unknown context '%s' in Template Parameter '%s'. Supported contexts: %s'",
-                            contextStr, parameterString, TemplateParameterContext.getSupportedContexts()));
+            throw new UnknownTemplateParameterContextException(
+                    parameterString,
+                    String.format("Unknown context '%s'. Supported contexts: %s'",
+                            contextStr, TemplateParameterContext.getSupportedContexts()));
 
         }
     }

@@ -66,6 +66,7 @@
                 <artifactId>jaxb2-maven-plugin</artifactId>
                 <version>2.2</version>
                 <executions>
+                    <!-- Generate config.xml classes -->
                     <execution>
                         <id>xjc-config</id>
                         <goals>
@@ -81,6 +82,8 @@
                             <packageName>com.netflix.imfutility.xsd.config</packageName>
                         </configuration>
                     </execution>
+
+                    <!-- Generate conversion.xml classes -->
                     <execution>
                         <id>xjc-conversion</id>
                         <goals>

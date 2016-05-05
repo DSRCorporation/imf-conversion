@@ -3,6 +3,8 @@ package com.netflix.imfutility.conversion.templateParameter;
 import com.netflix.imfutility.conversion.templateParameter.context.ITemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.segment.ISegmentTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.segment.SegmentTemplateParameter;
+import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterContextException;
 import com.netflix.imfutility.xsd.conversion.SegmentType;
 
 /**
@@ -24,10 +26,9 @@ public class TemplateParameterResolver {
         SegmentTemplateParameter templateParameter = new SegmentTemplateParameter(parameterStr, segment, segmentType);
         ITemplateParameterContext context = contextProvider.getContext(templateParameter.getContext());
         if (context == null) {
-            throw new RuntimeException(
-                    String.format(
-                            "Can not resolve template parameter context '%s' for parameter '%s'",
-                            templateParameter.getContext().getName(), parameterStr));
+            throw new UnknownTemplateParameterContextException(
+                    templateParameter.toString(),
+                    String.format("'%s' context not defined.", templateParameter.getContext().getName()));
         }
 
         if (context instanceof ISegmentTemplateParameterContext) {
@@ -40,10 +41,9 @@ public class TemplateParameterResolver {
         TemplateParameter templateParameter = new TemplateParameter(parameterStr);
         ITemplateParameterContext context = contextProvider.getContext(templateParameter.getContext());
         if (context == null) {
-            throw new RuntimeException(
-                    String.format(
-                            "Can not resolve template parameter context '%s' for parameter '%s'",
-                            templateParameter.getContext().getName(), parameterStr));
+            throw new UnknownTemplateParameterContextException(
+                    templateParameter.toString(),
+                    String.format("'%s' context not defined.", templateParameter.getContext().getName()));
         }
         return context.resolveTemplateParameter(templateParameter);
     }
