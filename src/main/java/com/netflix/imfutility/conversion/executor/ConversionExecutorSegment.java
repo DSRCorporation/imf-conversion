@@ -1,8 +1,8 @@
 package com.netflix.imfutility.conversion.executor;
 
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
-import com.netflix.imfutility.conversion.templateParameter.context.segment.SegmentTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SegmentTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.xsd.conversion.ExecEachSegmentType;
 
 import java.io.IOException;
@@ -16,8 +16,8 @@ import java.util.List;
  */
 public class ConversionExecutorSegment extends AbstractConversionExecutor {
 
-    public ConversionExecutorSegment(TemplateParameterResolver parameterResolver) {
-        super(parameterResolver);
+    public ConversionExecutorSegment(TemplateParameterContextProvider contextProvider) {
+        super(contextProvider);
     }
 
     public void execute(ExecEachSegmentType operation) throws IOException {
@@ -28,8 +28,8 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
         int segmentNum = segmContext.getSegmentsNum();
 
         for (int segment = 0; segment < segmentNum; segment++) {
-            List<String> resolvedParams = resolveSegmentParameters(operation.getValue(), segment, operation.getType());
-            ExternalProcess process = startProcess(resolvedParams, operation.getName(), operation.getClass());
+            List<String> execAndParams = parseOperation(operation.getValue(), segment, operation.getType());
+            ExternalProcess process = startProcess(execAndParams, operation.getName(), operation.getClass());
             process.finishWaitFor();
         }
     }

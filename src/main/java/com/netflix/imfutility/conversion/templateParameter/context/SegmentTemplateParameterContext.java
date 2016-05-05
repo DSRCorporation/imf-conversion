@@ -1,4 +1,4 @@
-package com.netflix.imfutility.conversion.templateParameter.context.segment;
+package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
@@ -17,9 +17,13 @@ import java.util.Map;
  * <li>Created dynamically in the code when analyzing CPL.</li>
  * </ul>
  */
-public class SegmentTemplateParameterContext implements ISegmentTemplateParameterContext {
+public class SegmentTemplateParameterContext implements ITemplateParameterContext {
 
     private final Map<Integer, SegmentData> segments = new HashMap<>();
+
+    public int getSegmentsNum() {
+        return segments.size();
+    }
 
     public void addSegmentParameter(int segment, SegmentType segmentType, SegmentContextParameters paramName, String paramValue) {
         SegmentData segmentData = segments.get(segment);
@@ -31,18 +35,18 @@ public class SegmentTemplateParameterContext implements ISegmentTemplateParamete
     }
 
     @Override
-    public int getSegmentsNum() {
-        return segments.size();
-    }
-
-    @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter) {
-        throw new RuntimeException("Segment context can be used with <execEachSegment> only.");
-    }
+        if (templateParameter.getSegment() < 0) {
+            throw new TemplateParameterNotFoundException(
+                    templateParameter.toString(),
+                    String.format("Incorrect segment number '%d'. Segment number must be specified for a segment template parameter.",
+                            templateParameter.getSegment()));
+        }
+        if (templateParameter.getSegmentType() == null) {
+            throw new TemplateParameterNotFoundException(
+                    templateParameter.toString(), "Segment type must be specified for a segment template parameter.");
+        }
 
-
-    @Override
-    public String resolveSegmentTemplateParameter(SegmentTemplateParameter templateParameter) {
         SegmentData segmentData = segments.get(templateParameter.getSegment());
         if (segmentData == null) {
             throw new TemplateParameterNotFoundException(

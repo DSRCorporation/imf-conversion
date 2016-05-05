@@ -36,10 +36,10 @@ public class ConfigProviderTest {
         assertEquals("root\\tool1", configProvider.getConfig().getExternalTools().getMap().get("tool1").getValue());
 
         assertNotNull(configProvider.getConfig().getExternalTools().getMap().get("tool2"));
-        assertEquals("root\\tool2", configProvider.getConfig().getExternalTools().getMap().get("tool2").getValue());
+        assertEquals("root\\tool 2", configProvider.getConfig().getExternalTools().getMap().get("tool2").getValue());
 
         assertNotNull(configProvider.getConfig().getExternalTools().getMap().get("tool3"));
-        assertEquals("root\\tool3", configProvider.getConfig().getExternalTools().getMap().get("tool3").getValue());
+        assertEquals("root\\tool 3", configProvider.getConfig().getExternalTools().getMap().get("tool3").getValue());
 
     }
 

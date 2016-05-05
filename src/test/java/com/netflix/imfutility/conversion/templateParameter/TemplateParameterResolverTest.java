@@ -4,9 +4,9 @@ import com.netflix.imfutility.ConfigProvider;
 import com.netflix.imfutility.Format;
 import com.netflix.imfutility.conversion.ConversionProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SegmentContextParameters;
+import com.netflix.imfutility.conversion.templateParameter.context.SegmentTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.conversion.templateParameter.context.segment.SegmentContextParameters;
-import com.netflix.imfutility.conversion.templateParameter.context.segment.SegmentTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.exception.InvalidTemplateParameterException;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterContextException;
@@ -69,10 +69,32 @@ public class TemplateParameterResolverTest {
     }
 
     @Test
+    public void trimsCorrectToolsContext() {
+        String tool2 = resolver.resolveTemplateParameter("%{tool.tool2}");
+        String tool3 = resolver.resolveTemplateParameter("%{tool.tool3}");
+
+        assertNotNull(tool2);
+        assertEquals("root\\tool 2", tool2);
+        assertNotNull(tool3);
+        assertEquals("root\\tool   3", tool3);
+    }
+
+    @Test
     public void resolvesCorrectTmpContext() {
         String resolved = resolver.resolveTemplateParameter("%{tmp.tmpParam1}");
         assertNotNull(resolved);
         assertEquals("tmpParam1Value", resolved);
+    }
+
+    @Test
+    public void trimsCorrectTmpContext() {
+        String tmp2 = resolver.resolveTemplateParameter("%{tmp.tmpParam2}");
+        String tmp3 = resolver.resolveTemplateParameter("%{tmp.tmpParam3}");
+
+        assertNotNull(tmp2);
+        assertEquals("tmpParam2 Value", tmp2);
+        assertNotNull(tmp3);
+        assertEquals("tmpParam3   Value", tmp3);
     }
 
     @Test
@@ -88,19 +110,19 @@ public class TemplateParameterResolverTest {
 
     @Test
     public void resolvesCorrectSegmentContext() {
-        String resolvedVideoEssence0 = resolver.resolveSegmentTemplateParameter("%{segment.essence}", 0, SegmentType.VIDEO);
-        String resolvedVideoDuration0 = resolver.resolveSegmentTemplateParameter("%{segment.duration}", 0, SegmentType.VIDEO);
-        String resolvedVideoStartTime0 = resolver.resolveSegmentTemplateParameter("%{segment.startTime}", 0, SegmentType.VIDEO);
-        String resolvedAudioEssence0 = resolver.resolveSegmentTemplateParameter("%{segment.essence}", 0, SegmentType.AUDIO);
-        String resolvedAudioDuration0 = resolver.resolveSegmentTemplateParameter("%{segment.duration}", 0, SegmentType.AUDIO);
-        String resolvedAudioStartTime0 = resolver.resolveSegmentTemplateParameter("%{segment.startTime}", 0, SegmentType.AUDIO);
+        String resolvedVideoEssence0 = resolver.resolveTemplateParameter("%{segment.essence}", 0, SegmentType.VIDEO);
+        String resolvedVideoDuration0 = resolver.resolveTemplateParameter("%{segment.duration}", 0, SegmentType.VIDEO);
+        String resolvedVideoStartTime0 = resolver.resolveTemplateParameter("%{segment.startTime}", 0, SegmentType.VIDEO);
+        String resolvedAudioEssence0 = resolver.resolveTemplateParameter("%{segment.essence}", 0, SegmentType.AUDIO);
+        String resolvedAudioDuration0 = resolver.resolveTemplateParameter("%{segment.duration}", 0, SegmentType.AUDIO);
+        String resolvedAudioStartTime0 = resolver.resolveTemplateParameter("%{segment.startTime}", 0, SegmentType.AUDIO);
 
-        String resolvedVideoEssence1 = resolver.resolveSegmentTemplateParameter("%{segment.essence}", 1, SegmentType.VIDEO);
-        String resolvedVideoDuration1 = resolver.resolveSegmentTemplateParameter("%{segment.duration}", 1, SegmentType.VIDEO);
-        String resolvedVideoStartTime1 = resolver.resolveSegmentTemplateParameter("%{segment.startTime}", 1, SegmentType.VIDEO);
-        String resolvedAudioEssence1 = resolver.resolveSegmentTemplateParameter("%{segment.essence}", 1, SegmentType.AUDIO);
-        String resolvedAudioDuration1 = resolver.resolveSegmentTemplateParameter("%{segment.duration}", 1, SegmentType.AUDIO);
-        String resolvedAudioStartTime1 = resolver.resolveSegmentTemplateParameter("%{segment.startTime}", 1, SegmentType.AUDIO);
+        String resolvedVideoEssence1 = resolver.resolveTemplateParameter("%{segment.essence}", 1, SegmentType.VIDEO);
+        String resolvedVideoDuration1 = resolver.resolveTemplateParameter("%{segment.duration}", 1, SegmentType.VIDEO);
+        String resolvedVideoStartTime1 = resolver.resolveTemplateParameter("%{segment.startTime}", 1, SegmentType.VIDEO);
+        String resolvedAudioEssence1 = resolver.resolveTemplateParameter("%{segment.essence}", 1, SegmentType.AUDIO);
+        String resolvedAudioDuration1 = resolver.resolveTemplateParameter("%{segment.duration}", 1, SegmentType.AUDIO);
+        String resolvedAudioStartTime1 = resolver.resolveTemplateParameter("%{segment.startTime}", 1, SegmentType.AUDIO);
 
         assertNotNull(resolvedVideoEssence0);
         assertEquals("video_essence_0", resolvedVideoEssence0);
@@ -131,6 +153,20 @@ public class TemplateParameterResolverTest {
         assertEquals("audio_startTime_1", resolvedAudioStartTime1);
     }
 
+    @Test
+    public void resolvesCorrectAllContextsWhenSegmentSpecified() {
+        String tool = resolver.resolveTemplateParameter("%{tool.tool1}", 0, SegmentType.VIDEO);
+        String tmp = resolver.resolveTemplateParameter("%{tmp.tmpParam1}", 0, SegmentType.AUDIO);
+        String dynamic = resolver.resolveTemplateParameter("%{dynamic.dynamic1}", 0, SegmentType.VIDEO);
+
+        assertNotNull(tool);
+        assertEquals("root\\tool1", tool);
+        assertNotNull(tmp);
+        assertEquals("tmpParam1Value", tmp);
+        assertNotNull(dynamic);
+        assertEquals("dynamicValue1", dynamic);
+    }
+
     @Test(expected = InvalidTemplateParameterException.class)
     public void exceptionOnIncorrectParameterFormat() {
         resolver.resolveTemplateParameter("%{tool.tool1");
@@ -147,8 +183,29 @@ public class TemplateParameterResolverTest {
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)
+    public void exceptionOnEmptyToolParameter() {
+        resolver.resolveTemplateParameter("%{tool.tool4}");
+    }
+
+    @Test(expected = TemplateParameterNotFoundException.class)
+    public void exceptionOnEmptyWithNewlinesToolParameter() {
+        resolver.resolveTemplateParameter("%{tool.tool5}");
+    }
+
+
+    @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnIncorrectTmpParameterName() {
         resolver.resolveTemplateParameter("%{tmp.xxxx}");
+    }
+
+    @Test(expected = TemplateParameterNotFoundException.class)
+    public void exceptionOnEmptyTmpParameter() {
+        resolver.resolveTemplateParameter("%{tmp.tmpParam4}");
+    }
+
+    @Test(expected = TemplateParameterNotFoundException.class)
+    public void exceptionOnEmptyWithNewlinesTmpParameter() {
+        resolver.resolveTemplateParameter("%{tmp.tmpParam5}");
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)
@@ -158,19 +215,19 @@ public class TemplateParameterResolverTest {
 
     @Test(expected = UnknownTemplateParameterNameException.class)
     public void exceptionOnIncorrectSegmentParameterName() {
-        resolver.resolveSegmentTemplateParameter("%{segment.xxxx}", 0, SegmentType.VIDEO);
+        resolver.resolveTemplateParameter("%{segment.xxxx}", 0, SegmentType.VIDEO);
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnIncorrectSegmentParameterSegment() {
         // we have only 2 segments (0 and 1)
-        resolver.resolveSegmentTemplateParameter("%{segment.essence}", 5, SegmentType.VIDEO);
+        resolver.resolveTemplateParameter("%{segment.essence}", 5, SegmentType.VIDEO);
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnIncorrectSegmentParameterType() {
         // we didn't fill subtitle segments
-        resolver.resolveSegmentTemplateParameter("%{segment.essence}", 0, SegmentType.SUBTITLE);
+        resolver.resolveTemplateParameter("%{segment.essence}", 0, SegmentType.SUBTITLE);
     }
 
 

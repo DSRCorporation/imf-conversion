@@ -3,7 +3,9 @@ package com.netflix.imfutility.conversion.executor;
 import com.netflix.imfutility.Constants;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
+import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.xsd.conversion.SegmentType;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Base Conversion Operation Executor.
@@ -27,52 +31,74 @@ public abstract class AbstractConversionExecutor {
 
     private static int count = 1;
 
-    public AbstractConversionExecutor(TemplateParameterResolver parameterResolver) {
-        this.parameterResolver = parameterResolver;
+    public AbstractConversionExecutor(TemplateParameterContextProvider contextProvider) {
+        this.parameterResolver = new TemplateParameterResolver(contextProvider);
     }
 
-    protected List<String> resolveParameters(String conversionOperation) {
+    protected List<String> parseOperation(String conversionOperation) {
+        return parseOperation(conversionOperation, TemplateParameter.DEFAULT_SEGMENT, TemplateParameter.DEFAULT_SEGMENT_TYPE);
+    }
+
+    protected List<String> parseOperation(String conversionOperation, int segment, SegmentType segmentType) {
+        // split parameters
         String[] params = splitParameters(conversionOperation);
+
         List<String> execAndParams = new ArrayList<>();
         for (String param : params) {
-            if (TemplateParameter.isTemplateParameter(param)) {
-                param = parameterResolver.resolveTemplateParameter(param);
+            String resolvedParam = param;
+            // resolve each template parameter the param contains
+            Matcher m = Pattern.compile(TemplateParameter.TEMPLATE_PARAM).matcher(param);
+            while (m.find()) {
+                int start = m.start();
+                int end = m.end();
+                String templateParam = m.group();
+                String resolvedTemplateParam = parameterResolver.resolveTemplateParameter(templateParam, segment, segmentType);
+                resolvedParam = resolvedParam.replace(templateParam, resolvedTemplateParam);
             }
-            param = String.format("\"%s\"", param);
-            execAndParams.add(param);
+            // add quotes if needed
+            resolvedParam = addQuotes(resolvedParam);
+            execAndParams.add(resolvedParam);
         }
+
         return execAndParams;
     }
 
-    protected List<String> resolveSegmentParameters(String conversionOperation, int segment, SegmentType segmentType) {
-        String[] params = splitParameters(conversionOperation);
-        List<String> execAndParams = new ArrayList<>();
-        for (String param : params) {
-            if (TemplateParameter.isTemplateParameter(param)) {
-                param = parameterResolver.resolveSegmentTemplateParameter(param, segment, segmentType);
-            }
-            param = String.format("\"%s\"", param);
-            execAndParams.add(param);
+    private String addQuotes(String param) {
+        if (!param.contains(" ")) {
+            return param;
         }
-        return execAndParams;
+        if (!param.contains("=")) {
+            return addQuotesIfNeeded(param);
+        }
+        String subParam = StringUtils.substringAfter(param, "=");
+        String quotedSubParam = addQuotesIfNeeded(subParam);
+        return StringUtils.substringBefore(param, "=") + "=" + quotedSubParam;
     }
 
-    protected ExternalProcess startProcess(List<String> resolvedParams, String operationName, Class<?> operationClass) throws IOException {
-        if (resolvedParams.isEmpty()) {
+    private String addQuotesIfNeeded(String param) {
+        String trimmedParam = param.trim();
+        if (!(trimmedParam.startsWith("\"") && trimmedParam.endsWith("\""))) {
+            trimmedParam = String.format("\"%s\"", trimmedParam);
+        }
+        return trimmedParam;
+    }
+
+    protected ExternalProcess startProcess(List<String> execAndParams, String operationName, Class<?> operationClass) throws IOException {
+        if (execAndParams.isEmpty()) {
             throw new RuntimeException(String.format("No parameters for process '%s'", operationName));
         }
 
         int processNum = count++;
         String operationType = operationClass.getSimpleName();
-        String programPath = resolvedParams.get(0);
+        String programPath = execAndParams.get(0);
         String programName = new File(programPath.replaceAll("\"", "")).getName();
         ExternalProcess.ExternalProcessInfo processInfo = new ExternalProcess.ExternalProcessInfo(
-                processNum, operationName, operationType, programName, resolvedParams);
+                processNum, operationName, operationType, programName, execAndParams);
 
         logger.info("Starting {}", processInfo.toString());
         logger.info("\t{}", processInfo.getProcessString());
 
-        ProcessBuilder pb = new ProcessBuilder(resolvedParams);
+        ProcessBuilder pb = new ProcessBuilder(execAndParams);
         pb.directory(new File(parameterResolver.getContextProvider().getWorkingDir()));
 
         File logFile = createLogFile(processInfo);
@@ -107,8 +133,7 @@ public abstract class AbstractConversionExecutor {
     }
 
     private String[] splitParameters(String conversionOperation) {
-        conversionOperation = conversionOperation.replaceFirst("\\s+|\\n+|\\r+", "");
-        return conversionOperation.split("\\s+");
+        return conversionOperation.trim().split("\\s+");
     }
 
 }

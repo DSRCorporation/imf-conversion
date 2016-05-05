@@ -1,6 +1,7 @@
 package com.netflix.imfutility.conversion.executor;
 
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
+import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.xsd.conversion.ExecOnceType;
 
 import java.io.IOException;
@@ -14,13 +15,13 @@ import java.util.List;
  */
 public class ConversionExecutorOnce extends AbstractConversionExecutor {
 
-    public ConversionExecutorOnce(TemplateParameterResolver parameterResolver) {
-        super(parameterResolver);
+    public ConversionExecutorOnce(TemplateParameterContextProvider contextProvider) {
+        super(contextProvider);
     }
 
     public void execute(ExecOnceType operation) throws IOException {
-        List<String> resolvedParams = resolveParameters(operation.getValue());
-        ExternalProcess process = startProcess(resolvedParams, operation.getName(), operation.getClass());
+        List<String> execAndParams = parseOperation(operation.getValue());
+        ExternalProcess process = startProcess(execAndParams, operation.getName(), operation.getClass());
         process.finishWaitFor();
     }
 

@@ -3,7 +3,6 @@ package com.netflix.imfutility.conversion;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorOnce;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorPipe;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorSegment;
-import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.xsd.conversion.*;
 
@@ -29,15 +28,12 @@ public class ConversionEngine {
             throw new RuntimeException(String.format("No configuration '%s' found for format '%s'.", configuration, formatType.getName()));
         }
 
-        // 3. init template parameter resolver
-        TemplateParameterResolver parameterResolver = new TemplateParameterResolver(contextProvider);
+        // 2. init executors
+        pipeExecutor = new ConversionExecutorPipe(contextProvider);
+        onceExecutor = new ConversionExecutorOnce(contextProvider);
+        segmentExecutor = new ConversionExecutorSegment(contextProvider);
 
-        // 4. init executors
-        pipeExecutor = new ConversionExecutorPipe(parameterResolver);
-        onceExecutor = new ConversionExecutorOnce(parameterResolver);
-        segmentExecutor = new ConversionExecutorSegment(parameterResolver);
-
-        // 5. run configuration
+        // 3. run configuration
         run(formatConfigurationType);
     }
 

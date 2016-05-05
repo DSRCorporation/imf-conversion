@@ -1,4 +1,4 @@
-package com.netflix.imfutility.conversion.templateParameter.context.segment;
+package com.netflix.imfutility.conversion.templateParameter.context;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

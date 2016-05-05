@@ -40,6 +40,12 @@
             <version>2.4</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -66,7 +72,7 @@
                 <artifactId>jaxb2-maven-plugin</artifactId>
                 <version>2.2</version>
                 <executions>
-                    <!-- Generate config.xml classes -->
+                    <!-- Generate conversion.xml classes -->
                     <execution>
                         <id>xjc-config</id>
                         <goals>
