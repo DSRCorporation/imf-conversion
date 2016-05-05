@@ -5,16 +5,42 @@ import com.netflix.imfutility.dpp.metadata.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.util.JAXBSource;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import java.io.File;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Created by Alexandr on 4/28/2016.
  */
 public class MetadataXml {
+
+    public enum DMFramework {
+        UKDPP("UKDPP"),
+        AS11CORE("AS11Core"),
+        AS11Segmentation("AS11Segmentation");
+
+        private final String value;
+
+        DMFramework(String v) {
+            value = v;
+        }
+
+        private String value() {
+            return value;
+        }
+    }
+
 
     public static void GenerateEmptyXml(String path) {
         File file = new File(path);
@@ -49,9 +75,9 @@ public class MetadataXml {
             video.setThreeD(false);
             video.setThreeDType(ThreeDTypeType.SIDE_BY_SIDE);
             video.setProductPlacement(false);
-            video.setPsePass(PsePassType.NOT_TESTED);
-            video.setPseManufacturer("");
-            video.setPseVersion("");
+            video.setPSEPass(PSEPassType.NOT_TESTED);
+            video.setPSEManufacturer("");
+            video.setPSEVersion("");
             video.setVideoComments("");
 
             //Audio
@@ -60,7 +86,7 @@ public class MetadataXml {
             audio.setPrimaryAudioLanguage(Iso6392CodeType.ZXX);
             audio.setSecondaryAudioLanguage(Iso6392CodeType.ZXX);
             audio.setTertiaryAudioLanguage(Iso6392CodeType.ZXX);
-            audio.setCompliantAudioStandard(CompliantAudioStandardType.NONE);
+            audio.setAudioLoudnessStandard(AudioLoudnessStandardType.NONE);
             audio.setAudioComments("");
 
             //Timecodes
@@ -82,9 +108,9 @@ public class MetadataXml {
             SegmentType segment = new SegmentType();
             segment.setPartNumber(1);
             segment.setPartTotal(1);
-            segment.setSOM(zeroTimecode);
-            segment.setDuration(zeroDuration);
-            segmentation.getParts().add(segment);
+            segment.setPartSOM(zeroTimecode);
+            segment.setPartDuration(zeroDuration);
+            segmentation.getPart().add(segment);
             timecodes.setParts(segmentation);
 
             //AccessService
@@ -98,7 +124,7 @@ public class MetadataXml {
             accessServicesType.setOpenCaptionsType(CaptionsTypeType.HARD_OF_HEARING);
             accessServicesType.setOpenCaptionsLanguage(Iso6392CodeType.ZXX);
             accessServicesType.setSigningPresent(SigningPresentType.NO);
-            accessServicesType.setSignLanguage(SignLanguageType.BRITISH_SIGN_LANGUAGE);
+            accessServicesType.setSignLanguage(SignLanguageType.BSL_BRITISH_SIGN_LANGUAGE);
 
             //Additional Section
             AdditionalType additional = new AdditionalType();
@@ -130,6 +156,70 @@ public class MetadataXml {
             throw new RuntimeException(e);
         }
     }
+
+    public static Map<DMFramework, File> getBmxDppParameters(File metadataXmlFile) {
+
+        // Source
+        JAXBContext jc = null;
+        JAXBSource source = null;
+        try {
+            jc = JAXBContext.newInstance(Dpp.class);
+            Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
+            Dpp dpp = (Dpp) jaxbUnmarshaller.unmarshal(metadataXmlFile);
+            source = new JAXBSource(jc, dpp);
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
+
+        Map<DMFramework, File> frameworkParameters = new HashMap<DMFramework, File>();
+
+        frameworkParameters.put(DMFramework.UKDPP, getBmxFrameworkParameters(source, DMFramework.UKDPP));
+        frameworkParameters.put(DMFramework.AS11CORE, getBmxFrameworkParameters(source, DMFramework.AS11CORE));
+        frameworkParameters.put(DMFramework.AS11Segmentation, getBmxFrameworkParameters(source, DMFramework.AS11Segmentation));
+
+        return frameworkParameters;
+    }
+
+    private static File getBmxFrameworkParameters(JAXBSource source, DMFramework framework) {
+        try {
+            //Get file from resources folder
+            ClassLoader classLoader = MetadataXml.class.getClassLoader();
+
+            // Create Transformer
+            TransformerFactory tf = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl", null);
+            StreamSource xslt = new StreamSource(classLoader.getResource("xsd/dpp/bmx-parameters.xsl").getFile());
+            Transformer transformer = tf.newTransformer(xslt);
+
+            //Set framework
+            transformer.setParameter("framework", framework.value());
+
+            //Prepare empty temporary file
+            File temp = File.createTempFile(UUID.randomUUID().toString(), ".txt");
+            if (!temp.delete()) {
+                throw new RuntimeException(String.format("Could not delete temporary file: %s", temp.getAbsolutePath()));
+            }
+            temp.deleteOnExit();
+
+            // Result
+            FileWriter writer = new FileWriter(temp);
+            StreamResult result = new StreamResult(writer);
+
+            // Transform
+            transformer.transform(source, result);
+
+            writer.flush();
+            writer.close();
+
+            return temp;
+        } catch (TransformerConfigurationException e) {
+            throw new RuntimeException(e);
+        } catch (TransformerException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }
 
