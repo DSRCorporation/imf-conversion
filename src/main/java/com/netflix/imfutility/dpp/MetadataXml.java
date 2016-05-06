@@ -93,11 +93,8 @@ public class MetadataXml {
             TimecodesType timecodes = new TimecodesType();
             TimecodeType zeroTimecode = new TimecodeType();
             zeroTimecode.setValue("00:00:00:00");
-            zeroTimecode.setRate("25 1");
             DurationType zeroDuration = new DurationType();
-            zeroDuration.setRate("25 1");
             zeroDuration.setValue("00:00:00:00");
-            zeroDuration.setCount(1);
             timecodes.setLineUpStart(zeroTimecode);
             timecodes.setIdentClockStart(zeroTimecode);
             timecodes.setTotalNumberOfParts(1);
