@@ -1,29 +1,37 @@
 package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.dpp.metadata.*;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.XMLConstants;
+import javax.xml.bind.*;
 import javax.xml.bind.util.JAXBSource;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.*;
 import java.util.*;
 
 /**
  * Created by Alexandr on 4/28/2016.
  */
 public class MetadataXml {
+
+    private static final String METADATA_XML_SCHEME = "xsd/dpp/metadata.xsd";
+    private static final String BMX_PARAMETERS_TRANSFORMATION = "xsd/dpp/bmx-parameters.xsl";
+    private static final String XSLT2_TRANSFORMER_IMPLEMENTATION = "net.sf.saxon.TransformerFactoryImpl";
 
     public enum DMFramework {
         UKDPP("UKDPP"),
@@ -40,7 +48,6 @@ public class MetadataXml {
             return value;
         }
     }
-
 
     public static void GenerateEmptyXml(String path) {
         File file = new File(path);
@@ -160,12 +167,40 @@ public class MetadataXml {
         JAXBContext jc = null;
         JAXBSource source = null;
         try {
+            SAXParserFactory spf = SAXParserFactory.newInstance();
+            spf.setNamespaceAware(true);
+
+            //Get file from resources folder
+            ClassLoader classLoader = MetadataXml.class.getClassLoader();
+            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = sf.newSchema(new File(classLoader.getResource(METADATA_XML_SCHEME).getFile()));
+            spf.setSchema(schema);
+
             jc = JAXBContext.newInstance(Dpp.class);
             Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
-            Dpp dpp = (Dpp) jaxbUnmarshaller.unmarshal(metadataXmlFile);
+            UnmarshallerHandler unmarshallerHandler = jaxbUnmarshaller.getUnmarshallerHandler();
+
+            SAXParser sp = spf.newSAXParser();
+            XMLReader xr = sp.getXMLReader();
+            MetadataXmlParsingHandler contentErrorHandler = new MetadataXmlParsingHandler(unmarshallerHandler);
+            xr.setErrorHandler(contentErrorHandler);
+            xr.setContentHandler(contentErrorHandler);
+
+            InputSource xml = new InputSource(new FileReader(metadataXmlFile));
+            xr.parse(xml);
+
+            Dpp dpp = (Dpp) unmarshallerHandler.getResult();
             source = new JAXBSource(jc, dpp);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
+        } catch (SAXException e) {
+            throw new RuntimeException(e);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         Map<DMFramework, File> frameworkParameters = new HashMap<DMFramework, File>();
@@ -177,14 +212,18 @@ public class MetadataXml {
         return frameworkParameters;
     }
 
+    public static void validateMetadataXml(File metadataXmlFile) {
+
+    }
+
     private static File getBmxFrameworkParameters(JAXBSource source, DMFramework framework) {
         try {
             //Get file from resources folder
             ClassLoader classLoader = MetadataXml.class.getClassLoader();
 
             // Create Transformer
-            TransformerFactory tf = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl", null);
-            StreamSource xslt = new StreamSource(classLoader.getResource("xsd/dpp/bmx-parameters.xsl").getFile());
+            TransformerFactory tf = TransformerFactory.newInstance(XSLT2_TRANSFORMER_IMPLEMENTATION, null);
+            StreamSource xslt = new StreamSource(classLoader.getResource(BMX_PARAMETERS_TRANSFORMATION).getFile());
             Transformer transformer = tf.newTransformer(xslt);
 
             //Set framework
