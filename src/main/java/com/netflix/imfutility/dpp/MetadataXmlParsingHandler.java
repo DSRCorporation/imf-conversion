@@ -1,6 +1,5 @@
 package com.netflix.imfutility.dpp;
 
-import com.netflix.imfutility.conversion.executor.ConversionExecutorOnce;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -10,21 +9,41 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import java.util.Stack;
 import java.util.Vector;
 
 /**
  * Created by Alexandr on 5/6/2016.
+ * A helper to get human readable errors of metadata.xml loading and parsing.
  */
 public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
 
     final Logger logger = LoggerFactory.getLogger(MetadataXmlParsingHandler.class);
 
+    /**
+     * Unmarshaller content handler that actually parses the metadata.xml.
+     */
     private ContentHandler contentHandler;
+    /**
+     * A node name that is being processed now.
+     */
     private String qname;
     private String namespaceURI;
 
+    /**
+     * A stack of current parsed nodes.
+     */
+    private Stack<String> qnames = new Stack<String>();
+    /**
+     * A collection of all found errors.
+     */
     private Vector<String> errorMessages = new Vector<String>();
 
+    /**
+     * Constructor.
+     *
+     * @param contentHandler Unmarshaller content handler that actually parses the metadata.xml.
+     */
     public MetadataXmlParsingHandler(ContentHandler contentHandler) {
         this.contentHandler = contentHandler;
     }
@@ -39,7 +58,8 @@ public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
 
     public void endElement(String uri, String localName, String qName)
                 throws SAXException {
-        qname = qName;
+        qnames.pop();
+        qname = qnames.size() > 0 ? qnames.lastElement() : "root";
         namespaceURI = uri;
         contentHandler.endElement(uri, localName, qName);
     }
@@ -71,6 +91,7 @@ public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
     }
 
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+        qnames.push(qName);
         qname = qName;
         namespaceURI = uri;
         contentHandler.startElement(uri, localName, qName, atts);
@@ -93,10 +114,20 @@ public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
         registerError(exception);
     }
 
+    /**
+     * Returns all found errors.
+     *
+     * @return a collection with all found errors.
+     */
     public Vector<String> getParsingErrors() {
         return errorMessages;
     }
 
+    /**
+     * Registers error.
+     *
+     * @param exception current SAXParseException with error description.
+     */
     private void registerError(SAXParseException exception) {
         StringBuilder errorMessage = new StringBuilder();;
         errorMessage.append("Line ").append(exception.getLineNumber()).append(", ");

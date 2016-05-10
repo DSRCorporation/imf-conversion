@@ -18,14 +18,6 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="ArrayType">
-        <xs:attribute name="size" type="xs:nonNegativeInteger" use="required"/>
-    </xs:complexType>
-
-    <xs:complexType name="ArrayElementType">
-        <xs:attribute name="index" type="xs:nonNegativeInteger" use="required"/>
-    </xs:complexType>
-
     <xs:simpleType name="VersionType">
         <xs:restriction base="xs:string">
             <xs:pattern value="\d{1,3}\.\d{1,3}"/>
@@ -75,17 +67,6 @@
         <xs:restriction base="xs:integer">
             <xs:minInclusive value="0"/>
             <xs:maxInclusive value="255"/>
-        </xs:restriction>
-    </xs:simpleType>
-
-    <xs:simpleType name="DurationCountType">
-        <xs:restriction base="xs:integer">
-            <xs:minInclusive value="-1"/>
-            <xs:maxInclusive value="9223372036854775807">
-                <xs:annotation>
-                    <xs:documentation>-1 to maximum signed 64-bit integer</xs:documentation>
-                </xs:annotation>
-            </xs:maxInclusive>
         </xs:restriction>
     </xs:simpleType>
 

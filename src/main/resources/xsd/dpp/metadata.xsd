@@ -91,26 +91,18 @@
     </xs:complexType>
 
     <xs:complexType name="SegmentationType">
-        <xs:complexContent>
-            <xs:extension base="ArrayType">
-                <xs:sequence>
-                    <xs:element name="Part" type="SegmentType" maxOccurs="unbounded"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
+        <xs:sequence>
+            <xs:element name="Part" type="SegmentType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="SegmentType">
-        <xs:complexContent>
-            <xs:extension base="ArrayElementType">
-                <xs:sequence>
-                    <xs:element name="PartNumber" type="Uint16Type"/>
-                    <xs:element name="PartTotal" type="Uint16Type"/>
-                    <xs:element name="PartSOM" type="TimecodeType"/>
-                    <xs:element name="PartDuration" type="DurationType"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
+        <xs:sequence>
+            <xs:element name="PartNumber" type="Uint16Type"/>
+            <xs:element name="PartTotal" type="Uint16Type"/>
+            <xs:element name="PartSOM" type="TimecodeType"/>
+            <xs:element name="PartDuration" type="DurationType"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="AccessServicesType">

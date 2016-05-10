@@ -26,6 +26,7 @@ import java.util.*;
 
 /**
  * Created by Alexandr on 4/28/2016.
+ * Provides functionality to generate empty metadata.xml for DPP format and transform it into BMXLib parameters.
  */
 public class MetadataXml {
 
@@ -33,6 +34,9 @@ public class MetadataXml {
     private static final String BMX_PARAMETERS_TRANSFORMATION = "xsd/dpp/bmx-parameters.xsl";
     private static final String XSLT2_TRANSFORMER_IMPLEMENTATION = "net.sf.saxon.TransformerFactoryImpl";
 
+    /**
+     * MXF frameworks enumeration
+     */
     public enum DMFramework {
         UKDPP("UKDPP"),
         AS11CORE("AS11Core"),
@@ -49,6 +53,11 @@ public class MetadataXml {
         }
     }
 
+    /**
+     * Generates empty metadata.xml file.
+     *
+     * @param path a path to the output metadata.xml file
+     */
     public static void GenerateEmptyXml(String path) {
         File file = new File(path);
         JAXBContext jaxbContext;
@@ -78,7 +87,7 @@ public class MetadataXml {
 
             //Video
             VideoType video = new VideoType();
-            video.setPictureRatio("");
+            video.setPictureRatio("16:9");
             video.setThreeD(false);
             video.setThreeDType(ThreeDTypeType.SIDE_BY_SIDE);
             video.setProductPlacement(false);
@@ -161,47 +170,16 @@ public class MetadataXml {
         }
     }
 
-    public static Map<DMFramework, File> getBmxDppParameters(File metadataXmlFile) {
+    /**
+     * Transform metadata.xml into a set of parameter files for BMXLib tool.
+     *
+     * @param metadataXmlFile the metadata.xml file
+     * @return a map with the parameter files for BMXLib
+     * @throws MetadataException an exception in case of metadata.xml parsing error
+     */
+    public static Map<DMFramework, File> getBmxDppParameters(File metadataXmlFile) throws MetadataException {
 
-        // Source
-        JAXBContext jc = null;
-        JAXBSource source = null;
-        try {
-            SAXParserFactory spf = SAXParserFactory.newInstance();
-            spf.setNamespaceAware(true);
-
-            //Get file from resources folder
-            ClassLoader classLoader = MetadataXml.class.getClassLoader();
-            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = sf.newSchema(new File(classLoader.getResource(METADATA_XML_SCHEME).getFile()));
-            spf.setSchema(schema);
-
-            jc = JAXBContext.newInstance(Dpp.class);
-            Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
-            UnmarshallerHandler unmarshallerHandler = jaxbUnmarshaller.getUnmarshallerHandler();
-
-            SAXParser sp = spf.newSAXParser();
-            XMLReader xr = sp.getXMLReader();
-            MetadataXmlParsingHandler contentErrorHandler = new MetadataXmlParsingHandler(unmarshallerHandler);
-            xr.setErrorHandler(contentErrorHandler);
-            xr.setContentHandler(contentErrorHandler);
-
-            InputSource xml = new InputSource(new FileReader(metadataXmlFile));
-            xr.parse(xml);
-
-            Dpp dpp = (Dpp) unmarshallerHandler.getResult();
-            source = new JAXBSource(jc, dpp);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        } catch (SAXException e) {
-            throw new RuntimeException(e);
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        JAXBSource source = loadMetadataXml(metadataXmlFile);
 
         Map<DMFramework, File> frameworkParameters = new HashMap<DMFramework, File>();
 
@@ -212,10 +190,70 @@ public class MetadataXml {
         return frameworkParameters;
     }
 
-    public static void validateMetadataXml(File metadataXmlFile) {
+    /**
+     * Loads and validates metadata.xml.
+     *
+     * @param metadataXmlFile the metadata.xml file
+     * @return JAXBSource with loaded and mapped metadata.xml
+     * @throws MetadataException an exception in case of metadata.xml parsing error
+     */
+    private static JAXBSource loadMetadataXml(File metadataXmlFile) throws MetadataException {
+        MetadataXmlParsingHandler contentErrorHandler = null;
+        try {
 
+            SAXParserFactory spf = SAXParserFactory.newInstance();
+            spf.setNamespaceAware(true);
+
+            //Get file from resources folder
+            ClassLoader classLoader = MetadataXml.class.getClassLoader();
+            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = sf.newSchema(new File(classLoader.getResource(METADATA_XML_SCHEME).getFile()));
+            spf.setSchema(schema);
+
+            JAXBContext jc = JAXBContext.newInstance(Dpp.class);
+            Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
+            UnmarshallerHandler unmarshallerHandler = jaxbUnmarshaller.getUnmarshallerHandler();
+
+            SAXParser sp = spf.newSAXParser();
+            XMLReader xr = sp.getXMLReader();
+            contentErrorHandler = new MetadataXmlParsingHandler(unmarshallerHandler);
+            xr.setErrorHandler(contentErrorHandler);
+            xr.setContentHandler(contentErrorHandler);
+
+            InputSource xml = new InputSource(new FileReader(metadataXmlFile));
+            xr.parse(xml);
+
+            if (contentErrorHandler.getParsingErrors().size() > 0) {
+                throw new MetadataException(contentErrorHandler.getParsingErrors());
+            }
+
+            Dpp dpp = (Dpp) unmarshallerHandler.getResult();
+            return new JAXBSource(jc, dpp);
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        } catch (SAXException e) {
+            if (contentErrorHandler != null && contentErrorHandler.getParsingErrors().size() > 0) {
+                throw new MetadataException(e, contentErrorHandler.getParsingErrors());
+            }
+            else {
+                throw new RuntimeException(e);
+            }
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    /**
+     * Transforms metadata.xml into a set of parameters for particular MXF framework.
+     *
+     * @param source loaded and validated JAXBSource with metadata.xml
+     * @param framework the framework for which the parameters must be transformed.
+     * @return a temporary file to be used as BMXLib input parameter for particular framework.
+     */
     private static File getBmxFrameworkParameters(JAXBSource source, DMFramework framework) {
         try {
             //Get file from resources folder
@@ -255,7 +293,5 @@ public class MetadataXml {
             throw new RuntimeException(e);
         }
     }
-
-
 }
 
