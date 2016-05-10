@@ -28,7 +28,7 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
         int segmentNum = segmContext.getSegmentsNum();
 
         for (int segment = 0; segment < segmentNum; segment++) {
-            List<String> execAndParams = parseOperation(operation.getValue(), segment, operation.getType());
+            List<String> execAndParams = conversionOperationParser.parseOperation(operation.getValue(), segment, operation.getType());
             ExternalProcess process = startProcess(execAndParams, operation.getName(), operation.getClass());
             process.finishWaitFor();
         }

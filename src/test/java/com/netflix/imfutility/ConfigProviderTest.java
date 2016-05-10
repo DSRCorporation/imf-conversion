@@ -32,15 +32,11 @@ public class ConfigProviderTest {
         assertNotNull(configProvider.getConfig());
         assertNotNull(configProvider.getConfig().getExternalTools());
 
-        assertNotNull(configProvider.getConfig().getExternalTools().getMap().get("tool1"));
-        assertEquals("root\\tool1", configProvider.getConfig().getExternalTools().getMap().get("tool1").getValue());
+        assertNotNull(configProvider.getConfig().getExternalTools().getMap().get("toolSimple"));
+        assertEquals("root\\toolSimple", configProvider.getConfig().getExternalTools().getMap().get("toolSimple").getValue());
 
-        assertNotNull(configProvider.getConfig().getExternalTools().getMap().get("tool2"));
-        assertEquals("root\\tool 2", configProvider.getConfig().getExternalTools().getMap().get("tool2").getValue());
-
-        assertNotNull(configProvider.getConfig().getExternalTools().getMap().get("tool3"));
-        assertEquals("root\\tool 3", configProvider.getConfig().getExternalTools().getMap().get("tool3").getValue());
-
+        assertNotNull(configProvider.getConfig().getExternalTools().getMap().get("toolWhitespace"));
+        assertEquals("root\\tool whitespace", configProvider.getConfig().getExternalTools().getMap().get("toolWhitespace").getValue());
     }
 
     @Test

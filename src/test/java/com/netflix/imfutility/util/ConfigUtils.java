@@ -13,11 +13,11 @@ public final class ConfigUtils {
     }
 
     public static String getBrokenXmlConfigXml() {
-        return ClassLoader.getSystemClassLoader().getResource("xml/broken-xml-config.xml").getPath();
+        return ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-config.xml").getPath();
     }
 
     public static String getInvalidXsdConfigXml() {
-        return ClassLoader.getSystemClassLoader().getResource("xml/invalid-xsd-config.xml").getPath();
+        return ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-config.xml").getPath();
     }
 
 }

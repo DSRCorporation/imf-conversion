@@ -20,7 +20,7 @@ public class ConversionExecutorOnce extends AbstractConversionExecutor {
     }
 
     public void execute(ExecOnceType operation) throws IOException {
-        List<String> execAndParams = parseOperation(operation.getValue());
+        List<String> execAndParams = conversionOperationParser.parseOperation(operation.getValue());
         ExternalProcess process = startProcess(execAndParams, operation.getName(), operation.getClass());
         process.finishWaitFor();
     }

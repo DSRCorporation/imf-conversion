@@ -63,38 +63,38 @@ public class TemplateParameterResolverTest {
 
     @Test
     public void resolvesCorrectToolsContext() {
-        String resolved = resolver.resolveTemplateParameter("%{tool.tool1}");
+        String resolved = resolver.resolveTemplateParameter("%{tool.toolSimple}");
         assertNotNull(resolved);
-        assertEquals("root\\tool1", resolved);
+        assertEquals("root\\toolSimple", resolved);
     }
 
     @Test
     public void trimsCorrectToolsContext() {
-        String tool2 = resolver.resolveTemplateParameter("%{tool.tool2}");
-        String tool3 = resolver.resolveTemplateParameter("%{tool.tool3}");
+        String tool2 = resolver.resolveTemplateParameter("%{tool.toolWhitespace}");
+        String tool3 = resolver.resolveTemplateParameter("%{tool.toolNewline}");
 
         assertNotNull(tool2);
-        assertEquals("root\\tool 2", tool2);
+        assertEquals("root\\tool whitespace", tool2);
         assertNotNull(tool3);
-        assertEquals("root\\tool   3", tool3);
+        assertEquals("root\\tool   newline", tool3);
     }
 
     @Test
     public void resolvesCorrectTmpContext() {
-        String resolved = resolver.resolveTemplateParameter("%{tmp.tmpParam1}");
+        String resolved = resolver.resolveTemplateParameter("%{tmp.tmpParamSimple}");
         assertNotNull(resolved);
-        assertEquals("tmpParam1Value", resolved);
+        assertEquals("tmpParamSimple", resolved);
     }
 
     @Test
     public void trimsCorrectTmpContext() {
-        String tmp2 = resolver.resolveTemplateParameter("%{tmp.tmpParam2}");
-        String tmp3 = resolver.resolveTemplateParameter("%{tmp.tmpParam3}");
+        String tmp2 = resolver.resolveTemplateParameter("%{tmp.tmpParamWhitespace}");
+        String tmp3 = resolver.resolveTemplateParameter("%{tmp.tmpParamNewline}");
 
         assertNotNull(tmp2);
-        assertEquals("tmpParam2 Value", tmp2);
+        assertEquals("tmpParam whitespace", tmp2);
         assertNotNull(tmp3);
-        assertEquals("tmpParam3   Value", tmp3);
+        assertEquals("tmpParam   newline", tmp3);
     }
 
     @Test
@@ -155,26 +155,26 @@ public class TemplateParameterResolverTest {
 
     @Test
     public void resolvesCorrectAllContextsWhenSegmentSpecified() {
-        String tool = resolver.resolveTemplateParameter("%{tool.tool1}", 0, SegmentType.VIDEO);
-        String tmp = resolver.resolveTemplateParameter("%{tmp.tmpParam1}", 0, SegmentType.AUDIO);
+        String tool = resolver.resolveTemplateParameter("%{tool.toolSimple}", 0, SegmentType.VIDEO);
+        String tmp = resolver.resolveTemplateParameter("%{tmp.tmpParamSimple}", 0, SegmentType.AUDIO);
         String dynamic = resolver.resolveTemplateParameter("%{dynamic.dynamic1}", 0, SegmentType.VIDEO);
 
         assertNotNull(tool);
-        assertEquals("root\\tool1", tool);
+        assertEquals("root\\toolSimple", tool);
         assertNotNull(tmp);
-        assertEquals("tmpParam1Value", tmp);
+        assertEquals("tmpParamSimple", tmp);
         assertNotNull(dynamic);
         assertEquals("dynamicValue1", dynamic);
     }
 
     @Test(expected = InvalidTemplateParameterException.class)
     public void exceptionOnIncorrectParameterFormat() {
-        resolver.resolveTemplateParameter("%{tool.tool1");
+        resolver.resolveTemplateParameter("%{tool.toolSimple");
     }
 
     @Test(expected = UnknownTemplateParameterContextException.class)
     public void exceptionOnIncorrectParameterContext() {
-        resolver.resolveTemplateParameter("%{xxxx.tool1}");
+        resolver.resolveTemplateParameter("%{xxxx.toolSimple}");
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)
@@ -184,14 +184,13 @@ public class TemplateParameterResolverTest {
 
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnEmptyToolParameter() {
-        resolver.resolveTemplateParameter("%{tool.tool4}");
+        resolver.resolveTemplateParameter("%{tool.toolEmpty}");
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnEmptyWithNewlinesToolParameter() {
-        resolver.resolveTemplateParameter("%{tool.tool5}");
+        resolver.resolveTemplateParameter("%{tool.toolEmptyNewlines}");
     }
-
 
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnIncorrectTmpParameterName() {
@@ -200,12 +199,12 @@ public class TemplateParameterResolverTest {
 
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnEmptyTmpParameter() {
-        resolver.resolveTemplateParameter("%{tmp.tmpParam4}");
+        resolver.resolveTemplateParameter("%{tmp.tmpParamEmpty}");
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnEmptyWithNewlinesTmpParameter() {
-        resolver.resolveTemplateParameter("%{tmp.tmpParam5}");
+        resolver.resolveTemplateParameter("%{tmp.tmpParamEmptyNewline}");
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)

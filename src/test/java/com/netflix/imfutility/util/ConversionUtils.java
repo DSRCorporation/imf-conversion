@@ -13,11 +13,11 @@ public final class ConversionUtils {
     }
 
     public static String getBrokenXmlConversionXml() {
-        return ClassLoader.getSystemClassLoader().getResource("xml/broken-xml-conversion.xml").getPath();
+        return ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-conversion.xml").getPath();
     }
 
     public static String getInvalidXsdConversionXml() {
-        return ClassLoader.getSystemClassLoader().getResource("xml/invalid-xsd-conversion.xml").getPath();
+        return ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-conversion.xml").getPath();
     }
 
 
