@@ -25,7 +25,7 @@
             <xs:element name="ProgrammeTitle" type="String127"/>
             <xs:element name="EpisodeTitleNumber" type="String127"/>
             <xs:element name="ProductionNumber" type="String127"/>
-            <xs:element name="Synopsis" type="String127"/>
+            <xs:element name="Synopsis" type="String250"/>
             <xs:element name="Originator" type="String127"/>
             <xs:element name="CopyrightYear" type="Uint16Type"/>
             <xs:element name="OtherIdentifier" type="String127" minOccurs="0"/>
@@ -58,13 +58,13 @@
             <xs:element name="ThreeD" type="xs:boolean"/>
             <xs:element name="ThreeDType" type="ThreeDTypeType" minOccurs="0"/>
             <xs:element name="ProductPlacement" type="xs:boolean" minOccurs="0"/>
-            <xs:element name="PsePass" type="PsePassType">
+            <xs:element name="PSEPass" type="PSEPassType">
                 <xs:annotation>
                     <xs:documentation>PsePass is required for AS-11 version >= 1.1</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="PseManufacturer" type="String127" minOccurs="0"/>
-            <xs:element name="PseVersion" type="String127" minOccurs="0"/>
+            <xs:element name="PSEManufacturer" type="String127" minOccurs="0"/>
+            <xs:element name="PSEVersion" type="String127" minOccurs="0"/>
             <xs:element name="VideoComments" type="String127" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
@@ -75,7 +75,7 @@
             <xs:element name="PrimaryAudioLanguage" type="Iso6392CodeType"/>
             <xs:element name="SecondaryAudioLanguage" type="Iso6392CodeType"/>
             <xs:element name="TertiaryAudioLanguage" type="Iso6392CodeType"/>
-            <xs:element name="CompliantAudioStandard" type="CompliantAudioStandardType"/>
+            <xs:element name="AudioLoudnessStandard" type="AudioLoudnessStandardType"/>
             <xs:element name="AudioComments" type="String127" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
@@ -91,26 +91,18 @@
     </xs:complexType>
 
     <xs:complexType name="SegmentationType">
-        <xs:complexContent>
-            <xs:extension base="ArrayType">
-                <xs:sequence>
-                    <xs:element name="Parts" type="SegmentType" maxOccurs="unbounded"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
+        <xs:sequence>
+            <xs:element name="Part" type="SegmentType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="SegmentType">
-        <xs:complexContent>
-            <xs:extension base="ArrayElementType">
-                <xs:sequence>
-                    <xs:element name="PartNumber" type="Uint16Type"/>
-                    <xs:element name="PartTotal" type="Uint16Type"/>
-                    <xs:element name="SOM" type="TimecodeType"/>
-                    <xs:element name="Duration" type="DurationType"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
+        <xs:sequence>
+            <xs:element name="PartNumber" type="Uint16Type"/>
+            <xs:element name="PartTotal" type="Uint16Type"/>
+            <xs:element name="PartSOM" type="TimecodeType"/>
+            <xs:element name="PartDuration" type="DurationType"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="AccessServicesType">
@@ -166,7 +158,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="PsePassType">
+    <xs:simpleType name="PSEPassType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="Yes"/>
             <xs:enumeration value="No"/>
@@ -194,7 +186,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="CompliantAudioStandardType">
+    <xs:simpleType name="AudioLoudnessStandardType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="None"/>
             <xs:enumeration value="EBU R 128"/>
@@ -225,8 +217,8 @@
 
     <xs:simpleType name="SignLanguageType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="British Sign Language"/>
-            <xs:enumeration value="Makaton"/>
+            <xs:enumeration value="BSL (British Sign Language)"/>
+            <xs:enumeration value="BSL (Makaton)"/>
         </xs:restriction>
     </xs:simpleType>
 

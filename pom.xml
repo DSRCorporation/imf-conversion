@@ -44,6 +44,11 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
+        <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
+            <version>9.7.0-4</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -110,10 +115,10 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/main/xsd/dpp/metadata.xsd</source>
+                                <source>src/main/resources/xsd/dpp/metadata.xsd</source>
                             </sources>
                             <xjbSources>
-                                <xjbSource>src/main/xsd/dpp/imfutility.xjb</xjbSource>
+                                <xjbSource>src/main/resources/xsd/dpp/imfutility.xjb</xjbSource>
                             </xjbSources>
                             <packageName>com.netflix.imfutility.dpp.metadata</packageName>
                             <clearOutputDir>false</clearOutputDir>
