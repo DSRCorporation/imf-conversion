@@ -9,8 +9,9 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
-import java.util.Vector;
 
 /**
  * Created by Alexandr on 5/6/2016.
@@ -25,10 +26,9 @@ public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
      */
     private ContentHandler contentHandler;
     /**
-     * A node name that is being processed now.
+     * A node name that is being processed
      */
     private String qname;
-    private String namespaceURI;
 
     /**
      * A stack of current parsed nodes.
@@ -37,7 +37,7 @@ public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
     /**
      * A collection of all found errors.
      */
-    private Vector<String> errorMessages = new Vector<String>();
+    private List<String> errorMessages = new ArrayList<>();
 
     /**
      * Constructor.
@@ -57,10 +57,9 @@ public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
     }
 
     public void endElement(String uri, String localName, String qName)
-                throws SAXException {
+            throws SAXException {
         qnames.pop();
         qname = qnames.size() > 0 ? qnames.lastElement() : "root";
-        namespaceURI = uri;
         contentHandler.endElement(uri, localName, qName);
     }
 
@@ -93,7 +92,6 @@ public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
         qnames.push(qName);
         qname = qName;
-        namespaceURI = uri;
         contentHandler.startElement(uri, localName, qName, atts);
     }
 
@@ -119,7 +117,7 @@ public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
      *
      * @return a collection with all found errors.
      */
-    public Vector<String> getParsingErrors() {
+    public List<String> getParsingErrors() {
         return errorMessages;
     }
 
@@ -129,7 +127,8 @@ public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
      * @param exception current SAXParseException with error description.
      */
     private void registerError(SAXParseException exception) {
-        StringBuilder errorMessage = new StringBuilder();;
+        StringBuilder errorMessage = new StringBuilder();
+        ;
         errorMessage.append("Line ").append(exception.getLineNumber()).append(", ");
         errorMessage.append("column ").append(exception.getColumnNumber());
 
@@ -137,9 +136,7 @@ public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
             errorMessage.append(", ").append("node <").append(qname).append(">");
         }
         errorMessage.append(". ").append(exception.getLocalizedMessage());
-
         errorMessages.add(errorMessage.toString());
-
         logger.error(errorMessage.toString());
     }
 }

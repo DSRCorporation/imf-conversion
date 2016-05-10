@@ -234,8 +234,7 @@ public class MetadataXml {
         } catch (SAXException e) {
             if (contentErrorHandler != null && contentErrorHandler.getParsingErrors().size() > 0) {
                 throw new MetadataException(e, contentErrorHandler.getParsingErrors());
-            }
-            else {
+            } else {
                 throw new RuntimeException(e);
             }
         } catch (ParserConfigurationException e) {
@@ -250,11 +249,12 @@ public class MetadataXml {
     /**
      * Transforms metadata.xml into a set of parameters for particular MXF framework.
      *
-     * @param source loaded and validated JAXBSource with metadata.xml
+     * @param source    loaded and validated JAXBSource with metadata.xml
      * @param framework the framework for which the parameters must be transformed.
      * @return a temporary file to be used as BMXLib input parameter for particular framework.
      */
     private static File getBmxFrameworkParameters(JAXBSource source, DMFramework framework) {
+        FileWriter writer = null;
         try {
             //Get file from resources folder
             ClassLoader classLoader = MetadataXml.class.getClassLoader();
@@ -275,14 +275,12 @@ public class MetadataXml {
             temp.deleteOnExit();
 
             // Result
-            FileWriter writer = new FileWriter(temp);
+            writer = new FileWriter(temp);
             StreamResult result = new StreamResult(writer);
 
             // Transform
             transformer.transform(source, result);
-
             writer.flush();
-            writer.close();
 
             return temp;
         } catch (TransformerConfigurationException e) {
@@ -291,6 +289,14 @@ public class MetadataXml {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 }

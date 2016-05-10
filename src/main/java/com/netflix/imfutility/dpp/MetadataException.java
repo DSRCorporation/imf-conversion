@@ -1,20 +1,22 @@
 package com.netflix.imfutility.dpp;
-import java.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Alexandr on 5/10/2016.
- *
+ * <p>
  * An Exception class to wrap Metadata.xml parsing errors.
  */
 public class MetadataException extends Exception {
 
-    private Vector<String> errors;
+    private List<String> errors;
 
-    public MetadataException(Exception e, Vector<String> errors) {
+    public MetadataException(Exception e, List<String> errors) {
         super(e);
         this.errors = errors;
         if (this.errors == null) {
-            this.errors = new Vector<String>();
+            this.errors = new ArrayList<String>();
         }
 
         if (this.errors.size() == 0) {
@@ -22,11 +24,11 @@ public class MetadataException extends Exception {
         }
     }
 
-    public MetadataException(Vector<String> errors) {
+    public MetadataException(List<String> errors) {
         super();
         this.errors = errors;
         if (this.errors == null) {
-            this.errors = new Vector<String>();
+            this.errors = new ArrayList<String>();
         }
     }
 
@@ -35,7 +37,7 @@ public class MetadataException extends Exception {
      *
      * @return a collection with all found errors.
      */
-    public Vector<String> getErrors() {
+    public List<String> getErrors() {
         return this.errors;
     }
 }
