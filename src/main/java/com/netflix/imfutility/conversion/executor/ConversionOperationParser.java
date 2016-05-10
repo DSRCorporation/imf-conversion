@@ -57,7 +57,7 @@ public class ConversionOperationParser {
         ParseState state = ParseState.NORMAL;
 
         StringTokenizer tokenizer = new StringTokenizer(trimmedConversionOperation, "\"\' \r\n", true);
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         StringBuilder currentArg = new StringBuilder();
         boolean lastTokenQuoted = false;
 
@@ -135,6 +135,6 @@ public class ConversionOperationParser {
     }
 
     private enum ParseState {
-        NORMAL, IN_QUOTE, IN_DOUBLE_QUOTE;
+        NORMAL, IN_QUOTE, IN_DOUBLE_QUOTE
     }
 }

@@ -1,6 +1,5 @@
 package com.netflix.imfutility.conversion.executor;
 
-import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.xsd.conversion.ExecOnceType;
 
