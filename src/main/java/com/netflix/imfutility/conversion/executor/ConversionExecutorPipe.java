@@ -1,8 +1,8 @@
 package com.netflix.imfutility.conversion.executor;
 
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
-import com.netflix.imfutility.conversion.templateParameter.context.segment.SegmentTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SegmentTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.xsd.conversion.ExecEachSegmentType;
 import com.netflix.imfutility.xsd.conversion.ExecOnceType;
 import com.netflix.imfutility.xsd.conversion.PipeType;
@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class ConversionExecutorPipe extends AbstractConversionExecutor {
 
-    public ConversionExecutorPipe(TemplateParameterResolver parameterResolver) {
-        super(parameterResolver);
+    public ConversionExecutorPipe(TemplateParameterContextProvider contextProvider) {
+        super(contextProvider);
     }
 
     public void execute(PipeType operation) throws IOException {
@@ -48,8 +48,8 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
     private List<ExternalProcess> getTailProcesses(PipeType operation) throws IOException {
         List<ExternalProcess> pipeline = new ArrayList<>();
         for (ExecOnceType execOnce : operation.getExecOnce()) {
-            List<String> resolvedParams = resolveParameters(execOnce.getValue());
-            pipeline.add(startProcess(resolvedParams, execOnce.getName(), execOnce.getClass()));
+            List<String> execAndParams = conversionOperationParser.parseOperation(execOnce.getValue());
+            pipeline.add(startProcess(execAndParams, execOnce.getName(), execOnce.getClass()));
         }
         return pipeline;
     }
@@ -70,8 +70,8 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
 
     private void processSeqExecOnce(ExecOnceType execOnce, List<ExternalProcess> tail) throws IOException {
         // 1. start the first Process
-        List<String> resolvedParams = resolveParameters(execOnce.getValue());
-        ExternalProcess execOnceProc = startProcess(resolvedParams, execOnce.getName(), execOnce.getClass());
+        List<String> execAndParams = conversionOperationParser.parseOperation(execOnce.getValue());
+        ExternalProcess execOnceProc = startProcess(execAndParams, execOnce.getName(), execOnce.getClass());
 
         // 2. create a pipeline: first + tail
         pipe(execOnceProc, tail);
@@ -88,7 +88,7 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
 
         // 2. for each segment: create a pipeline: segmentProc + tail
         for (int segment = 0; segment < segmentNum; segment++) {
-            List<String> resolvedParams = resolveSegmentParameters(execSegm.getValue(), segment, execSegm.getType());
+            List<String> resolvedParams = conversionOperationParser.parseOperation(execSegm.getValue(), segment, execSegm.getType());
             ExternalProcess execSegmProc = startProcess(resolvedParams, execSegm.getName(), execSegm.getClass());
             pipe(execSegmProc, tail);
         }

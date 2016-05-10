@@ -1,5 +1,10 @@
 package com.netflix.imfutility.conversion.templateParameter;
 
+import com.netflix.imfutility.conversion.templateParameter.exception.InvalidTemplateParameterException;
+import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterContextException;
+import com.netflix.imfutility.xsd.conversion.SegmentType;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,35 +13,51 @@ import java.util.regex.Pattern;
  */
 public class TemplateParameter {
 
-    private static final String TEMPLATE_PARAM = "%\\{(\\w+)\\.(\\w+)\\}";
+    public static final int DEFAULT_SEGMENT = -1;
+    public static final SegmentType DEFAULT_SEGMENT_TYPE = null;
 
+    public static final String TEMPLATE_PARAM = "%\\{(\\w+?)\\.(\\w+?)\\}"; // use reluctant quantifiers!
+
+    // required
     private final TemplateParameterContext context;
     private final String name;
+
+    // optional
+    private final int segment;
+    private final SegmentType segmentType;
 
     public static boolean isTemplateParameter(String parameterString) {
         return parameterString.matches(TEMPLATE_PARAM);
     }
 
     public TemplateParameter(String parameterString) {
+        this(parameterString, DEFAULT_SEGMENT, DEFAULT_SEGMENT_TYPE);
+    }
+
+    public TemplateParameter(String parameterString, int segment, SegmentType segmentType) {
+        this.segment = segment;
+        this.segmentType = segmentType;
+
         Pattern p = Pattern.compile(TEMPLATE_PARAM);
         Matcher m = p.matcher(parameterString);
         if (!m.matches()) {
-            throw new RuntimeException(
-                    String.format("Incorrect Template Parameter '%s'. Template parameter must have the following form: '%%{context.name}'", parameterString));
+            throw new InvalidTemplateParameterException(
+                    parameterString, "Template parameter must have the following form: '%%{context.name}'");
         }
         String contextStr = m.group(1);
         this.name = m.group(2);
 
-        if (contextStr == null || this.name == null) {
-            throw new RuntimeException(
-                    String.format("Incorrect Template Parameter '%s'. Template parameter must have the following form: '%%{context.name}'", parameterString));
+        if (StringUtils.isEmpty(contextStr) || StringUtils.isEmpty(this.name)) {
+            throw new InvalidTemplateParameterException(
+                    parameterString, "Template parameter must have the following form: '%%{context.name}'");
         }
 
         this.context = TemplateParameterContext.fromName(contextStr);
         if (this.context == null) {
-            throw new RuntimeException(
-                    String.format("Unknown context '%s' in Template Parameter '%s'. Supported contexts: %s'",
-                            contextStr, parameterString, TemplateParameterContext.getSupportedContexts()));
+            throw new UnknownTemplateParameterContextException(
+                    parameterString,
+                    String.format("Unknown context '%s'. Supported contexts: %s'",
+                            contextStr, TemplateParameterContext.getSupportedContexts()));
 
         }
     }
@@ -47,6 +68,14 @@ public class TemplateParameter {
 
     public TemplateParameterContext getContext() {
         return context;
+    }
+
+    public int getSegment() {
+        return segment;
+    }
+
+    public SegmentType getSegmentType() {
+        return segmentType;
     }
 
     @Override

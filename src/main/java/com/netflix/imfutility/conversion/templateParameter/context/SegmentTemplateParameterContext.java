@@ -1,7 +1,8 @@
-package com.netflix.imfutility.conversion.templateParameter.context.segment;
+package com.netflix.imfutility.conversion.templateParameter.context;
 
-import com.netflix.imfutility.conversion.templateParameter.SegmentTemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
+import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
+import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
 import com.netflix.imfutility.xsd.conversion.SegmentType;
 
 import java.util.HashMap;
@@ -16,9 +17,13 @@ import java.util.Map;
  * <li>Created dynamically in the code when analyzing CPL.</li>
  * </ul>
  */
-public class SegmentTemplateParameterContext implements ISegmentTemplateParameterContext {
+public class SegmentTemplateParameterContext implements ITemplateParameterContext {
 
     private final Map<Integer, SegmentData> segments = new HashMap<>();
+
+    public int getSegmentsNum() {
+        return segments.size();
+    }
 
     public void addSegmentParameter(int segment, SegmentType segmentType, SegmentContextParameters paramName, String paramValue) {
         SegmentData segmentData = segments.get(segment);
@@ -30,50 +35,48 @@ public class SegmentTemplateParameterContext implements ISegmentTemplateParamete
     }
 
     @Override
-    public int getSegmentsNum() {
-        return segments.size();
-    }
-
-    @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter) {
-        throw new RuntimeException("Segment context can be used with <execEachSegment> only.");
-    }
-
-
-    @Override
-    public String resolveSegmentTemplateParameter(SegmentTemplateParameter templateParameter) {
-        SegmentContextParameters segmentParameterName = SegmentContextParameters.fromName(templateParameter.getName());
-        if (segmentParameterName == null) {
-            throw new RuntimeException(
-                    String.format("Unknown Segment Template Parameter Name '%s' in Template Parameter '%s'. Supported Segment Parameter Names: %s'",
-                            templateParameter.getName(), templateParameter.toString(), getSupportedParameters()));
-
+        if (templateParameter.getSegment() < 0) {
+            throw new TemplateParameterNotFoundException(
+                    templateParameter.toString(),
+                    String.format("Incorrect segment number '%d'. Segment number must be specified for a segment template parameter.",
+                            templateParameter.getSegment()));
+        }
+        if (templateParameter.getSegmentType() == null) {
+            throw new TemplateParameterNotFoundException(
+                    templateParameter.toString(), "Segment type must be specified for a segment template parameter.");
         }
 
         SegmentData segmentData = segments.get(templateParameter.getSegment());
         if (segmentData == null) {
-            throw new RuntimeException(
-                    String.format("Incorrect segment number '%d'. Context for '%s' segments only is available.",
+            throw new TemplateParameterNotFoundException(
+                    templateParameter.toString(),
+                    String.format("Incorrect segment number '%d'. Context for '%s' segments only is defined.",
                             templateParameter.getSegment(), segments.size()));
         }
 
         SegmentTypeData segmentTypeData = segmentData.getData(templateParameter.getSegmentType());
         if (segmentTypeData == null) {
-            return null;
+            throw new TemplateParameterNotFoundException(
+                    templateParameter.toString(),
+                    String.format("Context for '%s' segment type is not defined.", templateParameter.getSegmentType()));
         }
 
-        return segmentTypeData.getParameterValue(segmentParameterName);
-    }
-
-    private String getSupportedParameters() {
-        StringBuilder supportedParamsBuilder = new StringBuilder();
-        supportedParamsBuilder.append("[ ");
-        for (SegmentContextParameters e : SegmentContextParameters.values()) {
-            supportedParamsBuilder.append(e.getName());
-            supportedParamsBuilder.append(" ");
+        SegmentContextParameters segmentParameterName = SegmentContextParameters.fromName(templateParameter.getName());
+        if (segmentParameterName == null) {
+            throw new UnknownTemplateParameterNameException(
+                    templateParameter.toString(),
+                    String.format("Unknown Segment Template Parameter Name '%s'. Supported Segment Parameter Names: %s'",
+                            templateParameter.getName(), SegmentContextParameters.getSupportedContextParameters()));
         }
-        supportedParamsBuilder.append("]");
-        return supportedParamsBuilder.toString();
+
+        String parameterValue = segmentTypeData.getParameterValue(segmentParameterName);
+        if (parameterValue == null) {
+            throw new TemplateParameterNotFoundException(
+                    templateParameter.toString(),
+                    String.format("'%s' parameter is not defined.", templateParameter.getName()));
+        }
+        return parameterValue;
     }
 
 

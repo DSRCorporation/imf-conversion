@@ -1,6 +1,7 @@
 package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
+import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +24,13 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
 
     @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter) {
-        return params.get(templateParameter.getName());
+        String paramValue = params.get(templateParameter.getName());
+        if (paramValue == null) {
+            throw new TemplateParameterNotFoundException(
+                    templateParameter.toString(),
+                    String.format("'%s' parameter is not defined.", templateParameter.getName()));
+        }
+        return paramValue;
     }
 
 }

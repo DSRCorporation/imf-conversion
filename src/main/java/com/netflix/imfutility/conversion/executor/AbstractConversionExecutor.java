@@ -1,15 +1,13 @@
 package com.netflix.imfutility.conversion.executor;
 
 import com.netflix.imfutility.Constants;
-import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
-import com.netflix.imfutility.xsd.conversion.SegmentType;
+import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,56 +21,32 @@ public abstract class AbstractConversionExecutor {
 
     private final Logger logger = LoggerFactory.getLogger(ConversionExecutorOnce.class);
 
+    protected final ConversionOperationParser conversionOperationParser;
     protected final TemplateParameterResolver parameterResolver;
 
     private static int count = 1;
 
-    public AbstractConversionExecutor(TemplateParameterResolver parameterResolver) {
-        this.parameterResolver = parameterResolver;
+    public AbstractConversionExecutor(TemplateParameterContextProvider contextProvider) {
+        this.parameterResolver = new TemplateParameterResolver(contextProvider);
+        this.conversionOperationParser = new ConversionOperationParser(parameterResolver);
     }
 
-    protected List<String> resolveParameters(String conversionOperation) {
-        String[] params = splitParameters(conversionOperation);
-        List<String> execAndParams = new ArrayList<>();
-        for (String param : params) {
-            if (TemplateParameter.isTemplateParameter(param)) {
-                param = parameterResolver.resolveTemplateParameter(param);
-            }
-            param = String.format("\"%s\"", param);
-            execAndParams.add(param);
-        }
-        return execAndParams;
-    }
-
-    protected List<String> resolveSegmentParameters(String conversionOperation, int segment, SegmentType segmentType) {
-        String[] params = splitParameters(conversionOperation);
-        List<String> execAndParams = new ArrayList<>();
-        for (String param : params) {
-            if (TemplateParameter.isTemplateParameter(param)) {
-                param = parameterResolver.resolveSegmentTemplateParameter(param, segment, segmentType);
-            }
-            param = String.format("\"%s\"", param);
-            execAndParams.add(param);
-        }
-        return execAndParams;
-    }
-
-    protected ExternalProcess startProcess(List<String> resolvedParams, String operationName, Class<?> operationClass) throws IOException {
-        if (resolvedParams.isEmpty()) {
+    protected ExternalProcess startProcess(List<String> execAndParams, String operationName, Class<?> operationClass) throws IOException {
+        if (execAndParams.isEmpty()) {
             throw new RuntimeException(String.format("No parameters for process '%s'", operationName));
         }
 
         int processNum = count++;
         String operationType = operationClass.getSimpleName();
-        String programPath = resolvedParams.get(0);
+        String programPath = execAndParams.get(0);
         String programName = new File(programPath.replaceAll("\"", "")).getName();
         ExternalProcess.ExternalProcessInfo processInfo = new ExternalProcess.ExternalProcessInfo(
-                processNum, operationName, operationType, programName, resolvedParams);
+                processNum, operationName, operationType, programName, execAndParams);
 
         logger.info("Starting {}", processInfo.toString());
         logger.info("\t{}", processInfo.getProcessString());
 
-        ProcessBuilder pb = new ProcessBuilder(resolvedParams);
+        ProcessBuilder pb = new ProcessBuilder(execAndParams);
         pb.directory(new File(parameterResolver.getContextProvider().getWorkingDir()));
 
         File logFile = createLogFile(processInfo);
@@ -104,11 +78,6 @@ public abstract class AbstractConversionExecutor {
             return null;
         }
         return logFile;
-    }
-
-    private String[] splitParameters(String conversionOperation) {
-        conversionOperation = conversionOperation.replaceFirst("\\s+|\\n+|\\r+", "");
-        return conversionOperation.split("\\s+");
     }
 
 }

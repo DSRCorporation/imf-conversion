@@ -39,7 +39,7 @@ public enum TemplateParameterContext {
     public static String getSupportedContexts() {
         return Arrays.stream(TemplateParameterContext.values())
                 .map(TemplateParameterContext::getName)
-                .collect(Collectors.joining(" "));
+                .collect(Collectors.joining(" ", "[", "]"));
     }
 
 }

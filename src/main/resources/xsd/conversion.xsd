@@ -58,24 +58,24 @@
     -->
     <xs:complexType name="conversionParametersType">
         <xs:sequence>
-            <xs:element type="videoConversionParametersType" name="video"/>
-            <xs:element type="audioConversionParametersType" name="audio"/>
+            <xs:element type="videoConversionParametersType" name="video"  maxOccurs="1" minOccurs="0"/>
+            <xs:element type="audioConversionParametersType" name="audio" maxOccurs="1" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="videoConversionParametersType">
         <xs:sequence>
-            <xs:element type="xs:string" name="size"/>
-            <xs:element type="xs:string" name="fps"/>
-            <xs:element type="xs:string" name="pixelFormat"/>
-            <xs:element type="xs:string" name="bitDepth"/>
+            <xs:element type="xs:string" name="size" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="xs:string" name="fps" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="xs:string" name="pixelFormat" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="xs:string" name="bitDepth" maxOccurs="1" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="audioConversionParametersType">
         <xs:sequence>
-            <xs:element type="xs:string" name="sampleRate"/>
-            <xs:element type="xs:string" name="bitsSample"/>
+            <xs:element type="xs:string" name="sampleRate" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="xs:string" name="bitsSample" maxOccurs="1" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
