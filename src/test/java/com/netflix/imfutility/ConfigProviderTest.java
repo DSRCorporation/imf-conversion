@@ -23,7 +23,7 @@ import static org.hamcrest.core.Is.isA;
 public class ConfigProviderTest {
 
     @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
+    public final ExpectedException expectedEx = ExpectedException.none();
 
     @Test
     public void testParseCorrectConfig() throws Exception {

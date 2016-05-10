@@ -16,10 +16,13 @@ import javax.xml.bind.JAXBException;
  */
 public class ConfigProvider extends AbstractXmlProvider {
 
+    private static final String XSD_CONFIG_XSD = "xsd/config.xsd";
+    private static final String CONFIG_PACKAGE = "com.netflix.imfutility.xsd.config";
+
     private ConfigType config;
 
     public ConfigProvider(String configXml) throws JAXBException, SAXException {
-        super(configXml, "com.netflix.imfutility.xsd.config", "xsd/config.xsd");
+        super(configXml, CONFIG_PACKAGE, XSD_CONFIG_XSD);
         //noinspection unchecked
         this.config = ((JAXBElement<ConfigType>) unmarshalResult).getValue();
     }

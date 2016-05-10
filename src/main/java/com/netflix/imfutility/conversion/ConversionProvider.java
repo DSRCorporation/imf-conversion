@@ -21,11 +21,14 @@ import java.util.List;
  */
 public class ConversionProvider extends AbstractXmlProvider {
 
+    private static final String XSD_CONVERSION_XSD = "xsd/conversion.xsd";
+    private static final String CONVERSION_PACKAGE = "com.netflix.imfutility.xsd.conversion";
+
     private FormatType formatType;
 
 
     public ConversionProvider(String configXml, Format format) throws JAXBException, SAXException {
-        super(configXml, "com.netflix.imfutility.xsd.conversion", "xsd/conversion.xsd");
+        super(configXml, CONVERSION_PACKAGE, XSD_CONVERSION_XSD);
         @SuppressWarnings("unchecked") ConversionType conversion = ((JAXBElement<ConversionType>) unmarshalResult).getValue();
         this.formatType = conversion.getFormats().getMap().get(format.getName());
     }

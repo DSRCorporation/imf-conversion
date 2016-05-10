@@ -25,7 +25,7 @@ public abstract class AbstractXmlProvider {
 
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
         unmarshaller.setSchema(getSchema(xsd));
-        unmarshaller.setEventHandler(new MyValidationEventHandler());
+        unmarshaller.setEventHandler(getValidationEventHandler());
 
         this.unmarshalResult = unmarshaller.unmarshal(new File(xml));
     }
@@ -37,6 +37,10 @@ public abstract class AbstractXmlProvider {
         }
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         return sf.newSchema(new File(xsdResource.getPath()));
+    }
+
+    protected ValidationEventHandler getValidationEventHandler() {
+        return new MyValidationEventHandler();
     }
 
     protected static class MyValidationEventHandler implements ValidationEventHandler {

@@ -22,7 +22,7 @@ import static org.hamcrest.core.Is.isA;
 public class ConversionProviderTest {
 
     @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
+    public final ExpectedException expectedEx = ExpectedException.none();
 
     @Test
     public void testParseCorrectConversion() throws Exception {
