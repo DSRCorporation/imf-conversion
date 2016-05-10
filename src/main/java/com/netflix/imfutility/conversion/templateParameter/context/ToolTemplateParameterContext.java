@@ -4,7 +4,11 @@ import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.xsd.config.ConfigType;
 
 /**
- * Created by Alexander on 4/25/2016.
+ * Tool Template Parameter Context.
+ * <ul>
+ * <li>It's used to replace tool template parameters in conversion operations</li>
+ * <li>Created from config.xml (see {@link com.netflix.imfutility.xsd.config.ExternalToolsType})</li>
+ * </ul>
  */
 public class ToolTemplateParameterContext implements ITemplateParameterContext {
 

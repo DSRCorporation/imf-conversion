@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by Alexander on 4/25/2016.
+ * Represent a template parameter from conversion operation in the following form: ${paramContext.paramName}.
  */
 public class TemplateParameter {
 
@@ -36,20 +36,9 @@ public class TemplateParameter {
         if (this.context == null) {
             throw new RuntimeException(
                     String.format("Unknown context '%s' in Template Parameter '%s'. Supported contexts: %s'",
-                            contextStr, parameterString, getSupportedContexts()));
+                            contextStr, parameterString, TemplateParameterContext.getSupportedContexts()));
 
         }
-    }
-
-    private String getSupportedContexts() {
-        StringBuilder supportedContextsBuilder = new StringBuilder();
-        supportedContextsBuilder.append("[ ");
-        for (TemplateParameterContext e : TemplateParameterContext.values()) {
-            supportedContextsBuilder.append(e.getName());
-            supportedContextsBuilder.append(" ");
-        }
-        supportedContextsBuilder.append("]");
-        return supportedContextsBuilder.toString();
     }
 
     public String getName() {

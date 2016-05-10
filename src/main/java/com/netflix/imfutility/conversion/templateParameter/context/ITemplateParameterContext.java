@@ -3,7 +3,10 @@ package com.netflix.imfutility.conversion.templateParameter.context;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 
 /**
- * Created by Alexander on 4/25/2016.
+ * Template Parameter Context.
+ * <ul>
+ * <li>It's used to replace template parameters in conversion operations</li>
+ * </ul>
  */
 public interface ITemplateParameterContext {
 

@@ -7,12 +7,18 @@ import com.netflix.imfutility.xsd.conversion.SegmentType;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
- * Created by Alexander on 4/25/2016.
+ * Segment Template Parameter Context.
+ * <ul>
+ * <li>It's used to replace segment template parameters in conversion operations</li>
+ * <li>May contain any only supported segment parameters (see {@link SegmentContextParameters}</li>
+ * <li>Created dynamically in the code when analyzing CPL.</li>
+ * </ul>
  */
 public class SegmentTemplateParameterContext implements ISegmentTemplateParameterContext {
 
-    private Map<Integer, SegmentData> segments = new HashMap<>();
+    private final Map<Integer, SegmentData> segments = new HashMap<>();
 
     public void addSegmentParameter(int segment, SegmentType segmentType, SegmentContextParameters paramName, String paramValue) {
         SegmentData segmentData = segments.get(segment);
@@ -71,8 +77,9 @@ public class SegmentTemplateParameterContext implements ISegmentTemplateParamete
     }
 
 
-    private class SegmentData {
-        private Map<SegmentType, SegmentTypeData> segmentTypes = new HashMap<>();
+    private static class SegmentData {
+
+        private final Map<SegmentType, SegmentTypeData> segmentTypes = new HashMap<>();
 
         public SegmentTypeData getData(SegmentType segmentType) {
             return segmentTypes.get(segmentType);
@@ -88,8 +95,9 @@ public class SegmentTemplateParameterContext implements ISegmentTemplateParamete
         }
     }
 
-    private class SegmentTypeData {
-        private Map<SegmentContextParameters, String> params = new HashMap<>();
+    private static class SegmentTypeData {
+
+        private final Map<SegmentContextParameters, String> params = new HashMap<>();
 
         public String getParameterValue(SegmentContextParameters param) {
             return params.get(param);

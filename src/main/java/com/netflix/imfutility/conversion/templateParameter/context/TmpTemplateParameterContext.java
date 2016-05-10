@@ -2,9 +2,16 @@ package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.xsd.conversion.FormatType;
+import com.netflix.imfutility.xsd.conversion.ParamType;
+
+import java.util.Collection;
 
 /**
- * Created by Alexander on 4/25/2016.
+ * Tmp Template Parameter Context.
+ * <ul>
+ * <li>It's used to replace tmp template parameters in conversion operations</li>
+ * <li>Created from conversion.xml (see {@link com.netflix.imfutility.xsd.conversion.TmpContextType})</li>
+ * </ul>
  */
 public class TmpTemplateParameterContext implements ITemplateParameterContext {
 
@@ -20,6 +27,10 @@ public class TmpTemplateParameterContext implements ITemplateParameterContext {
             return null;
         }
         return format.getTmpContext().getMap().get(templateParameter.getName()).getValue();
+    }
+
+    public Collection<ParamType> getAllParameters() {
+        return format.getTmpContext().getMap().values();
     }
 
 }

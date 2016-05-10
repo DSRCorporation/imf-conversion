@@ -1,4 +1,4 @@
-package com.netflix.imfutility;
+package com.netflix.imfutility.xml;
 
 import org.xml.sax.SAXException;
 
@@ -10,7 +10,11 @@ import java.io.File;
 import java.net.URL;
 
 /**
- * Created by Alexander on 4/28/2016.
+ * A base .xml parser.
+ * <ul>
+ * <li>Maps XML to a Java model</li>
+ * <li>Performs XSD validation and throws {@link RuntimeException} if config.xml is not a valid XML according to XSD.</li>
+ * </ul>
  */
 public abstract class AbstractXmlProvider {
 
@@ -39,18 +43,6 @@ public abstract class AbstractXmlProvider {
 
         public boolean handleEvent(ValidationEvent event) {
             throw new RuntimeException(event.getMessage());
-//            System.out.println("\nEVENT");
-//            System.out.println("SEVERITY:  " + event.getSeverity());
-//            System.out.println("MESSAGE:  " + event.getMessage());
-//            System.out.println("LINKED EXCEPTION:  " + event.getLinkedException());
-//            System.out.println("LOCATOR");
-//            System.out.println("    LINE NUMBER:  " + event.getLocator().getLineNumber());
-//            System.out.println("    COLUMN NUMBER:  " + event.getLocator().getColumnNumber());
-//            System.out.println("    OFFSET:  " + event.getLocator().getOffset());
-//            System.out.println("    OBJECT:  " + event.getLocator().getObject());
-//            System.out.println("    NODE:  " + event.getLocator().getNode());
-//            System.out.println("    URL:  " + event.getLocator().getURL());
-//            return true;
         }
 
     }

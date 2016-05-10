@@ -3,7 +3,8 @@ package com.netflix.imfutility.conversion.templateParameter;
 import com.netflix.imfutility.xsd.conversion.SegmentType;
 
 /**
- * Created by Alexander on 4/27/2016.
+ * Represents a segment template parameter from conversion.xml in the following form: %{segment.paramName}.
+ * Contains segment number and segment type in addition to a common template parameter.
  */
 public class SegmentTemplateParameter extends TemplateParameter {
 

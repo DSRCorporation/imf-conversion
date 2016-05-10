@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Alexander on 4/25/2016.
+ * Custom map for generated {@link ExternalToolsType}.
  */
 @XmlJavaTypeAdapter(ExternalToolsTypeMapAdapter.class)
 public class ExternalToolsTypeMap<String, ToolType> {

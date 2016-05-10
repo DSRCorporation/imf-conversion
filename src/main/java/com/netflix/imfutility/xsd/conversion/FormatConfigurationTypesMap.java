@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Alexander on 4/25/2016.
+ * Custom map for generated {@link FormatConfigurationTypes}.
  */
 @XmlJavaTypeAdapter(FormatConfigurationTypesMapAdapter.class)
 public class FormatConfigurationTypesMap<String, FormatConfigurationType> {

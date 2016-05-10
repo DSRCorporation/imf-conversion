@@ -6,7 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Alexander on 4/25/2016.
+ * Dynamic Template Parameter Context.
+ * <ul>
+ * <li>It's used to replace dynamic template parameters in conversion operations</li>
+ * <li>May contain any key-value map</li>
+ * <li>Created dynamically in the code</li>
+ * </ul>
  */
 public class DynamicTemplateParameterContext implements ITemplateParameterContext {
 

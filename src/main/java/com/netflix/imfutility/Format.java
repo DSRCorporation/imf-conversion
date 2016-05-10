@@ -1,7 +1,7 @@
 package com.netflix.imfutility;
 
 /**
- * Created by Alexander on 4/22/2016.
+ * Supported destination formats.
  */
 public enum Format {
 
