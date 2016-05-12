@@ -41,8 +41,8 @@
                             <cycle>
                                 <execEachSegment name="decode_video">
                                     <exec>
-                                        %{tool.ffmpeg} -y -i %{segment.essence} -ss %{segment.startTime}
-                                        -t %{segment.duration} -an -vf scale=1920:1080,fps=25
+                                        %{tool.ffmpeg} -y -i %{resource.essence} -ss %{resource.startTime}
+                                        -t %{resource.duration} -an -vf scale=1920:1080,fps=25
                                         -pix_fmt yuv422p10le -f rawvideo -
                                     </exec>
                                 </execEachSegment>
@@ -51,7 +51,7 @@
                                 %{tool.x264} --input-res 1920x1080 --input-csp i422 --input-depth 10 -
                                 --colorprim bt709 --transfer bt709 --colormatrix bt709 --tune psnr
                                 --fps 25/1 --interlaced --force-cfr --output-csp i422
-                                --avcintra-class 100 -o %{seq.num}-%{tmp.videoEncoded}
+                                --avcintra-class 100 -o %{tmp.videoEncoded}
                             </execOnce>
                         </pipe>
                         <dynamicParameter name="concatAudioInput"> -i %{seq.num}-%{tmp.videoEncoded}</dynamicParameter>
@@ -66,17 +66,14 @@
                             <cycle>
                                 <execEachSegment name="decode_audio">
                                     <exec>
-                                        %{tool.ffmpeg} -i %{segment.essence} -ss %{segment.startTime}
-                                        -t %{segment.duration} -vn -af aresample=48000
+                                        %{tool.ffmpeg} -i %{resource.essence} -ss %{resource.startTime}
+                                        -t %{resource.duration} -vn -af aresample=48000
                                         -acodec pcm_s24le -f s24le -
                                     </exec>
                                 </execEachSegment>
                             </cycle>
-                            <execOnce name="encode_video">
-                                %{tool.x264} --input-res 1920x1080 --input-csp i422 --input-depth 10 -
-                                --colorprim bt709 --transfer bt709 --colormatrix bt709 --tune psnr
-                                --fps 25/1 --interlaced --force-cfr --output-csp i422
-                                --avcintra-class 100 -o %{seq.num}-%{tmp.videoEncoded}
+                            <execOnce name="encode_audio">
+                                %{tool.ffmpeg} -f s24le -i - -vn -c:a copy -f s24le %{tmp.audioEncoded}
                             </execOnce>
                         </pipe>
                     </execEachSequence>
@@ -85,7 +82,7 @@
                         3. create output .mxf from flatten encoded video and audio
                     -->
                     <execOnce name="muxing_mxf">
-                        %{tool.bmx} -t as11op1a -o %{dynamic.outputMxf}
+                        %{tool.bmx} -t as11op1a -o %{output.mxf}
                         --avci100_1080i %{tmp.videoEncoded}
                         -q 24 -s 48000 --audio-chan %{dynamic.audioChannels}
                         --pcm %{tmp.audioEncoded}

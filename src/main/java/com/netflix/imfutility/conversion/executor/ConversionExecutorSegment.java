@@ -36,13 +36,13 @@ public class ConversionExecutorSegment implements IConversionExecutor {
         for (int segment = 0; segment < segmentNum; segment++) {
             for (Object operation : execEachSegm.getPipeOrExecOnceOrExecEachSequence()) {
                 if (operation instanceof PipeSequenceType) {
-                    execPipe((PipeSegmentType) operation);
+                    execPipe((PipeSegmentType) operation, segment);
                 } else if (operation instanceof ExecOnceType) {
-                    execOnce((ExecOnceType) operation);
+                    execOnce((ExecOnceType) operation, segment);
                 } else if (operation instanceof ExecEachSequenceType) {
-                    execSequence((ExecEachSequenceType) operation);
+                    execSequence((ExecEachSequenceType) operation, segment);
                 } else if (operation instanceof DynamicParameterType) {
-                    addDynamicParameter((DynamicParameterType) operation);
+                    addDynamicParameter((DynamicParameterType) operation, segment);
                 } else {
                     throw new RuntimeException(String.format("Unknown Conversion Operation type: %s", operation.toString()));
                 }
@@ -50,31 +50,31 @@ public class ConversionExecutorSegment implements IConversionExecutor {
         }
     }
 
-    private void execOnce(ExecOnceType execOnce) throws IOException {
-        new ExecuteOnceStrategy(contextProvider).execute(getExecOnceOperation(execOnce));
+    private void execOnce(ExecOnceType execOnce, int segment) throws IOException {
+        new ExecuteOnceStrategy(contextProvider).execute(getExecOnceOperation(execOnce, segment));
     }
 
-    private void execSequence(ExecEachSequenceType execSequence) throws IOException {
-        for (OperationInfo seqOperation : getExecSequenceOperations(execSequence)) {
+    private void execSequence(ExecEachSequenceType execSequence, int segment) throws IOException {
+        for (OperationInfo seqOperation : getExecSequenceOperations(execSequence, segment)) {
             new ExecuteOnceStrategy(contextProvider).execute(seqOperation);
         }
     }
 
-    private void execPipe(PipeSegmentType pipe) throws IOException {
+    private void execPipe(PipeSegmentType pipe, int segment) throws IOException {
         // 1. prepare operation to be executed in a pipe
         PipeOperationInfo pipeInfo = new PipeOperationInfo();
 
         for (ExecOnceType tailOperation : pipe.getExecOnce()) {
-            pipeInfo.getTailOperations().add(getExecOnceOperation(tailOperation));
+            pipeInfo.getTailOperations().add(getExecOnceOperation(tailOperation, segment));
         }
         if (pipe.getCycle() != null) {
             for (Object cycleOperation : pipe.getCycle().getExecEachSegmentOrExecOnce()) {
                 if (cycleOperation instanceof ExecOnceType) {
                     pipeInfo.getCycleOperations().add(
-                            getExecOnceOperation((ExecOnceType) cycleOperation));
+                            getExecOnceOperation((ExecOnceType) cycleOperation, segment));
                 } else if (cycleOperation instanceof ExecEachSequenceType) {
                     pipeInfo.getCycleOperations().addAll(
-                            getExecSequenceOperations((ExecEachSequenceType) cycleOperation));
+                            getExecSequenceOperations((ExecEachSequenceType) cycleOperation, segment));
                 }
             }
         }
@@ -83,23 +83,23 @@ public class ConversionExecutorSegment implements IConversionExecutor {
         new ExecutePipeStrategy(contextProvider).execute(pipeInfo);
     }
 
-    private void addDynamicParameter(DynamicParameterType dynamicParam) {
+    private void addDynamicParameter(DynamicParameterType dynamicParam, int segment) {
         ContextInfo contextInfo = new ContextInfoBuilder()
-                .setSegment(segmentNum)
+                .setSegment(segment)
                 .build();
         contextProvider.getDynamicContext().appendParameter(
                 dynamicParam.getName(), dynamicParam.getValue(), contextInfo);
     }
 
-    private OperationInfo getExecOnceOperation(ExecOnceType execOnce) {
+    private OperationInfo getExecOnceOperation(ExecOnceType execOnce, int segment) {
         ContextInfo contextInfo = new ContextInfoBuilder()
-                .setSegment(segmentNum)
+                .setSegment(segment)
                 .build();
         return new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(),
                 contextInfo);
     }
 
-    private List<OperationInfo> getExecSequenceOperations(ExecEachSequenceType execSequence) {
+    private List<OperationInfo> getExecSequenceOperations(ExecEachSequenceType execSequence, int segment) {
         List<OperationInfo> result = new ArrayList<>();
 
         // 1. get sequence type
@@ -111,7 +111,7 @@ public class ConversionExecutorSegment implements IConversionExecutor {
         // 2. process operation for each sequence within segment
         for (int seq = 0; seq < seqNum; seq++) {
             // 2.1 get resource number for the the given (segment, sequence):
-            int resourceNum = contextProvider.getResourceContext().getResourceCount(segmentNum, seqNum, seqType);
+            int resourceNum = contextProvider.getResourceContext().getResourceCount(segment, seqNum, seqType);
 
             // 2.2 process operations for each resource within segment and sequence
             for (int resource = 0; resource < resourceNum; resource++) {
@@ -119,7 +119,7 @@ public class ConversionExecutorSegment implements IConversionExecutor {
                 ContextInfo contextInfo = new ContextInfoBuilder()
                         .setSequence(seqNum)
                         .setSequenceType(seqType)
-                        .setSegment(segmentNum)
+                        .setSegment(segment)
                         .setResource(resource)
                         .build();
 

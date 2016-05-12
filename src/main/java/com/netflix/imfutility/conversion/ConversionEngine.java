@@ -34,7 +34,7 @@ public class ConversionEngine {
                 new ConversionExecutorOnce(contextProvider, (ExecOnceType) operation).execute();
             } else if (operation instanceof ExecEachSegmentSequenceType) {
                 new ConversionExecutorSegment(contextProvider, (ExecEachSegmentSequenceType) operation).execute();
-            } else if (operation instanceof ExecEachSegmentType) {
+            } else if (operation instanceof ExecEachSequenceSegmentType) {
                 new ConversionExecutorSequence(contextProvider, (ExecEachSequenceSegmentType) operation).execute();
             } else if (operation instanceof DynamicParameterType) {
                 DynamicParameterType parameter = (DynamicParameterType) operation;

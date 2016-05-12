@@ -20,13 +20,24 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     }
 
     @Override
+    protected void fillOutputContext() {
+        logger.info("Creating Output context...");
+
+        // FIXME
+
+        OutputTemplateParameterContext outputContext = contextProvider.getOutputContext();
+        outputContext.addParameter("mxf", "output.mxf");
+
+        logger.info("Created Output context: OK\n");
+    }
+
+    @Override
     protected void fillDynamicContext() {
         logger.info("Creating Dynamic context...");
 
         // FIXME
 
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
-        dynamicContext.addParameter("outputMxf", "output.mxf", ContextInfo.EMPTY);
         dynamicContext.addParameter("audioChannels", "2", ContextInfo.EMPTY);
 
         logger.info("Created Dynamic context: OK\n");
@@ -66,7 +77,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
                     resourceContext.initDefaultResourceParameters(resourceKey, resorceVideoCount);
                     resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.ESSENCE, pathToMedia);
                     resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.START_TIME,
-                            String.valueOf(startOffset + res * segm * segmDuration));
+                            String.valueOf(startOffset + (res + 1) * segm * segmDuration));
                     resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.DURATION,
                             String.valueOf(segmDuration));
                 }
@@ -78,7 +89,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
                     resourceContext.initDefaultResourceParameters(resourceKey, resorceAudioCount);
                     resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.ESSENCE, pathToMedia);
                     resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.START_TIME,
-                            String.valueOf(startOffset + res * segm * segmDuration));
+                            String.valueOf(startOffset + (res + 1) * segm * segmDuration));
                     resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.DURATION,
                             String.valueOf(segmDuration));
                 }

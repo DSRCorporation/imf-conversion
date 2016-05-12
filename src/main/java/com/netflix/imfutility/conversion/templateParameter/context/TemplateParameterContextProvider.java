@@ -53,6 +53,10 @@ public class TemplateParameterContextProvider {
         return (ResourceTemplateParameterContext) contexts.get(TemplateParameterContext.RESOURCE);
     }
 
+    public OutputTemplateParameterContext getOutputContext() {
+        return (OutputTemplateParameterContext) contexts.get(TemplateParameterContext.OUTPUT);
+    }
+
     public String getWorkingDir() {
         return workingDir;
     }
@@ -80,6 +84,8 @@ public class TemplateParameterContextProvider {
                 return new SequenceTemplateParameterContext();
             case RESOURCE:
                 return new ResourceTemplateParameterContext();
+            case OUTPUT:
+                return new OutputTemplateParameterContext();
         }
         return null;
     }
