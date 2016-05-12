@@ -133,6 +133,22 @@
                             <clearOutputDir>false</clearOutputDir>
                         </configuration>
                     </execution>
+
+                    <!-- Generate DPP audiomap.xml classes -->
+                    <execution>
+                        <id>xjc-dpp-audiomap</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/dpp/audiomap.xsd</source>
+                            </sources>
+                            <packageName>com.netflix.imfutility.dpp.audiomap</packageName>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
                 </executions>
             </plugin>
 

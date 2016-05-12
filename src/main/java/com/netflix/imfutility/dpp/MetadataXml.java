@@ -175,9 +175,9 @@ public class MetadataXml {
      *
      * @param metadataXmlFile the metadata.xml file
      * @return a map with the parameter files for BMXLib
-     * @throws MetadataException an exception in case of metadata.xml parsing error
+     * @throws XmlParsingException an exception in case of metadata.xml parsing error
      */
-    public static Map<DMFramework, File> getBmxDppParameters(File metadataXmlFile) throws MetadataException {
+    public static Map<DMFramework, File> getBmxDppParameters(File metadataXmlFile) throws XmlParsingException {
 
         JAXBSource source = loadMetadataXml(metadataXmlFile);
 
@@ -195,10 +195,10 @@ public class MetadataXml {
      *
      * @param metadataXmlFile the metadata.xml file
      * @return JAXBSource with loaded and mapped metadata.xml
-     * @throws MetadataException an exception in case of metadata.xml parsing error
+     * @throws XmlParsingException an exception in case of metadata.xml parsing error
      */
-    private static JAXBSource loadMetadataXml(File metadataXmlFile) throws MetadataException {
-        MetadataXmlParsingHandler contentErrorHandler = null;
+    private static JAXBSource loadMetadataXml(File metadataXmlFile) throws XmlParsingException {
+        XmlParsingHandler contentErrorHandler = null;
         try {
 
             SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -216,7 +216,7 @@ public class MetadataXml {
 
             SAXParser sp = spf.newSAXParser();
             XMLReader xr = sp.getXMLReader();
-            contentErrorHandler = new MetadataXmlParsingHandler(unmarshallerHandler);
+            contentErrorHandler = new XmlParsingHandler(unmarshallerHandler);
             xr.setErrorHandler(contentErrorHandler);
             xr.setContentHandler(contentErrorHandler);
 
@@ -224,7 +224,7 @@ public class MetadataXml {
             xr.parse(xml);
 
             if (contentErrorHandler.getParsingErrors().size() > 0) {
-                throw new MetadataException(contentErrorHandler.getParsingErrors());
+                throw new XmlParsingException(contentErrorHandler.getParsingErrors());
             }
 
             Dpp dpp = (Dpp) unmarshallerHandler.getResult();
@@ -233,7 +233,7 @@ public class MetadataXml {
             throw new RuntimeException(e);
         } catch (SAXException e) {
             if (contentErrorHandler != null && contentErrorHandler.getParsingErrors().size() > 0) {
-                throw new MetadataException(e, contentErrorHandler.getParsingErrors());
+                throw new XmlParsingException(e, contentErrorHandler.getParsingErrors());
             } else {
                 throw new RuntimeException(e);
             }
