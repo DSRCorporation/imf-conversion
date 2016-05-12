@@ -58,7 +58,6 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
                     String.format("Incorrect sequence number '%d'. Sequence number must be specified for a sequence template parameter.",
                             contextInfo.getSequence()));
         }
-
         if (contextInfo.getSequenceType() == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(), "Sequence type must be specified for a sequence template parameter.");
