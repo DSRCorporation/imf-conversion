@@ -2,10 +2,9 @@ package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.Format;
-import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.SegmentContextParameters;
-import com.netflix.imfutility.conversion.templateParameter.context.SegmentTemplateParameterContext;
-import com.netflix.imfutility.xsd.conversion.SegmentType;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
+import com.netflix.imfutility.conversion.templateParameter.context.*;
+import com.netflix.imfutility.xsd.conversion.SequenceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,53 +20,83 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     }
 
     @Override
+    protected void fillOutputContext() {
+        logger.info("Creating Output context...");
+
+        // FIXME
+
+        OutputTemplateParameterContext outputContext = contextProvider.getOutputContext();
+        outputContext.addParameter("mxf", "output.mxf");
+
+        logger.info("Created Output context: OK\n");
+    }
+
+    @Override
     protected void fillDynamicContext() {
         logger.info("Creating Dynamic context...");
 
         // FIXME
 
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
-        dynamicContext.addParameter("outputMxf", "output.mxf");
-        dynamicContext.addParameter("audioChannels", "2");
+        dynamicContext.addParameter("audioChannels", "2", ContextInfo.EMPTY);
 
         logger.info("Created Dynamic context: OK\n");
     }
 
     @Override
-    protected void fillSegmentContext() {
-        logger.info("Creating Segment context...");
+    protected void fillCplContext() {
+        logger.info("Creating CPL contexts (segment, sequence, resource)...");
 
         //FIXME
 
-        SegmentTemplateParameterContext segmentContext = contextProvider.getSegmentContext();
-
         String pathToMedia = "G:\\Netflix\\test\\encode\\Aladdin_trailer_ATT.ts";
 
-        segmentContext.addSegmentParameter(0, SegmentType.VIDEO, SegmentContextParameters.ESSENCE, pathToMedia);
-        segmentContext.addSegmentParameter(0, SegmentType.VIDEO, SegmentContextParameters.START_TIME, "10");
-        segmentContext.addSegmentParameter(0, SegmentType.VIDEO, SegmentContextParameters.DURATION, "5");
 
-        segmentContext.addSegmentParameter(0, SegmentType.AUDIO, SegmentContextParameters.ESSENCE, pathToMedia);
-        segmentContext.addSegmentParameter(0, SegmentType.AUDIO, SegmentContextParameters.START_TIME, "10");
-        segmentContext.addSegmentParameter(0, SegmentType.AUDIO, SegmentContextParameters.DURATION, "5");
+        int segmentCount = 2;
+        int videoSeqCount = 1;
+        int audioSeqCount = 1;
+        int startOffset = 10;
+        int segmDuration = 5;
+        int resorceVideoCount = 1;
+        int resorceAudioCount = 1;
 
-        segmentContext.addSegmentParameter(1, SegmentType.VIDEO, SegmentContextParameters.ESSENCE, pathToMedia);
-        segmentContext.addSegmentParameter(1, SegmentType.VIDEO, SegmentContextParameters.START_TIME, "25");
-        segmentContext.addSegmentParameter(1, SegmentType.VIDEO, SegmentContextParameters.DURATION, "5");
 
-        segmentContext.addSegmentParameter(1, SegmentType.AUDIO, SegmentContextParameters.ESSENCE, pathToMedia);
-        segmentContext.addSegmentParameter(1, SegmentType.AUDIO, SegmentContextParameters.START_TIME, "25");
-        segmentContext.addSegmentParameter(1, SegmentType.AUDIO, SegmentContextParameters.DURATION, "5");
+        SegmentTemplateParameterContext segmentContext = contextProvider.getSegmentContext();
+        segmentContext.initDefaultSegmentParameters(segmentCount);
 
-        segmentContext.addSegmentParameter(2, SegmentType.VIDEO, SegmentContextParameters.ESSENCE, pathToMedia);
-        segmentContext.addSegmentParameter(2, SegmentType.VIDEO, SegmentContextParameters.START_TIME, "35");
-        segmentContext.addSegmentParameter(2, SegmentType.VIDEO, SegmentContextParameters.DURATION, "5");
+        SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
+        sequenceContext.initDefaultSequenceParameters(SequenceType.VIDEO, videoSeqCount);
+        sequenceContext.initDefaultSequenceParameters(SequenceType.AUDIO, audioSeqCount);
 
-        segmentContext.addSegmentParameter(2, SegmentType.AUDIO, SegmentContextParameters.ESSENCE, pathToMedia);
-        segmentContext.addSegmentParameter(2, SegmentType.AUDIO, SegmentContextParameters.START_TIME, "35");
-        segmentContext.addSegmentParameter(2, SegmentType.AUDIO, SegmentContextParameters.DURATION, "5");
+        ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
+        for (int segm = 0; segm < segmentCount; segm++) {
+            for (int seq = 0; seq < videoSeqCount; seq++) {
+                for (int res = 0; res < resorceVideoCount; res++) {
+                    ResourceKey resourceKey = new ResourceKey(
+                            segm, seq, SequenceType.VIDEO);
+                    resourceContext.initDefaultResourceParameters(resourceKey, resorceVideoCount);
+                    resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.ESSENCE, pathToMedia);
+                    resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.START_TIME,
+                            String.valueOf(startOffset + (res + 1) * segm * segmDuration));
+                    resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.DURATION,
+                            String.valueOf(segmDuration));
+                }
+            }
+            for (int seq = 0; seq < audioSeqCount; seq++) {
+                for (int res = 0; res < resorceAudioCount; res++) {
+                    ResourceKey resourceKey = new ResourceKey(
+                            segm, seq, SequenceType.AUDIO);
+                    resourceContext.initDefaultResourceParameters(resourceKey, resorceAudioCount);
+                    resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.ESSENCE, pathToMedia);
+                    resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.START_TIME,
+                            String.valueOf(startOffset + (res + 1) * segm * segmDuration));
+                    resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.DURATION,
+                            String.valueOf(segmDuration));
+                }
+            }
+        }
 
-        logger.info("Created Segment context: OK\n");
+        logger.info("Created CPL contexts (segment, sequence, resource): OK\n");
     }
 
     @Override

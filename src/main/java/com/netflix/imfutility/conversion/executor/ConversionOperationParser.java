@@ -1,14 +1,12 @@
 package com.netflix.imfutility.conversion.executor;
 
-import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
-import com.netflix.imfutility.xsd.conversion.SegmentType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -22,29 +20,18 @@ public class ConversionOperationParser {
         this.parameterResolver = parameterResolver;
     }
 
-
-    public List<String> parseOperation(String conversionOperation) {
-        return parseOperation(conversionOperation, TemplateParameter.DEFAULT_SEGMENT, TemplateParameter.DEFAULT_SEGMENT_TYPE);
-    }
-
-    public List<String> parseOperation(String conversionOperation, int segment, SegmentType segmentType) {
+    public List<String> parseOperation(String conversionOperation, ContextInfo contextInfo) {
         // split parameters
         List<String> params = splitParameters(conversionOperation);
 
         List<String> execAndParams = new ArrayList<>();
         for (String param : params) {
-            String resolvedParam = param;
-
             // resolve each template parameter the param contains
-            Matcher m = Pattern.compile(TemplateParameter.TEMPLATE_PARAM).matcher(param);
-            while (m.find()) {
-                String templateParam = m.group();
-                String resolvedTemplateParam = parameterResolver.resolveTemplateParameter(templateParam, segment, segmentType);
-                resolvedParam = resolvedParam.replace(templateParam, resolvedTemplateParam);
-            }
+            String resolvedParam = parameterResolver.resolveTemplateParameter(param, contextInfo);
 
             // add quotes if needed
             resolvedParam = addQuotes(resolvedParam);
+
             execAndParams.add(resolvedParam);
         }
 

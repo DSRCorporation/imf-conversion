@@ -45,6 +45,18 @@ public class TemplateParameterContextProvider {
         return (SegmentTemplateParameterContext) contexts.get(TemplateParameterContext.SEGMENT);
     }
 
+    public SequenceTemplateParameterContext getSequenceContext() {
+        return (SequenceTemplateParameterContext) contexts.get(TemplateParameterContext.SEQUENCE);
+    }
+
+    public ResourceTemplateParameterContext getResourceContext() {
+        return (ResourceTemplateParameterContext) contexts.get(TemplateParameterContext.RESOURCE);
+    }
+
+    public OutputTemplateParameterContext getOutputContext() {
+        return (OutputTemplateParameterContext) contexts.get(TemplateParameterContext.OUTPUT);
+    }
+
     public String getWorkingDir() {
         return workingDir;
     }
@@ -65,9 +77,15 @@ public class TemplateParameterContextProvider {
             case TOOL:
                 return new ToolTemplateParameterContext(config);
             case DYNAMIC:
-                return new DynamicTemplateParameterContext();
+                return new DynamicTemplateParameterContext(this);
             case SEGMENT:
                 return new SegmentTemplateParameterContext();
+            case SEQUENCE:
+                return new SequenceTemplateParameterContext();
+            case RESOURCE:
+                return new ResourceTemplateParameterContext();
+            case OUTPUT:
+                return new OutputTemplateParameterContext();
         }
         return null;
     }

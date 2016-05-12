@@ -1,6 +1,7 @@
 package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 
 /**
  * Template Parameter Context.
@@ -18,6 +19,6 @@ public interface ITemplateParameterContext {
      * @param templateParameter the template parameter to be resolved.
      * @return resolved parameter value as a string. Never null.
      */
-    String resolveTemplateParameter(TemplateParameter templateParameter);
+    String resolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo);
 
 }
