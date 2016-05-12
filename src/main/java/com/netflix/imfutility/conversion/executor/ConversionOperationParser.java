@@ -1,14 +1,12 @@
 package com.netflix.imfutility.conversion.executor;
 
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
-import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -28,18 +26,12 @@ public class ConversionOperationParser {
 
         List<String> execAndParams = new ArrayList<>();
         for (String param : params) {
-            String resolvedParam = param;
-
             // resolve each template parameter the param contains
-            Matcher m = Pattern.compile(TemplateParameter.TEMPLATE_PARAM).matcher(param);
-            while (m.find()) {
-                String templateParam = m.group();
-                String resolvedTemplateParam = parameterResolver.resolveTemplateParameter(templateParam, contextInfo);
-                resolvedParam = resolvedParam.replace(templateParam, resolvedTemplateParam);
-            }
+            String resolvedParam = parameterResolver.resolveTemplateParameter(param, contextInfo);
 
             // add quotes if needed
             resolvedParam = addQuotes(resolvedParam);
+
             execAndParams.add(resolvedParam);
         }
 

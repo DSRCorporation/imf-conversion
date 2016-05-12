@@ -41,6 +41,8 @@ public class ConversionExecutorSegment implements IConversionExecutor {
                     execOnce((ExecOnceType) operation);
                 } else if (operation instanceof ExecEachSequenceType) {
                     execSequence((ExecEachSequenceType) operation);
+                } else if (operation instanceof DynamicParameterType) {
+                    addDynamicParameter((DynamicParameterType) operation);
                 } else {
                     throw new RuntimeException(String.format("Unknown Conversion Operation type: %s", operation.toString()));
                 }
@@ -81,6 +83,14 @@ public class ConversionExecutorSegment implements IConversionExecutor {
         new ExecutePipeStrategy(contextProvider).execute(pipeInfo);
     }
 
+    private void addDynamicParameter(DynamicParameterType dynamicParam) {
+        ContextInfo contextInfo = new ContextInfoBuilder()
+                .setSegment(segmentNum)
+                .build();
+        contextProvider.getDynamicContext().appendParameter(
+                dynamicParam.getName(), dynamicParam.getValue(), contextInfo);
+    }
+
     private OperationInfo getExecOnceOperation(ExecOnceType execOnce) {
         ContextInfo contextInfo = new ContextInfoBuilder()
                 .setSegment(segmentNum)
@@ -105,15 +115,28 @@ public class ConversionExecutorSegment implements IConversionExecutor {
 
             // 2.2 process operations for each resource within segment and sequence
             for (int resource = 0; resource < resourceNum; resource++) {
+                // context info
                 ContextInfo contextInfo = new ContextInfoBuilder()
                         .setSequence(seqNum)
                         .setSequenceType(seqType)
                         .setSegment(segmentNum)
                         .setResource(resource)
                         .build();
-                OperationInfo operationInfo = new OperationInfo(execSequence.getValue(), execSequence.getName(), execSequence.getClass(),
-                        contextInfo);
-                result.add(operationInfo);
+
+                // executable: operation info
+                if (execSequence.getExec() != null) {
+                    OperationInfo operationInfo = new OperationInfo(execSequence.getExec().getValue(), execSequence.getName(), execSequence.getClass(),
+                            contextInfo);
+                    result.add(operationInfo);
+                }
+
+                // dynamic parameter
+                if (execSequence.getDynamicParameter() != null) {
+                    for (DynamicParameterType dynamicParam : execSequence.getDynamicParameter()) {
+                        contextProvider.getDynamicContext().appendParameter(
+                                dynamicParam.getName(), dynamicParam.getValue(), contextInfo);
+                    }
+                }
             }
         }
 

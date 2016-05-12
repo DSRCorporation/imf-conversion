@@ -27,7 +27,7 @@ public class ConversionExecutorOnce implements IConversionExecutor {
     @Override
     public void execute() throws IOException {
         OperationInfo operationInfo = new OperationInfo(operation.getValue(), operation.getName(), operation.getClass(),
-                ContextInfo.EMPTY());
+                ContextInfo.EMPTY);
         new ExecuteOnceStrategy(contextProvider).execute(operationInfo);
     }
 

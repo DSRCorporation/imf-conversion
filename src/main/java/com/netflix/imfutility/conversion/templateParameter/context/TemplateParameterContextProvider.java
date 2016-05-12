@@ -73,7 +73,7 @@ public class TemplateParameterContextProvider {
             case TOOL:
                 return new ToolTemplateParameterContext(config);
             case DYNAMIC:
-                return new DynamicTemplateParameterContext();
+                return new DynamicTemplateParameterContext(this);
             case SEGMENT:
                 return new SegmentTemplateParameterContext();
             case SEQUENCE:

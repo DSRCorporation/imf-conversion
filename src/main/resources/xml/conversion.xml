@@ -36,13 +36,15 @@
                         1. decode each video segment and redirect output to encode's input
                         => flatten encoded video
                     -->
-                    <execEachSequence type="video">
+                    <execEachSequence type="video" name="encodeVideo">
                         <pipe>
                             <cycle>
                                 <execEachSegment name="decode_video">
-                                    %{tool.ffmpeg} -y -i %{segment.essence} -ss %{segment.startTime}
-                                    -t %{segment.duration} -an -vf scale=1920:1080,fps=25
-                                    -pix_fmt yuv422p10le -f rawvideo -
+                                    <exec>
+                                        %{tool.ffmpeg} -y -i %{segment.essence} -ss %{segment.startTime}
+                                        -t %{segment.duration} -an -vf scale=1920:1080,fps=25
+                                        -pix_fmt yuv422p10le -f rawvideo -
+                                    </exec>
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_video">
@@ -52,20 +54,22 @@
                                 --avcintra-class 100 -o %{seq.num}-%{tmp.videoEncoded}
                             </execOnce>
                         </pipe>
-                        <buildParam name="concatAudioInput"> -i %{seq.num}-%{tmp.videoEncoded}</buildParam>
+                        <dynamicParameter name="concatAudioInput"> -i %{seq.num}-%{tmp.videoEncoded}</dynamicParameter>
                     </execEachSequence>
 
                     <!--
                         2. decode each audio segment and redirect output to encode's input
                            => flatten encoded audio
                     -->
-                    <execEachSequence type="audio">
+                    <execEachSequence type="audio" name="encodeAudio">
                         <pipe>
                             <cycle>
                                 <execEachSegment name="decode_audio">
-                                    %{tool.ffmpeg} -i %{segment.essence} -ss %{segment.startTime}
-                                    -t %{segment.duration} -vn -af aresample=48000
-                                    -acodec pcm_s24le -f s24le -
+                                    <exec>
+                                        %{tool.ffmpeg} -i %{segment.essence} -ss %{segment.startTime}
+                                        -t %{segment.duration} -vn -af aresample=48000
+                                        -acodec pcm_s24le -f s24le -
+                                    </exec>
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_video">

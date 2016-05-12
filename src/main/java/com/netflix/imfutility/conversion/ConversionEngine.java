@@ -3,6 +3,7 @@ package com.netflix.imfutility.conversion;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorOnce;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorSegment;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorSequence;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.xsd.conversion.*;
 
@@ -35,6 +36,10 @@ public class ConversionEngine {
                 new ConversionExecutorSegment(contextProvider, (ExecEachSegmentSequenceType) operation).execute();
             } else if (operation instanceof ExecEachSegmentType) {
                 new ConversionExecutorSequence(contextProvider, (ExecEachSequenceSegmentType) operation).execute();
+            } else if (operation instanceof DynamicParameterType) {
+                DynamicParameterType parameter = (DynamicParameterType) operation;
+                contextProvider.getDynamicContext().addParameter(
+                        parameter.getName(), parameter.getValue(), ContextInfo.EMPTY);
             } else {
                 throw new RuntimeException(String.format("Unknown Conversion Operation type: %s", operation.toString()));
             }

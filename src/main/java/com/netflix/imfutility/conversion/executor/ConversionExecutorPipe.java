@@ -51,7 +51,7 @@ public class ConversionExecutorPipe implements IConversionExecutor {
 
     private OperationInfo getExecOnceOperation(ExecOnceType execOnce) {
         return new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(),
-                ContextInfo.EMPTY());
+                ContextInfo.EMPTY);
     }
 
 }

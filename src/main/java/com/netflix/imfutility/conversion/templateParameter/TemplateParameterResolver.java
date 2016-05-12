@@ -4,6 +4,9 @@ import com.netflix.imfutility.conversion.templateParameter.context.ITemplatePara
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterContextException;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Resolves a given template parameter using an appropriate template parameter context.
  */
@@ -20,7 +23,17 @@ public class TemplateParameterResolver {
     }
 
     public String resolveTemplateParameter(String parameterStr, ContextInfo contextInfo) {
-        return doResolveTemplateParameter(new TemplateParameter(parameterStr), contextInfo);
+        String resolvedParam = parameterStr;
+
+        // resolve each template parameter the param contains
+        Matcher m = Pattern.compile(TemplateParameter.TEMPLATE_PARAM).matcher(parameterStr);
+        while (m.find()) {
+            String templateParam = m.group();
+            String resolvedTemplateParam = doResolveTemplateParameter(new TemplateParameter(templateParam), contextInfo);
+            resolvedParam = resolvedParam.replace(templateParam, resolvedTemplateParam);
+        }
+
+        return resolvedParam;
     }
 
     private String doResolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo) {
@@ -30,6 +43,7 @@ public class TemplateParameterResolver {
                     templateParameter.toString(),
                     String.format("'%s' context not defined.", templateParameter.getContext().getName()));
         }
+
         return context.resolveTemplateParameter(templateParameter, contextInfo);
     }
 }

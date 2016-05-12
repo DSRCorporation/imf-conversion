@@ -2,6 +2,7 @@ package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.Format;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.*;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 import org.slf4j.Logger;
@@ -25,8 +26,8 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         // FIXME
 
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
-        dynamicContext.addParameter("outputMxf", "output.mxf");
-        dynamicContext.addParameter("audioChannels", "2");
+        dynamicContext.addParameter("outputMxf", "output.mxf", ContextInfo.EMPTY);
+        dynamicContext.addParameter("audioChannels", "2", ContextInfo.EMPTY);
 
         logger.info("Created Dynamic context: OK\n");
     }

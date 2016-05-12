@@ -2,6 +2,7 @@ package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
+import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 
 import java.util.HashMap;
@@ -18,9 +19,27 @@ import java.util.Map;
 public class DynamicTemplateParameterContext implements ITemplateParameterContext {
 
     private final Map<String, String> params = new HashMap<>();
+    private final TemplateParameterResolver parameterResolver;
 
-    public void addParameter(String paramName, String paramValue) {
+
+    public DynamicTemplateParameterContext(TemplateParameterContextProvider contextProvider) {
+        this.parameterResolver = new TemplateParameterResolver(contextProvider);
+    }
+
+    public void addParameter(String paramName, String paramValue, ContextInfo contextInfo) {
+        paramValue = parameterResolver.resolveTemplateParameter(paramValue, contextInfo);
         params.put(paramName, paramValue);
+    }
+
+    public void appendParameter(String paramName, String paramValue, ContextInfo contextInfo) {
+        paramValue = parameterResolver.resolveTemplateParameter(paramValue, contextInfo);
+        if (!params.containsKey(paramName)) {
+            params.put(paramName, paramValue);
+        } else {
+            paramValue = params.get(paramName).concat(paramValue);
+            params.put(paramName, paramValue);
+        }
+
     }
 
     @Override
