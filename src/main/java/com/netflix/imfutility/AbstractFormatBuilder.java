@@ -19,7 +19,7 @@ import java.io.IOException;
  * <li>Contains logic common for all formats</li>
  * <li>Designed for inheritance</li>
  * <li>Provides a common conversion workflow in a {@link #build(String, String)} method</li>
- * <li>Subclasses must provide logic related to context creation: {@link #fillDynamicContext()} and {@link #fillSegmentContext()}</li>
+ * <li>Subclasses must provide logic related to context creation: {@link #fillDynamicContext()} and {@link }</li>
  * <li>Subclasses may customize the workflow using {@link #preConvert()} and {@link #postConvert()} methods</li>
  * <li>Common workflow ({@link #build(String, String)}):
  * <ul>
@@ -62,7 +62,8 @@ public abstract class AbstractFormatBuilder {
 
             // 4. fill contexts
             fillDynamicContext();
-            fillSegmentContext();
+            fillCplContext();
+            fillOutputContext();
 
             // 5. convert
             preConvert();
@@ -116,9 +117,12 @@ public abstract class AbstractFormatBuilder {
         logger.info("Converted: OK\n");
     }
 
-    protected abstract void fillDynamicContext();
+    protected void fillDynamicContext() {
+    }
 
-    protected abstract void fillSegmentContext();
+    protected abstract void fillOutputContext();
+
+    protected abstract void fillCplContext();
 
     protected abstract String getConversionConfiguration();
 
@@ -145,24 +149,37 @@ public abstract class AbstractFormatBuilder {
 
         boolean success = true;
         for (ParamType tmpParam : contextProvider.getTmpContext().getAllParameters()) {
-            File tmpFile = new File(tmpParam.getValue());
-            if (!tmpFile.isAbsolute() || !tmpFile.isFile()) {
-                tmpFile = new File(workingDir, tmpParam.getValue());
-            }
-            if (!tmpFile.isAbsolute() || !tmpFile.isFile()) {
-                tmpFile = null;
-            }
-            if (tmpFile != null) {
-                if (!tmpFile.delete()) {
-                    success = false;
-                    logger.warn("Couldn't delete tmp file {}", tmpFile.getAbsolutePath());
-                }
-            }
+            success &= doDeleteTmpFile(tmpParam.getValue());
+        }
+        for (String paramValue : contextProvider.getDynamicContext().getAllParameters()) {
+            success &= doDeleteTmpFile(paramValue);
         }
 
         if (success) {
             logger.info("Deleted tmp files created during conversion: OK\n");
         }
+    }
+
+    private boolean doDeleteTmpFile(String paramValue) {
+        boolean success = true;
+
+        File tmpFile = new File(paramValue);
+        if (!tmpFile.isAbsolute() || !tmpFile.isFile()) {
+            tmpFile = new File(workingDir, paramValue);
+        }
+
+        if (!tmpFile.isAbsolute() || !tmpFile.isFile()) {
+            tmpFile = null;
+        }
+
+        if (tmpFile != null) {
+            if (!tmpFile.delete()) {
+                success = false;
+                logger.warn("Couldn't delete tmp file {}", tmpFile.getAbsolutePath());
+            }
+        }
+
+        return success;
     }
 
 }

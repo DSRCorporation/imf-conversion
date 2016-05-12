@@ -1,8 +1,9 @@
 package com.netflix.imfutility.conversion;
 
 import com.netflix.imfutility.conversion.executor.ConversionExecutorOnce;
-import com.netflix.imfutility.conversion.executor.ConversionExecutorPipe;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorSegment;
+import com.netflix.imfutility.conversion.executor.ConversionExecutorSequence;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.xsd.conversion.*;
 
@@ -17,9 +18,9 @@ import java.io.IOException;
  */
 public class ConversionEngine {
 
-    private ConversionExecutorPipe pipeExecutor;
     private ConversionExecutorOnce onceExecutor;
     private ConversionExecutorSegment segmentExecutor;
+    private ConversionExecutorSequence sequenceExecutor;
 
     public void convert(FormatType formatType, String configuration, TemplateParameterContextProvider contextProvider) throws IOException {
         // 1. get configuration
@@ -28,40 +29,20 @@ public class ConversionEngine {
             throw new RuntimeException(String.format("No configuration '%s' found for format '%s'.", configuration, formatType.getName()));
         }
 
-        // 2. init executors
-        pipeExecutor = new ConversionExecutorPipe(contextProvider);
-        onceExecutor = new ConversionExecutorOnce(contextProvider);
-        segmentExecutor = new ConversionExecutorSegment(contextProvider);
-
-        // 3. run configuration
-        run(formatConfigurationType);
-    }
-
-    private void run(FormatConfigurationType formatConfigurationType) throws IOException {
-        for (Object operation : formatConfigurationType.getPipeOrExecOnceOrExecEachSegment()) {
+        for (Object operation : formatConfigurationType.getExecOnceOrExecEachSegmentOrExecEachSequence()) {
             if (operation instanceof ExecOnceType) {
-                execOnce((ExecOnceType) operation);
-            } else if (operation instanceof PipeType) {
-                execPipe((PipeType) operation);
-            } else if (operation instanceof ExecEachSegmentType) {
-                execSegment((ExecEachSegmentType) operation);
+                new ConversionExecutorOnce(contextProvider, (ExecOnceType) operation).execute();
+            } else if (operation instanceof ExecEachSegmentSequenceType) {
+                new ConversionExecutorSegment(contextProvider, (ExecEachSegmentSequenceType) operation).execute();
+            } else if (operation instanceof ExecEachSequenceSegmentType) {
+                new ConversionExecutorSequence(contextProvider, (ExecEachSequenceSegmentType) operation).execute();
+            } else if (operation instanceof DynamicParameterType) {
+                contextProvider.getDynamicContext().addParameter((DynamicParameterType) operation, ContextInfo.EMPTY);
             } else {
                 throw new RuntimeException(String.format("Unknown Conversion Operation type: %s", operation.toString()));
             }
         }
     }
 
-
-    private void execOnce(ExecOnceType operation) throws IOException {
-        onceExecutor.execute(operation);
-    }
-
-    private void execPipe(PipeType operation) throws IOException {
-        pipeExecutor.execute(operation);
-    }
-
-    private void execSegment(ExecEachSegmentType operation) throws IOException {
-        segmentExecutor.execute(operation);
-    }
 
 }

@@ -1,6 +1,8 @@
-package com.netflix.imfutility.conversion.executor;
+package com.netflix.imfutility.conversion.executor.strategy;
 
 import com.netflix.imfutility.Constants;
+import com.netflix.imfutility.conversion.executor.ConversionOperationParser;
+import com.netflix.imfutility.conversion.executor.ExternalProcess;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import org.slf4j.Logger;
@@ -11,37 +13,34 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Base Conversion Operation Executor.
- * <ul>
- * <li>Resolves template parameters using Template Parameter Context</li>
- * <li>Creates a new external process</li>
- * </ul>
+ * Created by Alexander on 5/12/2016.
  */
-public abstract class AbstractConversionExecutor {
+public class AbstractExecuteStrategy {
 
-    private final Logger logger = LoggerFactory.getLogger(ConversionExecutorOnce.class);
+    private final Logger logger = LoggerFactory.getLogger(AbstractExecuteStrategy.class);
 
     protected final ConversionOperationParser conversionOperationParser;
     protected final TemplateParameterResolver parameterResolver;
 
     private static int count = 1;
 
-    public AbstractConversionExecutor(TemplateParameterContextProvider contextProvider) {
+    public AbstractExecuteStrategy(TemplateParameterContextProvider contextProvider) {
         this.parameterResolver = new TemplateParameterResolver(contextProvider);
         this.conversionOperationParser = new ConversionOperationParser(parameterResolver);
     }
 
-    protected ExternalProcess startProcess(List<String> execAndParams, String operationName, Class<?> operationClass) throws IOException {
+    protected ExternalProcess startProcess(OperationInfo operationInfo) throws IOException {
+        List<String> execAndParams = conversionOperationParser.parseOperation(operationInfo.getOperation(), operationInfo.getContextInfo());
         if (execAndParams.isEmpty()) {
-            throw new RuntimeException(String.format("No parameters for process '%s'", operationName));
+            throw new RuntimeException(String.format("No parameters for process '%s'", operationInfo.getOperaitonName()));
         }
 
         int processNum = count++;
-        String operationType = operationClass.getSimpleName();
+        String operationType = operationInfo.getOperationClass().getSimpleName();
         String programPath = execAndParams.get(0);
         String programName = new File(programPath.replaceAll("\"", "")).getName();
         ExternalProcess.ExternalProcessInfo processInfo = new ExternalProcess.ExternalProcessInfo(
-                processNum, operationName, operationType, programName, execAndParams);
+                processNum, operationInfo.getOperaitonName(), operationType, programName, execAndParams);
 
         logger.info("Starting {}", processInfo.toString());
         logger.info("\t{}", processInfo.getProcessString());

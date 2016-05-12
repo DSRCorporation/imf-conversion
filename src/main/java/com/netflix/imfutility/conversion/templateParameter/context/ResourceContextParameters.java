@@ -6,13 +6,19 @@ import java.util.stream.Collectors;
 /**
  * All supported segment template parameter names.
  */
-public enum SegmentContextParameters {
+public enum ResourceContextParameters {
 
-    NUM("num");
+    NUM("num"),
+
+    ESSENCE("essence"),
+
+    START_TIME("startTime"),
+
+    DURATION("duration");
 
     private final String name;
 
-    private SegmentContextParameters(String name) {
+    private ResourceContextParameters(String name) {
         this.name = name;
     }
 
@@ -20,8 +26,8 @@ public enum SegmentContextParameters {
         return name;
     }
 
-    public static SegmentContextParameters fromName(String name) {
-        for (SegmentContextParameters e : values()) {
+    public static ResourceContextParameters fromName(String name) {
+        for (ResourceContextParameters e : values()) {
             if (e.getName().equals(name)) {
                 return e;
             }
@@ -30,8 +36,8 @@ public enum SegmentContextParameters {
     }
 
     public static String getSupportedContextParameters() {
-        return Arrays.stream(SegmentContextParameters.values())
-                .map(SegmentContextParameters::getName)
+        return Arrays.stream(ResourceContextParameters.values())
+                .map(ResourceContextParameters::getName)
                 .collect(Collectors.joining(" ", "[", "]"));
     }
 
