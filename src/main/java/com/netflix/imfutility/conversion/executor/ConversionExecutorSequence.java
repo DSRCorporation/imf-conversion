@@ -14,33 +14,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Executor of {@link ExecEachSegmentType} conversion operation.
- * <ul>
- * <li>Execute the operation for each segment (Segment Template Parameter Context is used)</li>
- * </ul>
+ * Created by Alexander on 5/12/2016.
  */
-public class ConversionExecutorSegment implements IConversionExecutor {
+public class ConversionExecutorSequence implements IConversionExecutor {
 
     private final TemplateParameterContextProvider contextProvider;
-    private final ExecEachSegmentSequenceType execEachSegm;
-    private final int segmentNum;
+    private final ExecEachSequenceSegmentType execEachSeq;
+    private final SequenceType seqType;
+    private final int seqNum;
 
-    public ConversionExecutorSegment(TemplateParameterContextProvider contextProvider, ExecEachSegmentSequenceType execEachSegm) {
+    public ConversionExecutorSequence(TemplateParameterContextProvider contextProvider, ExecEachSequenceSegmentType execEachSeq) {
         this.contextProvider = contextProvider;
-        this.execEachSegm = execEachSegm;
-        this.segmentNum = contextProvider.getSegmentContext().getSegmentsNum();
+        this.execEachSeq = execEachSeq;
+        this.seqType = execEachSeq.getType();
+        this.seqNum = contextProvider.getSequenceContext().getSequenceCount(seqType);
     }
 
     @Override
     public void execute() throws IOException {
-        for (int segment = 0; segment < segmentNum; segment++) {
-            for (Object operation : execEachSegm.getPipeOrExecOnceOrExecEachSequence()) {
+        for (int seq = 0; seq < seqNum; seq++) {
+            for (Object operation : execEachSeq.getPipeOrExecOnceOrExecEachSegment()) {
                 if (operation instanceof PipeSequenceType) {
-                    execPipe((PipeSegmentType) operation);
+                    execPipe((PipeSequenceType) operation);
                 } else if (operation instanceof ExecOnceType) {
                     execOnce((ExecOnceType) operation);
-                } else if (operation instanceof ExecEachSequenceType) {
-                    execSequence((ExecEachSequenceType) operation);
+                } else if (operation instanceof ExecEachSegmentType) {
+                    execSegment((ExecEachSegmentType) operation);
                 } else {
                     throw new RuntimeException(String.format("Unknown Conversion Operation type: %s", operation.toString()));
                 }
@@ -52,13 +51,13 @@ public class ConversionExecutorSegment implements IConversionExecutor {
         new ExecuteOnceStrategy(contextProvider).execute(getExecOnceOperation(execOnce));
     }
 
-    private void execSequence(ExecEachSequenceType execSequence) throws IOException {
-        for (OperationInfo seqOperation : getExecSequenceOperations(execSequence)) {
-            new ExecuteOnceStrategy(contextProvider).execute(seqOperation);
+    private void execSegment(ExecEachSegmentType execSegment) throws IOException {
+        for (OperationInfo segmentOperation : getExecSegmentOperations(execSegment)) {
+            new ExecuteOnceStrategy(contextProvider).execute(segmentOperation);
         }
     }
 
-    private void execPipe(PipeSegmentType pipe) throws IOException {
+    private void execPipe(PipeSequenceType pipe) throws IOException {
         // 1. prepare operation to be executed in a pipe
         PipeOperationInfo pipeInfo = new PipeOperationInfo();
 
@@ -70,9 +69,9 @@ public class ConversionExecutorSegment implements IConversionExecutor {
                 if (cycleOperation instanceof ExecOnceType) {
                     pipeInfo.getCycleOperations().add(
                             getExecOnceOperation((ExecOnceType) cycleOperation));
-                } else if (cycleOperation instanceof ExecEachSequenceType) {
+                } else if (cycleOperation instanceof ExecEachSegmentType) {
                     pipeInfo.getCycleOperations().addAll(
-                            getExecSequenceOperations((ExecEachSequenceType) cycleOperation));
+                            getExecSegmentOperations((ExecEachSegmentType) cycleOperation));
                 }
             }
         }
@@ -83,35 +82,33 @@ public class ConversionExecutorSegment implements IConversionExecutor {
 
     private OperationInfo getExecOnceOperation(ExecOnceType execOnce) {
         ContextInfo contextInfo = new ContextInfoBuilder()
-                .setSegment(segmentNum)
+                .setSequence(seqNum)
+                .setSequenceType(seqType)
                 .build();
         return new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(),
                 contextInfo);
     }
 
-    private List<OperationInfo> getExecSequenceOperations(ExecEachSequenceType execSequence) {
+    private List<OperationInfo> getExecSegmentOperations(ExecEachSegmentType execSegment) {
         List<OperationInfo> result = new ArrayList<>();
 
-        // 1. get sequence type
-        SequenceType seqType = execSequence.getType();
+        // 1. get segments number
+        int segmentNum = contextProvider.getSegmentContext().getSegmentsNum();
 
-        //2. get sequence number
-        int seqNum = contextProvider.getSequenceContext().getSequenceCount(seqType);
-
-        // 2. process operation for each sequence within segment
-        for (int seq = 0; seq < seqNum; seq++) {
+        // 2. process operations for each segment within sequence
+        for (int segment = 0; segment < segmentNum; segment++) {
             // 2.1 get resource number for the the given (segment, sequence):
-            int resourceNum = contextProvider.getResourceContext().getResourceCount(segmentNum, seqNum, seqType);
+            int resourceNum = contextProvider.getResourceContext().getResourceCount(segment, seqNum, seqType);
 
             // 2.2 process operations for each resource within segment and sequence
             for (int resource = 0; resource < resourceNum; resource++) {
                 ContextInfo contextInfo = new ContextInfoBuilder()
                         .setSequence(seqNum)
                         .setSequenceType(seqType)
-                        .setSegment(segmentNum)
+                        .setSegment(segment)
                         .setResource(resource)
                         .build();
-                OperationInfo operationInfo = new OperationInfo(execSequence.getValue(), execSequence.getName(), execSequence.getClass(),
+                OperationInfo operationInfo = new OperationInfo(execSegment.getValue(), execSegment.getName(), execSegment.getClass(),
                         contextInfo);
                 result.add(operationInfo);
             }

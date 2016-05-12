@@ -15,7 +15,11 @@ public enum TemplateParameterContext {
 
     TOOL("tool"),
 
-    SEGMENT("segment");
+    SEGMENT("segment"),
+
+    SEQUENCE("sequence"),
+
+    RESOURCE("resource");
 
     private final String name;
 

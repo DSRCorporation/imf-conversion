@@ -52,6 +52,7 @@
                                 --avcintra-class 100 -o %{seq.num}-%{tmp.videoEncoded}
                             </execOnce>
                         </pipe>
+                        <buildParam name="concatAudioInput"> -i %{seq.num}-%{tmp.videoEncoded}</buildParam>
                     </execEachSequence>
 
                     <!--

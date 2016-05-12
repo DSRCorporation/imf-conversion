@@ -3,7 +3,6 @@ package com.netflix.imfutility.conversion.templateParameter;
 import com.netflix.imfutility.conversion.templateParameter.context.ITemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterContextException;
-import com.netflix.imfutility.xsd.conversion.SegmentType;
 
 /**
  * Resolves a given template parameter using an appropriate template parameter context.
@@ -20,21 +19,17 @@ public class TemplateParameterResolver {
         return contextProvider;
     }
 
-    public String resolveTemplateParameter(String parameterStr, int segment, SegmentType segmentType) {
-        return doResolveTemplateParameter(new TemplateParameter(parameterStr, segment, segmentType));
+    public String resolveTemplateParameter(String parameterStr, ContextInfo contextInfo) {
+        return doResolveTemplateParameter(new TemplateParameter(parameterStr), contextInfo);
     }
 
-    public String resolveTemplateParameter(String parameterStr) {
-        return doResolveTemplateParameter(new TemplateParameter(parameterStr));
-    }
-
-    private String doResolveTemplateParameter(TemplateParameter templateParameter) {
+    private String doResolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo) {
         ITemplateParameterContext context = contextProvider.getContext(templateParameter.getContext());
         if (context == null) {
             throw new UnknownTemplateParameterContextException(
                     templateParameter.toString(),
                     String.format("'%s' context not defined.", templateParameter.getContext().getName()));
         }
-        return context.resolveTemplateParameter(templateParameter);
+        return context.resolveTemplateParameter(templateParameter, contextInfo);
     }
 }

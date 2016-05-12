@@ -45,6 +45,14 @@ public class TemplateParameterContextProvider {
         return (SegmentTemplateParameterContext) contexts.get(TemplateParameterContext.SEGMENT);
     }
 
+    public SequenceTemplateParameterContext getSequenceContext() {
+        return (SequenceTemplateParameterContext) contexts.get(TemplateParameterContext.SEQUENCE);
+    }
+
+    public ResourceTemplateParameterContext getResourceContext() {
+        return (ResourceTemplateParameterContext) contexts.get(TemplateParameterContext.RESOURCE);
+    }
+
     public String getWorkingDir() {
         return workingDir;
     }
@@ -68,6 +76,10 @@ public class TemplateParameterContextProvider {
                 return new DynamicTemplateParameterContext();
             case SEGMENT:
                 return new SegmentTemplateParameterContext();
+            case SEQUENCE:
+                return new SequenceTemplateParameterContext();
+            case RESOURCE:
+                return new ResourceTemplateParameterContext();
         }
         return null;
     }

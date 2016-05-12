@@ -58,7 +58,7 @@
     -->
     <xs:complexType name="conversionParametersType">
         <xs:sequence>
-            <xs:element type="videoConversionParametersType" name="video"  maxOccurs="1" minOccurs="0"/>
+            <xs:element type="videoConversionParametersType" name="video" maxOccurs="1" minOccurs="0"/>
             <xs:element type="audioConversionParametersType" name="audio" maxOccurs="1" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
@@ -93,9 +93,10 @@
 
     <xs:complexType name="formatConfigurationType">
         <xs:choice maxOccurs="unbounded" minOccurs="1">
-            <xs:element type="pipeType" name="pipe"/>
             <xs:element type="execOnceType" name="execOnce"/>
-            <xs:element type="execEachSegmentType" name="execEachSegment"/>
+            <xs:element type="execEachSegmentSequenceType" name="execEachSegment"/>
+            <xs:element type="execEachSequenceSegmentType" name="execEachSequence"/>
+            <xs:element type="pipeType" name="pipe"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:complexType>
@@ -110,42 +111,115 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
-
+    <!--
+        Defines a Conversion Operation which is executed for each segment in a cycle
+    -->
+    <xs:complexType name="execEachSegmentSequenceType">
+        <xs:choice maxOccurs="unbounded" minOccurs="1">
+            <xs:element type="pipeSegmentType" name="pipe"/>
+            <xs:element type="execOnceType" name="execOnce"/>
+            <xs:element type="execEachSequenceType" name="execEachSequence"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="name" use="optional"/>
+    </xs:complexType>
+    <!--
+        Defines a Conversion Operation which is executed for each sequence in a cycle
+        for an essence type (audio/video/subtitle) for a particular segment
+    -->
+    <xs:complexType name="execEachSequenceType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="sequenceType" name="type" use="required"/>
+                <xs:attribute type="xs:string" name="name" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
     <!--
         Defines a pipeline consisting of several Conversion Operation
     -->
-    <xs:complexType name="pipeType">
+    <xs:complexType name="pipeSegmentType">
         <xs:sequence>
-            <xs:element type="sequenceType" name="sequence" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="cycleSequenceType" name="cycle" maxOccurs="1" minOccurs="0"/>
             <xs:element type="execOnceType" name="execOnce" maxOccurs="unbounded" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
-
     <!--
         The first Conversion Operation in the pipeline may consists of
         several subsequent sub-operations.
     -->
-    <xs:complexType name="sequenceType">
+    <xs:complexType name="cycleSegmentType">
+        <xs:choice maxOccurs="unbounded" minOccurs="1">
+            <xs:element type="execEachSequenceType" name="execEachSegment"/>
+            <xs:element type="execOnceType" name="execOnce"/>
+        </xs:choice>
+    </xs:complexType>
+
+
+    <!--
+        Defines a Conversion Operation which is executed for each sequence in a cycle
+        for an essence type (audio/video/subtitle)
+    -->
+    <xs:complexType name="execEachSequenceSegmentType">
+        <xs:choice maxOccurs="unbounded" minOccurs="1">
+            <xs:element type="pipeSequenceType" name="pipe"/>
+            <xs:element type="execOnceType" name="execOnce"/>
+            <xs:element type="execEachSegmentType" name="execEachSegment"/>
+        </xs:choice>
+        <xs:attribute type="sequenceType" name="type" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="optional"/>
+    </xs:complexType>
+    <!--
+        Defines a Conversion Operation which is executed for each segment in a cycle
+        for the given sequence
+    -->
+    <xs:complexType name="execEachSegmentType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <!--
+        Defines a pipeline consisting of several Conversion Operation
+    -->
+    <xs:complexType name="pipeSequenceType">
+        <xs:sequence>
+            <xs:element type="cycleSequenceType" name="cycle" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="execOnceType" name="execOnce" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!--
+        The first Conversion Operation in the pipeline may consists of
+        several subsequent sub-operations.
+    -->
+    <xs:complexType name="cycleSequenceType">
         <xs:choice maxOccurs="unbounded" minOccurs="1">
             <xs:element type="execEachSegmentType" name="execEachSegment"/>
             <xs:element type="execOnceType" name="execOnce"/>
         </xs:choice>
     </xs:complexType>
 
+
     <!--
-        Defines a Conversion Operation for an essence type (audio/video/subtitle)
-        which is executed for each segment in a cycle
+    Defines a pipeline consisting of several Conversion Operation
     -->
-    <xs:complexType name="execEachSegmentType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="segmentType" name="type" use="required"/>
-                <xs:attribute type="xs:string" name="name" use="optional"/>
-            </xs:extension>
-        </xs:simpleContent>
+    <xs:complexType name="pipeType">
+        <xs:sequence>
+            <xs:element type="cycleType" name="cycle" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="execOnceType" name="execOnce" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!--
+        The first Conversion Operation in the pipeline may consists of
+        several subsequent sub-operations.
+    -->
+    <xs:complexType name="cycleType">
+        <xs:sequence>
+            <xs:element type="execOnceType" name="execOnce" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
     </xs:complexType>
 
-    <xs:simpleType name="segmentType">
+    <xs:simpleType name="sequenceType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="video"/>
             <xs:enumeration value="audio"/>

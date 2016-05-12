@@ -1,8 +1,8 @@
 package com.netflix.imfutility.conversion.executor;
 
+import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
-import com.netflix.imfutility.xsd.conversion.SegmentType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -22,12 +22,7 @@ public class ConversionOperationParser {
         this.parameterResolver = parameterResolver;
     }
 
-
-    public List<String> parseOperation(String conversionOperation) {
-        return parseOperation(conversionOperation, TemplateParameter.DEFAULT_SEGMENT, TemplateParameter.DEFAULT_SEGMENT_TYPE);
-    }
-
-    public List<String> parseOperation(String conversionOperation, int segment, SegmentType segmentType) {
+    public List<String> parseOperation(String conversionOperation, ContextInfo contextInfo) {
         // split parameters
         List<String> params = splitParameters(conversionOperation);
 
@@ -39,7 +34,7 @@ public class ConversionOperationParser {
             Matcher m = Pattern.compile(TemplateParameter.TEMPLATE_PARAM).matcher(param);
             while (m.find()) {
                 String templateParam = m.group();
-                String resolvedTemplateParam = parameterResolver.resolveTemplateParameter(templateParam, segment, segmentType);
+                String resolvedTemplateParam = parameterResolver.resolveTemplateParameter(templateParam, contextInfo);
                 resolvedParam = resolvedParam.replace(templateParam, resolvedTemplateParam);
             }
 

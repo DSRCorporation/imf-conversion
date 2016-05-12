@@ -19,7 +19,7 @@ import java.io.IOException;
  * <li>Contains logic common for all formats</li>
  * <li>Designed for inheritance</li>
  * <li>Provides a common conversion workflow in a {@link #build(String, String)} method</li>
- * <li>Subclasses must provide logic related to context creation: {@link #fillDynamicContext()} and {@link #fillSegmentContext()}</li>
+ * <li>Subclasses must provide logic related to context creation: {@link #fillDynamicContext()} and {@link }</li>
  * <li>Subclasses may customize the workflow using {@link #preConvert()} and {@link #postConvert()} methods</li>
  * <li>Common workflow ({@link #build(String, String)}):
  * <ul>
@@ -62,7 +62,7 @@ public abstract class AbstractFormatBuilder {
 
             // 4. fill contexts
             fillDynamicContext();
-            fillSegmentContext();
+            fillCplContext();
 
             // 5. convert
             preConvert();
@@ -118,7 +118,7 @@ public abstract class AbstractFormatBuilder {
 
     protected abstract void fillDynamicContext();
 
-    protected abstract void fillSegmentContext();
+    protected abstract void fillCplContext();
 
     protected abstract String getConversionConfiguration();
 
