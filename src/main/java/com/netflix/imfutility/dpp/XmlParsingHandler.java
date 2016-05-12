@@ -17,9 +17,9 @@ import java.util.Stack;
  * Created by Alexandr on 5/6/2016.
  * A helper to get human readable errors of metadata.xml loading and parsing.
  */
-public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
+public class XmlParsingHandler implements ContentHandler, ErrorHandler {
 
-    final Logger logger = LoggerFactory.getLogger(MetadataXmlParsingHandler.class);
+    final Logger logger = LoggerFactory.getLogger(XmlParsingHandler.class);
 
     /**
      * Unmarshaller content handler that actually parses the metadata.xml.
@@ -44,7 +44,7 @@ public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
      *
      * @param contentHandler Unmarshaller content handler that actually parses the metadata.xml.
      */
-    public MetadataXmlParsingHandler(ContentHandler contentHandler) {
+    public XmlParsingHandler(ContentHandler contentHandler) {
         this.contentHandler = contentHandler;
     }
 
@@ -128,7 +128,7 @@ public class MetadataXmlParsingHandler implements ContentHandler, ErrorHandler {
      */
     private void registerError(SAXParseException exception) {
         StringBuilder errorMessage = new StringBuilder();
-        ;
+
         errorMessage.append("Line ").append(exception.getLineNumber()).append(", ");
         errorMessage.append("column ").append(exception.getColumnNumber());
 
