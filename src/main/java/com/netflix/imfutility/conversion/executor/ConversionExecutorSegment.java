@@ -41,8 +41,8 @@ public class ConversionExecutorSegment implements IConversionExecutor {
                     execOnce((ExecOnceType) operation, segment);
                 } else if (operation instanceof ExecEachSequenceType) {
                     execSequence((ExecEachSequenceType) operation, segment);
-                } else if (operation instanceof DynamicParameterType) {
-                    addDynamicParameter((DynamicParameterType) operation, segment);
+                } else if (operation instanceof DynamicParameterConcatType) {
+                    addDynamicParameter((DynamicParameterConcatType) operation, segment);
                 } else {
                     throw new RuntimeException(String.format("Unknown Conversion Operation type: %s", operation.toString()));
                 }
@@ -83,12 +83,11 @@ public class ConversionExecutorSegment implements IConversionExecutor {
         new ExecutePipeStrategy(contextProvider).execute(pipeInfo);
     }
 
-    private void addDynamicParameter(DynamicParameterType dynamicParam, int segment) {
+    private void addDynamicParameter(DynamicParameterConcatType dynamicParam, int segment) {
         ContextInfo contextInfo = new ContextInfoBuilder()
                 .setSegment(segment)
                 .build();
-        contextProvider.getDynamicContext().appendParameter(
-                dynamicParam.getName(), dynamicParam.getValue(), contextInfo);
+        contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo);
     }
 
     private OperationInfo getExecOnceOperation(ExecOnceType execOnce, int segment) {
@@ -132,9 +131,8 @@ public class ConversionExecutorSegment implements IConversionExecutor {
 
                 // dynamic parameter
                 if (execSequence.getDynamicParameter() != null) {
-                    for (DynamicParameterType dynamicParam : execSequence.getDynamicParameter()) {
-                        contextProvider.getDynamicContext().appendParameter(
-                                dynamicParam.getName(), dynamicParam.getValue(), contextInfo);
+                    for (DynamicParameterConcatType dynamicParam : execSequence.getDynamicParameter()) {
+                        contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo);
                     }
                 }
             }

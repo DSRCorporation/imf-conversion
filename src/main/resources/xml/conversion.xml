@@ -54,7 +54,7 @@
                                 --avcintra-class 100 -o %{tmp.videoEncoded}
                             </execOnce>
                         </pipe>
-                        <dynamicParameter name="concatAudioInput"> -i %{seq.num}-%{tmp.videoEncoded}</dynamicParameter>
+                        <dynamicParameter name="concatAudioInput" concat="true"> -i %{seq.num}-%{tmp.videoEncoded}</dynamicParameter>
                     </execEachSequence>
 
                     <!--

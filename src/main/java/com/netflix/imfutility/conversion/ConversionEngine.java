@@ -37,9 +37,7 @@ public class ConversionEngine {
             } else if (operation instanceof ExecEachSequenceSegmentType) {
                 new ConversionExecutorSequence(contextProvider, (ExecEachSequenceSegmentType) operation).execute();
             } else if (operation instanceof DynamicParameterType) {
-                DynamicParameterType parameter = (DynamicParameterType) operation;
-                contextProvider.getDynamicContext().addParameter(
-                        parameter.getName(), parameter.getValue(), ContextInfo.EMPTY);
+                contextProvider.getDynamicContext().addParameter((DynamicParameterType) operation, ContextInfo.EMPTY);
             } else {
                 throw new RuntimeException(String.format("Unknown Conversion Operation type: %s", operation.toString()));
             }

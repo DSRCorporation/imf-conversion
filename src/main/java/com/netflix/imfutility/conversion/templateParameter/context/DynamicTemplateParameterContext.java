@@ -4,6 +4,8 @@ import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
+import com.netflix.imfutility.xsd.conversion.DynamicParameterConcatType;
+import com.netflix.imfutility.xsd.conversion.DynamicParameterType;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,6 +27,22 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
 
     public DynamicTemplateParameterContext(TemplateParameterContextProvider contextProvider) {
         this.parameterResolver = new TemplateParameterResolver(contextProvider);
+    }
+
+    public void addParameter(DynamicParameterType dynamicParameter, ContextInfo contextInfo) {
+        String paramName = dynamicParameter.getName();
+        String paramValue = dynamicParameter.getValue();
+        addParameter(paramName, paramValue, contextInfo);
+    }
+
+    public void addParameter(DynamicParameterConcatType dynamicParameter, ContextInfo contextInfo) {
+        String paramName = dynamicParameter.getName();
+        String paramValue = dynamicParameter.getValue();
+        if (dynamicParameter.isConcat() != null && dynamicParameter.isConcat()) {
+            appendParameter(paramName, paramValue, contextInfo);
+        } else {
+            addParameter(paramName, paramValue, contextInfo);
+        }
     }
 
     public void addParameter(String paramName, String paramValue, ContextInfo contextInfo) {
