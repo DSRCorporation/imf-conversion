@@ -3,16 +3,21 @@ package com.netflix.imfutility.conversion.templateParameter;
 import com.netflix.imfutility.ConfigProvider;
 import com.netflix.imfutility.Format;
 import com.netflix.imfutility.conversion.ConversionProvider;
-import com.netflix.imfutility.conversion.templateParameter.context.*;
+import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.OutputTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.exception.InvalidTemplateParameterException;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterContextException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
 import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.util.ConversionUtils;
+import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,19 +30,25 @@ import static org.junit.Assert.assertNotNull;
  */
 public class TemplateParameterResolverTest {
 
+    private static final int SEGMENT_COUNT = 2;
+    private static final int SEQ_COUNT = 2;
+    private static final int RESOURCE_COUNT = 2;
     private static TemplateParameterResolver resolver;
-    private static TemplateParameterContextProvider contextProvider;
 
     @BeforeClass
     public static void setUpAll() throws Exception {
         ConfigProvider configProvider = new ConfigProvider(ConfigUtils.getCorrectConfigXml());
         ConversionProvider conversionProvider = new ConversionProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
 
-        contextProvider = new TemplateParameterContextProvider(
+        TemplateParameterContextProvider contextProvider = new TemplateParameterContextProvider(
                 configProvider.getConfig(), conversionProvider.getFormat(), ".");
         fillDynamic(contextProvider);
-        fillCpl(contextProvider);
         fillOutput(contextProvider);
+        TemplateParameterContextCreator.fillCPLContext(contextProvider,
+                SEGMENT_COUNT,
+                SEQ_COUNT,
+                RESOURCE_COUNT,
+                EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO)); // do not fill subtitle type!
 
         resolver = new TemplateParameterResolver(contextProvider);
     }
@@ -52,54 +63,6 @@ public class TemplateParameterResolverTest {
         OutputTemplateParameterContext outputContext = contextProvider.getOutputContext();
         outputContext.addParameter("output1", "outputValue1");
         outputContext.addParameter("output2", "outputValue2");
-    }
-
-    private static void fillCpl(TemplateParameterContextProvider contextProvider) {
-        int segmentCount = 2;
-        int seqCount = 2;
-        int resourceCount = 2;
-
-        // init segment ctxt
-        SegmentTemplateParameterContext segmentContext = contextProvider.getSegmentContext();
-        segmentContext.initDefaultSegmentParameters(segmentCount);
-
-        // init sequence ctxt
-        SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
-        sequenceContext.initDefaultSequenceParameters(SequenceType.VIDEO, seqCount);
-        sequenceContext.initDefaultSequenceParameters(SequenceType.AUDIO, seqCount);
-
-        // init resource ctxt
-        ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
-        for (int segm = 0; segm < segmentCount; segm++) {
-            for (int seq = 0; seq < seqCount; seq++) {
-                for (int res = 0; res < resourceCount; res++) {
-                    // do not fill subtitle type!
-
-                    // init default params
-                    resourceContext.initDefaultResourceParameters(new ResourceKey(segm, seq, SequenceType.VIDEO),
-                            resourceCount);
-                    resourceContext.initDefaultResourceParameters(new ResourceKey(segm, seq, SequenceType.AUDIO),
-                            resourceCount);
-
-                    // init essence, startTime and duration
-                    fillResourceParam(resourceContext, segm, seq, res, ResourceContextParameters.ESSENCE, SequenceType.VIDEO);
-                    fillResourceParam(resourceContext, segm, seq, res, ResourceContextParameters.DURATION, SequenceType.VIDEO);
-                    fillResourceParam(resourceContext, segm, seq, res, ResourceContextParameters.START_TIME, SequenceType.VIDEO);
-
-                    fillResourceParam(resourceContext, segm, seq, res, ResourceContextParameters.ESSENCE, SequenceType.AUDIO);
-                    fillResourceParam(resourceContext, segm, seq, res, ResourceContextParameters.DURATION, SequenceType.AUDIO);
-                    fillResourceParam(resourceContext, segm, seq, res, ResourceContextParameters.START_TIME, SequenceType.AUDIO);
-                }
-            }
-        }
-    }
-
-    private static void fillResourceParam(ResourceTemplateParameterContext resourceContext,
-                                          int segm, int seq, int res, ResourceContextParameters resParam, SequenceType seqType) {
-        resourceContext.addResourceParameter(
-                new ResourceKey(segm, seq, seqType),
-                res, resParam,
-                seqType.value() + "_" + resParam.getName() + "_" + segm + "_" + seq + "_" + res);
     }
 
     @Test
@@ -117,7 +80,7 @@ public class TemplateParameterResolverTest {
         assertNotNull(tool2);
         assertEquals("root\\tool whitespace", tool2);
         assertNotNull(tool3);
-        assertEquals("root\\tool   newline", tool3);
+        assertEquals("root\\tool newline", tool3);
     }
 
     @Test
@@ -135,7 +98,7 @@ public class TemplateParameterResolverTest {
         assertNotNull(tmp2);
         assertEquals("tmpParam whitespace", tmp2);
         assertNotNull(tmp3);
-        assertEquals("tmpParam   newline", tmp3);
+        assertEquals("tmpParam newline", tmp3);
     }
 
     @Test

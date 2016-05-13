@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by Alexander on 5/12/2016.
+ * Tests whether each context can initialize or create parameters correctly.
  */
 public class TemplateParameterInitializationTest {
 

@@ -26,7 +26,6 @@ public class ConversionProvider extends AbstractXmlProvider {
 
     private FormatType formatType;
 
-
     public ConversionProvider(String configXml, Format format) throws JAXBException, SAXException {
         super(configXml, CONVERSION_PACKAGE, XSD_CONVERSION_XSD);
         @SuppressWarnings("unchecked") ConversionType conversion = ((JAXBElement<ConversionType>) unmarshalResult).getValue();

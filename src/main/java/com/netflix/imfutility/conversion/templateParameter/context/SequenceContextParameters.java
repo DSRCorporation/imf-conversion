@@ -14,7 +14,7 @@ public enum SequenceContextParameters {
 
     private final String name;
 
-    private SequenceContextParameters(String name) {
+    SequenceContextParameters(String name) {
         this.name = name;
     }
 
