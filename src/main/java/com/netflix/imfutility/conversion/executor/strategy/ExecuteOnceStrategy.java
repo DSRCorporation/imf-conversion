@@ -1,17 +1,18 @@
 package com.netflix.imfutility.conversion.executor.strategy;
 
 import com.netflix.imfutility.conversion.executor.ExternalProcess;
+import com.netflix.imfutility.conversion.executor.ProcessStarter;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 
 import java.io.IOException;
 
 /**
- * Created by Alexander on 5/12/2016.
+ * Simply starts the conversion operation and waits until it's finished.
  */
 public class ExecuteOnceStrategy extends AbstractExecuteStrategy {
 
-    public ExecuteOnceStrategy(TemplateParameterContextProvider contextProvider) {
-        super(contextProvider);
+    public ExecuteOnceStrategy(TemplateParameterContextProvider contextProvider, ProcessStarter processStarter) {
+        super(contextProvider, processStarter);
     }
 
     public void execute(OperationInfo operationInfo) throws IOException {

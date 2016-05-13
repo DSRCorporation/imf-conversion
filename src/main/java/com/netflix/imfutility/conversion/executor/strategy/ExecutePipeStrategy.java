@@ -1,6 +1,7 @@
 package com.netflix.imfutility.conversion.executor.strategy;
 
 import com.netflix.imfutility.conversion.executor.ExternalProcess;
+import com.netflix.imfutility.conversion.executor.ProcessStarter;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 
 import java.io.IOException;
@@ -10,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Alexander on 5/12/2016.
+ * Execute all operations in a pipeline.
  */
 public class ExecutePipeStrategy extends AbstractExecuteStrategy {
 
-    public ExecutePipeStrategy(TemplateParameterContextProvider contextProvider) {
-        super(contextProvider);
+    public ExecutePipeStrategy(TemplateParameterContextProvider contextProvider, ProcessStarter processStarter) {
+        super(contextProvider, processStarter);
     }
 
     public void execute(PipeOperationInfo operations) throws IOException {

@@ -3,7 +3,7 @@ package com.netflix.imfutility.conversion.executor;
 import java.io.IOException;
 
 /**
- * Created by Alexander on 5/12/2016.
+ * A specific conversion executor is created for each conversion operation type.
  */
 public interface IConversionExecutor {
 

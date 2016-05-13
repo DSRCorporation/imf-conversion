@@ -57,8 +57,8 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         int audioSeqCount = 1;
         int startOffset = 10;
         int segmDuration = 5;
-        int resorceVideoCount = 1;
-        int resorceAudioCount = 1;
+        int resourceVideoCount = 1;
+        int resourceAudioCount = 1;
 
 
         SegmentTemplateParameterContext segmentContext = contextProvider.getSegmentContext();
@@ -71,10 +71,10 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
         for (int segm = 0; segm < segmentCount; segm++) {
             for (int seq = 0; seq < videoSeqCount; seq++) {
-                for (int res = 0; res < resorceVideoCount; res++) {
+                for (int res = 0; res < resourceVideoCount; res++) {
                     ResourceKey resourceKey = new ResourceKey(
                             segm, seq, SequenceType.VIDEO);
-                    resourceContext.initDefaultResourceParameters(resourceKey, resorceVideoCount);
+                    resourceContext.initDefaultResourceParameters(resourceKey, resourceVideoCount);
                     resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.ESSENCE, pathToMedia);
                     resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.START_TIME,
                             String.valueOf(startOffset + (res + 1) * segm * segmDuration));
@@ -83,10 +83,10 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
                 }
             }
             for (int seq = 0; seq < audioSeqCount; seq++) {
-                for (int res = 0; res < resorceAudioCount; res++) {
+                for (int res = 0; res < resourceAudioCount; res++) {
                     ResourceKey resourceKey = new ResourceKey(
                             segm, seq, SequenceType.AUDIO);
-                    resourceContext.initDefaultResourceParameters(resourceKey, resorceAudioCount);
+                    resourceContext.initDefaultResourceParameters(resourceKey, resourceAudioCount);
                     resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.ESSENCE, pathToMedia);
                     resourceContext.addResourceParameter(resourceKey, res, ResourceContextParameters.START_TIME,
                             String.valueOf(startOffset + (res + 1) * segm * segmDuration));

@@ -1,6 +1,6 @@
 package com.netflix.imfutility.conversion.executor;
 
-import com.netflix.imfutility.conversion.executor.strategy.ExecuteOnceStrategy;
+import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
@@ -9,18 +9,15 @@ import com.netflix.imfutility.xsd.conversion.ExecOnceType;
 import java.io.IOException;
 
 /**
- * Executor of {@link ExecOnceType} conversion operation.
- * <ul>
- * <li>Simply starts the external process and waits until it's finished synchronously.</li>
- * </ul>
+ * An executor for {@link ExecOnceType} conversion operation.
+ * It simply starts the conversion operation and waits until it's finished.
  */
-public class ConversionExecutorOnce implements IConversionExecutor {
+public class ConversionExecutorOnce extends AbstractConversionExecutor {
 
-    private final TemplateParameterContextProvider contextProvider;
     private final ExecOnceType operation;
 
-    public ConversionExecutorOnce(TemplateParameterContextProvider contextProvider, ExecOnceType operation) {
-        this.contextProvider = contextProvider;
+    public ConversionExecutorOnce(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory strategyProvider, ExecOnceType operation) {
+        super(contextProvider, strategyProvider);
         this.operation = operation;
     }
 
@@ -28,7 +25,7 @@ public class ConversionExecutorOnce implements IConversionExecutor {
     public void execute() throws IOException {
         OperationInfo operationInfo = new OperationInfo(operation.getValue(), operation.getName(), operation.getClass(),
                 ContextInfo.EMPTY);
-        new ExecuteOnceStrategy(contextProvider).execute(operationInfo);
+        executeStrategyFactory.createExecuteOnceStrategy(contextProvider).execute(operationInfo);
     }
 
 
