@@ -1,30 +1,25 @@
 package com.netflix.imfutility.conversion.executor;
 
-import com.netflix.imfutility.conversion.executor.strategy.ExecutePipeStrategy;
+import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.executor.strategy.PipeOperationInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.xsd.conversion.ExecOnceType;
 import com.netflix.imfutility.xsd.conversion.PipeType;
-import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 import java.io.IOException;
 
 /**
- * Executor of {@link } conversion operation.
- * <ul>
- * <li>Execute all operations in a pipeline</li>
- * <li>Supports {@link SequenceType}</li>
- * </ul>
+ * Executor of {@link PipeType} conversion operation.
+ * Execute all operations in a pipeline.
  */
-public class ConversionExecutorPipe implements IConversionExecutor {
+public class ConversionExecutorPipe extends AbstractConversionExecutor {
 
-    private final TemplateParameterContextProvider contextProvider;
     private final PipeType pipe;
 
-    public ConversionExecutorPipe(TemplateParameterContextProvider contextProvider, PipeType pipe) {
-        this.contextProvider = contextProvider;
+    public ConversionExecutorPipe(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory strategyProvider, PipeType pipe) {
+        super(contextProvider, strategyProvider);
         this.pipe = pipe;
     }
 
@@ -45,7 +40,7 @@ public class ConversionExecutorPipe implements IConversionExecutor {
         }
 
         // 2. execute in a pipe
-        new ExecutePipeStrategy(contextProvider).execute(pipeInfo);
+        executeStrategyFactory.createExecutePipeStrategy(contextProvider).execute(pipeInfo);
     }
 
 

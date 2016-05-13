@@ -63,7 +63,12 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
                     String.format("Incorrect sequence number '%d'. Sequence number must be specified for a resource template parameter.",
                             contextInfo.getSequence()));
         }
-
+        if (contextInfo.getResource() < 0) {
+            throw new TemplateParameterNotFoundException(
+                    templateParameter.toString(),
+                    String.format("Incorrect resource number '%d'. Resource number must be specified for a resource template parameter.",
+                            contextInfo.getSequence()));
+        }
         if (contextInfo.getSequenceType() == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(), "Sequence type must be specified for a resource template parameter.");
@@ -78,7 +83,7 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
                             contextInfo.getSequence(), contextInfo.getSequenceType().value(), contextInfo.getSegment()));
         }
 
-        ResourceParameterData parameterData = resourceData.getParameterData(contextInfo.getSequence());
+        ResourceParameterData parameterData = resourceData.getParameterData(contextInfo.getResource());
         if (parameterData == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(),

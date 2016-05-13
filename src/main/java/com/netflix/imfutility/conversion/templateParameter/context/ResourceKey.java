@@ -3,7 +3,7 @@ package com.netflix.imfutility.conversion.templateParameter.context;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 /**
- * Created by Alexander on 5/12/2016.
+ * Unique identifier ofa resource within a sequence and a segment.
  */
 public class ResourceKey {
 

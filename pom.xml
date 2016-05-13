@@ -50,6 +50,7 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
+
         <dependency>
             <groupId>net.sf.saxon</groupId>
             <artifactId>Saxon-HE</artifactId>
@@ -129,7 +130,7 @@
                             <xjbSources>
                                 <xjbSource>src/main/resources/xsd/dpp/imfutility.xjb</xjbSource>
                             </xjbSources>
-                            <packageName>com.netflix.imfutility.dpp.metadata</packageName>
+                            <packageName>com.netflix.imfutility.xsd.dpp.metadata</packageName>
                             <clearOutputDir>false</clearOutputDir>
                         </configuration>
                     </execution>
@@ -144,7 +145,7 @@
                             <sources>
                                 <source>src/main/resources/xsd/dpp/audiomap.xsd</source>
                             </sources>
-                            <packageName>com.netflix.imfutility.dpp.audiomap</packageName>
+                            <packageName>com.netflix.imfutility.xsd.dpp.audiomap</packageName>
                             <clearOutputDir>false</clearOutputDir>
                         </configuration>
                     </execution>

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Alexander on 5/12/2016.
+ * Information about all conversion operations to be executed in a pipe.
  */
 public class PipeOperationInfo {
 

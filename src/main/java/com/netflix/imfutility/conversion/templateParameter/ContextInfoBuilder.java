@@ -3,7 +3,7 @@ package com.netflix.imfutility.conversion.templateParameter;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 /**
- * Created by Alexander on 5/12/2016.
+ * A builder class for {@link ContextInfo}.
  */
 public class ContextInfoBuilder {
 

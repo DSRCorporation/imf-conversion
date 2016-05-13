@@ -1,7 +1,6 @@
 package com.netflix.imfutility.conversion.executor;
 
-import com.netflix.imfutility.conversion.executor.strategy.ExecuteOnceStrategy;
-import com.netflix.imfutility.conversion.executor.strategy.ExecutePipeStrategy;
+import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.executor.strategy.PipeOperationInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
@@ -14,18 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Alexander on 5/12/2016.
+ * An executor for {@link ExecEachSequenceSegmentType} conversion operation.
+ * It reads all sub-conversion operations for the input sequence conversion operation and executes them
+ * either once or in a pipe using an appropriate execute strategy.
  */
-public class ConversionExecutorSequence implements IConversionExecutor {
+public class ConversionExecutorSequence extends AbstractConversionExecutor {
 
-    private final TemplateParameterContextProvider contextProvider;
     private final ExecEachSequenceSegmentType execEachSeq;
     private final SequenceType seqType;
     private final int seqNum;
 
-    public ConversionExecutorSequence(TemplateParameterContextProvider contextProvider, ExecEachSequenceSegmentType execEachSeq) {
-        this.contextProvider = contextProvider;
+    public ConversionExecutorSequence(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory strategyProvider,
+                                      ExecEachSequenceSegmentType execEachSeq) {
+        super(contextProvider, strategyProvider);
         this.execEachSeq = execEachSeq;
+
         this.seqType = execEachSeq.getType();
         this.seqNum = contextProvider.getSequenceContext().getSequenceCount(seqType);
     }
@@ -50,12 +52,12 @@ public class ConversionExecutorSequence implements IConversionExecutor {
     }
 
     private void execOnce(ExecOnceType execOnce, int seq) throws IOException {
-        new ExecuteOnceStrategy(contextProvider).execute(getExecOnceOperation(execOnce, seq));
+        executeStrategyFactory.createExecuteOnceStrategy(contextProvider).execute(getExecOnceOperation(execOnce, seq));
     }
 
     private void execSegment(ExecEachSegmentType execSegment, int seq) throws IOException {
         for (OperationInfo segmentOperation : getExecSegmentOperations(execSegment, seq)) {
-            new ExecuteOnceStrategy(contextProvider).execute(segmentOperation);
+            executeStrategyFactory.createExecuteOnceStrategy(contextProvider).execute(segmentOperation);
         }
     }
 
@@ -79,7 +81,7 @@ public class ConversionExecutorSequence implements IConversionExecutor {
         }
 
         // 2. execute in a pipe
-        new ExecutePipeStrategy(contextProvider).execute(pipeInfo);
+        executeStrategyFactory.createExecutePipeStrategy(contextProvider).execute(pipeInfo);
     }
 
     private void addDynamicParameter(DynamicParameterConcatType dynamicParam, int seq) {

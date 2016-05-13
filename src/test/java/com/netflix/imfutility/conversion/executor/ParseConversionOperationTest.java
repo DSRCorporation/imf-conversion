@@ -1,6 +1,6 @@
 package com.netflix.imfutility.conversion.executor;
 
-import com.netflix.imfutility.ConfigProvider;
+import com.netflix.imfutility.config.ConfigProvider;
 import com.netflix.imfutility.Format;
 import com.netflix.imfutility.conversion.ConversionProvider;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;

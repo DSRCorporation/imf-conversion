@@ -1,27 +1,23 @@
 package com.netflix.imfutility.dpp;
 
-import com.netflix.imfutility.dpp.metadata.*;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import com.netflix.imfutility.xml.XmlParser;
+import com.netflix.imfutility.xml.XmlParsingException;
+import com.netflix.imfutility.xsd.dpp.metadata.*;
 
-import javax.xml.XMLConstants;
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.util.JAXBSource;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -33,6 +29,7 @@ public class MetadataXml {
     private static final String METADATA_XML_SCHEME = "xsd/dpp/metadata.xsd";
     private static final String BMX_PARAMETERS_TRANSFORMATION = "xsd/dpp/bmx-parameters.xsl";
     private static final String XSLT2_TRANSFORMER_IMPLEMENTATION = "net.sf.saxon.TransformerFactoryImpl";
+    private static final String METADATA_CONFIG_PACKAGE = "com.netflix.imfutility.xsd.dpp.metadata";
 
     /**
      * MXF frameworks enumeration
@@ -163,9 +160,7 @@ public class MetadataXml {
             technical.setContactInformation(contactInformation);
 
             jaxbMarshaller.marshal(dpp, file);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        } catch (DatatypeConfigurationException e) {
+        } catch (JAXBException | DatatypeConfigurationException e) {
             throw new RuntimeException(e);
         }
     }
@@ -181,7 +176,7 @@ public class MetadataXml {
 
         JAXBSource source = loadMetadataXml(metadataXmlFile);
 
-        Map<DMFramework, File> frameworkParameters = new HashMap<DMFramework, File>();
+        Map<DMFramework, File> frameworkParameters = new HashMap<>();
 
         frameworkParameters.put(DMFramework.UKDPP, getBmxFrameworkParameters(source, DMFramework.UKDPP));
         frameworkParameters.put(DMFramework.AS11CORE, getBmxFrameworkParameters(source, DMFramework.AS11CORE));
@@ -200,7 +195,7 @@ public class MetadataXml {
     public static Dpp getDpp(File metadataXmlFile) throws XmlParsingException {
         try {
             JAXBContext jc = JAXBContext.newInstance(Dpp.class);
-            return loadMetadataXmlToDpp(jc, metadataXmlFile);
+            return loadMetadataXmlToDpp(metadataXmlFile);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
@@ -214,69 +209,26 @@ public class MetadataXml {
      * @throws XmlParsingException an exception in case of metadata.xml parsing error
      */
     private static JAXBSource loadMetadataXml(File metadataXmlFile) throws XmlParsingException {
+        JAXBContext jaxbContext;
         try {
-            JAXBContext jc = JAXBContext.newInstance(Dpp.class);
-            Dpp dpp = loadMetadataXmlToDpp(jc, metadataXmlFile);
-            return new JAXBSource(jc, dpp);
+            Dpp dpp = loadMetadataXmlToDpp(metadataXmlFile);
+            jaxbContext = JAXBContext.newInstance(METADATA_CONFIG_PACKAGE);
+            return new JAXBSource(jaxbContext, dpp);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
     }
 
-
     /**
      * Loads and validates metadata.xml.
      *
-     * @param jc JAXBContext initialized with Dpp.class
      * @param metadataXmlFile the metadata.xml file
      * @return Dpp a Dpp instance with loaded metadata.xml
      * @throws XmlParsingException an exception in case of metadata.xml parsing error
      */
-    private static Dpp loadMetadataXmlToDpp(JAXBContext jc, File metadataXmlFile) throws XmlParsingException {
-        XmlParsingHandler contentErrorHandler = null;
-        try {
-
-            SAXParserFactory spf = SAXParserFactory.newInstance();
-            spf.setNamespaceAware(true);
-
-            //Get file from resources folder
-            ClassLoader classLoader = MetadataXml.class.getClassLoader();
-            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = sf.newSchema(new File(classLoader.getResource(METADATA_XML_SCHEME).getFile()));
-            spf.setSchema(schema);
-
-            Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
-            UnmarshallerHandler unmarshallerHandler = jaxbUnmarshaller.getUnmarshallerHandler();
-
-            SAXParser sp = spf.newSAXParser();
-            XMLReader xr = sp.getXMLReader();
-            contentErrorHandler = new XmlParsingHandler(unmarshallerHandler);
-            xr.setErrorHandler(contentErrorHandler);
-            xr.setContentHandler(contentErrorHandler);
-
-            InputSource xml = new InputSource(new FileReader(metadataXmlFile));
-            xr.parse(xml);
-
-            if (contentErrorHandler.getParsingErrors().size() > 0) {
-                throw new XmlParsingException(contentErrorHandler.getParsingErrors());
-            }
-
-            return (Dpp) unmarshallerHandler.getResult();
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        } catch (SAXException e) {
-            if (contentErrorHandler != null && contentErrorHandler.getParsingErrors().size() > 0) {
-                throw new XmlParsingException(e, contentErrorHandler.getParsingErrors());
-            } else {
-                throw new RuntimeException(e);
-            }
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private static Dpp loadMetadataXmlToDpp(File metadataXmlFile) throws XmlParsingException {
+        return new XmlParser().parse(
+                metadataXmlFile, METADATA_XML_SCHEME, METADATA_CONFIG_PACKAGE, Dpp.class);
     }
 
     /**
@@ -316,11 +268,7 @@ public class MetadataXml {
             writer.flush();
 
             return temp;
-        } catch (TransformerConfigurationException e) {
-            throw new RuntimeException(e);
-        } catch (TransformerException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (TransformerException | IOException e) {
             throw new RuntimeException(e);
         } finally {
             if (writer != null) {

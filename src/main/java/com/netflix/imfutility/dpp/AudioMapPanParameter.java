@@ -1,8 +1,8 @@
 package com.netflix.imfutility.dpp;
 
-import com.netflix.imfutility.dpp.audiomap.AudioMap;
-import com.netflix.imfutility.dpp.audiomap.EBUTrackType;
-import com.netflix.imfutility.dpp.metadata.AudioTrackLayoutDmAs11Type;
+import com.netflix.imfutility.xsd.dpp.audiomap.AudioMap;
+import com.netflix.imfutility.xsd.dpp.audiomap.EBUTrackType;
+import com.netflix.imfutility.xsd.dpp.metadata.AudioTrackLayoutDmAs11Type;
 
 import java.util.*;
 

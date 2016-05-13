@@ -18,7 +18,7 @@ public enum ResourceContextParameters {
 
     private final String name;
 
-    private ResourceContextParameters(String name) {
+    ResourceContextParameters(String name) {
         this.name = name;
     }
 
