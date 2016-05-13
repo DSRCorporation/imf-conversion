@@ -1,26 +1,16 @@
 package com.netflix.imfutility.dpp;
 
-import com.netflix.imfutility.dpp.audiomap.AudioMap;
-import com.netflix.imfutility.dpp.audiomap.AudioVirtualTrackType;
-import com.netflix.imfutility.dpp.audiomap.ChannelType;
-import com.netflix.imfutility.dpp.audiomap.MapType;
-import com.netflix.imfutility.dpp.metadata.Dpp;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import com.netflix.imfutility.xml.XmlParser;
+import com.netflix.imfutility.xml.XmlParsingException;
+import com.netflix.imfutility.xsd.dpp.audiomap.AudioMap;
+import com.netflix.imfutility.xsd.dpp.audiomap.AudioVirtualTrackType;
+import com.netflix.imfutility.xsd.dpp.audiomap.ChannelType;
+import com.netflix.imfutility.xsd.dpp.audiomap.MapType;
 
-import javax.xml.XMLConstants;
-import javax.xml.bind.*;
-import javax.xml.bind.util.JAXBSource;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 
 /**
  * Created by Alexandr on 5/12/2016.
@@ -28,6 +18,7 @@ import java.io.IOException;
 public class AudioMapXml {
 
     private static final String AUDIOMAP_XML_SCHEME = "xsd/dpp/audiomap.xsd";
+    private static final String AUDIOMAP_CONFIG_PACKAGE = "com.netflix.imfutility.xsd.dpp.audiomap";
 
     /**
      * Generates sample audiomap.xml file.
@@ -87,50 +78,7 @@ public class AudioMapXml {
      * @throws XmlParsingException an exception in case of metadata.xml parsing error
      */
     public static AudioMap loadAudioMapXml(File audioMapXmlFile) throws XmlParsingException {
-        XmlParsingHandler contentErrorHandler = null;
-        try {
-
-            SAXParserFactory spf = SAXParserFactory.newInstance();
-            spf.setNamespaceAware(true);
-
-            //Get file from resources folder
-            ClassLoader classLoader = MetadataXml.class.getClassLoader();
-            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = sf.newSchema(new File(classLoader.getResource(AUDIOMAP_XML_SCHEME).getFile()));
-            spf.setSchema(schema);
-
-            JAXBContext jc = JAXBContext.newInstance(AudioMap.class);
-            Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
-            UnmarshallerHandler unmarshallerHandler = jaxbUnmarshaller.getUnmarshallerHandler();
-
-            SAXParser sp = spf.newSAXParser();
-            XMLReader xr = sp.getXMLReader();
-            contentErrorHandler = new XmlParsingHandler(unmarshallerHandler);
-            xr.setErrorHandler(contentErrorHandler);
-            xr.setContentHandler(contentErrorHandler);
-
-            InputSource xml = new InputSource(new FileReader(audioMapXmlFile));
-            xr.parse(xml);
-
-            if (contentErrorHandler.getParsingErrors().size() > 0) {
-                throw new XmlParsingException(contentErrorHandler.getParsingErrors());
-            }
-
-            return (AudioMap) unmarshallerHandler.getResult();
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        } catch (SAXException e) {
-            if (contentErrorHandler != null && contentErrorHandler.getParsingErrors().size() > 0) {
-                throw new XmlParsingException(e, contentErrorHandler.getParsingErrors());
-            } else {
-                throw new RuntimeException(e);
-            }
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return new XmlParser().parse(
+                audioMapXmlFile, AUDIOMAP_XML_SCHEME, AUDIOMAP_CONFIG_PACKAGE, AudioMap.class);
     }
 }

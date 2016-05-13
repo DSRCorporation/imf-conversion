@@ -1,15 +1,15 @@
 package com.netflix.imfutility;
 
+import com.netflix.imfutility.config.ConfigProvider;
 import com.netflix.imfutility.conversion.ConversionEngine;
 import com.netflix.imfutility.conversion.ConversionProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.ParamType;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 
@@ -80,7 +80,7 @@ public abstract class AbstractFormatBuilder {
 
     }
 
-    protected void init(String configXml, String conversionXml) throws JAXBException, SAXException {
+    protected void init(String configXml, String conversionXml) throws XmlParsingException {
         logger.info("Initializing...");
 
         logger.info("Reading config.xml: {}", configXml);

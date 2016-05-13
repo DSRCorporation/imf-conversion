@@ -2,16 +2,11 @@ package com.netflix.imfutility.conversion;
 
 import com.netflix.imfutility.Format;
 import com.netflix.imfutility.util.ConversionUtils;
-import org.junit.Rule;
+import com.netflix.imfutility.xml.XmlParsingException;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.xml.sax.SAXParseException;
-
-import javax.xml.bind.UnmarshalException;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
-import static org.hamcrest.core.Is.isA;
 
 /**
  * <ul>
@@ -20,9 +15,6 @@ import static org.hamcrest.core.Is.isA;
  * </ul>
  */
 public class ConversionProviderTest {
-
-    @Rule
-    public final ExpectedException expectedEx = ExpectedException.none();
 
     @Test
     public void testParseCorrectConversion() throws Exception {
@@ -33,19 +25,13 @@ public class ConversionProviderTest {
         assertFalse(conversionProvider.getFormat().getFormatConfigurations().getMap().isEmpty());
     }
 
-    @Test
+    @Test(expected = XmlParsingException.class)
     public void testParseBrokenXml() throws Exception {
-        expectedEx.expect(UnmarshalException.class);
-        expectedEx.expectCause(isA(SAXParseException.class));
-
         new ConversionProvider(ConversionUtils.getBrokenXmlConversionXml(), Format.DPP);
     }
 
-    @Test
+    @Test(expected = XmlParsingException.class)
     public void testParseInvalidXsd() throws Exception {
-        expectedEx.expect(UnmarshalException.class);
-        expectedEx.expectCause(isA(SAXParseException.class));
-
         new ConversionProvider(ConversionUtils.getInvalidXsdConversionXml(), Format.DPP);
     }
 

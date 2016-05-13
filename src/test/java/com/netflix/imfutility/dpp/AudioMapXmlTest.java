@@ -1,6 +1,6 @@
 package com.netflix.imfutility.dpp;
 
-import com.netflix.imfutility.dpp.audiomap.AudioMap;
+import com.netflix.imfutility.xsd.dpp.audiomap.AudioMap;
 
 import java.io.File;
 import java.util.Map;
