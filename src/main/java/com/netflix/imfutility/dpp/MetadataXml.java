@@ -194,10 +194,45 @@ public class MetadataXml {
      * Loads and validates metadata.xml.
      *
      * @param metadataXmlFile the metadata.xml file
+     * @return Dpp a Dpp instance with loaded metadata.xml
+     * @throws XmlParsingException an exception in case of metadata.xml parsing error
+     */
+    public static Dpp getDpp(File metadataXmlFile) throws XmlParsingException {
+        try {
+            JAXBContext jc = JAXBContext.newInstance(Dpp.class);
+            return loadMetadataXmlToDpp(jc, metadataXmlFile);
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Loads and validates metadata.xml.
+     *
+     * @param metadataXmlFile the metadata.xml file
      * @return JAXBSource with loaded and mapped metadata.xml
      * @throws XmlParsingException an exception in case of metadata.xml parsing error
      */
     private static JAXBSource loadMetadataXml(File metadataXmlFile) throws XmlParsingException {
+        try {
+            JAXBContext jc = JAXBContext.newInstance(Dpp.class);
+            Dpp dpp = loadMetadataXmlToDpp(jc, metadataXmlFile);
+            return new JAXBSource(jc, dpp);
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    /**
+     * Loads and validates metadata.xml.
+     *
+     * @param jc JAXBContext initialized with Dpp.class
+     * @param metadataXmlFile the metadata.xml file
+     * @return Dpp a Dpp instance with loaded metadata.xml
+     * @throws XmlParsingException an exception in case of metadata.xml parsing error
+     */
+    private static Dpp loadMetadataXmlToDpp(JAXBContext jc, File metadataXmlFile) throws XmlParsingException {
         XmlParsingHandler contentErrorHandler = null;
         try {
 
@@ -210,7 +245,6 @@ public class MetadataXml {
             Schema schema = sf.newSchema(new File(classLoader.getResource(METADATA_XML_SCHEME).getFile()));
             spf.setSchema(schema);
 
-            JAXBContext jc = JAXBContext.newInstance(Dpp.class);
             Unmarshaller jaxbUnmarshaller = jc.createUnmarshaller();
             UnmarshallerHandler unmarshallerHandler = jaxbUnmarshaller.getUnmarshallerHandler();
 
@@ -227,8 +261,7 @@ public class MetadataXml {
                 throw new XmlParsingException(contentErrorHandler.getParsingErrors());
             }
 
-            Dpp dpp = (Dpp) unmarshallerHandler.getResult();
-            return new JAXBSource(jc, dpp);
+            return (Dpp) unmarshallerHandler.getResult();
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         } catch (SAXException e) {

@@ -103,4 +103,5 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     protected String getConversionConfiguration() {
         return conversionProvider.getConvertConfiguration().get(0);
     }
+
 }
