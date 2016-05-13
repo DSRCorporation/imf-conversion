@@ -1,21 +1,17 @@
-package com.netflix.imfutility.dpp;
+package com.netflix.imfutility.xml;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import org.xml.sax.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 /**
  * Created by Alexandr on 5/6/2016.
- * A helper to get human readable errors of metadata.xml loading and parsing.
+ * A helper to get human readable errors of an xml when loading and parsing.
  */
 public class XmlParsingHandler implements ContentHandler, ErrorHandler {
 
@@ -26,6 +22,10 @@ public class XmlParsingHandler implements ContentHandler, ErrorHandler {
      */
     private ContentHandler contentHandler;
     /**
+     * Input XML file.
+     */
+    private File xml;
+    /**
      * A node name that is being processed
      */
     private String qname;
@@ -33,7 +33,7 @@ public class XmlParsingHandler implements ContentHandler, ErrorHandler {
     /**
      * A stack of current parsed nodes.
      */
-    private Stack<String> qnames = new Stack<String>();
+    private Stack<String> qnames = new Stack<>();
     /**
      * A collection of all found errors.
      */
@@ -44,8 +44,9 @@ public class XmlParsingHandler implements ContentHandler, ErrorHandler {
      *
      * @param contentHandler Unmarshaller content handler that actually parses the metadata.xml.
      */
-    public XmlParsingHandler(ContentHandler contentHandler) {
+    public XmlParsingHandler(ContentHandler contentHandler, File xml) {
         this.contentHandler = contentHandler;
+        this.xml = xml;
     }
 
     public void characters(char[] ch, int start, int length) throws SAXException {
@@ -129,6 +130,7 @@ public class XmlParsingHandler implements ContentHandler, ErrorHandler {
     private void registerError(SAXParseException exception) {
         StringBuilder errorMessage = new StringBuilder();
 
+        errorMessage.append(xml.getAbsolutePath()).append(": ");
         errorMessage.append("Line ").append(exception.getLineNumber()).append(", ");
         errorMessage.append("column ").append(exception.getColumnNumber());
 

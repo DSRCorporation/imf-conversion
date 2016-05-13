@@ -23,7 +23,7 @@
     -->
     <xs:complexType name="formatTypes">
         <xs:sequence>
-            <xs:element type="formatType" name="format" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="formatType" name="format" maxOccurs="unbounded" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 

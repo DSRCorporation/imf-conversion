@@ -1,16 +1,11 @@
-package com.netflix.imfutility;
+package com.netflix.imfutility.config;
 
 import com.netflix.imfutility.util.ConfigUtils;
-import org.junit.Rule;
+import com.netflix.imfutility.xml.XmlParsingException;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.xml.sax.SAXParseException;
-
-import javax.xml.bind.UnmarshalException;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static org.hamcrest.core.Is.isA;
 
 
 /**
@@ -21,9 +16,6 @@ import static org.hamcrest.core.Is.isA;
  */
 
 public class ConfigProviderTest {
-
-    @Rule
-    public final ExpectedException expectedEx = ExpectedException.none();
 
     @Test
     public void testParseCorrectConfig() throws Exception {
@@ -39,19 +31,13 @@ public class ConfigProviderTest {
         assertEquals("root\\tool whitespace", configProvider.getConfig().getExternalTools().getMap().get("toolWhitespace").getValue());
     }
 
-    @Test
+    @Test(expected = XmlParsingException.class)
     public void testParseBrokenXml() throws Exception {
-        expectedEx.expect(UnmarshalException.class);
-        expectedEx.expectCause(isA(SAXParseException.class));
-
         new ConfigProvider(ConfigUtils.getBrokenXmlConfigXml());
     }
 
-    @Test
+    @Test(expected = XmlParsingException.class)
     public void testParseInvalidXsd() throws Exception {
-        expectedEx.expect(UnmarshalException.class);
-        expectedEx.expectCause(isA(SAXParseException.class));
-
         new ConfigProvider(ConfigUtils.getInvalidXsdConfigXml());
     }
 

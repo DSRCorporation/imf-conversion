@@ -1,13 +1,12 @@
 package com.netflix.imfutility.conversion;
 
 import com.netflix.imfutility.Format;
-import com.netflix.imfutility.xml.AbstractXmlProvider;
+import com.netflix.imfutility.xml.XmlParser;
+import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.ConversionType;
 import com.netflix.imfutility.xsd.conversion.FormatType;
-import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,17 +18,22 @@ import java.util.List;
  * <li>Performs XSD validation and throws {@link RuntimeException} if conversion.xml is not a valid XML according to conversion.xsd</li>
  * </ul>
  */
-public class ConversionProvider extends AbstractXmlProvider {
+public class ConversionProvider {
 
     private static final String XSD_CONVERSION_XSD = "xsd/conversion.xsd";
     private static final String CONVERSION_PACKAGE = "com.netflix.imfutility.xsd.conversion";
 
     private FormatType formatType;
 
-    public ConversionProvider(String configXml, Format format) throws JAXBException, SAXException {
-        super(configXml, CONVERSION_PACKAGE, XSD_CONVERSION_XSD);
-        @SuppressWarnings("unchecked") ConversionType conversion = ((JAXBElement<ConversionType>) unmarshalResult).getValue();
+    public ConversionProvider(String conversionXml, Format format) throws XmlParsingException {
+        ConversionType conversion = new XmlParser().parse(
+                new File(conversionXml), XSD_CONVERSION_XSD, CONVERSION_PACKAGE, ConversionType.class);
         this.formatType = conversion.getFormats().getMap().get(format.getName());
+        if (this.formatType == null) {
+            throw new RuntimeException(String.format("'%s' doesn't contain configuration for '%s' format.",
+                    conversionXml, format.getName()));
+
+        }
     }
 
     public FormatType getFormat() {

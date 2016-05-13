@@ -1,4 +1,4 @@
-package com.netflix.imfutility.dpp;
+package com.netflix.imfutility.xml;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +16,10 @@ public class XmlParsingException extends Exception {
         super(e);
         this.errors = errors;
         if (this.errors == null) {
-            this.errors = new ArrayList<String>();
+            this.errors = new ArrayList<>();
         }
 
-        if (this.errors.size() == 0) {
+        if (this.errors.isEmpty()) {
             this.errors.add(e.getLocalizedMessage());
         }
     }
@@ -28,7 +28,7 @@ public class XmlParsingException extends Exception {
         super();
         this.errors = errors;
         if (this.errors == null) {
-            this.errors = new ArrayList<String>();
+            this.errors = new ArrayList<>();
         }
     }
 
