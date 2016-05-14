@@ -8,30 +8,23 @@
     <xs:element name="AudioMap">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="AudioVirtualTrack" type="AudioVirtualTrackType" maxOccurs="unbounded"/>
+                <xs:element name="EBUTrack" type="EBUTrackType" maxOccurs="16"/>
             </xs:sequence>
         </xs:complexType>
 
         <xs:unique name="ChannelUnique">
-            <xs:selector xpath="AudioVirtualTrack/Map/Channel"/>
+            <xs:selector xpath="EBUTrack/Number"/>
             <xs:field xpath="."/>
         </xs:unique>
     </xs:element>
 
 
-    <!-- AudioVirtualTrack Type -->
-    <xs:complexType name="AudioVirtualTrackType">
+    <!-- EBUTrackType -->
+    <xs:complexType name="EBUTrackType">
         <xs:sequence>
-            <xs:element name="TrackId" type="UUIDType" maxOccurs="1"/>
-            <xs:element name="Map" type="MapType" maxOccurs="1"/>
-        </xs:sequence>
-    </xs:complexType>
-
-
-    <!-- Map Type -->
-    <xs:complexType name="MapType">
-        <xs:sequence>
-            <xs:element name="Channel" type="ChannelType" maxOccurs="unbounded"/>
+            <xs:element name="Number" type="NumberType" />
+            <xs:element name="CPLVirtualTrackId" type="UUIDType" minOccurs="0"/>
+            <xs:element name="CPLVirtualTrackChannel" type="CPLVirtualTrackChannelType" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -44,28 +37,20 @@
     </xs:simpleType>
 
 
-    <!-- Channel Type -->
-    <xs:complexType name="ChannelType">
-        <xs:simpleContent>
-            <xs:extension base="ChannelValueType">
-                <xs:attribute name="sourceChannel">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:integer">
-                            <xs:minInclusive value="1"/>
-                            <xs:maxInclusive value="256"/>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:attribute>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-
-
-    <!-- Channel Value Type -->
-    <xs:simpleType name="ChannelValueType">
+    <!-- NumberType -->
+    <xs:simpleType name="NumberType">
         <xs:restriction base="xs:integer">
             <xs:minInclusive value="1"/>
             <xs:maxInclusive value="16"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <!-- CPLVirtualTrackChannelType -->
+    <xs:simpleType name="CPLVirtualTrackChannelType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="256"/>
         </xs:restriction>
     </xs:simpleType>
 

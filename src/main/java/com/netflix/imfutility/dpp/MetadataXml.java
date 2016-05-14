@@ -189,20 +189,46 @@ public class MetadataXml {
      * Loads and validates metadata.xml.
      *
      * @param metadataXmlFile the metadata.xml file
+     * @return Dpp a Dpp instance with loaded metadata.xml
+     * @throws XmlParsingException an exception in case of metadata.xml parsing error
+     */
+    public static Dpp getDpp(File metadataXmlFile) throws XmlParsingException {
+        try {
+            JAXBContext jc = JAXBContext.newInstance(Dpp.class);
+            return loadMetadataXmlToDpp(metadataXmlFile);
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Loads and validates metadata.xml.
+     *
+     * @param metadataXmlFile the metadata.xml file
      * @return JAXBSource with loaded and mapped metadata.xml
      * @throws XmlParsingException an exception in case of metadata.xml parsing error
      */
     private static JAXBSource loadMetadataXml(File metadataXmlFile) throws XmlParsingException {
-        Dpp dpp = new XmlParser().parse(
-                metadataXmlFile, METADATA_XML_SCHEME, METADATA_CONFIG_PACKAGE, Dpp.class);
-
         JAXBContext jaxbContext;
         try {
+            Dpp dpp = loadMetadataXmlToDpp(metadataXmlFile);
             jaxbContext = JAXBContext.newInstance(METADATA_CONFIG_PACKAGE);
             return new JAXBSource(jaxbContext, dpp);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Loads and validates metadata.xml.
+     *
+     * @param metadataXmlFile the metadata.xml file
+     * @return Dpp a Dpp instance with loaded metadata.xml
+     * @throws XmlParsingException an exception in case of metadata.xml parsing error
+     */
+    private static Dpp loadMetadataXmlToDpp(File metadataXmlFile) throws XmlParsingException {
+        return new XmlParser().parse(
+                metadataXmlFile, METADATA_XML_SCHEME, METADATA_CONFIG_PACKAGE, Dpp.class);
     }
 
     /**
