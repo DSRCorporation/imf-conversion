@@ -7,40 +7,39 @@ import com.netflix.imfutility.xsd.conversion.SequenceType;
  */
 public class ContextInfo {
 
-    public static final int DEFAULT_SEGMENT = -1;
-    public static final int DEFAULT_SEQUENCE = -1;
+    public static final String DEFAULT_SEGMENT_UUID = null;
+    public static final String DEFAULT_SEQUENCE_UUID = null;
     public static final SequenceType DEFAULT_SEQUENCE_TYPE = null;
-    public static final int DEFAULT_RESOURCE = -1;
+    public static final String DEFAULT_RESOURCE_UUID = null;
 
     public static ContextInfo EMPTY = new ContextInfo(
-            DEFAULT_SEGMENT, DEFAULT_SEQUENCE, DEFAULT_SEQUENCE_TYPE, DEFAULT_RESOURCE);
+            DEFAULT_SEGMENT_UUID, DEFAULT_SEQUENCE_UUID, DEFAULT_SEQUENCE_TYPE, DEFAULT_RESOURCE_UUID);
 
-    private final int segment;
-    private final int sequence;
+    private final String segmentUuid;
+    private final String sequenceUuid;
     private final SequenceType sequenceType;
-    private final int resource;
+    private final String resourceUuid;
 
-    public ContextInfo(int segment, int sequence, SequenceType sequenceType, int resource) {
-        this.segment = segment;
-        this.sequence = sequence;
+    public ContextInfo(String segmentUuid, String sequenceUuid, SequenceType sequenceType, String resourceUuid) {
+        this.segmentUuid = segmentUuid;
+        this.sequenceUuid = sequenceUuid;
         this.sequenceType = sequenceType;
-        this.resource = resource;
+        this.resourceUuid = resourceUuid;
     }
 
-    public int getSequence() {
-        return sequence;
+    public String getSegmentUuid() {
+        return segmentUuid;
     }
 
-    public int getSegment() {
-        return segment;
+    public String getSequenceUuid() {
+        return sequenceUuid;
     }
 
     public SequenceType getSequenceType() {
         return sequenceType;
     }
 
-    public int getResource() {
-        return resource;
+    public String getResourceUuid() {
+        return resourceUuid;
     }
-
 }

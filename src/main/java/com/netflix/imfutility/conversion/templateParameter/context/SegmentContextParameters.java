@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
  */
 public enum SegmentContextParameters {
 
+    UUID("uuid"),
+
     NUM("num");
 
     private final String name;

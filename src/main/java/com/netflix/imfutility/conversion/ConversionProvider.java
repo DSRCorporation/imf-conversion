@@ -26,7 +26,7 @@ public class ConversionProvider {
     private FormatType formatType;
 
     public ConversionProvider(String conversionXml, Format format) throws XmlParsingException {
-        ConversionType conversion = new XmlParser().parse(
+        ConversionType conversion = XmlParser.parse(
                 new File(conversionXml), XSD_CONVERSION_XSD, CONVERSION_PACKAGE, ConversionType.class);
         this.formatType = conversion.getFormats().getMap().get(format.getName());
         if (this.formatType == null) {

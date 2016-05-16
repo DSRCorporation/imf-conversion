@@ -227,7 +227,7 @@ public class MetadataXml {
      * @throws XmlParsingException an exception in case of metadata.xml parsing error
      */
     private static Dpp loadMetadataXmlToDpp(File metadataXmlFile) throws XmlParsingException {
-        return new XmlParser().parse(
+        return XmlParser.parse(
                 metadataXmlFile, METADATA_XML_SCHEME, METADATA_CONFIG_PACKAGE, Dpp.class);
     }
 

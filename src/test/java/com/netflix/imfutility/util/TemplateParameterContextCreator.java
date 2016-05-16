@@ -5,10 +5,18 @@ import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 import java.util.EnumSet;
 
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /**
  * Helper class to fill segment, sequence and resource contexts (it emulates parsing a CPL).
  */
 public final class TemplateParameterContextCreator {
+
+    public static final String SEGMENT_UUID_FORMAT = "urn:uuid:segm:%d";
+    public static final String SEQUENCE_UUID_FORMAT = "urn:uuid:seq:%s:%d";
+    public static final String RESOURCE_UUID_FORMAT = "urn:uuid:res:segm-%d-seq-%d-%s-%d";
+    public static final String RESOURCE_PARAMETER_FORMAT = "%s-%s";
 
     private TemplateParameterContextCreator() {
     }
@@ -17,12 +25,16 @@ public final class TemplateParameterContextCreator {
                                       EnumSet<SequenceType> sequenceTypes) {
         // init segment ctxt
         SegmentTemplateParameterContext segmentContext = contextProvider.getSegmentContext();
-        segmentContext.initDefaultSegmentParameters(segmentCount);
+        for (int i = 0; i < segmentCount; i++) {
+            segmentContext.initSegment(getSegmentUuid(i));
+        }
 
         // init sequence ctxt
         SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
         for (SequenceType seqType : sequenceTypes) {
-            sequenceContext.initDefaultSequenceParameters(seqType, seqCount);
+            for (int i = 0; i < segmentCount; i++) {
+                sequenceContext.initSequence(seqType, getSequenceUuid(i, seqType));
+            }
         }
 
         // init resource ctxt
@@ -31,25 +43,50 @@ public final class TemplateParameterContextCreator {
             for (int seq = 0; seq < seqCount; seq++) {
                 for (int res = 0; res < resourceCount; res++) {
                     for (SequenceType seqType : sequenceTypes) {
+                        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(segm), getSequenceUuid(seq, seqType), seqType);
+                        String resourceUuid = getResourceUuid(segm, seq, seqType, res);
+
                         // init default params
-                        resourceContext.initDefaultResourceParameters(new ResourceKey(segm, seq, seqType), resourceCount);
+                        resourceContext.initResource(resourceKey, resourceUuid);
 
                         // init essence, startTime and duration
-                        fillResourceParam(resourceContext, segm, seq, res, ResourceContextParameters.ESSENCE, seqType);
-                        fillResourceParam(resourceContext, segm, seq, res, ResourceContextParameters.DURATION, seqType);
-                        fillResourceParam(resourceContext, segm, seq, res, ResourceContextParameters.START_TIME, seqType);
+                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.ESSENCE);
+                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.DURATION);
+                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.START_TIME);
                     }
                 }
             }
         }
+
+        int a = 0;
     }
 
-    private static void fillResourceParam(ResourceTemplateParameterContext resourceContext,
-                                          int segm, int seq, int res, ResourceContextParameters resParam, SequenceType seqType) {
+    public static String getSegmentUuid(int segm) {
+        return String.format(SEGMENT_UUID_FORMAT, segm);
+    }
+
+    public static String getSequenceUuid(int seq, SequenceType seqType) {
+        return String.format(SEQUENCE_UUID_FORMAT, seqType.value(), seq);
+    }
+
+    public static String getResourceUuid(int segm, int seq, SequenceType seqType, int res) {
+        return String.format(RESOURCE_UUID_FORMAT, segm, seq, seqType.value(), res);
+    }
+
+    private static void fillResourceParam(ResourceTemplateParameterContext resourceContext, ResourceKey resourceKey,
+                                          String resourceUuid, ResourceContextParameters resParam) {
         resourceContext.addResourceParameter(
-                new ResourceKey(segm, seq, seqType),
-                res, resParam,
-                seqType.value() + "_" + resParam.getName() + "_" + segm + "_" + seq + "_" + res);
+                resourceKey,
+                resourceUuid,
+                resParam,
+                String.format(RESOURCE_PARAMETER_FORMAT, resourceUuid, resParam.getName())
+        );
+    }
+
+    public static void assertResourceParameter(String value, String resourceUuid, ResourceContextParameters resParam) {
+        String expectedValue = String.format(RESOURCE_PARAMETER_FORMAT, resourceUuid, resParam.getName());
+        assertNotNull(value);
+        assertEquals(expectedValue, value);
     }
 
 }

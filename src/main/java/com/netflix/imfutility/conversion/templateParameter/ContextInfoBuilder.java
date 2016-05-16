@@ -8,18 +8,18 @@ import com.netflix.imfutility.xsd.conversion.SequenceType;
 public class ContextInfoBuilder {
 
 
-    private int segment = ContextInfo.DEFAULT_SEGMENT;
-    private int sequence = ContextInfo.DEFAULT_SEQUENCE;
+    private String segmentUuid = ContextInfo.DEFAULT_SEGMENT_UUID;
+    private String sequenceUuid = ContextInfo.DEFAULT_SEQUENCE_UUID;
     private SequenceType sequenceType = ContextInfo.DEFAULT_SEQUENCE_TYPE;
-    private int resource = ContextInfo.DEFAULT_RESOURCE;
+    private String resourceUuid = ContextInfo.DEFAULT_RESOURCE_UUID;
 
-    public ContextInfoBuilder setSegment(int segment) {
-        this.segment = segment;
+    public ContextInfoBuilder setSegmentUuid(String segmentUuid) {
+        this.segmentUuid = segmentUuid;
         return this;
     }
 
-    public ContextInfoBuilder setSequence(int sequence) {
-        this.sequence = sequence;
+    public ContextInfoBuilder setSequenceUuid(String sequenceUuid) {
+        this.sequenceUuid = sequenceUuid;
         return this;
     }
 
@@ -28,12 +28,12 @@ public class ContextInfoBuilder {
         return this;
     }
 
-    public ContextInfoBuilder setResource(int resource) {
-        this.resource = resource;
+    public ContextInfoBuilder setResourceUuid(String resourceUuid) {
+        this.resourceUuid = resourceUuid;
         return this;
     }
 
     public ContextInfo build() {
-        return new ContextInfo(segment, sequence, sequenceType, resource);
+        return new ContextInfo(segmentUuid, sequenceUuid, sequenceType, resourceUuid);
     }
 }
