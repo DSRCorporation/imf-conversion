@@ -4,6 +4,7 @@ import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
+import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,24 +22,24 @@ import java.util.Map;
  */
 public class SegmentTemplateParameterContext implements ITemplateParameterContext {
 
-    private Map<String, SegmentParameterData> segments = new LinkedHashMap<>();
+    private Map<SegmentUUID, SegmentParameterData> segments = new LinkedHashMap<>();
 
-    public SegmentTemplateParameterContext addSegmentParameter(String uuid, SegmentContextParameters paramName, String paramValue) {
+    public SegmentTemplateParameterContext addSegmentParameter(SegmentUUID uuid, SegmentContextParameters paramName, String paramValue) {
         initSegment(uuid);
         doAddParameter(uuid, paramName, paramValue);
         return this;
     }
 
-    public SegmentTemplateParameterContext initSegment(String uuid) {
+    public SegmentTemplateParameterContext initSegment(SegmentUUID uuid) {
         if (!segments.containsKey(uuid)) {
             int segmNum = segments.size();
-            doAddParameter(uuid, SegmentContextParameters.UUID, uuid);
+            doAddParameter(uuid, SegmentContextParameters.UUID, uuid.getUuid());
             doAddParameter(uuid, SegmentContextParameters.NUM, String.valueOf(segmNum));
         }
         return this;
     }
 
-    private void doAddParameter(String uuid, SegmentContextParameters paramName, String paramValue) {
+    private void doAddParameter(SegmentUUID uuid, SegmentContextParameters paramName, String paramValue) {
         SegmentParameterData segmentData = segments.get(uuid);
         if (segmentData == null) {
             segmentData = new SegmentParameterData();
@@ -51,7 +52,7 @@ public class SegmentTemplateParameterContext implements ITemplateParameterContex
         return segments.size();
     }
 
-    public Collection<String> getUuids() {
+    public Collection<SegmentUUID> getUuids() {
         return segments.keySet();
     }
 

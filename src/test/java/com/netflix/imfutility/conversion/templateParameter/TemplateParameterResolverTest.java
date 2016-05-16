@@ -11,6 +11,7 @@ import com.netflix.imfutility.conversion.templateParameter.exception.InvalidTemp
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterContextException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
+import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.util.ConversionUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
@@ -138,7 +139,7 @@ public class TemplateParameterResolverTest {
             assertNotNull(resolvedNum);
             assertEquals(String.valueOf(segm), resolvedNum);
             assertNotNull(resolvedUuid);
-            assertEquals(TemplateParameterContextCreator.getSegmentUuid(segm), resolvedUuid);
+            assertEquals(getSegmentUuid(segm).getUuid(), resolvedUuid);
         }
     }
 
@@ -160,7 +161,7 @@ public class TemplateParameterResolverTest {
                 assertEquals(seqType.value(), resolvedType);
 
                 assertNotNull(resolvedUuid);
-                assertEquals(getSequenceUuid(seq, seqType), resolvedUuid);
+                assertEquals(getSequenceUuid(seq, seqType).getUuid(), resolvedUuid);
             }
         }
     }
@@ -171,7 +172,7 @@ public class TemplateParameterResolverTest {
             for (SequenceType seqType : SEQUENCE_TYPES) {
                 for (int seq = 0; seq < SEQ_COUNT; seq++) {
                     for (int res = 0; res < RESOURCE_COUNT; res++) {
-                        String resourceUuid = getResourceUuid(segm, seq, seqType, res);
+                        ResourceUUID resourceUuid = getResourceUuid(segm, seq, seqType, res);
                         ContextInfo contextInfo = new ContextInfoBuilder()
                                 .setSegmentUuid(getSegmentUuid(segm))
                                 .setSequenceUuid(getSequenceUuid(seq, seqType))
@@ -189,7 +190,7 @@ public class TemplateParameterResolverTest {
                         assertEquals(String.valueOf(res), resolvedNum);
 
                         assertNotNull(resolvedUuid);
-                        assertEquals(resourceUuid, resolvedUuid);
+                        assertEquals(resourceUuid.getUuid(), resolvedUuid);
 
                         assertResourceParameter(resolvedEssence, resourceUuid, ResourceContextParameters.ESSENCE);
                         assertResourceParameter(resolvedStartTime, resourceUuid, ResourceContextParameters.START_TIME);

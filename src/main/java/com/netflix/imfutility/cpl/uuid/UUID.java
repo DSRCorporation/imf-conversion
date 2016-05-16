@@ -19,4 +19,20 @@ public abstract class UUID {
     public String toString() {
         return uuid;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UUID uuid1 = (UUID) o;
+
+        return uuid != null ? uuid.equals(uuid1.uuid) : uuid1.uuid == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return uuid != null ? uuid.hashCode() : 0;
+    }
 }

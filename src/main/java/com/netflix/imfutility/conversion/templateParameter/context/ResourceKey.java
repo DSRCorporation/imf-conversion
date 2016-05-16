@@ -1,5 +1,7 @@
 package com.netflix.imfutility.conversion.templateParameter.context;
 
+import com.netflix.imfutility.cpl.uuid.SegmentUUID;
+import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 /**
@@ -7,15 +9,15 @@ import com.netflix.imfutility.xsd.conversion.SequenceType;
  */
 public class ResourceKey {
 
-    private final String segmentUuid;
-    private final String sequenceUuid;
+    private final SegmentUUID segmentUuid;
+    private final SequenceUUID sequenceUuid;
     private final SequenceType sequenceType;
 
-    public static ResourceKey create(String segmentUuid, String sequenceUuid, SequenceType sequenceType) {
+    public static ResourceKey create(SegmentUUID segmentUuid, SequenceUUID sequenceUuid, SequenceType sequenceType) {
         return new ResourceKey(segmentUuid, sequenceUuid, sequenceType);
     }
 
-    private ResourceKey(String segmentUuid, String sequenceUuid, SequenceType sequenceType) {
+    private ResourceKey(SegmentUUID segmentUuid, SequenceUUID sequenceUuid, SequenceType sequenceType) {
         this.segmentUuid = segmentUuid;
         this.sequenceUuid = sequenceUuid;
         this.sequenceType = sequenceType;
@@ -42,11 +44,11 @@ public class ResourceKey {
         return result;
     }
 
-    public String getSegmentUuid() {
+    public SegmentUUID getSegmentUuid() {
         return segmentUuid;
     }
 
-    public String getSequenceUuid() {
+    public SequenceUUID getSequenceUuid() {
         return sequenceUuid;
     }
 
@@ -56,6 +58,6 @@ public class ResourceKey {
 
     @Override
     public String toString() {
-        return segmentUuid + "_" + sequenceUuid + "_" + sequenceType.value();
+        return segmentUuid.toString() + "_" + sequenceUuid.toString() + "_" + sequenceType.value();
     }
 }

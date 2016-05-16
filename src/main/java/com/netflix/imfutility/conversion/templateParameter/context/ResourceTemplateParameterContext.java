@@ -4,6 +4,7 @@ import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
+import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 
 import java.util.*;
 
@@ -19,22 +20,22 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
 
     private final Map<ResourceKey, ResourceData> resources = new HashMap<>();
 
-    public ResourceTemplateParameterContext initResource(ResourceKey resourceKey, String uuid) {
+    public ResourceTemplateParameterContext initResource(ResourceKey resourceKey, ResourceUUID uuid) {
         if (!resources.containsKey(resourceKey) || !resources.get(resourceKey).contains(uuid)) {
             int resourceNum = getResourceCount(resourceKey);
-            doAddParameter(resourceKey, uuid, ResourceContextParameters.UUID, uuid);
+            doAddParameter(resourceKey, uuid, ResourceContextParameters.UUID, uuid.getUuid());
             doAddParameter(resourceKey, uuid, ResourceContextParameters.NUM, String.valueOf(resourceNum));
         }
         return this;
     }
 
-    public ResourceTemplateParameterContext addResourceParameter(ResourceKey resourceKey, String uuid, ResourceContextParameters paramName, String paramValue) {
+    public ResourceTemplateParameterContext addResourceParameter(ResourceKey resourceKey, ResourceUUID uuid, ResourceContextParameters paramName, String paramValue) {
         initResource(resourceKey, uuid);
         doAddParameter(resourceKey, uuid, paramName, paramValue);
         return this;
     }
 
-    private void doAddParameter(ResourceKey resourceKey, String uuid, ResourceContextParameters paramName, String paramValue) {
+    private void doAddParameter(ResourceKey resourceKey, ResourceUUID uuid, ResourceContextParameters paramName, String paramValue) {
         ResourceData resourceData = resources.get(resourceKey);
         if (resourceData == null) {
             resourceData = new ResourceData();
@@ -51,7 +52,7 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
         return resourceData.getResourceCount();
     }
 
-    public Collection<String> getUuids(ResourceKey resourceKey) {
+    public Collection<ResourceUUID> getUuids(ResourceKey resourceKey) {
         ResourceData resourceData = resources.get(resourceKey);
         if (resourceData == null) {
             return Collections.EMPTY_LIST;
@@ -116,13 +117,13 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
 
     private static class ResourceData {
 
-        private final Map<String, ResourceParameterData> resourceParams = new LinkedHashMap<>();
+        private final Map<ResourceUUID, ResourceParameterData> resourceParams = new LinkedHashMap<>();
 
-        public Collection<String> getUuids() {
+        public Collection<ResourceUUID> getUuids() {
             return resourceParams.keySet();
         }
 
-        public ResourceParameterData getParameterData(String uuid) {
+        public ResourceParameterData getParameterData(ResourceUUID uuid) {
             return resourceParams.get(uuid);
         }
 
@@ -130,11 +131,11 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
             return resourceParams.size();
         }
 
-        public boolean contains(String uuid) {
+        public boolean contains(ResourceUUID uuid) {
             return resourceParams.containsKey(uuid);
         }
 
-        public void addParameter(String uuid, ResourceContextParameters paramName, String paramValue) {
+        public void addParameter(ResourceUUID uuid, ResourceContextParameters paramName, String paramValue) {
             ResourceParameterData resourceParamData = resourceParams.get(uuid);
             if (resourceParamData == null) {
                 resourceParamData = new ResourceParameterData();

@@ -1,6 +1,9 @@
 package com.netflix.imfutility.util;
 
 import com.netflix.imfutility.conversion.templateParameter.context.*;
+import com.netflix.imfutility.cpl.uuid.ResourceUUID;
+import com.netflix.imfutility.cpl.uuid.SegmentUUID;
+import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 import java.util.EnumSet;
@@ -19,6 +22,10 @@ public final class TemplateParameterContextCreator {
     public static final String RESOURCE_PARAMETER_FORMAT = "%s-%s";
 
     private TemplateParameterContextCreator() {
+    }
+
+    public static void fillCPLContext(TemplateParameterContextProvider contextProvider, int segmentCount, int seqCount, int resourceCount) {
+        fillCPLContext(contextProvider, segmentCount, seqCount, resourceCount, EnumSet.allOf(SequenceType.class));
     }
 
     public static void fillCPLContext(TemplateParameterContextProvider contextProvider, int segmentCount, int seqCount, int resourceCount,
@@ -44,7 +51,7 @@ public final class TemplateParameterContextCreator {
                 for (int res = 0; res < resourceCount; res++) {
                     for (SequenceType seqType : sequenceTypes) {
                         ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(segm), getSequenceUuid(seq, seqType), seqType);
-                        String resourceUuid = getResourceUuid(segm, seq, seqType, res);
+                        ResourceUUID resourceUuid = getResourceUuid(segm, seq, seqType, res);
 
                         // init default params
                         resourceContext.initResource(resourceKey, resourceUuid);
@@ -61,20 +68,23 @@ public final class TemplateParameterContextCreator {
         int a = 0;
     }
 
-    public static String getSegmentUuid(int segm) {
-        return String.format(SEGMENT_UUID_FORMAT, segm);
+    public static SegmentUUID getSegmentUuid(int segm) {
+        return SegmentUUID.create(
+                String.format(SEGMENT_UUID_FORMAT, segm));
     }
 
-    public static String getSequenceUuid(int seq, SequenceType seqType) {
-        return String.format(SEQUENCE_UUID_FORMAT, seqType.value(), seq);
+    public static SequenceUUID getSequenceUuid(int seq, SequenceType seqType) {
+        return SequenceUUID.create(
+                String.format(SEQUENCE_UUID_FORMAT, seqType.value(), seq));
     }
 
-    public static String getResourceUuid(int segm, int seq, SequenceType seqType, int res) {
-        return String.format(RESOURCE_UUID_FORMAT, segm, seq, seqType.value(), res);
+    public static ResourceUUID getResourceUuid(int segm, int seq, SequenceType seqType, int res) {
+        return ResourceUUID.create(
+                String.format(RESOURCE_UUID_FORMAT, segm, seq, seqType.value(), res));
     }
 
     private static void fillResourceParam(ResourceTemplateParameterContext resourceContext, ResourceKey resourceKey,
-                                          String resourceUuid, ResourceContextParameters resParam) {
+                                          ResourceUUID resourceUuid, ResourceContextParameters resParam) {
         resourceContext.addResourceParameter(
                 resourceKey,
                 resourceUuid,
@@ -83,8 +93,8 @@ public final class TemplateParameterContextCreator {
         );
     }
 
-    public static void assertResourceParameter(String value, String resourceUuid, ResourceContextParameters resParam) {
-        String expectedValue = String.format(RESOURCE_PARAMETER_FORMAT, resourceUuid, resParam.getName());
+    public static void assertResourceParameter(String value, ResourceUUID resourceUuid, ResourceContextParameters resParam) {
+        String expectedValue = String.format(RESOURCE_PARAMETER_FORMAT, resourceUuid.getUuid(), resParam.getName());
         assertNotNull(value);
         assertEquals(expectedValue, value);
     }

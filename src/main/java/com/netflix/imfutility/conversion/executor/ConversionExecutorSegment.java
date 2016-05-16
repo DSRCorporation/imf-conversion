@@ -7,6 +7,9 @@ import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.cpl.uuid.ResourceUUID;
+import com.netflix.imfutility.cpl.uuid.SegmentUUID;
+import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.xsd.conversion.*;
 
 import java.io.IOException;
@@ -22,7 +25,7 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
 
     private final ExecEachSegmentSequenceType execEachSegm;
 
-    private String currentSegmentUuid;
+    private SegmentUUID currentSegmentUuid;
 
     public ConversionExecutorSegment(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory strategyProvider,
                                      ExecEachSegmentSequenceType execEachSegm) {
@@ -32,7 +35,7 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
 
     @Override
     public void execute() throws IOException {
-        for (String segmentUuid : contextProvider.getSegmentContext().getUuids()) {
+        for (SegmentUUID segmentUuid : contextProvider.getSegmentContext().getUuids()) {
             this.currentSegmentUuid = segmentUuid;
 
             for (Object operation : execEachSegm.getPipeOrExecOnceOrExecEachSequence()) {
@@ -106,10 +109,10 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
         SequenceType seqType = execSequence.getType();
 
         // 2. process operation for each sequence within segment
-        for (String seqUuid : contextProvider.getSequenceContext().getUuids(seqType)) {
+        for (SequenceUUID seqUuid : contextProvider.getSequenceContext().getUuids(seqType)) {
             // process operations for each resource within segment and sequence
             ResourceKey resKey = ResourceKey.create(currentSegmentUuid, seqUuid, seqType);
-            for (String resourceUuid : contextProvider.getResourceContext().getUuids(resKey)) {
+            for (ResourceUUID resourceUuid : contextProvider.getResourceContext().getUuids(resKey)) {
                 // context info
                 ContextInfo contextInfo = new ContextInfoBuilder()
                         .setSequenceUuid(seqUuid)

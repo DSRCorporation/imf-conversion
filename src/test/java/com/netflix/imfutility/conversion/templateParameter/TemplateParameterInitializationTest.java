@@ -3,16 +3,18 @@ package com.netflix.imfutility.conversion.templateParameter;
 import com.netflix.imfutility.Format;
 import com.netflix.imfutility.config.ConfigProvider;
 import com.netflix.imfutility.conversion.ConversionProvider;
-import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
 import com.netflix.imfutility.conversion.templateParameter.context.SegmentContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.cpl.uuid.SegmentUUID;
+import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.util.ConversionUtils;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.*;
 import static org.junit.Assert.*;
 
 /**
@@ -72,14 +74,7 @@ public class TemplateParameterInitializationTest {
     @Test
     public void testAddDynamicParameterWithParams() {
         TemplateParameterContextProvider contextProvider = createContextProvider();
-        contextProvider.getSegmentContext()
-                .initSegment("urn:uuid:segm:1111");
-        contextProvider.getSequenceContext()
-                .initSequence(SequenceType.AUDIO, "urn:uuid:seq:1111")
-                .initSequence(SequenceType.AUDIO, "urn:uuid:seq:2222");
-        contextProvider.getResourceContext()
-                .initResource(ResourceKey.create("urn:uuid:segm:1111", "urn:uuid:seq:1111", SequenceType.AUDIO), "urn:uuid:res:1111")
-                .initResource(ResourceKey.create("urn:uuid:segm:1111", "urn:uuid:seq:2222", SequenceType.AUDIO), "urn:uuid:res:2222");
+        fillCPLContext(contextProvider, 2, 2, 2);
 
         contextProvider.getDynamicContext().addParameter(
                 "addDynamicWithParam1",
@@ -89,27 +84,19 @@ public class TemplateParameterInitializationTest {
                 "addDynamicWithParam2",
                 "%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}",
                 new ContextInfoBuilder()
-                        .setSegmentUuid("urn:uuid:segm:1111")
-                        .setSequenceUuid("urn:uuid:seq:2222")
-                        .setResourceUuid("urn:uuid:res:2222")
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(1, SequenceType.AUDIO))
+                        .setResourceUuid(getResourceUuid(0, 1, SequenceType.AUDIO, 1))
                         .setSequenceType(SequenceType.AUDIO).build());
 
         assertTrue(contextProvider.getDynamicContext().getAllParameters().contains("tmpParamSimple"));
-        assertTrue(contextProvider.getDynamicContext().getAllParameters().contains("0-1-audio-0-tmpParamSimple"));
+        assertTrue(contextProvider.getDynamicContext().getAllParameters().contains("0-1-audio-1-tmpParamSimple"));
     }
 
     @Test
     public void testAppendDynamicParameterWithParams() {
         TemplateParameterContextProvider contextProvider = createContextProvider();
-        contextProvider.getSegmentContext()
-                .initSegment("urn:uuid:segm:1111")
-                .initSegment("urn:uuid:segm:2222");
-        contextProvider.getSequenceContext()
-                .initSequence(SequenceType.AUDIO, "urn:uuid:seq:1111")
-                .initSequence(SequenceType.AUDIO, "urn:uuid:seq:2222");
-        contextProvider.getResourceContext()
-                .initResource(ResourceKey.create("urn:uuid:segm:1111", "urn:uuid:seq:1111", SequenceType.AUDIO), "urn:uuid:res:1111")
-                .initResource(ResourceKey.create("urn:uuid:segm:2222", "urn:uuid:seq:2222", SequenceType.AUDIO), "urn:uuid:res:4444");
+        fillCPLContext(contextProvider, 2, 2, 2);
 
         contextProvider.getDynamicContext().appendParameter("appendDynamicWithParam1", "%{tmp.tmpParamSimple}_1", ContextInfo.EMPTY);
         contextProvider.getDynamicContext().appendParameter("appendDynamicWithParam1", "_%{tmp.tmpParamSimple}_2", ContextInfo.EMPTY);
@@ -118,77 +105,86 @@ public class TemplateParameterInitializationTest {
                 "appendDynamicWithParam2",
                 "%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}",
                 new ContextInfoBuilder()
-                        .setSegmentUuid("urn:uuid:segm:1111")
-                        .setSequenceUuid("urn:uuid:seq:1111")
-                        .setResourceUuid("urn:uuid:res:1111")
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.AUDIO))
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0))
                         .setSequenceType(SequenceType.AUDIO).build());
 
         contextProvider.getDynamicContext().appendParameter(
                 "appendDynamicWithParam2",
                 "_%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}",
                 new ContextInfoBuilder()
-                        .setSegmentUuid("urn:uuid:segm:2222")
-                        .setSequenceUuid("urn:uuid:seq:2222")
-                        .setResourceUuid("urn:uuid:res:4444")
-                        .setSequenceType(SequenceType.AUDIO).build());
+                        .setSegmentUuid(getSegmentUuid(1))
+                        .setSequenceUuid(getSequenceUuid(1, SequenceType.VIDEO))
+                        .setResourceUuid(getResourceUuid(1, 1, SequenceType.VIDEO, 1))
+                        .setSequenceType(SequenceType.VIDEO).build());
 
         assertTrue(
                 contextProvider.getDynamicContext().getAllParameters().contains(
                         "tmpParamSimple_1_tmpParamSimple_2"));
         assertTrue(
                 contextProvider.getDynamicContext().getAllParameters().contains(
-                        "0-0-audio-0-tmpParamSimple_1-1-audio-0-tmpParamSimple"));
+                        "0-0-audio-0-tmpParamSimple_1-1-video-1-tmpParamSimple"));
     }
 
     @Test
     public void testInitSegmentsOrder() {
         TemplateParameterContextProvider contextProvider = createContextProvider();
-        contextProvider.getSegmentContext().initSegment("urn:uuid:3333");
-        contextProvider.getSegmentContext().initSegment("urn:uuid:1111");
-        contextProvider.getSegmentContext().initSegment("urn:uuid:2222");
+        contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:3333"));
+        contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:1111"));
+        contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:2222"));
 
         assertEquals(3, contextProvider.getSegmentContext().getSegmentsNum());
         assertArrayEquals(
-                new String[]{"urn:uuid:3333", "urn:uuid:1111", "urn:uuid:2222"},
+                new SegmentUUID[]{
+                        SegmentUUID.create("urn:uuid:3333"),
+                        SegmentUUID.create("urn:uuid:1111"),
+                        SegmentUUID.create("urn:uuid:2222")},
                 contextProvider.getSegmentContext().getUuids().toArray());
     }
 
     @Test
     public void testInitSegmentsNoDuplicate() {
         TemplateParameterContextProvider contextProvider = createContextProvider();
-        contextProvider.getSegmentContext().initSegment("urn:uuid:3333");
-        contextProvider.getSegmentContext().initSegment("urn:uuid:1111");
-        contextProvider.getSegmentContext().initSegment("urn:uuid:2222");
-        contextProvider.getSegmentContext().initSegment("urn:uuid:3333");
-        contextProvider.getSegmentContext().initSegment("urn:uuid:1111");
+        contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:3333"));
+        contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:1111"));
+        contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:2222"));
+        contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:3333"));
+        contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:1111"));
 
         assertEquals(3, contextProvider.getSegmentContext().getSegmentsNum());
         assertArrayEquals(
-                new String[]{"urn:uuid:3333", "urn:uuid:1111", "urn:uuid:2222"},
+                new SegmentUUID[]{
+                        SegmentUUID.create("urn:uuid:3333"),
+                        SegmentUUID.create("urn:uuid:1111"),
+                        SegmentUUID.create("urn:uuid:2222")},
                 contextProvider.getSegmentContext().getUuids().toArray());
     }
 
     @Test
     public void testInitDefaultSegmentParameters() {
         TemplateParameterContextProvider contextProvider = createContextProvider();
-        contextProvider.getSegmentContext().initSegment("urn:uuid:3333");
-        contextProvider.getSegmentContext().initSegment("urn:uuid:1111");
-        contextProvider.getSegmentContext().initSegment("urn:uuid:2222");
+        contextProvider.getSegmentContext().initSegment(
+                SegmentUUID.create("urn:uuid:3333"));
+        contextProvider.getSegmentContext().initSegment(
+                SegmentUUID.create("urn:uuid:1111"));
+        contextProvider.getSegmentContext().initSegment(
+                SegmentUUID.create("urn:uuid:2222"));
 
-        assertDefaultSegmentParameters(contextProvider, 0, "urn:uuid:3333");
-        assertDefaultSegmentParameters(contextProvider, 1, "urn:uuid:1111");
-        assertDefaultSegmentParameters(contextProvider, 2, "urn:uuid:2222");
+        assertDefaultSegmentParameters(contextProvider, 0, SegmentUUID.create("urn:uuid:3333"));
+        assertDefaultSegmentParameters(contextProvider, 1, SegmentUUID.create("urn:uuid:1111"));
+        assertDefaultSegmentParameters(contextProvider, 2, SegmentUUID.create("urn:uuid:2222"));
     }
 
     private void assertDefaultSegmentParameters(TemplateParameterContextProvider contextProvider, int segmNum,
-                                                String segmUuid) {
+                                                SegmentUUID segmUuid) {
         assertEquals(
                 String.valueOf(segmNum),
                 contextProvider.getSegmentContext().resolveTemplateParameter(
                         new TemplateParameter("%{segm.num}"),
                         new ContextInfoBuilder().setSegmentUuid(segmUuid).build()));
         assertEquals(
-                segmUuid,
+                segmUuid.getUuid(),
                 contextProvider.getSegmentContext().resolveTemplateParameter(
                         new TemplateParameter("%{segm.uuid}"),
                         new ContextInfoBuilder().setSegmentUuid(segmUuid).build()));
@@ -197,91 +193,106 @@ public class TemplateParameterInitializationTest {
     @Test
     public void testAddSegmentParametersInitsSegment() {
         TemplateParameterContextProvider contextProvider = createContextProvider();
-        contextProvider.getSegmentContext().addSegmentParameter("urn:uuid:3333", SegmentContextParameters.NUM, "5");
+        contextProvider.getSegmentContext().addSegmentParameter(
+                SegmentUUID.create("urn:uuid:3333"), SegmentContextParameters.NUM, "5");
 
         assertEquals(1, contextProvider.getSegmentContext().getSegmentsNum());
         assertArrayEquals(
-                new String[]{"urn:uuid:3333"},
+                new SegmentUUID[]{SegmentUUID.create("urn:uuid:3333")},
                 contextProvider.getSegmentContext().getUuids().toArray());
 
-        assertDefaultSegmentParameters(contextProvider, 5, "urn:uuid:3333");
+        assertDefaultSegmentParameters(contextProvider, 5, SegmentUUID.create("urn:uuid:3333"));
     }
 
     @Test
     public void testInitSequenceOrder() {
         TemplateParameterContextProvider contextProvider = createContextProvider();
-        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, "urn:uuid:3333");
-        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, "urn:uuid:1111");
-        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, "urn:uuid:2222");
+        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:3333"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:1111"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:2222"));
 
-        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, "urn:uuid:2222");
-        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, "urn:uuid:3333");
-        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, "urn:uuid:1111");
-        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, "urn:uuid:4444");
+        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, SequenceUUID.create("urn:uuid:2222"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, SequenceUUID.create("urn:uuid:3333"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, SequenceUUID.create("urn:uuid:1111"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, SequenceUUID.create("urn:uuid:4444"));
 
         assertEquals(3, contextProvider.getSequenceContext().getSequenceCount(SequenceType.VIDEO));
         assertArrayEquals(
-                new String[]{"urn:uuid:3333", "urn:uuid:1111", "urn:uuid:2222"},
+                new SequenceUUID[]{
+                        SequenceUUID.create("urn:uuid:3333"),
+                        SequenceUUID.create("urn:uuid:1111"),
+                        SequenceUUID.create("urn:uuid:2222")},
                 contextProvider.getSequenceContext().getUuids(SequenceType.VIDEO).toArray());
 
         assertEquals(4, contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO));
         assertArrayEquals(
-                new String[]{"urn:uuid:2222", "urn:uuid:3333", "urn:uuid:1111", "urn:uuid:4444"},
+                new SequenceUUID[]{
+                        SequenceUUID.create("urn:uuid:2222"),
+                        SequenceUUID.create("urn:uuid:3333"),
+                        SequenceUUID.create("urn:uuid:1111"),
+                        SequenceUUID.create("urn:uuid:4444")},
                 contextProvider.getSequenceContext().getUuids(SequenceType.AUDIO).toArray());
     }
 
     @Test
     public void testInitSequenceNoDuplicate() {
         TemplateParameterContextProvider contextProvider = createContextProvider();
-        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, "urn:uuid:3333");
-        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, "urn:uuid:1111");
-        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, "urn:uuid:2222");
-        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, "urn:uuid:3333");
-        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, "urn:uuid:2222");
+        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:3333"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:1111"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:2222"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:3333"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:2222"));
 
-        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, "urn:uuid:2222");
-        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, "urn:uuid:3333");
-        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, "urn:uuid:3333");
-        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, "urn:uuid:3333");
-        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, "urn:uuid:1111");
-        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, "urn:uuid:4444");
-        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, "urn:uuid:2222");
+        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, SequenceUUID.create("urn:uuid:2222"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, SequenceUUID.create("urn:uuid:3333"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, SequenceUUID.create("urn:uuid:3333"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, SequenceUUID.create("urn:uuid:3333"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, SequenceUUID.create("urn:uuid:1111"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, SequenceUUID.create("urn:uuid:4444"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, SequenceUUID.create("urn:uuid:2222"));
 
         assertEquals(3, contextProvider.getSequenceContext().getSequenceCount(SequenceType.VIDEO));
         assertArrayEquals(
-                new String[]{"urn:uuid:3333", "urn:uuid:1111", "urn:uuid:2222"},
+                new SequenceUUID[]{
+                        SequenceUUID.create("urn:uuid:3333"),
+                        SequenceUUID.create("urn:uuid:1111"),
+                        SequenceUUID.create("urn:uuid:2222")},
                 contextProvider.getSequenceContext().getUuids(SequenceType.VIDEO).toArray());
 
         assertEquals(4, contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO));
         assertArrayEquals(
-                new String[]{"urn:uuid:2222", "urn:uuid:3333", "urn:uuid:1111", "urn:uuid:4444"},
+                new SequenceUUID[]{
+                        SequenceUUID.create("urn:uuid:2222"),
+                        SequenceUUID.create("urn:uuid:3333"),
+                        SequenceUUID.create("urn:uuid:1111"),
+                        SequenceUUID.create("urn:uuid:4444")},
                 contextProvider.getSequenceContext().getUuids(SequenceType.AUDIO).toArray());
     }
 
     @Test
     public void testInitDefaultSequenceParameters() {
         TemplateParameterContextProvider contextProvider = createContextProvider();
-        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, "urn:uuid:3333");
-        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, "urn:uuid:1111");
+        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:3333"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:1111"));
 
-        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, "urn:uuid:2222");
-        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, "urn:uuid:3333");
+        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, SequenceUUID.create("urn:uuid:2222"));
+        contextProvider.getSequenceContext().initSequence(SequenceType.AUDIO, SequenceUUID.create("urn:uuid:3333"));
 
-        assertDefaultSequenceParameters(contextProvider, 0, "urn:uuid:3333", SequenceType.VIDEO);
-        assertDefaultSequenceParameters(contextProvider, 1, "urn:uuid:1111", SequenceType.VIDEO);
-        assertDefaultSequenceParameters(contextProvider, 0, "urn:uuid:2222", SequenceType.AUDIO);
-        assertDefaultSequenceParameters(contextProvider, 1, "urn:uuid:3333", SequenceType.AUDIO);
+        assertDefaultSequenceParameters(contextProvider, 0, SequenceUUID.create("urn:uuid:3333"), SequenceType.VIDEO);
+        assertDefaultSequenceParameters(contextProvider, 1, SequenceUUID.create("urn:uuid:1111"), SequenceType.VIDEO);
+        assertDefaultSequenceParameters(contextProvider, 0, SequenceUUID.create("urn:uuid:2222"), SequenceType.AUDIO);
+        assertDefaultSequenceParameters(contextProvider, 1, SequenceUUID.create("urn:uuid:3333"), SequenceType.AUDIO);
     }
 
     private void assertDefaultSequenceParameters(TemplateParameterContextProvider contextProvider, int seqNum,
-                                                 String seqUuid, SequenceType seqType) {
+                                                 SequenceUUID seqUuid, SequenceType seqType) {
         assertEquals(
                 String.valueOf(seqNum),
                 contextProvider.getSequenceContext().resolveTemplateParameter(
                         new TemplateParameter("%{seq.num}"),
                         new ContextInfoBuilder().setSequenceUuid(seqUuid).setSequenceType(seqType).build()));
         assertEquals(
-                seqUuid,
+                seqUuid.getUuid(),
                 contextProvider.getSequenceContext().resolveTemplateParameter(
                         new TemplateParameter("%{seq.uuid}"),
                         new ContextInfoBuilder().setSequenceUuid(seqUuid).setSequenceType(seqType).build()));
@@ -295,15 +306,15 @@ public class TemplateParameterInitializationTest {
     @Test
     public void testAddSequenceParameterInitsSequence() {
         TemplateParameterContextProvider contextProvider = createContextProvider();
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, "urn:uuid:3333",
+        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:3333"),
                 SequenceContextParameters.NUM, "5");
 
         assertEquals(1, contextProvider.getSequenceContext().getSequenceCount(SequenceType.VIDEO));
         assertArrayEquals(
-                new String[]{"urn:uuid:3333"},
+                new SequenceUUID[]{SequenceUUID.create("urn:uuid:3333")},
                 contextProvider.getSequenceContext().getUuids(SequenceType.VIDEO).toArray());
 
-        assertDefaultSequenceParameters(contextProvider, 5, "urn:uuid:3333", SequenceType.VIDEO);
+        assertDefaultSequenceParameters(contextProvider, 5, SequenceUUID.create("urn:uuid:3333"), SequenceType.VIDEO);
     }
 
 

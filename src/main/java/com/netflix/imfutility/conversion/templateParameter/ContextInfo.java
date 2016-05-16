@@ -1,5 +1,8 @@
 package com.netflix.imfutility.conversion.templateParameter;
 
+import com.netflix.imfutility.cpl.uuid.ResourceUUID;
+import com.netflix.imfutility.cpl.uuid.SegmentUUID;
+import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 /**
@@ -7,31 +10,31 @@ import com.netflix.imfutility.xsd.conversion.SequenceType;
  */
 public class ContextInfo {
 
-    public static final String DEFAULT_SEGMENT_UUID = null;
-    public static final String DEFAULT_SEQUENCE_UUID = null;
+    public static final SegmentUUID DEFAULT_SEGMENT_UUID = null;
+    public static final SequenceUUID DEFAULT_SEQUENCE_UUID = null;
     public static final SequenceType DEFAULT_SEQUENCE_TYPE = null;
-    public static final String DEFAULT_RESOURCE_UUID = null;
+    public static final ResourceUUID DEFAULT_RESOURCE_UUID = null;
 
     public static ContextInfo EMPTY = new ContextInfo(
             DEFAULT_SEGMENT_UUID, DEFAULT_SEQUENCE_UUID, DEFAULT_SEQUENCE_TYPE, DEFAULT_RESOURCE_UUID);
 
-    private final String segmentUuid;
-    private final String sequenceUuid;
+    private final SegmentUUID segmentUuid;
+    private final SequenceUUID sequenceUuid;
     private final SequenceType sequenceType;
-    private final String resourceUuid;
+    private final ResourceUUID resourceUuid;
 
-    public ContextInfo(String segmentUuid, String sequenceUuid, SequenceType sequenceType, String resourceUuid) {
+    public ContextInfo(SegmentUUID segmentUuid, SequenceUUID sequenceUuid, SequenceType sequenceType, ResourceUUID resourceUuid) {
         this.segmentUuid = segmentUuid;
         this.sequenceUuid = sequenceUuid;
         this.sequenceType = sequenceType;
         this.resourceUuid = resourceUuid;
     }
 
-    public String getSegmentUuid() {
+    public SegmentUUID getSegmentUuid() {
         return segmentUuid;
     }
 
-    public String getSequenceUuid() {
+    public SequenceUUID getSequenceUuid() {
         return sequenceUuid;
     }
 
@@ -39,7 +42,7 @@ public class ContextInfo {
         return sequenceType;
     }
 
-    public String getResourceUuid() {
+    public ResourceUUID getResourceUuid() {
         return resourceUuid;
     }
 }

@@ -4,6 +4,7 @@ import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
+import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 import java.util.*;
@@ -21,23 +22,23 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
 
     private Map<SequenceType, SequenceData> sequences = new HashMap<>();
 
-    public SequenceTemplateParameterContext initSequence(SequenceType seqType, String uuid) {
+    public SequenceTemplateParameterContext initSequence(SequenceType seqType, SequenceUUID uuid) {
         if (!sequences.containsKey(seqType) || !sequences.get(seqType).contains(uuid)) {
             int seqNum = getSequenceCount(seqType);
-            doAddParameter(seqType, uuid, SequenceContextParameters.UUID, uuid);
+            doAddParameter(seqType, uuid, SequenceContextParameters.UUID, uuid.getUuid());
             doAddParameter(seqType, uuid, SequenceContextParameters.TYPE, seqType.value());
             doAddParameter(seqType, uuid, SequenceContextParameters.NUM, String.valueOf(seqNum));
         }
         return this;
     }
 
-    public SequenceTemplateParameterContext addSequenceParameter(SequenceType seqType, String uuid, SequenceContextParameters paramName, String paramValue) {
+    public SequenceTemplateParameterContext addSequenceParameter(SequenceType seqType, SequenceUUID uuid, SequenceContextParameters paramName, String paramValue) {
         initSequence(seqType, uuid);
         doAddParameter(seqType, uuid, paramName, paramValue);
         return this;
     }
 
-    private void doAddParameter(SequenceType seqType, String uuid, SequenceContextParameters paramName, String paramValue) {
+    private void doAddParameter(SequenceType seqType, SequenceUUID uuid, SequenceContextParameters paramName, String paramValue) {
         SequenceData sequenceData = sequences.get(seqType);
         if (sequenceData == null) {
             sequenceData = new SequenceData();
@@ -54,7 +55,7 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
         return sequenceData.getSequenceCount();
     }
 
-    public Collection<String> getUuids(SequenceType sequenceType) {
+    public Collection<SequenceUUID> getUuids(SequenceType sequenceType) {
         SequenceData sequenceData = sequences.get(sequenceType);
         if (sequenceData == null) {
             return Collections.EMPTY_LIST;
@@ -109,13 +110,13 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
 
     private static class SequenceData {
 
-        private final Map<String, SequenceParametersData> sequenceParams = new LinkedHashMap<>();
+        private final Map<SequenceUUID, SequenceParametersData> sequenceParams = new LinkedHashMap<>();
 
-        public Collection<String> getUuids() {
+        public Collection<SequenceUUID> getUuids() {
             return sequenceParams.keySet();
         }
 
-        public SequenceParametersData getParameterData(String uuid) {
+        public SequenceParametersData getParameterData(SequenceUUID uuid) {
             return sequenceParams.get(uuid);
         }
 
@@ -123,11 +124,11 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
             return sequenceParams.size();
         }
 
-        public boolean contains(String uuid) {
+        public boolean contains(SequenceUUID uuid) {
             return sequenceParams.containsKey(uuid);
         }
 
-        public void addParameter(String uuid, SequenceContextParameters paramName, String paramValue) {
+        public void addParameter(SequenceUUID uuid, SequenceContextParameters paramName, String paramValue) {
             SequenceParametersData sequenceParamData = sequenceParams.get(uuid);
             if (sequenceParamData == null) {
                 sequenceParamData = new SequenceParametersData();

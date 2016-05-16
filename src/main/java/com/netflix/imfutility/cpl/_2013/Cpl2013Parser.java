@@ -5,6 +5,9 @@ import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.cpl.AssetMap;
 import com.netflix.imfutility.cpl.SequenceTypeCpl;
+import com.netflix.imfutility.cpl.uuid.ResourceUUID;
+import com.netflix.imfutility.cpl.uuid.SegmentUUID;
+import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -47,7 +50,8 @@ public class Cpl2013Parser {
         for (SegmentType segment : cpl2013.getSegmentList().getSegment()) {
             this.currentSegment = segment;
 
-            contextProvider.getSegmentContext().initSegment(segment.getId());
+            contextProvider.getSegmentContext().initSegment(
+                    SegmentUUID.create(segment.getId()));
 
             for (Object anySeqJaxb : segment.getSequenceList().getAny()) {
                 JAXBElement jaxbElement = (JAXBElement) (anySeqJaxb);
@@ -69,7 +73,8 @@ public class Cpl2013Parser {
             throw new RuntimeException(String.format("Sequence '%s': Unknown sequence type", currentSequence.getId()));
         }
         String seqId = currentSequence.getTrackId();
-        contextProvider.getSequenceContext().initSequence(currentSequenceType, seqId);
+        contextProvider.getSequenceContext().initSequence(currentSequenceType,
+                SequenceUUID.create(seqId));
 
         for (BaseResourceType resource : currentSequence.getResourceList().getResource()) {
             processResource(resource);
@@ -84,8 +89,11 @@ public class Cpl2013Parser {
         TrackFileResourceType trackFileResource = (TrackFileResourceType) resource;
 
         // 1. init resource context
-        String resourceId = trackFileResource.getId();
-        ResourceKey resourceKey = ResourceKey.create(currentSegment.getId(), currentSequence.getTrackId(), currentSequenceType);
+        ResourceUUID resourceId = ResourceUUID.create(trackFileResource.getId());
+        ResourceKey resourceKey = ResourceKey.create(
+                SegmentUUID.create(currentSegment.getId()),
+                SequenceUUID.create(currentSequence.getTrackId()),
+                currentSequenceType);
         contextProvider.getResourceContext().initResource(resourceKey, resourceId);
 
 
