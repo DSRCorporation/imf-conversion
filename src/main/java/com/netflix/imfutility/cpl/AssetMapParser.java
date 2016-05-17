@@ -21,12 +21,13 @@ public class AssetMapParser {
         AssetMapType assetmap = XmlParser.parse(new File(assetMapXml), XSD_ASSETMAP_XSD, ASSETMAP_PACKAGE, AssetMapType.class);
         for (AssetType asset : assetmap.getAssetList().getAsset()) {
             String id = asset.getId();
-            if (asset.getChunkList() == null || asset.getChunkList().getChunk().isEmpty()) {
+            //per st0429-9:2014 Section 6.4, <ChunkList> shall contain one <Chunk> element only
+            if (asset.getChunkList() == null || (asset.getChunkList().getChunk().size() != 1)) {
                 throw new RuntimeException(String.format(
-                        "'%s' must have at least one chunk for asset '%s'",
+                        "'%s' must have exactly one chunk for asset '%s'",
                         assetMapXml, id));
             }
-            result.addAsset(id, asset);
+            result.addAsset(id, asset.getChunkList().getChunk().get(0).getPath());
         }
 
         return result;

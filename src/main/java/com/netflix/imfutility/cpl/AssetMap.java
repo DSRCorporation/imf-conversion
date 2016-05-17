@@ -10,13 +10,13 @@ import java.util.Map;
  */
 public class AssetMap {
 
-    private final Map<String, AssetType> assetMap = new HashMap<>();
+    private final Map<String, String> assetMap = new HashMap<>();
 
-    public void addAsset(String id, AssetType asset) {
-        assetMap.put(id, asset);
+    public void addAsset(String id, String assetPath) {
+        assetMap.put(id, assetPath);
     }
 
-    public AssetType getAsset(String id) {
+    public String getAsset(String id) {
         return assetMap.get(id);
     }
 

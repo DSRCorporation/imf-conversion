@@ -99,13 +99,13 @@ public class Cpl2013Parser {
 
         // 2. Init essence parameter. Check that we have a corresponding track file in assetmap
         String trackId = trackFileResource.getTrackFileId();
-        AssetType asset = assetMap.getAsset(trackId);
-        if (asset == null) {
+        String assetPath = assetMap.getAsset(trackId);
+        if (assetPath == null) {
             throw new RuntimeException(String.format(
                     "Resource track file '%s' isn't present in assetmap.xml", trackId));
         }
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
-                ResourceContextParameters.ESSENCE, asset.getChunkList().getChunk().get(0).getPath());
+                ResourceContextParameters.ESSENCE, assetPath);
 
 
         // 3. Init startTime parameter
