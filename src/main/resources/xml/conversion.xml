@@ -55,11 +55,25 @@
                                 --avcintra-class 100 -o %{tmp.videoEncoded}
                             </execOnce>
                         </pipe>
-                        <dynamicParameter name="concatAudioInput" concat="true"> -i %{seq.num}-%{tmp.videoEncoded}</dynamicParameter>
                     </execEachSequence>
 
                     <!--
                         2. decode each audio segment and redirect output to encode's input
+                       => flatten encoded audio
+                    -->
+                    <execEachSequence type="audio" name="extractAudioSegments">
+                        <execEachSegment name="decode_audio">
+                            <exec>
+                                mxf2raw -p %{seq.num}-%{segm.num} --start %{resource.startTime}
+                                --dur %{resource.duration} %{resource.essence}
+                            </exec>
+                            <!-- to delete intermediate files at the end -->
+                            <dynamicParameter name="tmp-%{seq.num}-%{segm.num}">%{seq.num}-%{segm.num}_a0.raw</dynamicParameter>
+                        </execEachSegment>
+                    </execEachSequence>
+
+                    <!--
+                        3. decode each audio segment and redirect output to encode's input
                            => flatten encoded audio
                     -->
                     <execEachSequence type="audio" name="encodeAudio">
@@ -67,27 +81,37 @@
                             <cycle>
                                 <execEachSegment name="decode_audio">
                                     <exec>
-                                        %{tool.ffmpeg} -i %{resource.essence} -ss %{resource.startTime}
-                                        -t %{resource.duration} -vn -af aresample=48000
+                                        %{tool.ffmpeg} -f s24le -ar %{seq.sample_rate} -ac %{seq.channels}
+                                        -i %{seq.num}-%{segm.num}_a0.raw -vn -af aresample=48000
                                         -acodec pcm_s24le -f s24le -
                                     </exec>
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_audio">
-                                %{tool.ffmpeg} -f s24le -i - -vn -c:a copy -f s24le %{tmp.audioEncoded}
+                                %{tool.ffmpeg} -f s24le -i - -vn -c:a copy -f s24le %{seq.num}-audio-encoded.wav
                             </execOnce>
                         </pipe>
+                        <dynamicParameter name="concatAudioInput" concat="true"> -i %{seq.num}-audio-encoded.wav</dynamicParameter>
+                        <dynamicParameter name="concatAudioMap" concat="true">[%{seq.num}:a]</dynamicParameter>
+                        <!-- to delete intermediate files at the end -->
+                        <dynamicParameter name="tmp-%{seq.num}-audio-encoded">%{seq.num}-audio-encoded.wav</dynamicParameter>
                     </execEachSequence>
 
-
+                    <!--
+                        4. Remap audio in accordance with AudioMap.xml
+                    -->
+                    <execOnce name="audioMaping">
+                        ffmpeg %{dynamic.concatAudioInput} -filter_complex "%{dynamic.concatAudioMap}amerge,pan={%seq.panParameter}[aout]"
+                        -map "[aout]" -acodec pcm_s24le -ar 48000 {tmp.audioEncoded}
+                    </execOnce>
 
                     <!--
-                        3. create output .mxf from flatten encoded video and audio
+                        5. create output .mxf from flatten encoded video and audio
                     -->
                     <execOnce name="muxing_mxf">
                         %{tool.bmx} -t as11op1a -o %{output.mxf}
                         --avci100_1080i %{tmp.videoEncoded}
-                        -q 24 -s 48000 --audio-chan %{dynamic.audioChannels}
+                        -q 24 -s 48000 --audio-chan %{seq.ebuAudioTracks}
                         --pcm %{tmp.audioEncoded}
                     </execOnce>
 
