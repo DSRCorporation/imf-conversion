@@ -41,8 +41,9 @@
                             <cycle>
                                 <execEachSegment name="decode_video">
                                     <exec>
-                                        %{tool.ffmpeg} -y -i %{resource.essence} -ss %{resource.startTime}
-                                        -t %{resource.duration} -an -vf scale=1920:1080,fps=25
+                                        %{tool.ffmpeg} -y -i %{resource.essence} -map 0:0 -ss %{resource.startTime}
+                                        -t %{resource.duration} -an
+                                        -vf "scale=iw*sar*min(1920/(iw*sar)\,1080/ih):ih*min(1920/(iw*sar)\,1080/ih),pad=1920:1080:(ow-iw)/2:(oh-ih)/2,fps=25"
                                         -pix_fmt yuv422p10le -f rawvideo -
                                     </exec>
                                 </execEachSegment>
