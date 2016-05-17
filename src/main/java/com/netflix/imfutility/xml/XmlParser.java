@@ -25,54 +25,80 @@ import java.net.URL;
  */
 public class XmlParser {
 
-    public <T> T parse(File xml, String xsd, String pkg, Class<T> resultClass) throws XmlParsingException {
-        XmlParsingHandler contentErrorHandler = null;
-        try (FileReader fileReader = new FileReader(xml)) {
-            // 1. get schema
-            Schema schema = getSchema(xsd);
+    public static String getNamespace(File xml) throws XmlParsingException {
+        // 1. create an error and content handler
+        XmlParsingNamespaceHandler contentErrorHandler = new XmlParsingNamespaceHandler(xml);
 
-            // 2. create JAXB unmarshaller
+        // 2. do parse
+        doParse(xml, contentErrorHandler);
+
+        return contentErrorHandler.getNamespace();
+    }
+
+    public static <T> T parse(File xml, String xsd, String pkg, Class<T> resultClass) throws XmlParsingException {
+        try {
+            // 1. create JAXB unmarshaller
             JAXBContext jaxbContext = JAXBContext.newInstance(pkg);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             UnmarshallerHandler unmarshallerHandler = unmarshaller.getUnmarshallerHandler();
 
-            // 3. create a an error handler (which is also a bridge between a sax parser and unmarshaller)
-            contentErrorHandler = new XmlParsingHandler(unmarshallerHandler, xml);
+            // 2. create a an error and content handler (which is also a bridge between a sax parser and unmarshaller)
+            XmlParsingHandler contentErrorHandler = new XmlParsingHandlerWrapper(unmarshallerHandler, xml);
 
-            // 4. create a SAX parser a assign the error handler
-            XMLReader xr = getXmlReader(schema);
-            xr.setErrorHandler(contentErrorHandler);
-            xr.setContentHandler(contentErrorHandler);
+            // 3. do parse
+            doParse(xml, xsd, contentErrorHandler);
 
-            // 5. parse XML
-            xr.parse(new InputSource(fileReader));
-
-            // 6. if there are errors during parsing - throw an exception
-            if (contentErrorHandler.getParsingErrors().size() > 0) {
-                throw new XmlParsingException(contentErrorHandler.getParsingErrors());
-            }
-
-            // 7. get unmarshall result
+            // 4. get unmarshall result
             Object result = JAXBIntrospector.getValue(unmarshallerHandler.getResult());
             if (!resultClass.isInstance(result)) {
                 throw new RuntimeException(String.format("A root element in '%s' must be an instance of %s type.",
                         xml.getAbsoluteFile(), resultClass.getSimpleName()));
 
             }
+            //noinspection unchecked
             return (T) result;
-
-        } catch (SAXException e) {
-            if (contentErrorHandler != null && contentErrorHandler.getParsingErrors().size() > 0) {
-                throw new XmlParsingException(e, contentErrorHandler.getParsingErrors());
-            } else {
-                throw new RuntimeException(e);
-            }
-        } catch (ParserConfigurationException | IOException | JAXBException e) {
+        } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Schema getSchema(String xsd) throws SAXException {
+    private static void doParse(File xml, XmlParsingHandler parsingHandler) throws XmlParsingException {
+        doParse(xml, null, parsingHandler);
+    }
+
+    private static void doParse(File xml, String xsd, XmlParsingHandler parsingHandler) throws XmlParsingException {
+        try (FileReader fileReader = new FileReader(xml)) {
+            // 1. get schema
+            Schema schema = null;
+            if (xsd != null) {
+                schema = getSchema(xsd);
+            }
+
+            // 2. create a SAX parser a assign the error handler
+            XMLReader xr = getXmlReader(schema);
+            xr.setErrorHandler(parsingHandler);
+            xr.setContentHandler(parsingHandler);
+
+            // 3. parse XML
+            xr.parse(new InputSource(fileReader));
+
+            // 4. if there are errors during parsing - throw an exception
+            if (parsingHandler.getParsingErrors().size() > 0) {
+                throw new XmlParsingException(parsingHandler.getParsingErrors());
+            }
+
+        } catch (SAXException e) {
+            if (parsingHandler != null && parsingHandler.getParsingErrors().size() > 0) {
+                throw new XmlParsingException(e, parsingHandler.getParsingErrors());
+            } else {
+                throw new RuntimeException(e);
+            }
+        } catch (ParserConfigurationException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Schema getSchema(String xsd) throws SAXException {
         URL xsdResource = ClassLoader.getSystemClassLoader().getResource(xsd);
         if (xsdResource == null) {
             throw new RuntimeException(String.format("'%s' schema not found.", xsd));
@@ -81,10 +107,12 @@ public class XmlParser {
         return sf.newSchema(new File(xsdResource.getPath()));
     }
 
-    private XMLReader getXmlReader(Schema schema) throws ParserConfigurationException, SAXException {
+    private static XMLReader getXmlReader(Schema schema) throws ParserConfigurationException, SAXException {
         SAXParserFactory spf = SAXParserFactory.newInstance();
         spf.setNamespaceAware(true);
-        spf.setSchema(schema); // set XSD schema for validation
+        if (schema != null) {
+            spf.setSchema(schema); // set XSD schema for validation
+        }
         SAXParser sp = spf.newSAXParser();
         return sp.getXMLReader();
     }

@@ -78,7 +78,7 @@ public class AudioMapXml {
      * @throws XmlParsingException an exception in case of metadata.xml parsing error
      */
     public static AudioMap loadAudioMapXml(File audioMapXmlFile) throws XmlParsingException {
-        return new XmlParser().parse(
+        return XmlParser.parse(
                 audioMapXmlFile, AUDIOMAP_XML_SCHEME, AUDIOMAP_CONFIG_PACKAGE, AudioMap.class);
     }
 }

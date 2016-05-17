@@ -1,5 +1,7 @@
 package com.netflix.imfutility.conversion.templateParameter.context;
 
+import com.netflix.imfutility.cpl.uuid.SegmentUUID;
+import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 /**
@@ -7,13 +9,17 @@ import com.netflix.imfutility.xsd.conversion.SequenceType;
  */
 public class ResourceKey {
 
-    private final int segmentNum;
-    private final int sequenceNum;
+    private final SegmentUUID segmentUuid;
+    private final SequenceUUID sequenceUuid;
     private final SequenceType sequenceType;
 
-    public ResourceKey(int segmentNum, int sequenceNum, SequenceType sequenceType) {
-        this.segmentNum = segmentNum;
-        this.sequenceNum = sequenceNum;
+    public static ResourceKey create(SegmentUUID segmentUuid, SequenceUUID sequenceUuid, SequenceType sequenceType) {
+        return new ResourceKey(segmentUuid, sequenceUuid, sequenceType);
+    }
+
+    private ResourceKey(SegmentUUID segmentUuid, SequenceUUID sequenceUuid, SequenceType sequenceType) {
+        this.segmentUuid = segmentUuid;
+        this.sequenceUuid = sequenceUuid;
         this.sequenceType = sequenceType;
     }
 
@@ -24,17 +30,34 @@ public class ResourceKey {
 
         ResourceKey that = (ResourceKey) o;
 
-        if (segmentNum != that.segmentNum) return false;
-        if (sequenceNum != that.sequenceNum) return false;
+        if (segmentUuid != null ? !segmentUuid.equals(that.segmentUuid) : that.segmentUuid != null) return false;
+        if (sequenceUuid != null ? !sequenceUuid.equals(that.sequenceUuid) : that.sequenceUuid != null) return false;
         return sequenceType == that.sequenceType;
 
     }
 
     @Override
     public int hashCode() {
-        int result = segmentNum;
-        result = 31 * result + sequenceNum;
-        result = 31 * result + sequenceType.hashCode();
+        int result = segmentUuid != null ? segmentUuid.hashCode() : 0;
+        result = 31 * result + (sequenceUuid != null ? sequenceUuid.hashCode() : 0);
+        result = 31 * result + (sequenceType != null ? sequenceType.hashCode() : 0);
         return result;
+    }
+
+    public SegmentUUID getSegmentUuid() {
+        return segmentUuid;
+    }
+
+    public SequenceUUID getSequenceUuid() {
+        return sequenceUuid;
+    }
+
+    public SequenceType getSequenceType() {
+        return sequenceType;
+    }
+
+    @Override
+    public String toString() {
+        return segmentUuid.toString() + "_" + sequenceUuid.toString() + "_" + sequenceType.value();
     }
 }

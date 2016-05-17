@@ -26,9 +26,8 @@ public class AudioMapPanParameter {
         Integer channelCountToMap = getChannelCountToMap(layout, audioMap);
 
         //Build reverse map of mapped channels.
-        Map<Integer, EBUTrackType> mappedChannels = new HashMap<Integer, EBUTrackType>();
-        for (Iterator<EBUTrackType> ebuTrack = audioMap.getEBUTrack().iterator(); ebuTrack.hasNext(); ) {
-            EBUTrackType ebuTrackItem = ebuTrack.next();
+        Map<Integer, EBUTrackType> mappedChannels = new HashMap<>();
+        for (EBUTrackType ebuTrackItem : audioMap.getEBUTrack()) {
             mappedChannels.put(ebuTrackItem.getNumber(), ebuTrackItem);
         }
 
@@ -39,7 +38,7 @@ public class AudioMapPanParameter {
         //"pan" part ("4c|c0=c0|c1=c1|c2=0*c0|c3=0*c0") should be build with this logic
 
         //Get order of merged virtual track channels before pan filter
-        List<String> sequencedTrackChannelNumbers = new ArrayList<String>();
+        List<String> sequencedTrackChannelNumbers = new ArrayList<>();
         sequencedTracks.forEach((String trackId, Integer trackChannelCount) -> {
             for (Integer i = 0; i < trackChannelCount; i++) {
                 sequencedTrackChannelNumbers.add(getIntermediateKey(trackId, i));
@@ -66,7 +65,7 @@ public class AudioMapPanParameter {
             if (sequencedChannel == -1) {
                 throw new RuntimeException(
                         String.format(
-                                "Audio Virtual TrackId \"%s\" with channel number \"%i\" was not found in CPL.",
+                                "Audio Virtual TrackId \"%s\" with channel number \"%d\" was not found in CPL.",
                                 ebuTrack.getCPLVirtualTrackId(), ebuTrack.getCPLVirtualTrackChannel()));
             }
 

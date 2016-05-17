@@ -7,7 +7,7 @@ import com.netflix.imfutility.conversion.ConversionEngine;
  */
 public class TestConversionEngine extends ConversionEngine {
 
-    private TestExecutorLogger executorLogger = new TestExecutorLogger();
+    private final TestExecutorLogger executorLogger = new TestExecutorLogger();
 
     @Override
     protected TestExecuteStrategyFactory getExecuteStrategyFactory() {

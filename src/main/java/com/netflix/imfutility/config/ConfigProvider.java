@@ -21,7 +21,7 @@ public class ConfigProvider {
     private ConfigType config;
 
     public ConfigProvider(String configXml) throws XmlParsingException {
-        this.config = new XmlParser().parse(
+        this.config = XmlParser.parse(
                 new File(configXml), XSD_CONFIG_XSD, CONFIG_PACKAGE, ConfigType.class);
     }
 

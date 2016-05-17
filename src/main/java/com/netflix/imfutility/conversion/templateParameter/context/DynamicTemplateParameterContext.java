@@ -29,13 +29,14 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         this.parameterResolver = new TemplateParameterResolver(contextProvider);
     }
 
-    public void addParameter(DynamicParameterType dynamicParameter, ContextInfo contextInfo) {
+    public DynamicTemplateParameterContext addParameter(DynamicParameterType dynamicParameter, ContextInfo contextInfo) {
         String paramName = dynamicParameter.getName();
         String paramValue = dynamicParameter.getValue();
         addParameter(paramName, paramValue, contextInfo);
+        return this;
     }
 
-    public void addParameter(DynamicParameterConcatType dynamicParameter, ContextInfo contextInfo) {
+    public DynamicTemplateParameterContext addParameter(DynamicParameterConcatType dynamicParameter, ContextInfo contextInfo) {
         String paramName = dynamicParameter.getName();
         String paramValue = dynamicParameter.getValue();
         if (dynamicParameter.isConcat() != null && dynamicParameter.isConcat()) {
@@ -43,14 +44,16 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         } else {
             addParameter(paramName, paramValue, contextInfo);
         }
+        return this;
     }
 
-    public void addParameter(String paramName, String paramValue, ContextInfo contextInfo) {
+    public DynamicTemplateParameterContext addParameter(String paramName, String paramValue, ContextInfo contextInfo) {
         paramValue = parameterResolver.resolveTemplateParameter(paramValue, contextInfo);
         params.put(paramName, paramValue);
+        return this;
     }
 
-    public void appendParameter(String paramName, String paramValue, ContextInfo contextInfo) {
+    public DynamicTemplateParameterContext appendParameter(String paramName, String paramValue, ContextInfo contextInfo) {
         paramValue = parameterResolver.resolveTemplateParameter(paramValue, contextInfo);
         if (!params.containsKey(paramName)) {
             params.put(paramName, paramValue);
@@ -58,7 +61,7 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
             paramValue = params.get(paramName).concat(paramValue);
             params.put(paramName, paramValue);
         }
-
+        return this;
     }
 
     @Override

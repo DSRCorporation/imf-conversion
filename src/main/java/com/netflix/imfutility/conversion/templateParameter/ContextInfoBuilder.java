@@ -1,5 +1,8 @@
 package com.netflix.imfutility.conversion.templateParameter;
 
+import com.netflix.imfutility.cpl.uuid.ResourceUUID;
+import com.netflix.imfutility.cpl.uuid.SegmentUUID;
+import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 /**
@@ -7,19 +10,18 @@ import com.netflix.imfutility.xsd.conversion.SequenceType;
  */
 public class ContextInfoBuilder {
 
-
-    private int segment = ContextInfo.DEFAULT_SEGMENT;
-    private int sequence = ContextInfo.DEFAULT_SEQUENCE;
+    private SegmentUUID segmentUuid = ContextInfo.DEFAULT_SEGMENT_UUID;
+    private SequenceUUID sequenceUuid = ContextInfo.DEFAULT_SEQUENCE_UUID;
     private SequenceType sequenceType = ContextInfo.DEFAULT_SEQUENCE_TYPE;
-    private int resource = ContextInfo.DEFAULT_RESOURCE;
+    private ResourceUUID resourceUuid = ContextInfo.DEFAULT_RESOURCE_UUID;
 
-    public ContextInfoBuilder setSegment(int segment) {
-        this.segment = segment;
+    public ContextInfoBuilder setSegmentUuid(SegmentUUID segmentUuid) {
+        this.segmentUuid = segmentUuid;
         return this;
     }
 
-    public ContextInfoBuilder setSequence(int sequence) {
-        this.sequence = sequence;
+    public ContextInfoBuilder setSequenceUuid(SequenceUUID sequenceUuid) {
+        this.sequenceUuid = sequenceUuid;
         return this;
     }
 
@@ -28,12 +30,12 @@ public class ContextInfoBuilder {
         return this;
     }
 
-    public ContextInfoBuilder setResource(int resource) {
-        this.resource = resource;
+    public ContextInfoBuilder setResourceUuid(ResourceUUID resourceUuid) {
+        this.resourceUuid = resourceUuid;
         return this;
     }
 
     public ContextInfo build() {
-        return new ContextInfo(segment, sequence, sequenceType, resource);
+        return new ContextInfo(segmentUuid, sequenceUuid, sequenceType, resourceUuid);
     }
 }

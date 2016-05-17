@@ -21,8 +21,9 @@ public class OutputTemplateParameterContext implements ITemplateParameterContext
     private final Map<String, String> params = new HashMap<>();
 
 
-    public void addParameter(String paramName, String paramValue) {
+    public OutputTemplateParameterContext addParameter(String paramName, String paramValue) {
         params.put(paramName, paramValue);
+        return this;
     }
 
     @Override

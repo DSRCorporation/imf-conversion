@@ -10,7 +10,7 @@ package com.netflix.imfutility.conversion.templateParameter.exception;
 public abstract class AbstractTemplateParameterException extends RuntimeException {
 
     public AbstractTemplateParameterException(String templateParameterStr, String message) {
-        super(String.format("Can not resolve '%s' template parameter. %s.", templateParameterStr, message));
+        super(String.format("Can not resolve '%s' template parameter. %s", templateParameterStr, message));
     }
 
 }

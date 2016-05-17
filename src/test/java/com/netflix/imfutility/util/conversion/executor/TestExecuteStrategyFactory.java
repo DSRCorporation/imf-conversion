@@ -7,7 +7,7 @@ import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactor
  */
 public class TestExecuteStrategyFactory extends ExecuteStrategyFactory {
 
-    private TestExecutorLogger executorLogger;
+    private final TestExecutorLogger executorLogger;
 
     public TestExecuteStrategyFactory(TestExecutorLogger executorLogger) {
         this.executorLogger = executorLogger;
