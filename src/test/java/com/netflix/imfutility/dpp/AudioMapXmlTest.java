@@ -76,13 +76,13 @@ public class AudioMapXmlTest {
         AudioMap audioMap = AudioMapXml.loadAudioMapXml(temp);
 
         //Check simple way
-        LinkedHashMap<String, Integer> sequencedTracks = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> sequencedTracks = new LinkedHashMap<>();
         sequencedTracks.put("urn:uuid:38d52c00-68d3-4056-8858-28eeaf3238d3", 2);
         String audioMapParameter = AudioMapPanParameter.getPanParameter(AudioTrackLayoutDmAs11Type.EBU_R_48_2_A, audioMap,  sequencedTracks);
         assertTrue("Generated audio map pan parameter is wrong.", "4c|c0=c0|c1=c1|c2=0*c0|c3=0*c0".equals(audioMapParameter));
 
         //Check with several virtual tracks
-        LinkedHashMap<String, Integer> sequencedTracks2 = new LinkedHashMap<String, Integer>();
+        LinkedHashMap<String, Integer> sequencedTracks2 = new LinkedHashMap<>();
         sequencedTracks2.put("some track before", 6);
         sequencedTracks2.put("urn:uuid:38d52c00-68d3-4056-8858-28eeaf3238d3", 2);
         String audioMapParameter2 = AudioMapPanParameter.getPanParameter(AudioTrackLayoutDmAs11Type.EBU_R_48_2_A, audioMap,  sequencedTracks2);

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestExecutorLogger {
 
-    private List<String> processes = new ArrayList<>();
+    private final List<String> processes = new ArrayList<>();
     private Iterator<String> iterator = null;
 
 

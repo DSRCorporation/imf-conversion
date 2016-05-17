@@ -1,24 +1,26 @@
 package com.netflix.imfutility.conversion.templateParameter;
 
-import com.netflix.imfutility.config.ConfigProvider;
 import com.netflix.imfutility.Format;
+import com.netflix.imfutility.config.ConfigProvider;
 import com.netflix.imfutility.conversion.ConversionProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.OutputTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.ResourceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.exception.InvalidTemplateParameterException;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterContextException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
+import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.util.ConversionUtils;
-import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.EnumSet;
 
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -33,6 +35,8 @@ public class TemplateParameterResolverTest {
     private static final int SEGMENT_COUNT = 2;
     private static final int SEQ_COUNT = 2;
     private static final int RESOURCE_COUNT = 2;
+    private static final EnumSet<SequenceType> SEQUENCE_TYPES = EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO); // do not fill subtitle type!
+
     private static TemplateParameterResolver resolver;
 
     @BeforeClass
@@ -44,11 +48,11 @@ public class TemplateParameterResolverTest {
                 configProvider.getConfig(), conversionProvider.getFormat(), ".");
         fillDynamic(contextProvider);
         fillOutput(contextProvider);
-        TemplateParameterContextCreator.fillCPLContext(contextProvider,
+        fillCPLContext(contextProvider,
                 SEGMENT_COUNT,
                 SEQ_COUNT,
                 RESOURCE_COUNT,
-                EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO)); // do not fill subtitle type!
+                SEQUENCE_TYPES);
 
         resolver = new TemplateParameterResolver(contextProvider);
     }
@@ -125,192 +129,75 @@ public class TemplateParameterResolverTest {
 
     @Test
     public void resolvesCorrectSegmentContext() {
-        String resolvedNum0 = resolver.resolveTemplateParameter("%{segm.num}", new ContextInfoBuilder().setSegment(0).build());
-        String resolvedNum1 = resolver.resolveTemplateParameter("%{segm.num}", new ContextInfoBuilder().setSegment(1).build());
+        for (int segm = 0; segm < SEGMENT_COUNT; segm++) {
+            String resolvedNum = resolver.resolveTemplateParameter("%{segm.num}",
+                    new ContextInfoBuilder().setSegmentUuid(getSegmentUuid(segm)).build());
+            String resolvedUuid = resolver.resolveTemplateParameter("%{segm.uuid}",
+                    new ContextInfoBuilder().setSegmentUuid(getSegmentUuid(segm)).build());
 
-        assertNotNull(resolvedNum0);
-        assertEquals("0", resolvedNum0);
-        assertNotNull(resolvedNum1);
-        assertEquals("1", resolvedNum1);
+            assertNotNull(resolvedNum);
+            assertEquals(String.valueOf(segm), resolvedNum);
+            assertNotNull(resolvedUuid);
+            assertEquals(getSegmentUuid(segm).getUuid(), resolvedUuid);
+        }
     }
 
     @Test
     public void resolvesCorrectSequenceContext() {
-        String resolvedAudioNum0 = resolver.resolveTemplateParameter("%{seq.num}",
-                new ContextInfoBuilder().setSequence(0).setSequenceType(SequenceType.AUDIO).build());
-        String resolvedAudioType0 = resolver.resolveTemplateParameter("%{seq.type}",
-                new ContextInfoBuilder().setSequence(0).setSequenceType(SequenceType.AUDIO).build());
+        for (SequenceType seqType : SEQUENCE_TYPES) {
+            for (int seq = 0; seq < SEQ_COUNT; seq++) {
+                ContextInfo contextInfo = new ContextInfoBuilder()
+                        .setSequenceUuid(getSequenceUuid(seq, seqType))
+                        .setSequenceType(seqType).build();
+                String resolvedNum = resolver.resolveTemplateParameter("%{seq.num}", contextInfo);
+                String resolvedType = resolver.resolveTemplateParameter("%{seq.type}", contextInfo);
+                String resolvedUuid = resolver.resolveTemplateParameter("%{seq.uuid}", contextInfo);
 
-        String resolvedAudioNum1 = resolver.resolveTemplateParameter("%{seq.num}",
-                new ContextInfoBuilder().setSequence(1).setSequenceType(SequenceType.AUDIO).build());
-        String resolvedAudioType1 = resolver.resolveTemplateParameter("%{seq.type}",
-                new ContextInfoBuilder().setSequence(1).setSequenceType(SequenceType.AUDIO).build());
+                assertNotNull(resolvedNum);
+                assertEquals(String.valueOf(seq), resolvedNum);
 
-        String resolvedVideoNum0 = resolver.resolveTemplateParameter("%{seq.num}",
-                new ContextInfoBuilder().setSequence(0).setSequenceType(SequenceType.VIDEO).build());
-        String resolvedVideoType0 = resolver.resolveTemplateParameter("%{seq.type}",
-                new ContextInfoBuilder().setSequence(0).setSequenceType(SequenceType.VIDEO).build());
+                assertNotNull(resolvedType);
+                assertEquals(seqType.value(), resolvedType);
 
-        String resolvedVideoNum1 = resolver.resolveTemplateParameter("%{seq.num}",
-                new ContextInfoBuilder().setSequence(1).setSequenceType(SequenceType.VIDEO).build());
-        String resolvedVideoType1 = resolver.resolveTemplateParameter("%{seq.type}",
-                new ContextInfoBuilder().setSequence(1).setSequenceType(SequenceType.VIDEO).build());
-
-        assertNotNull(resolvedAudioNum0);
-        assertEquals("0", resolvedAudioNum0);
-
-        assertNotNull(resolvedAudioType0);
-        assertEquals("audio", resolvedAudioType0);
-
-        assertNotNull(resolvedAudioNum1);
-        assertEquals("1", resolvedAudioNum1);
-
-        assertNotNull(resolvedAudioType1);
-        assertEquals("audio", resolvedAudioType1);
-
-        assertNotNull(resolvedVideoNum0);
-        assertEquals("0", resolvedVideoNum0);
-
-        assertNotNull(resolvedVideoType0);
-        assertEquals("video", resolvedVideoType0);
-
-        assertNotNull(resolvedVideoNum1);
-        assertEquals("1", resolvedVideoNum1);
-
-        assertNotNull(resolvedVideoType1);
-        assertEquals("video", resolvedVideoType1);
+                assertNotNull(resolvedUuid);
+                assertEquals(getSequenceUuid(seq, seqType).getUuid(), resolvedUuid);
+            }
+        }
     }
 
     @Test
     public void resolvesCorrectResourceContext() {
-        String resolvedVideoEssence000 = resolver.resolveTemplateParameter("%{resource.essence}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.VIDEO).setResource(0).build());
-        String resolvedVideoEssence001 = resolver.resolveTemplateParameter("%{resource.essence}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.VIDEO).setResource(1).build());
-        String resolvedVideoEssence111 = resolver.resolveTemplateParameter("%{resource.essence}",
-                new ContextInfoBuilder().setSegment(1).setSequence(1).setSequenceType(SequenceType.VIDEO).setResource(1).build());
+        for (int segm = 0; segm < SEGMENT_COUNT; segm++) {
+            for (SequenceType seqType : SEQUENCE_TYPES) {
+                for (int seq = 0; seq < SEQ_COUNT; seq++) {
+                    for (int res = 0; res < RESOURCE_COUNT; res++) {
+                        ResourceUUID resourceUuid = getResourceUuid(segm, seq, seqType, res);
+                        ContextInfo contextInfo = new ContextInfoBuilder()
+                                .setSegmentUuid(getSegmentUuid(segm))
+                                .setSequenceUuid(getSequenceUuid(seq, seqType))
+                                .setSequenceType(seqType)
+                                .setResourceUuid(resourceUuid)
+                                .build();
 
-        String resolvedVideoStartTime000 = resolver.resolveTemplateParameter("%{resource.startTime}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.VIDEO).setResource(0).build());
-        String resolvedVideoStartTime001 = resolver.resolveTemplateParameter("%{resource.startTime}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.VIDEO).setResource(1).build());
-        String resolvedVideoStartTime111 = resolver.resolveTemplateParameter("%{resource.startTime}",
-                new ContextInfoBuilder().setSegment(1).setSequence(1).setSequenceType(SequenceType.VIDEO).setResource(1).build());
+                        String resolvedNum = resolver.resolveTemplateParameter("%{resource.num}", contextInfo);
+                        String resolvedUuid = resolver.resolveTemplateParameter("%{resource.uuid}", contextInfo);
+                        String resolvedEssence = resolver.resolveTemplateParameter("%{resource.essence}", contextInfo);
+                        String resolvedStartTime = resolver.resolveTemplateParameter("%{resource.startTime}", contextInfo);
+                        String resolvedDuration = resolver.resolveTemplateParameter("%{resource.duration}", contextInfo);
 
-        String resolvedVideoDuration000 = resolver.resolveTemplateParameter("%{resource.duration}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.VIDEO).setResource(0).build());
-        String resolvedVideoDuration001 = resolver.resolveTemplateParameter("%{resource.duration}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.VIDEO).setResource(1).build());
-        String resolvedVideoDuration111 = resolver.resolveTemplateParameter("%{resource.duration}",
-                new ContextInfoBuilder().setSegment(1).setSequence(1).setSequenceType(SequenceType.VIDEO).setResource(1).build());
+                        assertNotNull(resolvedNum);
+                        assertEquals(String.valueOf(res), resolvedNum);
 
-        String resolvedVideoNum000 = resolver.resolveTemplateParameter("%{resource.num}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.VIDEO).setResource(0).build());
-        String resolvedVideoNum001 = resolver.resolveTemplateParameter("%{resource.num}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.VIDEO).setResource(1).build());
-        String resolvedVideoNum111 = resolver.resolveTemplateParameter("%{resource.num}",
-                new ContextInfoBuilder().setSegment(1).setSequence(1).setSequenceType(SequenceType.VIDEO).setResource(1).build());
+                        assertNotNull(resolvedUuid);
+                        assertEquals(resourceUuid.getUuid(), resolvedUuid);
 
-        String resolvedAudioEssence000 = resolver.resolveTemplateParameter("%{resource.essence}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.AUDIO).setResource(0).build());
-        String resolvedAudioEssence001 = resolver.resolveTemplateParameter("%{resource.essence}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.AUDIO).setResource(1).build());
-        String resolvedAudioEssence111 = resolver.resolveTemplateParameter("%{resource.essence}",
-                new ContextInfoBuilder().setSegment(1).setSequence(1).setSequenceType(SequenceType.AUDIO).setResource(1).build());
-
-        String resolvedAudioStartTime000 = resolver.resolveTemplateParameter("%{resource.startTime}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.AUDIO).setResource(0).build());
-        String resolvedAudioStartTime001 = resolver.resolveTemplateParameter("%{resource.startTime}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.AUDIO).setResource(1).build());
-        String resolvedAudioStartTime111 = resolver.resolveTemplateParameter("%{resource.startTime}",
-                new ContextInfoBuilder().setSegment(1).setSequence(1).setSequenceType(SequenceType.AUDIO).setResource(1).build());
-
-        String resolvedAudioDuration000 = resolver.resolveTemplateParameter("%{resource.duration}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.AUDIO).setResource(0).build());
-        String resolvedAudioDuration001 = resolver.resolveTemplateParameter("%{resource.duration}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.AUDIO).setResource(1).build());
-        String resolvedAudioDuration111 = resolver.resolveTemplateParameter("%{resource.duration}",
-                new ContextInfoBuilder().setSegment(1).setSequence(1).setSequenceType(SequenceType.AUDIO).setResource(1).build());
-
-        String resolvedAudioNum000 = resolver.resolveTemplateParameter("%{resource.num}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.AUDIO).setResource(0).build());
-        String resolvedAudioNum001 = resolver.resolveTemplateParameter("%{resource.num}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.AUDIO).setResource(1).build());
-        String resolvedAudioNum111 = resolver.resolveTemplateParameter("%{resource.num}",
-                new ContextInfoBuilder().setSegment(1).setSequence(1).setSequenceType(SequenceType.AUDIO).setResource(1).build());
-
-        assertNotNull(resolvedVideoEssence000);
-        assertEquals("video_essence_0_0_0", resolvedVideoEssence000);
-
-        assertNotNull(resolvedVideoEssence001);
-        assertEquals("video_essence_0_0_1", resolvedVideoEssence001);
-
-        assertNotNull(resolvedVideoEssence111);
-        assertEquals("video_essence_1_1_1", resolvedVideoEssence111);
-
-        assertNotNull(resolvedVideoStartTime000);
-        assertEquals("video_startTime_0_0_0", resolvedVideoStartTime000);
-
-        assertNotNull(resolvedVideoStartTime001);
-        assertEquals("video_startTime_0_0_1", resolvedVideoStartTime001);
-
-        assertNotNull(resolvedVideoStartTime111);
-        assertEquals("video_startTime_1_1_1", resolvedVideoStartTime111);
-
-        assertNotNull(resolvedVideoDuration000);
-        assertEquals("video_duration_0_0_0", resolvedVideoDuration000);
-
-        assertNotNull(resolvedVideoDuration001);
-        assertEquals("video_duration_0_0_1", resolvedVideoDuration001);
-
-        assertNotNull(resolvedVideoDuration111);
-        assertEquals("video_duration_1_1_1", resolvedVideoDuration111);
-
-        assertNotNull(resolvedVideoNum000);
-        assertEquals("0", resolvedVideoNum000);
-
-        assertNotNull(resolvedVideoNum001);
-        assertEquals("1", resolvedVideoNum001);
-
-        assertNotNull(resolvedVideoNum111);
-        assertEquals("1", resolvedVideoNum111);
-
-
-        assertNotNull(resolvedAudioEssence000);
-        assertEquals("audio_essence_0_0_0", resolvedAudioEssence000);
-
-        assertNotNull(resolvedAudioEssence001);
-        assertEquals("audio_essence_0_0_1", resolvedAudioEssence001);
-
-        assertNotNull(resolvedAudioEssence111);
-        assertEquals("audio_essence_1_1_1", resolvedAudioEssence111);
-
-        assertNotNull(resolvedAudioStartTime000);
-        assertEquals("audio_startTime_0_0_0", resolvedAudioStartTime000);
-
-        assertNotNull(resolvedAudioStartTime001);
-        assertEquals("audio_startTime_0_0_1", resolvedAudioStartTime001);
-
-        assertNotNull(resolvedAudioStartTime111);
-        assertEquals("audio_startTime_1_1_1", resolvedAudioStartTime111);
-
-        assertNotNull(resolvedAudioDuration000);
-        assertEquals("audio_duration_0_0_0", resolvedAudioDuration000);
-
-        assertNotNull(resolvedAudioDuration001);
-        assertEquals("audio_duration_0_0_1", resolvedAudioDuration001);
-
-        assertNotNull(resolvedAudioDuration111);
-        assertEquals("audio_duration_1_1_1", resolvedAudioDuration111);
-
-        assertNotNull(resolvedAudioNum000);
-        assertEquals("0", resolvedVideoNum000);
-
-        assertNotNull(resolvedAudioNum001);
-        assertEquals("1", resolvedVideoNum001);
-
-        assertNotNull(resolvedAudioNum111);
-        assertEquals("1", resolvedVideoNum111);
+                        assertResourceParameter(resolvedEssence, resourceUuid, ResourceContextParameters.ESSENCE);
+                        assertResourceParameter(resolvedStartTime, resourceUuid, ResourceContextParameters.START_TIME);
+                        assertResourceParameter(resolvedDuration, resourceUuid, ResourceContextParameters.DURATION);
+                    }
+                }
+            }
+        }
     }
 
     @Test(expected = InvalidTemplateParameterException.class)
@@ -366,61 +253,106 @@ public class TemplateParameterResolverTest {
     @Test(expected = UnknownTemplateParameterNameException.class)
     public void exceptionOnIncorrectSegmentParameterName() {
         resolver.resolveTemplateParameter("%{segm.xxxx}",
-                new ContextInfoBuilder().setSegment(0).build());
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .build());
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnIncorrectSegmentParameterSegment() {
         // we have only 2 segments (0 and 1)
         resolver.resolveTemplateParameter("%{segm.num}",
-                new ContextInfoBuilder().setSegment(10).build());
+                new ContextInfoBuilder().setSegmentUuid(
+                        getSegmentUuid(10))
+                        .build());
     }
 
     @Test(expected = UnknownTemplateParameterNameException.class)
     public void exceptionOnIncorrectSequenceParameterName() {
         resolver.resolveTemplateParameter("%{seq.xxxx}",
-                new ContextInfoBuilder().setSequence(0).setSequenceType(SequenceType.AUDIO).build());
+                new ContextInfoBuilder()
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.AUDIO))
+                        .setSequenceType(SequenceType.AUDIO)
+                        .build());
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnIncorrectSequenceParameterSequence() {
         // we have only 2 sequences (0 and 1)
         resolver.resolveTemplateParameter("%{seq.num}",
-                new ContextInfoBuilder().setSequence(10).setSequenceType(SequenceType.AUDIO).build());
+                new ContextInfoBuilder()
+                        .setSequenceUuid(getSequenceUuid(10, SequenceType.AUDIO))
+                        .setSequenceType(SequenceType.AUDIO)
+                        .build());
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnIncorrectSequenceParameterType() {
         // we didn't fill subtitle type
         resolver.resolveTemplateParameter("%{seq.num}",
-                new ContextInfoBuilder().setSequence(0).setSequenceType(SequenceType.SUBTITLE).build());
+                new ContextInfoBuilder()
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.SUBTITLE))
+                        .setSequenceType(SequenceType.SUBTITLE)
+                        .build());
     }
 
     @Test(expected = UnknownTemplateParameterNameException.class)
     public void exceptionOnIncorrectResourceParameterName() {
         resolver.resolveTemplateParameter("%{resource.xxxx}",
-                new ContextInfoBuilder().setSegment(0).setSequence(0).setSequenceType(SequenceType.VIDEO).setResource(0).build());
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.VIDEO))
+                        .setSequenceType(SequenceType.VIDEO)
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.VIDEO, 0))
+                        .build());
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnIncorrectResourceParameterSegment() {
         // we have only 2 segments (0 and 1)
         resolver.resolveTemplateParameter("%{resource.essence}",
-                new ContextInfoBuilder().setSegment(10).setSequence(0).setSequenceType(SequenceType.VIDEO).setResource(0).build());
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(10))
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.VIDEO))
+                        .setSequenceType(SequenceType.VIDEO)
+                        .setResourceUuid(getResourceUuid(10, 0, SequenceType.VIDEO, 0))
+                        .build());
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnIncorrectResourceParameterSequence() {
         // we have only 2 sequences (0 and 1)
         resolver.resolveTemplateParameter("%{resource.essence}",
-                new ContextInfoBuilder().setSegment(0).setSequence(10).setSequenceType(SequenceType.VIDEO).setResource(0).build());
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(10, SequenceType.VIDEO))
+                        .setSequenceType(SequenceType.VIDEO)
+                        .setResourceUuid(getResourceUuid(0, 10, SequenceType.VIDEO, 0))
+                        .build());
+    }
+
+    @Test(expected = TemplateParameterNotFoundException.class)
+    public void exceptionOnIncorrectResourceParameterResource() {
+        // we have only 2 resources (0 and 1)
+        resolver.resolveTemplateParameter("%{resource.essence}",
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.VIDEO))
+                        .setSequenceType(SequenceType.VIDEO)
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.VIDEO, 10))
+                        .build());
     }
 
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnIncorrectResourceParameterType() {
         // we didn't fill subtitle type
         resolver.resolveTemplateParameter("%{resource.essence}",
-                new ContextInfoBuilder().setSegment(10).setSequence(0).setSequenceType(SequenceType.SUBTITLE).setResource(0).build());
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.SUBTITLE))
+                        .setSequenceType(SequenceType.SUBTITLE)
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.SUBTITLE, 0))
+                        .build());
     }
 
 

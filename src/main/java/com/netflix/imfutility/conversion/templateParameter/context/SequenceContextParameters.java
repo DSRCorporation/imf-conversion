@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
  */
 public enum SequenceContextParameters {
 
+    UUID("uuid"),
+
     NUM("num"),
 
     TYPE("type");

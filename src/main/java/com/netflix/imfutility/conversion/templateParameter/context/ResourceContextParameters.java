@@ -10,6 +10,8 @@ public enum ResourceContextParameters {
 
     NUM("num"),
 
+    UUID("uuid"),
+
     ESSENCE("essence"),
 
     START_TIME("startTime"),

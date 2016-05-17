@@ -4,6 +4,9 @@ import com.netflix.imfutility.config.ConfigProvider;
 import com.netflix.imfutility.conversion.ConversionEngine;
 import com.netflix.imfutility.conversion.ConversionProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.cpl.AssetMap;
+import com.netflix.imfutility.cpl.AssetMapParser;
+import com.netflix.imfutility.cpl.CplParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.ParamType;
 import org.apache.commons.io.FileUtils;
@@ -38,16 +41,22 @@ public abstract class AbstractFormatBuilder {
     private final Logger logger = LoggerFactory.getLogger(AbstractFormatBuilder.class);
 
     protected final Format format;
+    protected final String configXml;
+    protected final String conversionXml;
+
     protected ConfigProvider configProvider;
     protected ConversionProvider conversionProvider;
     protected TemplateParameterContextProvider contextProvider;
     protected String workingDir;
+    protected AssetMap assetMap;
 
-    public AbstractFormatBuilder(Format format) {
+    public AbstractFormatBuilder(Format format, String configXml, String conversionXml) {
         this.format = format;
+        this.configXml = configXml;
+        this.conversionXml = conversionXml;
     }
 
-    public final void build(String configXml, String conversionXml) {
+    public final void build(String cplXml, String assetmapXml) {
         try {
             logger.info("Starting conversion to '{}' format\n", format.getName());
 
@@ -57,20 +66,22 @@ public abstract class AbstractFormatBuilder {
             // 2. clear working dir
             cleanWorkingDir();
 
-            // 3. create logs dir in the working dir
+            // 3. create logs dir in the working fdir
             createLogsDir();
 
-            // 4. fill contexts
+            // 4. parse IMF and fill CPL contexts
+            fillCplContext(cplXml, assetmapXml);
+
+            // 5. fill dynamic and output contexts
             fillDynamicContext();
-            fillCplContext();
             fillOutputContext();
 
-            // 5. convert
+            // 6. convert
             preConvert();
             convert();
             postConvert();
 
-            // 6. delete tmp files.
+            // 7. delete tmp files.
             deleteTmpFiles();
 
             logger.info("Conversion to '{}' format: OK\n", format.getName());
@@ -100,32 +111,6 @@ public abstract class AbstractFormatBuilder {
         logger.info("Initialized: OK\n");
     }
 
-    protected void preConvert() {
-    }
-
-    protected void postConvert() {
-    }
-
-    protected void convert() throws IOException {
-        logger.info("Starting conversion...");
-
-        String conversionConfig = getConversionConfiguration();
-        logger.info("Conversion config: {}\n", conversionConfig);
-        new ConversionEngine().convert(
-                conversionProvider.getFormat(), conversionConfig, contextProvider);
-
-        logger.info("Converted: OK\n");
-    }
-
-    protected void fillDynamicContext() {
-    }
-
-    protected abstract void fillOutputContext();
-
-    protected abstract void fillCplContext();
-
-    protected abstract String getConversionConfiguration();
-
     private void cleanWorkingDir() throws IOException {
         logger.info("Cleaning working directory...");
         FileUtils.cleanDirectory(new File(workingDir));
@@ -143,6 +128,51 @@ public abstract class AbstractFormatBuilder {
 
         logger.info("Created external tools logging directory: OK\n");
     }
+
+    private void fillCplContext(String cplXml, String assetmapXml) throws XmlParsingException {
+        logger.info("Parsing ASSETMAP.xml ('{}')...", assetmapXml);
+        this.assetMap = new AssetMapParser().parse(assetmapXml);
+        logger.info("Parsed ASSETMAP.xml: OK");
+
+        logger.info("Parsing CPL ('{}')...", cplXml);
+        new CplParser(contextProvider, assetMap).parse(cplXml);
+        logger.info("Parsed CPL: OK");
+    }
+
+    private void fillDynamicContext() {
+        logger.info("Filling Dynamic context...");
+        doFillDynamicContext();
+        logger.info("Filled Dynamic context: OK");
+    }
+
+    protected abstract void doFillDynamicContext();
+
+    private void fillOutputContext() {
+        logger.info("Filling Output context...");
+        doFillOutputContext();
+        logger.info("Filled Output context: OK");
+    }
+
+    protected abstract void doFillOutputContext();
+
+    protected void preConvert() {
+    }
+
+    protected void postConvert() {
+    }
+
+    private void convert() throws IOException {
+        logger.info("Starting conversion...");
+
+        String conversionConfig = getConversionConfiguration();
+        logger.info("Conversion config: {}\n", conversionConfig);
+        new ConversionEngine().convert(
+                conversionProvider.getFormat(), conversionConfig, contextProvider);
+
+        logger.info("Converted: OK\n");
+    }
+
+    protected abstract String getConversionConfiguration();
 
     private void deleteTmpFiles() {
         logger.info("Deleting tmp files created during conversion...");

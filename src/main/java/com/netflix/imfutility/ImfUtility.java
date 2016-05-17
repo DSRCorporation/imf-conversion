@@ -16,7 +16,10 @@ public class ImfUtility {
         String configXml = ClassLoader.getSystemClassLoader().getResource("xml/config.xml").getPath();
         String conversionXml = ClassLoader.getSystemClassLoader().getResource("xml/conversion.xml").getPath();
 
-        new DppFormatBuilder().build(configXml, conversionXml);
+        String cplXml = ClassLoader.getSystemClassLoader().getResource("xml/CPL-test.xml").getPath();
+        String assetmapXml = ClassLoader.getSystemClassLoader().getResource("xml/ASSETMAP-test.xml").getPath();
+
+        new DppFormatBuilder(configXml, conversionXml).build(cplXml, assetmapXml);
     }
 
 }

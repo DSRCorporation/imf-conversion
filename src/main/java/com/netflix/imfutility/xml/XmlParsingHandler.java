@@ -18,13 +18,9 @@ public class XmlParsingHandler implements ContentHandler, ErrorHandler {
     final Logger logger = LoggerFactory.getLogger(XmlParsingHandler.class);
 
     /**
-     * Unmarshaller content handler that actually parses the metadata.xml.
-     */
-    private ContentHandler contentHandler;
-    /**
      * Input XML file.
      */
-    private File xml;
+    private final File xml;
     /**
      * A node name that is being processed
      */
@@ -33,72 +29,58 @@ public class XmlParsingHandler implements ContentHandler, ErrorHandler {
     /**
      * A stack of current parsed nodes.
      */
-    private Stack<String> qnames = new Stack<>();
+    private final Stack<String> qnames = new Stack<>();
     /**
      * A collection of all found errors.
      */
-    private List<String> errorMessages = new ArrayList<>();
+    private final List<String> errorMessages = new ArrayList<>();
 
     /**
      * Constructor.
      *
-     * @param contentHandler Unmarshaller content handler that actually parses the metadata.xml.
+     * @param xml the XML file to be parsed
      */
-    public XmlParsingHandler(ContentHandler contentHandler, File xml) {
-        this.contentHandler = contentHandler;
+    public XmlParsingHandler(File xml) {
         this.xml = xml;
     }
 
     public void characters(char[] ch, int start, int length) throws SAXException {
-        contentHandler.characters(ch, start, length);
     }
 
     public void endDocument() throws SAXException {
-        contentHandler.endDocument();
     }
 
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
         qnames.pop();
         qname = qnames.size() > 0 ? qnames.lastElement() : "root";
-        contentHandler.endElement(uri, localName, qName);
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
-        contentHandler.endPrefixMapping(prefix);
     }
 
     public void ignorableWhitespace(char[] ch, int start, int length)
             throws SAXException {
-        contentHandler.ignorableWhitespace(ch, start, length);
     }
 
-    public void processingInstruction(String target, String data)
-            throws SAXException {
-        contentHandler.processingInstruction(target, data);
+    public void processingInstruction(String target, String data) throws SAXException {
     }
 
     public void setDocumentLocator(Locator locator) {
-        contentHandler.setDocumentLocator(locator);
     }
 
     public void skippedEntity(String name) throws SAXException {
-        contentHandler.skippedEntity(name);
     }
 
     public void startDocument() throws SAXException {
-        contentHandler.startDocument();
     }
 
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
         qnames.push(qName);
         qname = qName;
-        contentHandler.startElement(uri, localName, qName, atts);
     }
 
-    public void startPrefixMapping(String prefix, String uri)
-            throws SAXException {
-        contentHandler.startPrefixMapping(prefix, uri);
+    public void startPrefixMapping(String prefix, String uri) throws SAXException {
     }
 
     public void error(SAXParseException exception) throws SAXException {

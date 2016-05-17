@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class FakeProcessStarter extends ProcessStarter {
 
-    private TestExecutorLogger executorLogger;
+    private final TestExecutorLogger executorLogger;
 
     public FakeProcessStarter(TestExecutorLogger executorLogger) {
         this.executorLogger = executorLogger;
