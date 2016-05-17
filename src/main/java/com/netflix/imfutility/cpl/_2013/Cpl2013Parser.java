@@ -20,7 +20,11 @@ import java.io.File;
 import java.math.BigInteger;
 
 /**
- * Created by Alexander on 5/14/2016.
+ * A CPL parser for 2013 namespace.
+ * <ul>
+ * <li>Parses the given CPL</li>
+ * <li>Fills segment, sequence and resource contexts, so conversion can be started using context parameters.</li>
+ * </ul>
  */
 public class Cpl2013Parser {
 
@@ -33,7 +37,6 @@ public class Cpl2013Parser {
     private BigFraction compositionEditRate;
     private SegmentType currentSegment;
     private SequenceType currentSequence;
-    private SequenceTypeCpl currentSequenceTypeCpl;
     private com.netflix.imfutility.xsd.conversion.SequenceType currentSequenceType;
 
     public Cpl2013Parser(TemplateParameterContextProvider contextProvider, AssetMap assetMap) {
@@ -57,8 +60,9 @@ public class Cpl2013Parser {
                 JAXBElement jaxbElement = (JAXBElement) (anySeqJaxb);
                 Object anySeq = jaxbElement.getValue();
 
-                currentSequenceTypeCpl = SequenceTypeCpl.fromName(jaxbElement.getName().getLocalPart());
-                if ((currentSequenceType != null) && (anySeq instanceof SequenceType)) {
+                SequenceTypeCpl currentSequenceTypeCpl = SequenceTypeCpl.fromName(jaxbElement.getName().getLocalPart());
+                if ((currentSequenceTypeCpl != null) && (anySeq instanceof SequenceType)) {
+                    currentSequenceType = getType(currentSequenceTypeCpl);
                     currentSequence = (SequenceType) anySeq;
                     processSequence();
                 }
@@ -68,7 +72,6 @@ public class Cpl2013Parser {
     }
 
     private void processSequence() {
-        currentSequenceType = getType(currentSequenceTypeCpl);
         if (currentSequenceType == null) {
             throw new RuntimeException(String.format("Sequence '%s': Unknown sequence type", currentSequence.getId()));
         }
@@ -76,10 +79,7 @@ public class Cpl2013Parser {
         contextProvider.getSequenceContext().initSequence(currentSequenceType,
                 SequenceUUID.create(seqId));
 
-        for (BaseResourceType resource : currentSequence.getResourceList().getResource()) {
-            processResource(resource);
-        }
-
+        currentSequence.getResourceList().getResource().forEach(this::processResource);
     }
 
     private void processResource(BaseResourceType resource) {

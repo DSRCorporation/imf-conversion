@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * Created by Alexander on 5/14/2016.
+ * Supported CPL namespaces.
  */
 public enum CplNamespace {
 

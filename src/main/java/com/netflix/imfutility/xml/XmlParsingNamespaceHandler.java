@@ -7,6 +7,7 @@ import java.io.File;
 
 /**
  * Created by Alexander on 5/14/2016.
+ * A helper to get human readable errors of an xml when loading and parsing, and get the namespace of the root element.
  */
 public class XmlParsingNamespaceHandler extends XmlParsingHandler {
 

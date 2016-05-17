@@ -21,10 +21,10 @@ import java.io.IOException;
  * <ul>
  * <li>Contains logic common for all formats</li>
  * <li>Designed for inheritance</li>
- * <li>Provides a common conversion workflow in a {@link #build(String, String, String, String)} method</li>
+ * <li>Provides a common conversion workflow in a {@link #build(String, String)} method</li>
  * <li>Subclasses must provide logic related to context creation: {@link #fillDynamicContext()} and {@link }</li>
  * <li>Subclasses may customize the workflow using {@link #preConvert()} and {@link #postConvert()} methods</li>
- * <li>Common workflow ({@link #build(String, String, String, String)}):
+ * <li>Common workflow ({@link #build(String, String)}):
  * <ul>
  * <li>Initializing config and conversion (reading, parsing and validating config.xml and conversion,xml)</li>
  * <li>Clearing the specified working dir</li>
@@ -41,17 +41,22 @@ public abstract class AbstractFormatBuilder {
     private final Logger logger = LoggerFactory.getLogger(AbstractFormatBuilder.class);
 
     protected final Format format;
+    protected final String configXml;
+    protected final String conversionXml;
+
     protected ConfigProvider configProvider;
     protected ConversionProvider conversionProvider;
     protected TemplateParameterContextProvider contextProvider;
     protected String workingDir;
     protected AssetMap assetMap;
 
-    public AbstractFormatBuilder(Format format) {
+    public AbstractFormatBuilder(Format format, String configXml, String conversionXml) {
         this.format = format;
+        this.configXml = configXml;
+        this.conversionXml = conversionXml;
     }
 
-    public final void build(String configXml, String conversionXml, String cplXml, String assetmapXml) {
+    public final void build(String cplXml, String assetmapXml) {
         try {
             logger.info("Starting conversion to '{}' format\n", format.getName());
 

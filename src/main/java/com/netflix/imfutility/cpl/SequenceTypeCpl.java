@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * Created by Alexander on 5/15/2016.
+ * Sequence (virtual track) types as specified in CPL.
  */
 public enum SequenceTypeCpl {
 

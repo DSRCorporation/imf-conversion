@@ -8,8 +8,8 @@ import java.util.List;
  */
 public class PipeOperationInfo {
 
-    private List<OperationInfo> cycleOperations = new ArrayList<>();
-    private List<OperationInfo> tailOperations = new ArrayList<>();
+    private final List<OperationInfo> cycleOperations = new ArrayList<>();
+    private final List<OperationInfo> tailOperations = new ArrayList<>();
 
     public List<OperationInfo> getCycleOperations() {
         return cycleOperations;

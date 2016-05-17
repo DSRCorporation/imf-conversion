@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Alexander on 5/14/2016.
+ * Asset Map containing a path to an asset (resource, essence) for each asset UUID.
  */
 public class AssetMap {
 
-    private Map<String, AssetType> assetMap = new HashMap<>();
+    private final Map<String, AssetType> assetMap = new HashMap<>();
 
     public void addAsset(String id, AssetType asset) {
         assetMap.put(id, asset);

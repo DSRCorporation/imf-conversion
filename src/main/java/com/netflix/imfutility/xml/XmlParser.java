@@ -55,6 +55,7 @@ public class XmlParser {
                         xml.getAbsoluteFile(), resultClass.getSimpleName()));
 
             }
+            //noinspection unchecked
             return (T) result;
         } catch (JAXBException e) {
             throw new RuntimeException(e);

@@ -1,7 +1,7 @@
 package com.netflix.imfutility.cpl.uuid;
 
 /**
- * Created by Alexander on 5/16/2016.
+ * Sequence UUID.
  */
 public class SequenceUUID extends UUID {
 

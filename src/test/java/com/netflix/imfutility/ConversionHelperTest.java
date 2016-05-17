@@ -9,7 +9,7 @@ import java.math.BigInteger;
 import static junit.framework.TestCase.assertEquals;
 
 /**
- * Created by Alexander on 5/15/2016.
+ * Tests that conversion helper utility methods work properly.
  */
 public class ConversionHelperTest {
 

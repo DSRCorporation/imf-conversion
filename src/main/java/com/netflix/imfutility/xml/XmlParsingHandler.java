@@ -20,7 +20,7 @@ public class XmlParsingHandler implements ContentHandler, ErrorHandler {
     /**
      * Input XML file.
      */
-    private File xml;
+    private final File xml;
     /**
      * A node name that is being processed
      */
@@ -29,11 +29,11 @@ public class XmlParsingHandler implements ContentHandler, ErrorHandler {
     /**
      * A stack of current parsed nodes.
      */
-    private Stack<String> qnames = new Stack<>();
+    private final Stack<String> qnames = new Stack<>();
     /**
      * A collection of all found errors.
      */
-    private List<String> errorMessages = new ArrayList<>();
+    private final List<String> errorMessages = new ArrayList<>();
 
     /**
      * Constructor.

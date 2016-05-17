@@ -10,7 +10,7 @@ public final class OperationInfo {
     private final String operation;
     private final String operationName;
     private final Class<?> operationClass;
-    private ContextInfo contextInfo;
+    private final ContextInfo contextInfo;
 
     public OperationInfo(String operation, String operationName, Class<?> operationClass, ContextInfo contextInfo) {
         this.operation = operation;

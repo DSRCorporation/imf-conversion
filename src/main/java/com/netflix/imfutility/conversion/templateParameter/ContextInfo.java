@@ -15,7 +15,7 @@ public class ContextInfo {
     public static final SequenceType DEFAULT_SEQUENCE_TYPE = null;
     public static final ResourceUUID DEFAULT_RESOURCE_UUID = null;
 
-    public static ContextInfo EMPTY = new ContextInfo(
+    public static final ContextInfo EMPTY = new ContextInfo(
             DEFAULT_SEGMENT_UUID, DEFAULT_SEQUENCE_UUID, DEFAULT_SEQUENCE_TYPE, DEFAULT_RESOURCE_UUID);
 
     private final SegmentUUID segmentUuid;

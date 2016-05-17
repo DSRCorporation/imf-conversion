@@ -15,8 +15,8 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
 
     private final Logger logger = LoggerFactory.getLogger(AbstractFormatBuilder.class);
 
-    public DppFormatBuilder() {
-        super(Format.DPP);
+    public DppFormatBuilder(String configXml, String conversionXml) {
+        super(Format.DPP, configXml, conversionXml);
     }
 
     @Override

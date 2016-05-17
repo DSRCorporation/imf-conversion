@@ -8,7 +8,7 @@ import com.netflix.imfutility.xsd.imf.assetmap.AssetType;
 import java.io.File;
 
 /**
- * Created by Alexander on 5/15/2016.
+ * Parses ASSETMAP.xml and creates a {@link AssetMap} with location of each asset.
  */
 public class AssetMapParser {
 

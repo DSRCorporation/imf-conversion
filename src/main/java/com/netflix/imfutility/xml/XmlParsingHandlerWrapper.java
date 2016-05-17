@@ -9,14 +9,14 @@ import java.io.File;
 
 /**
  * Created by Alexandr on 5/6/2016.
- * A helper to get human readable errors of an xml when loading and parsing.
+ * A helper to get human readable errors of an xml when loading and parsing, while passing parse events to another {@link ContentHandler}.
  */
 public class XmlParsingHandlerWrapper extends XmlParsingHandler {
 
     /**
      * Unmarshaller content handler that actually parses the xml.
      */
-    private ContentHandler contentHandler;
+    private final ContentHandler contentHandler;
 
     /**
      * Constructor.

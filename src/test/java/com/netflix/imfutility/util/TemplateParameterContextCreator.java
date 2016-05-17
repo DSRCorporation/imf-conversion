@@ -64,8 +64,6 @@ public final class TemplateParameterContextCreator {
                 }
             }
         }
-
-        int a = 0;
     }
 
     public static SegmentUUID getSegmentUuid(int segm) {

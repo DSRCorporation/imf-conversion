@@ -14,7 +14,6 @@ import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemp
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.util.ConversionUtils;
-import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -36,7 +35,7 @@ public class TemplateParameterResolverTest {
     private static final int SEGMENT_COUNT = 2;
     private static final int SEQ_COUNT = 2;
     private static final int RESOURCE_COUNT = 2;
-    private static EnumSet<SequenceType> SEQUENCE_TYPES = EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO); // do not fill subtitle type!
+    private static final EnumSet<SequenceType> SEQUENCE_TYPES = EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO); // do not fill subtitle type!
 
     private static TemplateParameterResolver resolver;
 

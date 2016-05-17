@@ -7,7 +7,6 @@ import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemp
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -22,7 +21,10 @@ import java.util.Map;
  */
 public class SegmentTemplateParameterContext implements ITemplateParameterContext {
 
-    private Map<SegmentUUID, SegmentParameterData> segments = new LinkedHashMap<>();
+    private static class SegmentParameterData extends ContextParameterData<SegmentContextParameters> {
+    }
+
+    private final Map<SegmentUUID, SegmentParameterData> segments = new LinkedHashMap<>();
 
     public SegmentTemplateParameterContext addSegmentParameter(SegmentUUID uuid, SegmentContextParameters paramName, String paramValue) {
         initSegment(uuid);
@@ -88,17 +90,5 @@ public class SegmentTemplateParameterContext implements ITemplateParameterContex
         return parameterValue;
     }
 
-    private static class SegmentParameterData {
-
-        private final Map<SegmentContextParameters, String> params = new HashMap<>();
-
-        public String getParameterValue(SegmentContextParameters param) {
-            return params.get(param);
-        }
-
-        public void addParameter(SegmentContextParameters paramName, String paramValue) {
-            params.put(paramName, paramValue);
-        }
-    }
 
 }

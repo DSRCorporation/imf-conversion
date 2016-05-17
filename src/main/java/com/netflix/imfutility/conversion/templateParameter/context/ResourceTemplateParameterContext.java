@@ -6,7 +6,10 @@ import com.netflix.imfutility.conversion.templateParameter.exception.TemplatePar
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Resource Template Parameter Context.
@@ -17,6 +20,9 @@ import java.util.*;
  * </ul>
  */
 public class ResourceTemplateParameterContext implements ITemplateParameterContext {
+
+    private static class ResourceData extends ContextData<ResourceUUID, ResourceContextParameters> {
+    }
 
     private final Map<ResourceKey, ResourceData> resources = new HashMap<>();
 
@@ -49,13 +55,13 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
         if (resourceData == null) {
             return 0;
         }
-        return resourceData.getResourceCount();
+        return resourceData.getCount();
     }
 
     public Collection<ResourceUUID> getUuids(ResourceKey resourceKey) {
         ResourceData resourceData = resources.get(resourceKey);
         if (resourceData == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return resourceData.getUuids();
     }
@@ -88,12 +94,12 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
                             contextInfo.getSequenceUuid(), contextInfo.getSequenceType().value(), contextInfo.getSegmentUuid()));
         }
 
-        ResourceParameterData parameterData = resourceData.getParameterData(contextInfo.getResourceUuid());
+        ContextParameterData<ResourceContextParameters> parameterData = resourceData.getParameterData(contextInfo.getResourceUuid());
         if (parameterData == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(),
                     String.format("Resource Context for %s resource is not defined. Context for %d resources only are defined.",
-                            contextInfo.getSequenceUuid(), resourceData.getResourceCount()));
+                            contextInfo.getSequenceUuid(), resourceData.getCount()));
         }
 
         ResourceContextParameters resourceParameterName = ResourceContextParameters.fromName(templateParameter.getName());
@@ -113,49 +119,6 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
                             contextInfo.getSequenceUuid(), contextInfo.getSequenceType().value(), contextInfo.getSegmentUuid()));
         }
         return parameterValue;
-    }
-
-    private static class ResourceData {
-
-        private final Map<ResourceUUID, ResourceParameterData> resourceParams = new LinkedHashMap<>();
-
-        public Collection<ResourceUUID> getUuids() {
-            return resourceParams.keySet();
-        }
-
-        public ResourceParameterData getParameterData(ResourceUUID uuid) {
-            return resourceParams.get(uuid);
-        }
-
-        public int getResourceCount() {
-            return resourceParams.size();
-        }
-
-        public boolean contains(ResourceUUID uuid) {
-            return resourceParams.containsKey(uuid);
-        }
-
-        public void addParameter(ResourceUUID uuid, ResourceContextParameters paramName, String paramValue) {
-            ResourceParameterData resourceParamData = resourceParams.get(uuid);
-            if (resourceParamData == null) {
-                resourceParamData = new ResourceParameterData();
-                resourceParams.put(uuid, resourceParamData);
-            }
-            resourceParamData.addParameter(paramName, paramValue);
-        }
-    }
-
-    private static class ResourceParameterData {
-
-        private final Map<ResourceContextParameters, String> params = new HashMap<>();
-
-        public String getParameterValue(ResourceContextParameters param) {
-            return params.get(param);
-        }
-
-        public void addParameter(ResourceContextParameters paramName, String paramValue) {
-            params.put(paramName, paramValue);
-        }
     }
 
 }

@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class SequenceMap {
 
-    private Map<String, SequenceInfo> sequenceMap = new HashMap<>();
+    private final Map<String, SequenceInfo> sequenceMap = new HashMap<>();
 
     public void addAsset(String id, SequenceInfo asset) {
         sequenceMap.put(id, asset);

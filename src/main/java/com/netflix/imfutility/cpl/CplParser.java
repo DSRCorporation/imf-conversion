@@ -8,7 +8,11 @@ import com.netflix.imfutility.xml.XmlParsingException;
 import java.io.File;
 
 /**
- * Created by Alexander on 5/14/2016.
+ * A CPL parser. It analyzes the CPL namespace a chooses an appropriate CPL parser implementation which can process the CPL namespace.
+ * <ul>
+ * <li>Parses the given CPL</li>
+ * <li>Fills segment, sequence and resource contexts, so conversion can be started using context parameters.</li>
+ * </ul>
  */
 public class CplParser {
 
