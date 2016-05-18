@@ -38,13 +38,14 @@ public class TemplateParameterResolverTest {
     private static final EnumSet<SequenceType> SEQUENCE_TYPES = EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO); // do not fill subtitle type!
 
     private static TemplateParameterResolver resolver;
+    private static TemplateParameterContextProvider contextProvider;
 
     @BeforeClass
     public static void setUpAll() throws Exception {
         ConfigProvider configProvider = new ConfigProvider(ConfigUtils.getCorrectConfigXml());
         ConversionProvider conversionProvider = new ConversionProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
 
-        TemplateParameterContextProvider contextProvider = new TemplateParameterContextProvider(
+        contextProvider = new TemplateParameterContextProvider(
                 configProvider.getConfig(), conversionProvider.getFormat(), ".");
         fillDynamic(contextProvider);
         fillOutput(contextProvider);
@@ -114,6 +115,28 @@ public class TemplateParameterResolverTest {
         assertEquals("dynamicValue1", resolved1);
         assertNotNull(resolved2);
         assertEquals("dynamicValue2", resolved2);
+    }
+
+    @Test
+    public void resolvesCorrectDynamicContextSubparameters() {
+        contextProvider.getDynamicContext().addParameter(
+                "name-%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}",
+                "valueWithSubparameters",
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.AUDIO))
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0))
+                        .setSequenceType(SequenceType.AUDIO).build());
+
+        String resolved1 = resolver.resolveTemplateParameter("%{dynamic.name-%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}}",
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.AUDIO))
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0))
+                        .setSequenceType(SequenceType.AUDIO).build());
+
+        assertNotNull(resolved1);
+        assertEquals("valueWithSubparameters", resolved1);
     }
 
     @Test

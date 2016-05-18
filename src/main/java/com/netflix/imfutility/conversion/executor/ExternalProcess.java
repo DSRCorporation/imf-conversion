@@ -18,15 +18,22 @@ public final class ExternalProcess {
     private final Process process;
     private final ExternalProcessInfo processInfo;
 
+    private volatile boolean closed = false;
+
     public ExternalProcess(Process process, ExternalProcessInfo processInfo) {
         this.process = process;
         this.processInfo = processInfo;
         logStarted();
     }
 
+
     public void finishWaitFor() {
+        if (closed) {
+            return;
+        }
         try {
             process.waitFor();
+            closed = true;
             logFinishedSuccess();
         } catch (InterruptedException e) {
             logFinishedFailure(e);
@@ -34,8 +41,12 @@ public final class ExternalProcess {
     }
 
     public void finishClose() {
+        if (closed) {
+            return;
+        }
         try {
             process.getOutputStream().close();
+            closed = true;
             logFinishedSuccess();
         } catch (IOException e) {
             logFinishedFailure(e);

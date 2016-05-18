@@ -11,7 +11,10 @@
             <tmpContext>
                 <param id="videoEncoded">output.x264</param>
                 <param id="audioEncoded">output.pcm</param>
+                <param id="mediaInfoOutput">mediaInfo.xml</param>
             </tmpContext>
+
+            <mediaInfoCommand>%{tool.ffprobe} -show_streams -print_format xml %{dynamic.mediaInfoInput} %{tmp.mediaInfoOutput}</mediaInfoCommand>
 
             <!--
                 Destination parameters for conversion

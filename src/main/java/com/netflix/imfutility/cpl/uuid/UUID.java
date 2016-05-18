@@ -3,9 +3,13 @@ package com.netflix.imfutility.cpl.uuid;
 /**
  * Base UUI representation.
  */
-public abstract class UUID {
+public class UUID {
 
     private final String uuid;
+
+    public static UUID create(String uuid) {
+        return new UUID(uuid);
+    }
 
     protected UUID(String uuid) {
         this.uuid = uuid;

@@ -1,5 +1,6 @@
 package com.netflix.imfutility.cpl;
 
+import com.netflix.imfutility.cpl.uuid.UUID;
 import com.netflix.imfutility.xsd.imf.assetmap.AssetType;
 
 import java.util.HashMap;
@@ -10,14 +11,14 @@ import java.util.Map;
  */
 public class AssetMap {
 
-    private final Map<String, String> assetMap = new HashMap<>();
+    private final Map<UUID, String> assetMap = new HashMap<>();
 
-    public void addAsset(String id, String assetPath) {
-        assetMap.put(id, assetPath);
+    public void addAsset(UUID uuid, String assetPath) {
+        assetMap.put(uuid, assetPath);
     }
 
-    public String getAsset(String id) {
-        return assetMap.get(id);
+    public String getAsset(UUID uuid) {
+        return assetMap.get(uuid);
     }
 
 }

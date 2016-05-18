@@ -30,6 +30,7 @@
     <xs:complexType name="formatType">
         <xs:sequence>
             <xs:element type="tmpContextType" name="tmpContext"/>
+            <xs:element type="mediaInfoCommandType" name="mediaInfoCommand"/>
             <xs:element type="conversionParametersType" name="conversionParameters"/>
             <xs:element type="formatConfigurationTypes" name="formatConfigurations" maxOccurs="1" minOccurs="1"/>
         </xs:sequence>
@@ -49,6 +50,16 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="id" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <!--
+        A command to gather media info parameters (such as channels num, fps, etc.)
+    -->
+    <xs:complexType name="mediaInfoCommandType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -130,7 +141,10 @@
     -->
     <xs:complexType name="execEachSequenceType">
         <xs:sequence>
-            <xs:element type="execType" name="exec" maxOccurs="1" minOccurs="0"/>
+            <xs:choice maxOccurs="1" minOccurs="1">
+                <xs:element type="subPipeType" name="pipe"/>
+                <xs:element type="execOnceType" name="execOnce"/>
+            </xs:choice>
             <xs:element type="dynamicParameterConcatType" name="dynamicParameter" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute type="sequenceType" name="type" use="required"/>
@@ -152,6 +166,7 @@
     <xs:complexType name="cycleSegmentType">
         <xs:choice maxOccurs="unbounded" minOccurs="1">
             <xs:element type="execEachSequenceType" name="execEachSegment"/>
+            <xs:element type="subPipeType" name="pipe"/>
             <xs:element type="execOnceType" name="execOnce"/>
         </xs:choice>
     </xs:complexType>
@@ -177,7 +192,10 @@
     -->
     <xs:complexType name="execEachSegmentType">
         <xs:sequence>
-            <xs:element type="execType" name="exec" maxOccurs="1" minOccurs="0"/>
+            <xs:choice maxOccurs="1" minOccurs="1">
+                <xs:element type="subPipeType" name="pipe"/>
+                <xs:element type="execOnceType" name="execOnce"/>
+            </xs:choice>
             <xs:element type="dynamicParameterConcatType" name="dynamicParameter" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute type="xs:string" name="name" use="required"/>
@@ -198,6 +216,7 @@
     <xs:complexType name="cycleSequenceType">
         <xs:choice maxOccurs="unbounded" minOccurs="1">
             <xs:element type="execEachSegmentType" name="execEachSegment"/>
+            <xs:element type="subPipeType" name="pipe"/>
             <xs:element type="execOnceType" name="execOnce"/>
         </xs:choice>
     </xs:complexType>
@@ -217,9 +236,10 @@
         several subsequent sub-operations.
     -->
     <xs:complexType name="cycleType">
-        <xs:sequence>
-            <xs:element type="execOnceType" name="execOnce" maxOccurs="unbounded" minOccurs="1"/>
-        </xs:sequence>
+        <xs:choice maxOccurs="unbounded" minOccurs="1">
+            <xs:element type="subPipeType" name="pipe"/>
+            <xs:element type="execOnceType" name="execOnce"/>
+        </xs:choice>
     </xs:complexType>
 
     <xs:complexType name="dynamicParameterType">
@@ -239,11 +259,10 @@
         </xs:simpleContent>
     </xs:complexType>
 
-    <xs:complexType name="execType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-            </xs:extension>
-        </xs:simpleContent>
+    <xs:complexType name="subPipeType">
+        <xs:sequence>
+            <xs:element type="execOnceType" name="execOnce" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:simpleType name="sequenceType">
