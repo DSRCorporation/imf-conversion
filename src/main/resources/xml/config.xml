@@ -8,6 +8,7 @@
      -->
     <externalTools>
         <tool id="ffmpeg">G:\Netflix\test\encode\test\ffmpeg.exe</tool>
+        <tool id="ffprobe">G:\Netflix\test\encode\test\ffprobe.exe</tool>
         <tool id="bmx">G:\Netflix\test\encode\test\raw2bmx.exe</tool>
         <tool id="x264">G:\Netflix\test\encode\test\x264.exe</tool>
         <tool id="ttmlToStl">ttmlToStl path</tool>

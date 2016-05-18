@@ -11,7 +11,10 @@
             <tmpContext>
                 <param id="videoEncoded">output.x264</param>
                 <param id="audioEncoded">output.pcm</param>
+                <param id="mediaInfoOutput">mediaInfo.xml</param>
             </tmpContext>
+
+            <mediaInfoCommand>%{tool.ffprobe} -show_streams -print_format xml %{dynamic.mediaInfoInput} %{tmp.mediaInfoOutput}</mediaInfoCommand>
 
             <!--
                 Destination parameters for conversion
@@ -54,7 +57,8 @@
                                 --avcintra-class 100 -o %{tmp.videoEncoded}
                             </execOnce>
                         </pipe>
-                        <dynamicParameter name="concatAudioInput" concat="true"> -i %{seq.num}-%{tmp.videoEncoded}</dynamicParameter>
+                        <dynamicParameter name="concatAudioInput" concat="true">-i %{seq.num}-%{tmp.videoEncoded}
+                        </dynamicParameter>
                     </execEachSequence>
 
                     <!--
@@ -77,7 +81,6 @@
                             </execOnce>
                         </pipe>
                     </execEachSequence>
-
 
 
                     <!--
