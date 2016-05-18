@@ -12,13 +12,14 @@ import java.util.regex.Pattern;
  */
 public class TemplateParameter {
 
-    public static final String TEMPLATE_PARAM = "%\\{(\\w+?)\\.(\\w+?)\\}"; // use reluctant quantifiers!
+    public static final String TEMPLATE_PARAM = "%\\{([^.%]+?)\\.([^.%]+?)\\}"; // use reluctant quantifiers!
+    private static final String TEMPLATE_PARAM_WITH_SUBPARAM = "%\\{(.+?)\\.(.+?)\\}"; // use reluctant quantifiers!
 
     private final TemplateParameterContext context;
     private final String name;
 
     public static boolean isTemplateParameter(String parameterString) {
-        return parameterString.matches(TEMPLATE_PARAM);
+        return parameterString.matches(TEMPLATE_PARAM_WITH_SUBPARAM);
     }
 
     public TemplateParameter(String parameterString) {

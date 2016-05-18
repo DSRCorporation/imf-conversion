@@ -59,8 +59,16 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
     }
 
     private void execSequence(ExecEachSequenceType execSequence) throws IOException {
-        for (OperationInfo seqOperation : getExecSequenceOperations(execSequence)) {
-            executeStrategyFactory.createExecuteOnceStrategy(contextProvider).execute(seqOperation);
+        if (execSequence.getExecOnce() != null) {
+            for (OperationInfo segmentOperation : getExecSequenceOnceOperations(execSequence)) {
+                executeStrategyFactory.createExecuteOnceStrategy(contextProvider).execute(segmentOperation);
+            }
+        } else if (execSequence.getPipe() != null) {
+            for (List<OperationInfo> pipeOperations : getExecSequencePipeOperations(execSequence)) {
+                PipeOperationInfo pipeInfo = new PipeOperationInfo();
+                pipeInfo.addTailOperations(pipeOperations);
+                executeStrategyFactory.createExecutePipeStrategy(contextProvider).execute(pipeInfo);
+            }
         }
     }
 
@@ -72,19 +80,31 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
             pipeInfo.getTailOperations().add(getExecOnceOperation(tailOperation));
         }
         if (pipe.getCycle() != null) {
-            for (Object cycleOperation : pipe.getCycle().getExecEachSegmentOrExecOnce()) {
+            for (Object cycleOperation : pipe.getCycle().getExecEachSegmentOrPipeOrExecOnce()) {
                 if (cycleOperation instanceof ExecOnceType) {
-                    pipeInfo.getCycleOperations().add(
-                            getExecOnceOperation((ExecOnceType) cycleOperation));
+                    pipeInfo.addCycleOperation(getExecOnceOperation((ExecOnceType) cycleOperation));
+                } else if (cycleOperation instanceof SubPipeType) {
+                    pipeInfo.addCycleOperation(getSubPipeOperations((SubPipeType) cycleOperation));
                 } else if (cycleOperation instanceof ExecEachSequenceType) {
-                    pipeInfo.getCycleOperations().addAll(
-                            getExecSequenceOperations((ExecEachSequenceType) cycleOperation));
+                    execEachSequenceInPipe((ExecEachSequenceType) cycleOperation, pipeInfo);
                 }
             }
         }
 
         // 2. execute in a pipe
         executeStrategyFactory.createExecutePipeStrategy(contextProvider).execute(pipeInfo);
+    }
+
+    private void execEachSequenceInPipe(ExecEachSequenceType execSequence, PipeOperationInfo pipeInfo) throws IOException {
+        if (execSequence.getExecOnce() != null) {
+            for (OperationInfo headOperation : getExecSequenceOnceOperations(execSequence)) {
+                pipeInfo.addCycleOperation(headOperation);
+            }
+        } else if (execSequence.getPipe() != null) {
+            for (List<OperationInfo> headOperations : getExecSequencePipeOperations(execSequence)) {
+                pipeInfo.addCycleOperation(headOperations);
+            }
+        }
     }
 
     private void addDynamicParameter(DynamicParameterConcatType dynamicParam) {
@@ -102,7 +122,20 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
                 contextInfo);
     }
 
-    private List<OperationInfo> getExecSequenceOperations(ExecEachSequenceType execSequence) {
+
+    private List<OperationInfo> getSubPipeOperations(SubPipeType subPipe) {
+        List<OperationInfo> result = new ArrayList<>();
+        ContextInfo contextInfo = new ContextInfoBuilder()
+                .setSegmentUuid(currentSegmentUuid)
+                .build();
+        for (ExecOnceType execOnce : subPipe.getExecOnce()) {
+            result.add(new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(),
+                    contextInfo));
+        }
+        return result;
+    }
+
+    private List<OperationInfo> getExecSequenceOnceOperations(ExecEachSequenceType execSequence) {
         List<OperationInfo> result = new ArrayList<>();
 
         // 1. get sequence type
@@ -122,10 +155,52 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
                         .build();
 
                 // executable: operation info
-                if (execSequence.getExec() != null) {
-                    OperationInfo operationInfo = new OperationInfo(execSequence.getExec().getValue(), execSequence.getName(), execSequence.getClass(),
+                if (execSequence.getExecOnce() != null) {
+                    OperationInfo operationInfo = new OperationInfo(execSequence.getExecOnce().getValue(), execSequence.getName(), execSequence.getClass(),
                             contextInfo);
                     result.add(operationInfo);
+                }
+
+                // dynamic parameter
+                if (execSequence.getDynamicParameter() != null) {
+                    for (DynamicParameterConcatType dynamicParam : execSequence.getDynamicParameter()) {
+                        contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private List<List<OperationInfo>> getExecSequencePipeOperations(ExecEachSequenceType execSequence) {
+        List<List<OperationInfo>> result = new ArrayList<>();
+
+        // 1. get sequence type
+        SequenceType seqType = execSequence.getType();
+
+        // 2. process operation for each sequence within segment
+        for (SequenceUUID seqUuid : contextProvider.getSequenceContext().getUuids(seqType)) {
+            // process operations for each resource within segment and sequence
+            ResourceKey resKey = ResourceKey.create(currentSegmentUuid, seqUuid, seqType);
+            for (ResourceUUID resourceUuid : contextProvider.getResourceContext().getUuids(resKey)) {
+                // context info
+                ContextInfo contextInfo = new ContextInfoBuilder()
+                        .setSequenceUuid(seqUuid)
+                        .setSequenceType(seqType)
+                        .setSegmentUuid(currentSegmentUuid)
+                        .setResourceUuid(resourceUuid)
+                        .build();
+
+                // executable: operation info
+                if (execSequence.getPipe() != null) {
+                    List<OperationInfo> pipeOperations = new ArrayList<>();
+                    for (ExecOnceType execOnceType : execSequence.getPipe().getExecOnce()) {
+                        OperationInfo operationInfo = new OperationInfo(execOnceType.getValue(), execOnceType.getName(), execSequence.getClass(),
+                                contextInfo);
+                        pipeOperations.add(operationInfo);
+                    }
+                    result.add(pipeOperations);
                 }
 
                 // dynamic parameter

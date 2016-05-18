@@ -1,5 +1,6 @@
 package com.netflix.imfutility.cpl;
 
+import com.netflix.imfutility.cpl.uuid.UUID;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.imf.assetmap.AssetMapType;
@@ -20,14 +21,14 @@ public class AssetMapParser {
 
         AssetMapType assetmap = XmlParser.parse(new File(assetMapXml), XSD_ASSETMAP_XSD, ASSETMAP_PACKAGE, AssetMapType.class);
         for (AssetType asset : assetmap.getAssetList().getAsset()) {
-            String id = asset.getId();
+            UUID uuid = UUID.create(asset.getId());
             //per st0429-9:2014 Section 6.4, <ChunkList> shall contain one <Chunk> element only
             if (asset.getChunkList() == null || (asset.getChunkList().getChunk().size() != 1)) {
                 throw new RuntimeException(String.format(
                         "'%s' must have exactly one chunk for asset '%s'",
-                        assetMapXml, id));
+                        assetMapXml, uuid.toString()));
             }
-            result.addAsset(id, asset.getChunkList().getChunk().get(0).getPath());
+            result.addAsset(uuid, asset.getChunkList().getChunk().get(0).getPath());
         }
 
         return result;

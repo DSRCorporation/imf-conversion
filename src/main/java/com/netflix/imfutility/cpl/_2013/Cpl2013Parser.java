@@ -8,6 +8,7 @@ import com.netflix.imfutility.cpl.SequenceTypeCpl;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
+import com.netflix.imfutility.cpl.uuid.UUID;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -98,7 +99,7 @@ public class Cpl2013Parser {
 
 
         // 2. Init essence parameter. Check that we have a corresponding track file in assetmap
-        String trackId = trackFileResource.getTrackFileId();
+        UUID trackId = UUID.create(trackFileResource.getTrackFileId());
         String assetPath = assetMap.getAsset(trackId);
         if (assetPath == null) {
             throw new RuntimeException(String.format(

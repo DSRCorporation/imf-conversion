@@ -122,6 +122,26 @@
                         </configuration>
                     </execution>
 
+                    <!-- Generate ffprobe classes -->
+                    <execution>
+                        <id>ffprobe-conversion</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/ffprobe.xsd</source>
+                            </sources>
+                            <packageName>com.netflix.imfutility.xsd.ffprobe</packageName>
+                            <!--
+                             Don't clear the output directory before generating the sources.
+                             Clearing the output directory removes the config schema from above.
+                            -->
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
+
                     <!-- Generate DPP metadata.xml classes -->
                     <execution>
                         <id>xjc-dpp-metadata</id>

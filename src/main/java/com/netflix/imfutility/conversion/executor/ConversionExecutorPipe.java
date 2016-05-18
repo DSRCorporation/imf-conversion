@@ -7,8 +7,11 @@ import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.xsd.conversion.ExecOnceType;
 import com.netflix.imfutility.xsd.conversion.PipeType;
+import com.netflix.imfutility.xsd.conversion.SubPipeType;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Executor of {@link PipeType} conversion operation.
@@ -33,9 +36,12 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
                     getExecOnceOperation(tailOperation));
         }
         if (pipe.getCycle() != null) {
-            for (ExecOnceType cycleOperation : pipe.getCycle().getExecOnce()) {
-                pipeInfo.getCycleOperations().add(
-                        getExecOnceOperation(cycleOperation));
+            for (Object cycleOperation : pipe.getCycle().getPipeOrExecOnce()) {
+                if (cycleOperation instanceof ExecOnceType) {
+                    pipeInfo.addCycleOperation(getExecOnceOperation((ExecOnceType) cycleOperation));
+                } else if (cycleOperation instanceof SubPipeType) {
+                    pipeInfo.addCycleOperation(getSubPipeOperations((SubPipeType) cycleOperation));
+                }
             }
         }
 
@@ -47,6 +53,15 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
     private OperationInfo getExecOnceOperation(ExecOnceType execOnce) {
         return new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(),
                 ContextInfo.EMPTY);
+    }
+
+    private List<OperationInfo> getSubPipeOperations(SubPipeType subPipe) {
+        List<OperationInfo> result = new ArrayList<>();
+        for (ExecOnceType execOnce : subPipe.getExecOnce()) {
+            result.add(new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(),
+                    ContextInfo.EMPTY));
+        }
+        return result;
     }
 
 }

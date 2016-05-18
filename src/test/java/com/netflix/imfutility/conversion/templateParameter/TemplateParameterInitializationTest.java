@@ -72,7 +72,7 @@ public class TemplateParameterInitializationTest {
     }
 
     @Test
-    public void testAddDynamicParameterWithParams() {
+    public void testAddDynamicParameterWithParamsInValue() {
         TemplateParameterContextProvider contextProvider = createContextProvider();
         fillCPLContext(contextProvider, 2, 2, 2);
 
@@ -89,12 +89,58 @@ public class TemplateParameterInitializationTest {
                         .setResourceUuid(getResourceUuid(0, 1, SequenceType.AUDIO, 1))
                         .setSequenceType(SequenceType.AUDIO).build());
 
-        assertTrue(contextProvider.getDynamicContext().getAllParameters().contains("tmpParamSimple"));
-        assertTrue(contextProvider.getDynamicContext().getAllParameters().contains("0-1-audio-1-tmpParamSimple"));
+        assertEquals("tmpParamSimple", contextProvider.getDynamicContext().getParameterValue("addDynamicWithParam1"));
+        assertEquals("0-1-audio-1-tmpParamSimple", contextProvider.getDynamicContext().getParameterValue("addDynamicWithParam2"));
     }
 
     @Test
-    public void testAppendDynamicParameterWithParams() {
+    public void testAddDynamicParameterWithParamsInName() {
+        TemplateParameterContextProvider contextProvider = createContextProvider();
+        fillCPLContext(contextProvider, 2, 2, 2);
+
+        contextProvider.getDynamicContext().addParameter(
+                "name-%{tmp.tmpParamSimple}",
+                "value1",
+                ContextInfo.EMPTY);
+        contextProvider.getDynamicContext().addParameter(
+                "name-%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}",
+                "value2",
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(1, SequenceType.AUDIO))
+                        .setResourceUuid(getResourceUuid(0, 1, SequenceType.AUDIO, 1))
+                        .setSequenceType(SequenceType.AUDIO).build());
+
+        assertEquals("value1", contextProvider.getDynamicContext().getParameterValue("name-tmpParamSimple"));
+        assertEquals("value2", contextProvider.getDynamicContext().getParameterValue("name-0-1-audio-1-tmpParamSimple"));
+    }
+
+    @Test
+    public void testAddDynamicParameterWithParamsInNameAndValue() {
+        TemplateParameterContextProvider contextProvider = createContextProvider();
+        fillCPLContext(contextProvider, 2, 2, 2);
+
+        contextProvider.getDynamicContext().addParameter(
+                "name-%{tmp.tmpParamSimple}",
+                "%{tmp.tmpParamSimple}",
+                ContextInfo.EMPTY);
+        contextProvider.getDynamicContext().addParameter(
+                "name-%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}",
+                "%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}",
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(1, SequenceType.AUDIO))
+                        .setResourceUuid(getResourceUuid(0, 1, SequenceType.AUDIO, 1))
+                        .setSequenceType(SequenceType.AUDIO).build());
+
+        assertEquals("tmpParamSimple",
+                contextProvider.getDynamicContext().getParameterValue("name-tmpParamSimple"));
+        assertEquals("0-1-audio-1-tmpParamSimple",
+                contextProvider.getDynamicContext().getParameterValue("name-0-1-audio-1-tmpParamSimple"));
+    }
+
+    @Test
+    public void testAppendDynamicParameterWithParamsInValue() {
         TemplateParameterContextProvider contextProvider = createContextProvider();
         fillCPLContext(contextProvider, 2, 2, 2);
 
@@ -119,12 +165,72 @@ public class TemplateParameterInitializationTest {
                         .setResourceUuid(getResourceUuid(1, 1, SequenceType.VIDEO, 1))
                         .setSequenceType(SequenceType.VIDEO).build());
 
-        assertTrue(
-                contextProvider.getDynamicContext().getAllParameters().contains(
-                        "tmpParamSimple_1_tmpParamSimple_2"));
-        assertTrue(
-                contextProvider.getDynamicContext().getAllParameters().contains(
-                        "0-0-audio-0-tmpParamSimple_1-1-video-1-tmpParamSimple"));
+        assertEquals(2, contextProvider.getDynamicContext().getAllParameters().size());
+        assertEquals("tmpParamSimple_1_tmpParamSimple_2",
+                contextProvider.getDynamicContext().getParameterValue("appendDynamicWithParam1"));
+        assertEquals("0-0-audio-0-tmpParamSimple_1-1-video-1-tmpParamSimple",
+                contextProvider.getDynamicContext().getParameterValue("appendDynamicWithParam2"));
+    }
+
+    @Test
+    public void testAppendDynamicParameterWithParamsInName() {
+        TemplateParameterContextProvider contextProvider = createContextProvider();
+        fillCPLContext(contextProvider, 2, 2, 2);
+
+        contextProvider.getDynamicContext().appendParameter("%{tmp.tmpParamSimple}", "appendDynamicWithParam1", ContextInfo.EMPTY);
+        contextProvider.getDynamicContext().appendParameter("%{tmp.tmpParamSimple}", "_appendDynamicWithParam1", ContextInfo.EMPTY);
+
+        contextProvider.getDynamicContext().appendParameter(
+                "%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}",
+                "appendDynamicWithParam2",
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.AUDIO))
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0))
+                        .setSequenceType(SequenceType.AUDIO).build());
+
+        contextProvider.getDynamicContext().appendParameter(
+                "%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}",
+                "_appendDynamicWithParam2",
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.AUDIO))
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0))
+                        .setSequenceType(SequenceType.AUDIO).build());
+
+        assertEquals(2, contextProvider.getDynamicContext().getAllParameters().size());
+        assertEquals("appendDynamicWithParam1_appendDynamicWithParam1",
+                contextProvider.getDynamicContext().getParameterValue("tmpParamSimple"));
+        assertEquals("appendDynamicWithParam2_appendDynamicWithParam2",
+                contextProvider.getDynamicContext().getParameterValue("0-0-audio-0-tmpParamSimple"));
+    }
+
+    @Test
+    public void testAppendDynamicParameterWithParamsInNameAndValue() {
+        TemplateParameterContextProvider contextProvider = createContextProvider();
+        fillCPLContext(contextProvider, 2, 2, 2);
+
+        contextProvider.getDynamicContext().appendParameter(
+                "name-%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}",
+                "%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}",
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.AUDIO))
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0))
+                        .setSequenceType(SequenceType.AUDIO).build());
+
+        contextProvider.getDynamicContext().appendParameter(
+                "name-%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}",
+                "_%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}",
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.AUDIO))
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0))
+                        .setSequenceType(SequenceType.AUDIO).build());
+
+        assertEquals(1, contextProvider.getDynamicContext().getAllParameters().size());
+        assertEquals("0-0-audio-0-tmpParamSimple_0-0-audio-0-tmpParamSimple",
+                contextProvider.getDynamicContext().getParameterValue("name-0-0-audio-0-tmpParamSimple"));
     }
 
     @Test

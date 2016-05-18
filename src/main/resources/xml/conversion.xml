@@ -11,7 +11,10 @@
             <tmpContext>
                 <param id="videoEncoded">output.x264</param>
                 <param id="audioEncoded">output.pcm</param>
+                <param id="mediaInfoOutput">mediaInfo.xml</param>
             </tmpContext>
+
+            <mediaInfoCommand>%{tool.ffprobe} -show_streams -print_format xml %{dynamic.mediaInfoInput} %{tmp.mediaInfoOutput}</mediaInfoCommand>
 
             <!--
                 Destination parameters for conversion
@@ -40,11 +43,11 @@
                         <pipe>
                             <cycle>
                                 <execEachSegment name="decode_video">
-                                    <exec>
+                                    <execOnce name="decode_video">
                                         %{tool.ffmpeg} -y -i %{resource.essence} -ss %{resource.startTime}
                                         -t %{resource.duration} -an -vf scale=1920:1080,fps=25
                                         -pix_fmt yuv422p10le -f rawvideo -
-                                    </exec>
+                                    </execOnce>
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_video">
@@ -54,7 +57,8 @@
                                 --avcintra-class 100 -o %{tmp.videoEncoded}
                             </execOnce>
                         </pipe>
-                        <dynamicParameter name="concatAudioInput" concat="true"> -i %{seq.num}-%{tmp.videoEncoded}</dynamicParameter>
+                        <dynamicParameter name="concatAudioInput" concat="true">-i %{seq.num}-%{tmp.videoEncoded}
+                        </dynamicParameter>
                     </execEachSequence>
 
                     <!--
@@ -65,11 +69,11 @@
                         <pipe>
                             <cycle>
                                 <execEachSegment name="decode_audio">
-                                    <exec>
+                                    <execOnce name="decode_audio">
                                         %{tool.ffmpeg} -i %{resource.essence} -ss %{resource.startTime}
                                         -t %{resource.duration} -vn -af aresample=48000
                                         -acodec pcm_s24le -f s24le -
-                                    </exec>
+                                    </execOnce>
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_audio">
@@ -77,7 +81,6 @@
                             </execOnce>
                         </pipe>
                     </execEachSequence>
-
 
 
                     <!--
