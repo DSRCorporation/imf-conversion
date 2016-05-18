@@ -23,6 +23,17 @@ public class TemplateParameterResolver {
     }
 
     public String resolveTemplateParameter(String parameterStr, ContextInfo contextInfo) {
+        String unresolvedParam = parameterStr;
+        String resolvedParam = null;
+        // resolve all sub-parameters, such as %{dynamic.%{segm.num}}
+        while (!unresolvedParam.equals(resolvedParam)) {
+            unresolvedParam = resolvedParam != null ? resolvedParam : unresolvedParam;
+            resolvedParam = doResolveSubParameters(unresolvedParam, contextInfo);
+        }
+        return resolvedParam;
+    }
+
+    private String doResolveSubParameters(String parameterStr, ContextInfo contextInfo) {
         String resolvedParam = parameterStr;
 
         // resolve each template parameter the param contains
