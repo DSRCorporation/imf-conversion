@@ -75,6 +75,34 @@ public class AudioMapPanParameter {
         return panParameter.toString();
     }
 
+    /**
+     * Returns numbers of tracks required for pointed in metadata.xml Audio Layout.
+     *
+     * @param layout the layout from metadata.xml
+     * @return
+     */
+    public static Integer getEBUAudioTracks(AudioTrackLayoutDmAs11Type layout) {
+        //How many channels we should provide for particular EBU option.
+        Integer channelCountToMap = 0;
+        switch (layout) {
+            case EBU_R_48_2_A:
+            case EBU_R_48_4_B:
+            case EBU_R_48_4_C:
+                channelCountToMap = 4;
+                break;
+            case EBU_R_123_16_C:
+            case EBU_R_123_16_D:
+            case EBU_R_123_16_F:
+                channelCountToMap = 16;
+                break;
+            default:
+                // Unknown layout
+                throw new RuntimeException(
+                        String.format("metadata.xml defined unknown audio layout as \"%s\".", layout.value()));
+        }
+        return channelCountToMap;
+    }
+
     private static String getIntermediateKey(String trackId, Integer channelNumber) {
         return trackId + ":" + channelNumber.toString();
     }
@@ -84,35 +112,13 @@ public class AudioMapPanParameter {
         Integer mappedChannelCount = audioMap.getEBUTrack().size();
 
         //How many channels we need to map
-        Integer channelCountToMap = 0;
-        switch (layout) {
-            case EBU_R_48_2_A:
-            case EBU_R_48_4_B:
-            case EBU_R_48_4_C:
-                if (mappedChannelCount > 4) {
-                    throw new RuntimeException(
-                            String.format(
-                                    "metadata.xml defined audio layout as \"%s\" that has 4 tracks. Mapped channel count is greater than 4.",
-                                    layout.value()));
-                }
-                channelCountToMap = 4;
-                break;
-            case EBU_R_123_16_C:
-            case EBU_R_123_16_D:
-            case EBU_R_123_16_F:
-                if (mappedChannelCount > 16) {
-                    // Never must be here since we have validation at XSD level
-                    throw new RuntimeException(
-                            String.format(
-                                    "metadata.xml defined audio layout as \"%s\" that has 16 tracks. Mapped channel count is greater than 16.",
-                                    layout.value()));
-                }
-                channelCountToMap = 16;
-                break;
-            default:
-                // Unknown layout
-                throw new RuntimeException(
-                        String.format("metadata.xml defined unknown audio layout as \"%s\".", layout.value()));
+        Integer channelCountToMap = getEBUAudioTracks(layout);
+        if (mappedChannelCount > channelCountToMap) {
+            throw new RuntimeException(
+                    String.format(
+                            "metadata.xml defined audio layout as \"%s\" that has %d tracks. Mapped channel count is greater than 4.",
+                            layout.value(),
+                            channelCountToMap));
         }
         return channelCountToMap;
     }
