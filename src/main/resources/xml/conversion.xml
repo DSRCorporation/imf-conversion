@@ -40,11 +40,11 @@
                         <pipe>
                             <cycle>
                                 <execEachSegment name="decode_video">
-                                    <exec>
+                                    <execOnce name="decode_video">
                                         %{tool.ffmpeg} -y -i %{resource.essence} -ss %{resource.startTime}
                                         -t %{resource.duration} -an -vf scale=1920:1080,fps=25
                                         -pix_fmt yuv422p10le -f rawvideo -
-                                    </exec>
+                                    </execOnce>
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_video">
@@ -65,11 +65,11 @@
                         <pipe>
                             <cycle>
                                 <execEachSegment name="decode_audio">
-                                    <exec>
+                                    <execOnce name="decode_audio">
                                         %{tool.ffmpeg} -i %{resource.essence} -ss %{resource.startTime}
                                         -t %{resource.duration} -vn -af aresample=48000
                                         -acodec pcm_s24le -f s24le -
-                                    </exec>
+                                    </execOnce>
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_audio">

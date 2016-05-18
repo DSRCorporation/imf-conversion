@@ -48,12 +48,14 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
     }
 
     public DynamicTemplateParameterContext addParameter(String paramName, String paramValue, ContextInfo contextInfo) {
+        paramName = parameterResolver.resolveTemplateParameter(paramName, contextInfo);
         paramValue = parameterResolver.resolveTemplateParameter(paramValue, contextInfo);
         params.put(paramName, paramValue);
         return this;
     }
 
     public DynamicTemplateParameterContext appendParameter(String paramName, String paramValue, ContextInfo contextInfo) {
+        paramName = parameterResolver.resolveTemplateParameter(paramName, contextInfo);
         paramValue = parameterResolver.resolveTemplateParameter(paramValue, contextInfo);
         if (!params.containsKey(paramName)) {
             params.put(paramName, paramValue);
@@ -77,6 +79,10 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
 
     public Collection<String> getAllParameters() {
         return params.values();
+    }
+
+    public String getParameterValue(String parameterName) {
+        return params.get(parameterName);
     }
 
 }

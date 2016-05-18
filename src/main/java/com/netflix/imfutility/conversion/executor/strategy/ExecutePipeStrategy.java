@@ -20,11 +20,13 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
     }
 
     public void execute(PipeOperationInfo operations) throws IOException {
-        // 1. start all tailing operation
-        List<ExternalProcess> tailProcesses = getTailProcesses(operations);
+        List<ExternalProcess> tailProcesses = new ArrayList<>();
 
-        // 2. start all cycle processes in a sequence subsequently in pipelines
         try {
+            // 1. start all tailing operation
+            startTailProcesses(operations, tailProcesses);
+
+            // 2. start all cycle processes in a sequence subsequently in pipelines
             if (operations.getCycleOperations().isEmpty()) {
                 processNonCycle(tailProcesses);
             } else {
@@ -36,12 +38,10 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
         }
     }
 
-    private List<ExternalProcess> getTailProcesses(PipeOperationInfo operations) throws IOException {
-        List<ExternalProcess> pipeline = new ArrayList<>();
+    private void startTailProcesses(PipeOperationInfo operations, List<ExternalProcess> tailProcesses) throws IOException {
         for (OperationInfo tailOperation : operations.getTailOperations()) {
-            pipeline.add(startProcess(tailOperation));
+            tailProcesses.add(startProcess(tailOperation));
         }
-        return pipeline;
     }
 
     private void processNonCycle(List<ExternalProcess> pipeline) {
@@ -49,10 +49,27 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
     }
 
     private void processCycle(PipeOperationInfo operations, List<ExternalProcess> tailProcesses) throws IOException {
-        for (OperationInfo cycleOperation : operations.getCycleOperations()) {
-            ExternalProcess process = startProcess(cycleOperation);
-            pipe(process, tailProcesses);
+        for (List<OperationInfo> cyclePipeOperations : operations.getCycleOperations()) {
+            processCyclePipe(cyclePipeOperations, tailProcesses);
         }
+    }
+
+    private void processCyclePipe(List<OperationInfo> cyclePipeOperations, List<ExternalProcess> tailProcesses) throws IOException {
+        List<ExternalProcess> headProcesses = new ArrayList<>();
+        try {
+            for (OperationInfo headOperation : cyclePipeOperations) {
+                headProcesses.add(startProcess(headOperation));
+            }
+            pipe(headProcesses, tailProcesses);
+        } finally {
+            headProcesses.forEach(ExternalProcess::finishClose);
+        }
+    }
+
+    private void pipe(List<ExternalProcess> head, List<ExternalProcess> tail) {
+        List<ExternalProcess> pipeline = new ArrayList<>(head);
+        pipeline.addAll(tail);
+        pipe(pipeline);
     }
 
     private void pipe(ExternalProcess firstProc, List<ExternalProcess> tail) {
