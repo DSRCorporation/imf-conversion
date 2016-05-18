@@ -116,7 +116,7 @@ public class AudioMapPanParameter {
         if (mappedChannelCount > channelCountToMap) {
             throw new RuntimeException(
                     String.format(
-                            "metadata.xml defined audio layout as \"%s\" that has %i tracks. Mapped channel count is greater than 4.",
+                            "metadata.xml defined audio layout as \"%s\" that has %d tracks. Mapped channel count is greater than 4.",
                             layout.value(),
                             channelCountToMap));
         }
