@@ -215,8 +215,8 @@ public class TemplateParameterResolverTest {
                         assertEquals(resourceUuid.getUuid(), resolvedUuid);
 
                         assertResourceParameter(resolvedEssence, resourceUuid, ResourceContextParameters.ESSENCE);
-                        assertResourceParameter(resolvedStartTime, resourceUuid, ResourceContextParameters.START_TIME);
-                        assertResourceParameter(resolvedDuration, resourceUuid, ResourceContextParameters.DURATION);
+                        assertResourceParameter(resolvedStartTime, resourceUuid, ResourceContextParameters.START_TIME_TIMECODE);
+                        assertResourceParameter(resolvedDuration, resourceUuid, ResourceContextParameters.DURATION_TIMECODE);
                     }
                 }
             }

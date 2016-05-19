@@ -1,9 +1,9 @@
 package com.netflix.imfutility.cpl._2013;
 
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
+import com.netflix.imfutility.asset.AssetMap;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.asset.AssetMap;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.cpl.SequenceTypeCpl;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
@@ -107,21 +107,27 @@ public class Cpl2013ContextBuilder {
         // 3. Init startTime parameter
         BigFraction editRate = trackFileResource.getEditRate() != null
                 ? ConversionHelper.parseEditRate(trackFileResource.getEditRate()) : compositionEditRate;
-        BigInteger entryPoint = trackFileResource.getEntryPoint() != null
+        BigInteger startTimeEditUnit = trackFileResource.getEntryPoint() != null
                 ? trackFileResource.getEntryPoint() : BigInteger.valueOf(0);
-        String startTime = ConversionHelper.editUnitToTimecode(entryPoint, editRate);
+        String startTimeTimeCode = ConversionHelper.editUnitToTimecode(startTimeEditUnit, editRate);
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
-                ResourceContextParameters.START_TIME, startTime);
+                ResourceContextParameters.START_TIME_TIMECODE, startTimeTimeCode);
+        contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
+                ResourceContextParameters.START_TIME_EDIT_UNIT, startTimeEditUnit.toString());
+
 
         // 4. init duration parameter
-        String duration;
+        BigInteger durationEditUnit;
         if (trackFileResource.getSourceDuration() != null) {
-            duration = ConversionHelper.editUnitToTimecode(trackFileResource.getSourceDuration(), editRate);
+            durationEditUnit = trackFileResource.getSourceDuration();
         } else {
-            duration = ConversionHelper.editUnitToTimecode(trackFileResource.getIntrinsicDuration().subtract(entryPoint), editRate);
+            durationEditUnit = trackFileResource.getIntrinsicDuration().subtract(startTimeEditUnit);
         }
+        String durationTimecode = ConversionHelper.editUnitToTimecode(durationEditUnit, editRate);
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
-                ResourceContextParameters.DURATION, duration);
+                ResourceContextParameters.DURATION_TIMECODE, durationTimecode);
+        contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
+                ResourceContextParameters.DURATION_EDIT_UNIT, durationEditUnit.toString());
 
     }
 
