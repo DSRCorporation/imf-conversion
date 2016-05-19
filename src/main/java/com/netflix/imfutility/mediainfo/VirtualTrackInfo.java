@@ -12,9 +12,9 @@ import java.util.Map;
  */
 public class VirtualTrackInfo {
 
-    private SequenceType seqType;
+    private final SequenceType seqType;
 
-    private Map<SequenceContextParameters, String> parameters = new HashMap<>();
+    private final Map<SequenceContextParameters, String> parameters = new HashMap<>();
 
     public VirtualTrackInfo(SequenceType seqType, StreamType stream) {
         this.seqType = seqType;

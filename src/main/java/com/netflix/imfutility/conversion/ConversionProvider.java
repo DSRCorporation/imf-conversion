@@ -4,6 +4,7 @@ import com.netflix.imfutility.Format;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.ConversionType;
+import com.netflix.imfutility.xsd.conversion.FormatConfigurationType;
 import com.netflix.imfutility.xsd.conversion.FormatType;
 
 import java.io.File;
@@ -45,6 +46,14 @@ public class ConversionProvider {
             return Collections.emptyList();
         }
         return new ArrayList<>(formatType.getFormatConfigurations().getMap().keySet());
+    }
+
+    public FormatConfigurationType getFormatConfigurationType(String configuration) {
+        FormatConfigurationType formatConfigurationType = formatType.getFormatConfigurations().getMap().get(configuration);
+        if (formatConfigurationType == null) {
+            throw new RuntimeException(String.format("No configuration '%s' found for format '%s'.", configuration, formatType.getName()));
+        }
+        return formatConfigurationType;
     }
 
 

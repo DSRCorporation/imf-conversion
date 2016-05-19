@@ -18,25 +18,26 @@
             <mediaInfoCommandAudio>%{tool.ffprobe} -select_streams a:0 -show_streams -noprivate -print_format xml=x=1 %{output.mediaInfoInput}</mediaInfoCommandAudio>
             <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams s:0 -show_streams -noprivate -print_format xml=x=1 %{output.mediaInfoInput}</mediaInfoCommandSubtitle>
 
-            <!--
-                Destination parameters for conversion
-             -->
-            <conversionParameters>
-                <video>
-                    <width>1920</width>
-                    <height>1080</height>
-                    <frameRate>25</frameRate>
-                    <pixelFormat>yuv422p10le</pixelFormat>
-                    <bitDepth>10</bitDepth>
-                </video>
-                <audio>
-                    <sampleRate>48000</sampleRate>
-                    <bitsSample>24</bitsSample>
-                </audio>
-            </conversionParameters>
 
             <formatConfigurations>
                 <formatConfiguration name="main">
+
+                    <!--
+                        Destination parameters for conversion
+                     -->
+                    <conversionParameters>
+                        <video>
+                            <width>1920</width>
+                            <height>1080</height>
+                            <frameRate>25</frameRate>
+                            <pixelFormat>yuv422p10le</pixelFormat>
+                            <bitDepth>10</bitDepth>
+                        </video>
+                        <audio>
+                            <sampleRate>48000</sampleRate>
+                            <bitsSample>24</bitsSample>
+                        </audio>
+                    </conversionParameters>
 
                     <!--
                         1. decode each video segment and redirect output to encode's input
@@ -47,8 +48,8 @@
                             <cycle>
                                 <execEachSegment name="decode_video">
                                     <execOnce name="decode_video">
-                                        %{tool.ffmpeg} -y -i "%{resource.essence}" -map 0:0 -ss %{resource.startTime}
-                                        -t %{resource.duration} -an
+                                        %{tool.ffmpeg} -y -i "%{resource.essence}" -map 0:0 -ss %{resource.startTimeTC}
+                                        -t %{resource.durationTC} -an
                                         -vf "scale=iw*sar*min(1920/(iw*sar)\,1080/ih):ih*min(1920/(iw*sar)\,1080/ih),pad=1920:1080:(ow-iw)/2:(oh-ih)/2,fps=25"
                                         -pix_fmt yuv422p10le -f rawvideo -
                                     </execOnce>
@@ -69,8 +70,8 @@
                     <execEachSequence type="audio" name="extractAudioSegments">
                         <execEachSegment name="extract_audio">
                             <execOnce name="extract_audio">
-                                mxf2raw -p "%{seq.num}-%{segm.num}" --start %{resource.startTime}
-                                --dur %{resource.duration} "%{resource.essence}"
+                                %{tool.mxf2raw} -p "%{seq.num}-%{segm.num}" --start %{resource.startTimeEU}
+                                --dur %{resource.durationEU} "%{resource.essence}"
                             </execOnce>
                             <!-- to delete intermediate files at the end -->
                             <dynamicParameter name="tmp-%{seq.num}-%{segm.num}">%{seq.num}-%{segm.num}_a0.raw</dynamicParameter>
@@ -86,14 +87,14 @@
                             <cycle>
                                 <execEachSegment name="decode_audio">
                                     <execOnce name="decode_audio">
-                                        %{tool.ffmpeg} -f s24le -ar %{seq.sample_rate} -ac %{seq.channels}
+                                        %{tool.ffmpeg} -f s24le -ar %{seq.sample_rate} -ac %{seq.channels_num}
                                         -i "%{seq.num}-%{segm.num}_a0.raw" -vn -af aresample=48000
                                         -acodec pcm_s24le -f s24le -
                                     </execOnce>
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_audio">
-                                %{tool.ffmpeg} -f s24le -i - -vn -c:a copy -f s24le %{seq.num}-audio-encoded.wav
+                                %{tool.ffmpeg} -f s24le -ar %{seq.sample_rate} -ac %{seq.channels_num} -i - -vn -c:a copy -f wav %{seq.num}-audio-encoded.wav
                             </execOnce>
                         </pipe>
                         <dynamicParameter name="concatAudioInput" concat="true"> -i "%{seq.num}-audio-encoded.wav"</dynamicParameter>
@@ -106,8 +107,9 @@
                         4. Remap audio in accordance with AudioMap.xml
                     -->
                     <execOnce name="audioMaping">
-                        ffmpeg %{dynamic.concatAudioInput} -filter_complex "%{dynamic.concatAudioMap}amerge,pan=%{dynamic.panParameter}[aout]"
-                        -map "[aout]" -acodec pcm_s24le -ar 48000 "%{tmp.audioEncoded}"
+                        <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
+                        %{tool.ffmpeg} %{dynamic.concatAudioInput} -filter_complex "%{dynamic.concatAudioMap}[0:a]amerge,pan=%{dynamic.panParameter}[aout]"
+                        -map "[aout]" -acodec pcm_s24le -ar 48000 -f wav "%{tmp.audioEncoded}"
                     </execOnce>
 
                     <!--
@@ -116,8 +118,8 @@
                     <execOnce name="muxing_mxf">
                         %{tool.bmx} -t as11op1a -o "%{output.mxf}"
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
-                        --dm-file dpp "%{dynamic.UKDppFramework}"
-                        --seg "%{dynamic.AS11SegmentationFramework}"
+                        --dm-file dpp "%{dynamic.ukDppFramework}"
+                        --seg "%{dynamic.as11SegmentationFramework}"
                         --avci100_1080i "%{tmp.videoEncoded}"
                         -q 24 -s 48000 --audio-chan %{dynamic.ebuAudioTracks}
                         --pcm "%{tmp.audioEncoded}"

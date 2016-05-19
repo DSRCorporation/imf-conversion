@@ -10,6 +10,7 @@
         <tool id="ffmpeg">G:\Netflix\test\encode\test\ffmpeg.exe</tool>
         <tool id="ffprobe">G:\Netflix\test\encode\test\ffprobe.exe</tool>
         <tool id="bmx">G:\Netflix\test\encode\test\raw2bmx.exe</tool>
+        <tool id="mxf2raw">G:\Netflix\test\encode\test\mxf2raw.exe</tool>
         <tool id="x264">G:\Netflix\test\encode\test\x264.exe</tool>
         <tool id="ttmlToStl">ttmlToStl path</tool>
         <tool id="photon">photon path</tool>
@@ -22,7 +23,7 @@
     <conversionParameters>
         <video>
             <size>yes</size>
-            <fps>no</fps>
+            <frameRate>yes</frameRate>
             <pixelFormat>yes</pixelFormat>
             <bitDepth>yes</bitDepth>
         </video>

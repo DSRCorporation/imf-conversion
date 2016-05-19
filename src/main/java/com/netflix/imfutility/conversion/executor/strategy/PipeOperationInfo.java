@@ -31,8 +31,8 @@ public class PipeOperationInfo {
         tailOperations.add(tailOperation);
     }
 
-    public void addTailOperations(Collection<OperationInfo> tailOperations) {
-        tailOperations.addAll(tailOperations);
+    public void addTailOperations(Collection<OperationInfo> operations) {
+        this.tailOperations.addAll(operations);
     }
 
 

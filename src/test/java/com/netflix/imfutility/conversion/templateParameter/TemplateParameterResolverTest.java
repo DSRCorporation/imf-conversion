@@ -205,8 +205,8 @@ public class TemplateParameterResolverTest {
                         String resolvedNum = resolver.resolveTemplateParameter("%{resource.num}", contextInfo);
                         String resolvedUuid = resolver.resolveTemplateParameter("%{resource.uuid}", contextInfo);
                         String resolvedEssence = resolver.resolveTemplateParameter("%{resource.essence}", contextInfo);
-                        String resolvedStartTime = resolver.resolveTemplateParameter("%{resource.startTime}", contextInfo);
-                        String resolvedDuration = resolver.resolveTemplateParameter("%{resource.duration}", contextInfo);
+                        String resolvedStartTime = resolver.resolveTemplateParameter("%{resource.startTimeTC}", contextInfo);
+                        String resolvedDuration = resolver.resolveTemplateParameter("%{resource.durationTC}", contextInfo);
 
                         assertNotNull(resolvedNum);
                         assertEquals(String.valueOf(res), resolvedNum);

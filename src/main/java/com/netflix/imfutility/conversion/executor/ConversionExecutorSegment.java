@@ -15,6 +15,7 @@ import com.netflix.imfutility.xsd.conversion.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * An executor for {@link ExecEachSegmentSequenceType} conversion operation.
@@ -95,15 +96,11 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
         executeStrategyFactory.createExecutePipeStrategy(contextProvider).execute(pipeInfo);
     }
 
-    private void execEachSequenceInPipe(ExecEachSequenceType execSequence, PipeOperationInfo pipeInfo) throws IOException {
+    private void execEachSequenceInPipe(ExecEachSequenceType execSequence, PipeOperationInfo pipeInfo) {
         if (execSequence.getExecOnce() != null) {
-            for (OperationInfo headOperation : getExecSequenceOnceOperations(execSequence)) {
-                pipeInfo.addCycleOperation(headOperation);
-            }
+            getExecSequenceOnceOperations(execSequence).forEach(pipeInfo::addCycleOperation);
         } else if (execSequence.getPipe() != null) {
-            for (List<OperationInfo> headOperations : getExecSequencePipeOperations(execSequence)) {
-                pipeInfo.addCycleOperation(headOperations);
-            }
+            getExecSequencePipeOperations(execSequence).forEach(pipeInfo::addCycleOperation);
         }
     }
 
@@ -124,15 +121,12 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
 
 
     private List<OperationInfo> getSubPipeOperations(SubPipeType subPipe) {
-        List<OperationInfo> result = new ArrayList<>();
         ContextInfo contextInfo = new ContextInfoBuilder()
                 .setSegmentUuid(currentSegmentUuid)
                 .build();
-        for (ExecOnceType execOnce : subPipe.getExecOnce()) {
-            result.add(new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(),
-                    contextInfo));
-        }
-        return result;
+        return subPipe.getExecOnce().stream()
+                .map(execOnce -> new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(), contextInfo))
+                .collect(Collectors.toList());
     }
 
     private List<OperationInfo> getExecSequenceOnceOperations(ExecEachSequenceType execSequence) {

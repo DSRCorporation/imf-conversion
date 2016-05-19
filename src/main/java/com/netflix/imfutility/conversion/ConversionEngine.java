@@ -20,13 +20,7 @@ import java.io.IOException;
  */
 public class ConversionEngine {
 
-    public void convert(FormatType formatType, String configuration, TemplateParameterContextProvider contextProvider) throws IOException {
-        // 1. get configuration
-        FormatConfigurationType formatConfigurationType = formatType.getFormatConfigurations().getMap().get(configuration);
-        if (formatConfigurationType == null) {
-            throw new RuntimeException(String.format("No configuration '%s' found for format '%s'.", configuration, formatType.getName()));
-        }
-
+    public void convert(FormatConfigurationType formatConfigurationType, TemplateParameterContextProvider contextProvider) throws IOException {
         for (Object operation : formatConfigurationType.getExecOnceOrExecEachSegmentOrExecEachSequence()) {
             if (operation instanceof ExecOnceType) {
                 new ConversionExecutorOnce(contextProvider, getExecuteStrategyFactory(), (ExecOnceType) operation).execute();

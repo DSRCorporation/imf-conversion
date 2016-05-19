@@ -19,7 +19,7 @@ class VirtualTrackInfoMapBuilder {
     private static final String MEDIAINFO_XSD = "xsd/media-info.xsd";
     private static final String MEDIAINFO_PACKAGE = "com.netflix.imfutility.xsd.mediainfo";
 
-    private Map<SequenceUUID, VirtualTrackInfo> virtualTrackInfoMap = new HashMap<>();
+    private final Map<SequenceUUID, VirtualTrackInfo> virtualTrackInfoMap = new HashMap<>();
 
     void addResourceInfo(File inputFile, File outputFile, ContextInfo contextInfo) throws XmlParsingException, MediaInfoException {
         // 1. parse output xml
