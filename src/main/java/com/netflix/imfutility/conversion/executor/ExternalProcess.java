@@ -27,30 +27,33 @@ public final class ExternalProcess {
     }
 
 
-    public void finishWaitFor() {
+    public int finishWaitFor() {
         if (closed) {
-            return;
+            return 0;
         }
+        int result = 0;
         try {
-            process.waitFor();
+            result = process.waitFor();
             closed = true;
             logFinishedSuccess();
         } catch (InterruptedException e) {
             logFinishedFailure(e);
         }
+        return result;
     }
 
-    public void finishClose() {
+    public int finishClose() {
         if (closed) {
-            return;
+            return 0;
         }
+        int result = 0;
         try {
             process.getOutputStream().close();
-            closed = true;
-            logFinishedSuccess();
+            result = finishWaitFor();
         } catch (IOException e) {
             logFinishedFailure(e);
         }
+        return result;
     }
 
     private void logStarted() {

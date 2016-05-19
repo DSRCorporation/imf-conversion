@@ -57,7 +57,7 @@
     <xs:complexType name="videoConversionParametersType">
         <xs:sequence>
             <xs:element type="allowDisalow" name="size" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="allowDisalow" name="fps" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="allowDisalow" name="frameRate" maxOccurs="1" minOccurs="0"/>
             <xs:element type="allowDisalow" name="pixelFormat" maxOccurs="1" minOccurs="0"/>
             <xs:element type="allowDisalow" name="bitDepth" maxOccurs="1" minOccurs="0"/>
         </xs:sequence>

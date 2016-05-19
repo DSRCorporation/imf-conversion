@@ -4,12 +4,15 @@ import com.netflix.imfutility.asset.AssetMap;
 import com.netflix.imfutility.asset.AssetMapParser;
 import com.netflix.imfutility.config.ConfigProvider;
 import com.netflix.imfutility.conversion.ConversionEngine;
+import com.netflix.imfutility.conversion.ConversionNotAllowedException;
 import com.netflix.imfutility.conversion.ConversionProvider;
+import com.netflix.imfutility.conversion.SilentConversionChecker;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.cpl.CplContextBuilder;
 import com.netflix.imfutility.mediainfo.MediaInfoContextBuilder;
 import com.netflix.imfutility.mediainfo.MediaInfoException;
 import com.netflix.imfutility.xml.XmlParsingException;
+import com.netflix.imfutility.xsd.conversion.FormatConfigurationType;
 import com.netflix.imfutility.xsd.conversion.ParamType;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -48,6 +51,7 @@ public abstract class AbstractFormatBuilder {
 
     protected ConfigProvider configProvider;
     protected ConversionProvider conversionProvider;
+    protected FormatConfigurationType formatConfigurationType;
     protected TemplateParameterContextProvider contextProvider;
     protected String workingDir;
     protected AssetMap assetMap;
@@ -81,12 +85,19 @@ public abstract class AbstractFormatBuilder {
             // 6. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
             buildMediaInfoContext();
 
-            // 7. convert
+
+            // 7. select a conversion config within format.
+            selectConversionConfig();
+
+            // 8. check whether we can silently convert to destination parameters
+            checkForSilentConversion();
+
+            // 9. convert
             preConvert();
             convert();
             postConvert();
 
-            // 8. delete tmp files.
+            // 10. delete tmp files.
             deleteTmpFiles();
 
             logger.info("Conversion to '{}' format: OK\n", format.getName());
@@ -173,20 +184,27 @@ public abstract class AbstractFormatBuilder {
         logger.info("Built Metadata Info contexts: OK");
     }
 
-    protected void preConvert() {
+    private void selectConversionConfig() {
+        String conversionConfig = getConversionConfiguration();
+        logger.info("Conversion config: {}\n", conversionConfig);
+        this.formatConfigurationType = conversionProvider.getFormatConfigurationType(conversionConfig);
     }
 
-    protected void postConvert() {
+    private void checkForSilentConversion() throws ConversionNotAllowedException {
+        logger.info("Checking whether it's allowed by config.xml to silently convert to destination parameters if they don't macth...");
+        new SilentConversionChecker(contextProvider, formatConfigurationType, configProvider).check();
+        logger.info("Checked: silent conversion is either allowed or not needed.");
+    }
+
+    protected void preConvert() throws IOException, XmlParsingException {
+    }
+
+    protected void postConvert() throws IOException, XmlParsingException {
     }
 
     private void convert() throws IOException {
         logger.info("Starting conversion...");
-
-        String conversionConfig = getConversionConfiguration();
-        logger.info("Conversion config: {}\n", conversionConfig);
-        new ConversionEngine().convert(
-                conversionProvider.getFormat(), conversionConfig, contextProvider);
-
+        new ConversionEngine().convert(formatConfigurationType, contextProvider);
         logger.info("Converted: OK\n");
     }
 

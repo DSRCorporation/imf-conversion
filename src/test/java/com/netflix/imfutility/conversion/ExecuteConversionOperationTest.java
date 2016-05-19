@@ -60,7 +60,7 @@ public class ExecuteConversionOperationTest {
     @Test
     // TODO: create more specific and granulated tests
     public void testExec() throws Exception {
-        conversionEngine.convert(conversionProvider.getFormat(), "1", contextProvider);
+        conversionEngine.convert(conversionProvider.getFormatConfigurationType("1"), contextProvider);
 
         assertEquals("START: External Process 1: execOnce1, ExecOnceType, execOnce1Exec", executorLogger.getNext());
         assertEquals("FINISH: External Process 1: execOnce1, ExecOnceType, execOnce1Exec", executorLogger.getNext());

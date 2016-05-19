@@ -29,14 +29,15 @@
             <mediaInfoCommandAudio></mediaInfoCommandAudio>
             <mediaInfoCommandSubtitle></mediaInfoCommandSubtitle>
 
-            <!--
-                Destination parameters for conversion
-             -->
-            <conversionParameters>
-            </conversionParameters>
 
             <formatConfigurations>
                 <formatConfiguration name="1">
+
+                    <!--
+                        Destination parameters for conversion
+                     -->
+                    <conversionParameters>
+                    </conversionParameters>
 
                     <execOnce name="execOnce1">
                         execOnce1Exec - param

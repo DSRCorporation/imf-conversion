@@ -33,7 +33,6 @@
             <xs:element type="mediaInfoCommandType" name="mediaInfoCommandVideo"/>
             <xs:element type="mediaInfoCommandType" name="mediaInfoCommandAudio"/>
             <xs:element type="mediaInfoCommandType" name="mediaInfoCommandSubtitle"/>
-            <xs:element type="conversionParametersType" name="conversionParameters"/>
             <xs:element type="formatConfigurationTypes" name="formatConfigurations" maxOccurs="1" minOccurs="1"/>
         </xs:sequence>
         <xs:attribute type="xs:string" name="name" use="required"/>
@@ -69,14 +68,14 @@
     <!--
       defines destination format video/audio parameters for conversion.
     -->
-    <xs:complexType name="conversionParametersType">
+    <xs:complexType name="destinationConversionParametersType">
         <xs:sequence>
-            <xs:element type="videoConversionParametersType" name="video" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="audioConversionParametersType" name="audio" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="destinationVideoConversionParametersType" name="video" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="destinationAudioConversionParametersType" name="audio" maxOccurs="1" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="videoConversionParametersType">
+    <xs:complexType name="destinationVideoConversionParametersType">
         <xs:sequence>
             <xs:element type="xs:string" name="width" maxOccurs="1" minOccurs="0"/>
             <xs:element type="xs:string" name="height" maxOccurs="1" minOccurs="0"/>
@@ -86,7 +85,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="audioConversionParametersType">
+    <xs:complexType name="destinationAudioConversionParametersType">
         <xs:sequence>
             <xs:element type="xs:string" name="sampleRate" maxOccurs="1" minOccurs="0"/>
             <xs:element type="xs:string" name="bitsSample" maxOccurs="1" minOccurs="0"/>
@@ -106,13 +105,17 @@
     </xs:complexType>
 
     <xs:complexType name="formatConfigurationType">
-        <xs:choice maxOccurs="unbounded" minOccurs="1">
-            <xs:element type="execOnceType" name="execOnce"/>
-            <xs:element type="execEachSegmentSequenceType" name="execEachSegment"/>
-            <xs:element type="execEachSequenceSegmentType" name="execEachSequence"/>
-            <xs:element type="pipeType" name="pipe"/>
-            <xs:element type="dynamicParameterType" name="dynamicParameter"/>
-        </xs:choice>
+        <xs:sequence>
+            <xs:element type="destinationConversionParametersType" name="conversionParameters"/>
+
+            <xs:choice maxOccurs="unbounded" minOccurs="1">
+                <xs:element type="execOnceType" name="execOnce"/>
+                <xs:element type="execEachSegmentSequenceType" name="execEachSegment"/>
+                <xs:element type="execEachSequenceSegmentType" name="execEachSequence"/>
+                <xs:element type="pipeType" name="pipe"/>
+                <xs:element type="dynamicParameterType" name="dynamicParameter"/>
+            </xs:choice>
+        </xs:sequence>
         <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:complexType>
 

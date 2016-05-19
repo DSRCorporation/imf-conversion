@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Conversion Operation parser. Splits arguments and resolves all parameters.
@@ -26,8 +27,7 @@ public class ConversionOperationParser {
 
         // 2. split params
         // do not add quotes! it's up to conversion.xml to insert correct quotes.
-        List<String> execAndParams = splitParameters(conversionOperation);
-        return execAndParams;
+        return splitParameters(conversionOperation);
     }
 
     public List<String> parseWithQuotes(String conversionOperation, ContextInfo contextInfo) {
@@ -35,11 +35,9 @@ public class ConversionOperationParser {
         conversionOperation = parameterResolver.resolveTemplateParameter(conversionOperation, contextInfo);
 
         // 2. split params and add quotes if needed
-        List<String> result = new ArrayList<>();
-        for (String param : splitParameters(conversionOperation)) {
-            result.add(addQuotes(param));
-        }
-        return result;
+        return splitParameters(conversionOperation).stream()
+                .map(this::addQuotes)
+                .collect(Collectors.toList());
     }
 
 

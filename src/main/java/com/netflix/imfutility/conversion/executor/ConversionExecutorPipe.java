@@ -10,8 +10,8 @@ import com.netflix.imfutility.xsd.conversion.PipeType;
 import com.netflix.imfutility.xsd.conversion.SubPipeType;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Executor of {@link PipeType} conversion operation.
@@ -56,12 +56,9 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
     }
 
     private List<OperationInfo> getSubPipeOperations(SubPipeType subPipe) {
-        List<OperationInfo> result = new ArrayList<>();
-        for (ExecOnceType execOnce : subPipe.getExecOnce()) {
-            result.add(new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(),
-                    ContextInfo.EMPTY));
-        }
-        return result;
+        return subPipe.getExecOnce().stream()
+                .map(execOnce -> new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(), ContextInfo.EMPTY))
+                .collect(Collectors.toList());
     }
 
 }
