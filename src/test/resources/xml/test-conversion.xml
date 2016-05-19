@@ -25,7 +25,9 @@
                 <param id="tmpParam6">"tmpParam6 Value"</param>
             </tmpContext>
 
-            <mediaInfoCommand></mediaInfoCommand>
+            <mediaInfoCommandVideo></mediaInfoCommandVideo>
+            <mediaInfoCommandAudio></mediaInfoCommandAudio>
+            <mediaInfoCommandSubtitle></mediaInfoCommandSubtitle>
 
             <!--
                 Destination parameters for conversion

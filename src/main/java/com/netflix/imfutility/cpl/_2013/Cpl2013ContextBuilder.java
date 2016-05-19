@@ -1,9 +1,9 @@
 package com.netflix.imfutility.cpl._2013;
 
-import com.netflix.imfutility.conversion.templateParameter.context.ResourceContextParameters;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.cpl.AssetMap;
+import com.netflix.imfutility.asset.AssetMap;
 import com.netflix.imfutility.cpl.SequenceTypeCpl;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
@@ -13,7 +13,6 @@ import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.imf._2013.cpl.*;
-import com.netflix.imfutility.xsd.imf.assetmap.AssetType;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import javax.xml.bind.JAXBElement;
@@ -27,7 +26,7 @@ import java.math.BigInteger;
  * <li>Fills segment, sequence and resource contexts, so conversion can be started using context parameters.</li>
  * </ul>
  */
-public class Cpl2013Parser {
+public class Cpl2013ContextBuilder {
 
     private static final String XSD_CPL_2013_XSD = "xsd/imf/2013/imf-cpl-2013.xsd";
     private static final String CPL_2013_PACKAGE = "com.netflix.imfutility.xsd.imf._2013.cpl";
@@ -36,26 +35,26 @@ public class Cpl2013Parser {
     private final AssetMap assetMap;
 
     private BigFraction compositionEditRate;
-    private SegmentType currentSegment;
+    private SegmentUUID currentSegmentUuid;
     private SequenceType currentSequence;
+    private SequenceUUID currentSequenceUuid;
     private com.netflix.imfutility.xsd.conversion.SequenceType currentSequenceType;
 
-    public Cpl2013Parser(TemplateParameterContextProvider contextProvider, AssetMap assetMap) {
+    public Cpl2013ContextBuilder(TemplateParameterContextProvider contextProvider, AssetMap assetMap) {
         this.contextProvider = contextProvider;
         this.assetMap = assetMap;
     }
 
-    public void parse(String cplXml) throws XmlParsingException {
+    public void build(String cplXml) throws XmlParsingException {
         CompositionPlaylistType cpl2013 = XmlParser.parse(
                 new File(cplXml), XSD_CPL_2013_XSD, CPL_2013_PACKAGE, CompositionPlaylistType.class);
 
         this.compositionEditRate = ConversionHelper.parseEditRate(cpl2013.getEditRate());
 
         for (SegmentType segment : cpl2013.getSegmentList().getSegment()) {
-            this.currentSegment = segment;
+            this.currentSegmentUuid = SegmentUUID.create(segment.getId());
 
-            contextProvider.getSegmentContext().initSegment(
-                    SegmentUUID.create(segment.getId()));
+            contextProvider.getSegmentContext().initSegment(currentSegmentUuid);
 
             for (Object anySeqJaxb : segment.getSequenceList().getAny()) {
                 JAXBElement jaxbElement = (JAXBElement) (anySeqJaxb);
@@ -63,8 +62,9 @@ public class Cpl2013Parser {
 
                 SequenceTypeCpl currentSequenceTypeCpl = SequenceTypeCpl.fromName(jaxbElement.getName().getLocalPart());
                 if ((currentSequenceTypeCpl != null) && (anySeq instanceof SequenceType)) {
-                    currentSequenceType = getType(currentSequenceTypeCpl);
-                    currentSequence = (SequenceType) anySeq;
+                    this.currentSequence = (SequenceType) anySeq;
+                    this.currentSequenceType = currentSequenceTypeCpl.toSequenceType();
+                    this.currentSequenceUuid = SequenceUUID.create(currentSequence.getTrackId());
                     processSequence();
                 }
             }
@@ -76,9 +76,7 @@ public class Cpl2013Parser {
         if (currentSequenceType == null) {
             throw new RuntimeException(String.format("Sequence '%s': Unknown sequence type", currentSequence.getId()));
         }
-        String seqId = currentSequence.getTrackId();
-        contextProvider.getSequenceContext().initSequence(currentSequenceType,
-                SequenceUUID.create(seqId));
+        contextProvider.getSequenceContext().initSequence(currentSequenceType, currentSequenceUuid);
 
         currentSequence.getResourceList().getResource().forEach(this::processResource);
     }
@@ -91,10 +89,7 @@ public class Cpl2013Parser {
 
         // 1. init resource context
         ResourceUUID resourceId = ResourceUUID.create(trackFileResource.getId());
-        ResourceKey resourceKey = ResourceKey.create(
-                SegmentUUID.create(currentSegment.getId()),
-                SequenceUUID.create(currentSequence.getTrackId()),
-                currentSequenceType);
+        ResourceKey resourceKey = ResourceKey.create(currentSegmentUuid, currentSequenceUuid, currentSequenceType);
         contextProvider.getResourceContext().initResource(resourceKey, resourceId);
 
 
@@ -127,18 +122,8 @@ public class Cpl2013Parser {
         }
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
                 ResourceContextParameters.DURATION, duration);
+
     }
 
-    private com.netflix.imfutility.xsd.conversion.SequenceType getType(SequenceTypeCpl typeCpl) {
-        switch (typeCpl) {
-            case AUDIO:
-                return com.netflix.imfutility.xsd.conversion.SequenceType.AUDIO;
-            case IMAGE:
-                return com.netflix.imfutility.xsd.conversion.SequenceType.VIDEO;
-            case SUBTITLE:
-                return com.netflix.imfutility.xsd.conversion.SequenceType.SUBTITLE;
-        }
-        return null;
-    }
 
 }

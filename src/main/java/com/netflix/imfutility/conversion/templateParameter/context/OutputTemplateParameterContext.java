@@ -2,6 +2,8 @@ package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
+import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.OutputContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 
 import java.util.Collection;
@@ -20,14 +22,29 @@ public class OutputTemplateParameterContext implements ITemplateParameterContext
 
     private final Map<String, String> params = new HashMap<>();
 
+    public OutputTemplateParameterContext addParameter(OutputContextParameters param, String paramValue) {
+        return addParameter(param.getName(), paramValue);
+    }
 
     public OutputTemplateParameterContext addParameter(String paramName, String paramValue) {
         params.put(paramName, paramValue);
         return this;
     }
 
+    public String getParameterValue(String templateParameterName) {
+        return getParameterValue(new TemplateParameter(TemplateParameterContext.OUTPUT, templateParameterName));
+    }
+
     @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo) {
+        return getParameterValue(templateParameter);
+    }
+
+    public Collection<String> getAllParameters() {
+        return params.values();
+    }
+
+    private String getParameterValue(TemplateParameter templateParameter) {
         String paramValue = params.get(templateParameter.getName());
         if (paramValue == null) {
             throw new TemplateParameterNotFoundException(
@@ -35,10 +52,6 @@ public class OutputTemplateParameterContext implements ITemplateParameterContext
                     String.format("'%s' parameter is not defined.", templateParameter.getName()));
         }
         return paramValue;
-    }
-
-    public Collection<String> getAllParameters() {
-        return params.values();
     }
 
 }

@@ -1,12 +1,14 @@
 package com.netflix.imfutility;
 
+import com.netflix.imfutility.asset.AssetMap;
+import com.netflix.imfutility.asset.AssetMapParser;
 import com.netflix.imfutility.config.ConfigProvider;
 import com.netflix.imfutility.conversion.ConversionEngine;
 import com.netflix.imfutility.conversion.ConversionProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.cpl.AssetMap;
-import com.netflix.imfutility.cpl.AssetMapParser;
-import com.netflix.imfutility.cpl.CplParser;
+import com.netflix.imfutility.cpl.CplContextBuilder;
+import com.netflix.imfutility.mediainfo.MediaInfoContextBuilder;
+import com.netflix.imfutility.mediainfo.MediaInfoException;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.ParamType;
 import org.apache.commons.io.FileUtils;
@@ -22,7 +24,7 @@ import java.io.IOException;
  * <li>Contains logic common for all formats</li>
  * <li>Designed for inheritance</li>
  * <li>Provides a common conversion workflow in a {@link #build(String, String)} method</li>
- * <li>Subclasses must provide logic related to context creation: {@link #fillDynamicContext()} and {@link }</li>
+ * <li>Subclasses must provide logic related to context creation: {@link #buildDynamicContext()} and {@link }</li>
  * <li>Subclasses may customize the workflow using {@link #preConvert()} and {@link #postConvert()} methods</li>
  * <li>Common workflow ({@link #build(String, String)}):
  * <ul>
@@ -69,19 +71,22 @@ public abstract class AbstractFormatBuilder {
             // 3. create logs dir in the working fdir
             createLogsDir();
 
-            // 4. parse IMF and fill CPL contexts
-            fillCplContext(cplXml, assetmapXml);
+            // 4. build IMF CPL contexts
+            buildCplContext(cplXml, assetmapXml);
 
             // 5. fill dynamic and output contexts
-            fillDynamicContext();
-            fillOutputContext();
+            buildDynamicContext();
+            buildOutputContext();
 
-            // 6. convert
+            // 6. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
+            buildMediaInfoContext();
+
+            // 7. convert
             preConvert();
             convert();
             postConvert();
 
-            // 7. delete tmp files.
+            // 8. delete tmp files.
             deleteTmpFiles();
 
             logger.info("Conversion to '{}' format: OK\n", format.getName());
@@ -129,31 +134,44 @@ public abstract class AbstractFormatBuilder {
         logger.info("Created external tools logging directory: OK\n");
     }
 
-    private void fillCplContext(String cplXml, String assetmapXml) throws XmlParsingException {
+    private void buildCplContext(String cplXml, String assetmapXml) throws XmlParsingException {
+        logger.info("Building CPL contexts...");
+
         logger.info("Parsing ASSETMAP.xml ('{}')...", assetmapXml);
         this.assetMap = new AssetMapParser().parse(assetmapXml);
         logger.info("Parsed ASSETMAP.xml: OK");
 
         logger.info("Parsing CPL ('{}')...", cplXml);
-        new CplParser(contextProvider, assetMap).parse(cplXml);
+        new CplContextBuilder(contextProvider, assetMap).build(cplXml);
         logger.info("Parsed CPL: OK");
+
+        logger.info("Built CPL contexts: OK");
     }
 
-    private void fillDynamicContext() {
-        logger.info("Filling Dynamic context...");
-        doFillDynamicContext();
-        logger.info("Filled Dynamic context: OK");
+    private void buildDynamicContext() {
+        logger.info("Building Dynamic context...");
+        doBuildDynamicContext();
+        logger.info("Built Dynamic context: OK");
     }
 
-    protected abstract void doFillDynamicContext();
+    protected abstract void doBuildDynamicContext();
 
-    private void fillOutputContext() {
-        logger.info("Filling Output context...");
-        doFillOutputContext();
-        logger.info("Filled Output context: OK");
+    private void buildOutputContext() {
+        logger.info("Building Output context...");
+        doBuildOutputContext();
+        logger.info("Built Output context: OK");
     }
 
-    protected abstract void doFillOutputContext();
+    protected abstract void doBuildOutputContext();
+
+    private void buildMediaInfoContext() throws XmlParsingException, IOException, MediaInfoException {
+        logger.info("Building Metadata Info contexts...");
+
+        new MediaInfoContextBuilder(
+                contextProvider, new ConversionEngine().getExecuteStrategyFactory(), conversionProvider.getFormat()).build();
+
+        logger.info("Built Metadata Info contexts: OK");
+    }
 
     protected void preConvert() {
     }

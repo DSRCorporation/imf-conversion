@@ -2,6 +2,8 @@ package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
+import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
@@ -69,8 +71,31 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
         return sequenceData.getUuids();
     }
 
+    public Collection<SequenceType> getSequenceTypes() {
+        return sequences.keySet();
+    }
+
+    public String getParameterValue(SequenceContextParameters seqParameter, ContextInfo contextInfo) {
+        return getParameterValue(
+                new TemplateParameter(TemplateParameterContext.SEQUENCE, seqParameter.getName()),
+                seqParameter,
+                contextInfo);
+    }
+
     @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo) {
+        SequenceContextParameters sequenceParameter = SequenceContextParameters.fromName(templateParameter.getName());
+        if (sequenceParameter == null) {
+            throw new UnknownTemplateParameterNameException(
+                    templateParameter.toString(),
+                    String.format("Unknown Sequence Template Parameter Name '%s'. Supported Sequence Parameter Names: %s'",
+                            templateParameter.getName(), SequenceContextParameters.getSupportedContextParameters()));
+        }
+
+        return getParameterValue(templateParameter, sequenceParameter, contextInfo);
+    }
+
+    private String getParameterValue(TemplateParameter templateParameter, SequenceContextParameters seqParameter, ContextInfo contextInfo) {
         if (contextInfo.getSequenceUuid() == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(),
@@ -97,15 +122,7 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
                             contextInfo.getSequenceUuid(), sequenceData.getCount()));
         }
 
-        SequenceContextParameters sequenceParameterName = SequenceContextParameters.fromName(templateParameter.getName());
-        if (sequenceParameterName == null) {
-            throw new UnknownTemplateParameterNameException(
-                    templateParameter.toString(),
-                    String.format("Unknown Sequence Template Parameter Name '%s'. Supported Sequence Parameter Names: %s'",
-                            templateParameter.getName(), SequenceContextParameters.getSupportedContextParameters()));
-        }
-
-        String parameterValue = parameterData.getParameterValue(sequenceParameterName);
+        String parameterValue = parameterData.getParameterValue(seqParameter);
         if (parameterValue == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(),
@@ -113,5 +130,6 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
         }
         return parameterValue;
     }
+
 
 }

@@ -38,4 +38,16 @@ public enum SequenceTypeCpl {
                 .map(SequenceTypeCpl::getName)
                 .collect(Collectors.joining(" ", "[", "]"));
     }
+
+    public com.netflix.imfutility.xsd.conversion.SequenceType toSequenceType() {
+        switch (this) {
+            case AUDIO:
+                return com.netflix.imfutility.xsd.conversion.SequenceType.AUDIO;
+            case IMAGE:
+                return com.netflix.imfutility.xsd.conversion.SequenceType.VIDEO;
+            case SUBTITLE:
+                return com.netflix.imfutility.xsd.conversion.SequenceType.SUBTITLE;
+        }
+        return null;
+    }
 }

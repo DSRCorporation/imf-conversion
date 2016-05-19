@@ -1,4 +1,4 @@
-package com.netflix.imfutility.cpl;
+package com.netflix.imfutility.asset;
 
 import com.netflix.imfutility.cpl.uuid.UUID;
 import com.netflix.imfutility.xml.XmlParser;

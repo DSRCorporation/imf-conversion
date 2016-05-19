@@ -38,7 +38,8 @@ public class AbstractExecuteStrategy {
         }
 
         ExternalProcess.ExternalProcessInfo processInfo = createProcessInfo(operationInfo, execAndParams);
-        Process process = processStarter.startProcess(processInfo, execAndParams, parameterResolver.getContextProvider().getWorkingDir());
+        Process process = processStarter.startProcess(
+                processInfo, execAndParams, parameterResolver.getContextProvider().getWorkingDir(), operationInfo.getOutput());
         return new ExternalProcess(process, processInfo);
     }
 

@@ -2,6 +2,8 @@ package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
+import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
@@ -66,8 +68,27 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
         return resourceData.getUuids();
     }
 
+    public String getParameterValue(ResourceContextParameters resourceParameter, ContextInfo contextInfo) {
+        return getParameterValue(
+                new TemplateParameter(TemplateParameterContext.RESOURCE, resourceParameter.getName()),
+                resourceParameter,
+                contextInfo);
+    }
+
     @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo) {
+        ResourceContextParameters resourceParameter = ResourceContextParameters.fromName(templateParameter.getName());
+        if (resourceParameter == null) {
+            throw new UnknownTemplateParameterNameException(
+                    templateParameter.toString(),
+                    String.format("Unknown Resource Template Parameter Name '%s'. Supported Resource Parameter Names: %s'",
+                            templateParameter.getName(), ResourceContextParameters.getSupportedContextParameters()));
+        }
+
+        return getParameterValue(templateParameter, resourceParameter, contextInfo);
+    }
+
+    private String getParameterValue(TemplateParameter templateParameter, ResourceContextParameters resourceParameter, ContextInfo contextInfo) {
         if (contextInfo.getSegmentUuid() == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(), "Segment UUID is not specified. Segment UUID is required for a resource template parameter.");
@@ -102,15 +123,7 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
                             contextInfo.getSequenceUuid(), resourceData.getCount()));
         }
 
-        ResourceContextParameters resourceParameterName = ResourceContextParameters.fromName(templateParameter.getName());
-        if (resourceParameterName == null) {
-            throw new UnknownTemplateParameterNameException(
-                    templateParameter.toString(),
-                    String.format("Unknown Resource Template Parameter Name '%s'. Supported Resource Parameter Names: %s'",
-                            templateParameter.getName(), ResourceContextParameters.getSupportedContextParameters()));
-        }
-
-        String parameterValue = parameterData.getParameterValue(resourceParameterName);
+        String parameterValue = parameterData.getParameterValue(resourceParameter);
         if (parameterValue == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(),
@@ -120,5 +133,6 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
         }
         return parameterValue;
     }
+
 
 }

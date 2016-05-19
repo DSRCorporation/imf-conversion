@@ -20,14 +20,14 @@ import java.util.List;
  */
 public class ConversionProvider {
 
-    private static final String XSD_CONVERSION_XSD = "xsd/conversion.xsd";
+    private static final String CONVERSION_XSD = "xsd/conversion.xsd";
     private static final String CONVERSION_PACKAGE = "com.netflix.imfutility.xsd.conversion";
 
     private FormatType formatType;
 
     public ConversionProvider(String conversionXml, Format format) throws XmlParsingException {
         ConversionType conversion = XmlParser.parse(
-                new File(conversionXml), XSD_CONVERSION_XSD, CONVERSION_PACKAGE, ConversionType.class);
+                new File(conversionXml), CONVERSION_XSD, CONVERSION_PACKAGE, ConversionType.class);
         this.formatType = conversion.getFormats().getMap().get(format.getName());
         if (this.formatType == null) {
             throw new RuntimeException(String.format("'%s' doesn't contain configuration for '%s' format.",
