@@ -1,5 +1,6 @@
 package com.netflix.imfutility.mediainfo;
 
+import com.netflix.imfutility.Constants;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
@@ -77,7 +78,7 @@ public class MediaInfoContextBuilder {
 
         // 2. fill dynamic context's mediaInfoInput and Output
         contextProvider.getOutputContext().addParameter(OutputContextParameters.MEDIA_INFO_INPUT, essence);
-        File outputFile = new File(contextProvider.getWorkingDir(), "mediaInfo.xml");
+        File outputFile = new File(contextProvider.getWorkingDir(), Constants.MEDIA_INFO_FILE);
 
         // 3. execute media info command. the output will be in %{tmp.mediaInfoOutput}
         executeMediaInfoCommand(contextInfo, outputFile);
