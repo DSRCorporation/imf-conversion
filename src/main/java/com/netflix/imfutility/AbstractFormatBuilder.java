@@ -87,7 +87,7 @@ public abstract class AbstractFormatBuilder {
             postConvert();
 
             // 8. delete tmp files.
-            deleteTmpFiles();
+          //  deleteTmpFiles();
 
             logger.info("Conversion to '{}' format: OK\n", format.getName());
         } catch (Exception e) {
