@@ -14,9 +14,13 @@ public enum ResourceContextParameters {
 
     ESSENCE("essence"),
 
-    START_TIME("startTime"),
+    START_TIME_TIMECODE("startTimeTC"),
 
-    DURATION("duration");
+    START_TIME_EDIT_UNIT("startTimeEU"),
+
+    DURATION_TIMECODE("durationTC"),
+
+    DURATION_EDIT_UNIT("durationEU");
 
     private final String name;
 

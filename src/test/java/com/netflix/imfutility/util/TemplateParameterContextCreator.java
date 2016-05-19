@@ -59,8 +59,8 @@ public final class TemplateParameterContextCreator {
 
                         // init essence, startTime and duration
                         fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.ESSENCE);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.DURATION);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.START_TIME);
+                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.DURATION_TIMECODE);
+                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.START_TIME_TIMECODE);
                     }
                 }
             }
