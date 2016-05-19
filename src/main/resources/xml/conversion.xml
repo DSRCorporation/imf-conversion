@@ -69,8 +69,8 @@
                     <execEachSequence type="audio" name="extractAudioSegments">
                         <execEachSegment name="extract_audio">
                             <execOnce name="extract_audio">
-                                mxf2raw -p "%{seq.num}-%{segm.num}" --start %{resource.startTime}
-                                --dur %{resource.duration} "%{resource.essence}"
+                                %{tool.mxf2raw} -p "%{seq.num}-%{segm.num}" --start %{resource.startTimeEU}
+                                --dur %{resource.durationEU} "%{resource.essence}"
                             </execOnce>
                             <!-- to delete intermediate files at the end -->
                             <dynamicParameter name="tmp-%{seq.num}-%{segm.num}">%{seq.num}-%{segm.num}_a0.raw</dynamicParameter>
@@ -86,14 +86,14 @@
                             <cycle>
                                 <execEachSegment name="decode_audio">
                                     <execOnce name="decode_audio">
-                                        %{tool.ffmpeg} -f s24le -ar %{seq.sample_rate} -ac %{seq.channels}
+                                        %{tool.ffmpeg} -f s24le -ar %{seq.sample_rate} -ac %{seq.channels_num}
                                         -i "%{seq.num}-%{segm.num}_a0.raw" -vn -af aresample=48000
                                         -acodec pcm_s24le -f s24le -
                                     </execOnce>
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_audio">
-                                %{tool.ffmpeg} -f s24le -i - -vn -c:a copy -f s24le %{seq.num}-audio-encoded.wav
+                                %{tool.ffmpeg} -f s24le -ar %{seq.sample_rate} -ac %{seq.channels_num} -i - -vn -c:a copy -f wav %{seq.num}-audio-encoded.wav
                             </execOnce>
                         </pipe>
                         <dynamicParameter name="concatAudioInput" concat="true"> -i "%{seq.num}-audio-encoded.wav"</dynamicParameter>
@@ -106,8 +106,9 @@
                         4. Remap audio in accordance with AudioMap.xml
                     -->
                     <execOnce name="audioMaping">
-                        ffmpeg %{dynamic.concatAudioInput} -filter_complex "%{dynamic.concatAudioMap}amerge,pan=%{dynamic.panParameter}[aout]"
-                        -map "[aout]" -acodec pcm_s24le -ar 48000 "%{tmp.audioEncoded}"
+                        <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
+                        %{tool.ffmpeg} %{dynamic.concatAudioInput} -filter_complex "%{dynamic.concatAudioMap}[0:a]amerge,pan=%{dynamic.panParameter}[aout]"
+                        -map "[aout]" -acodec pcm_s24le -ar 48000 -f wav "%{tmp.audioEncoded}"
                     </execOnce>
 
                     <!--
@@ -116,8 +117,8 @@
                     <execOnce name="muxing_mxf">
                         %{tool.bmx} -t as11op1a -o "%{output.mxf}"
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
-                        --dm-file dpp "%{dynamic.UKDppFramework}"
-                        --seg "%{dynamic.AS11SegmentationFramework}"
+                        --dm-file dpp "%{dynamic.ukDppFramework}"
+                        --seg "%{dynamic.as11SegmentationFramework}"
                         --avci100_1080i "%{tmp.videoEncoded}"
                         -q 24 -s 48000 --audio-chan %{dynamic.ebuAudioTracks}
                         --pcm "%{tmp.audioEncoded}"
