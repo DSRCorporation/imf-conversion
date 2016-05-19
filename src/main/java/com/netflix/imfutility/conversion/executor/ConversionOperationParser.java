@@ -21,22 +21,27 @@ public class ConversionOperationParser {
     }
 
     public List<String> parseOperation(String conversionOperation, ContextInfo contextInfo) {
-        // split parameters
-        List<String> params = splitParameters(conversionOperation);
+        // 1. resolve parameters BEFORE splitting since resolved values may contain multiple sub-paramaters!
+        conversionOperation = parameterResolver.resolveTemplateParameter(conversionOperation, contextInfo);
 
-        List<String> execAndParams = new ArrayList<>();
-        for (String param : params) {
-            // resolve each template parameter the param contains
-            String resolvedParam = parameterResolver.resolveTemplateParameter(param, contextInfo);
-
-            // add quotes if needed
-            resolvedParam = addQuotes(resolvedParam);
-
-            execAndParams.add(resolvedParam);
-        }
-
+        // 2. split params
+        // do not add quotes! it's up to conversion.xml to insert correct quotes.
+        List<String> execAndParams = splitParameters(conversionOperation);
         return execAndParams;
     }
+
+    public List<String> parseWithQuotes(String conversionOperation, ContextInfo contextInfo) {
+        // 1. resolve parameters BEFORE splitting since resolved values may contain multiple sub-paramaters!
+        conversionOperation = parameterResolver.resolveTemplateParameter(conversionOperation, contextInfo);
+
+        // 2. split params and add quotes if needed
+        List<String> result = new ArrayList<>();
+        for (String param : splitParameters(conversionOperation)) {
+            result.add(addQuotes(param));
+        }
+        return result;
+    }
+
 
     private List<String> splitParameters(String conversionOperation) {
         String trimmedConversionOperation = conversionOperation.trim();
