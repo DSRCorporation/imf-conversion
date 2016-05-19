@@ -3,6 +3,7 @@ package com.netflix.imfutility.util.conversion.executor;
 import com.netflix.imfutility.conversion.executor.ExternalProcess;
 import com.netflix.imfutility.conversion.executor.ProcessStarter;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class FakeProcessStarter extends ProcessStarter {
     }
 
     @Override
-    public Process startProcess(ExternalProcess.ExternalProcessInfo processInfo, List<String> execAndParams, String workingDir) throws IOException {
+    public Process startProcess(ExternalProcess.ExternalProcessInfo processInfo, List<String> execAndParams, String workingDir, File output) throws IOException {
         return new FakeProcess(executorLogger, processInfo);
     }
 

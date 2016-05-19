@@ -15,14 +15,14 @@ import java.io.File;
  */
 public class ConfigProvider {
 
-    private static final String XSD_CONFIG_XSD = "xsd/config.xsd";
+    private static final String CONFIG_XSD = "xsd/config.xsd";
     private static final String CONFIG_PACKAGE = "com.netflix.imfutility.xsd.config";
 
     private ConfigType config;
 
     public ConfigProvider(String configXml) throws XmlParsingException {
         this.config = XmlParser.parse(
-                new File(configXml), XSD_CONFIG_XSD, CONFIG_PACKAGE, ConfigType.class);
+                new File(configXml), CONFIG_XSD, CONFIG_PACKAGE, ConfigType.class);
     }
 
     public ConfigType getConfig() {

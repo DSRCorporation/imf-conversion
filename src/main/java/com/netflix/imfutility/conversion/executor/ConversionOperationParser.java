@@ -90,7 +90,7 @@ public class ConversionOperationParser {
         }
 
         if (state == ParseState.IN_QUOTE || state == ParseState.IN_DOUBLE_QUOTE) {
-            throw new IllegalArgumentException(String.format("Can not parse Conversion Operation '%s'. Unbalanced quotes.", conversionOperation));
+            throw new IllegalArgumentException(String.format("Can not build Conversion Operation '%s'. Unbalanced quotes.", conversionOperation));
         }
 
         return result;

@@ -2,7 +2,9 @@ package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
+import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.xsd.conversion.DynamicParameterConcatType;
 import com.netflix.imfutility.xsd.conversion.DynamicParameterType;
@@ -32,8 +34,7 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
     public DynamicTemplateParameterContext addParameter(DynamicParameterType dynamicParameter, ContextInfo contextInfo) {
         String paramName = dynamicParameter.getName();
         String paramValue = dynamicParameter.getValue();
-        addParameter(paramName, paramValue, contextInfo);
-        return this;
+        return addParameter(paramName, paramValue, contextInfo);
     }
 
     public DynamicTemplateParameterContext addParameter(DynamicParameterConcatType dynamicParameter, ContextInfo contextInfo) {
@@ -54,6 +55,14 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         return this;
     }
 
+    public DynamicTemplateParameterContext addParameter(DynamicContextParameters paramName, String paramValue, ContextInfo contextInfo) {
+        return addParameter(paramName.getName(), paramValue, contextInfo);
+    }
+
+    public DynamicTemplateParameterContext appendParameter(DynamicContextParameters paramName, String paramValue, ContextInfo contextInfo) {
+        return appendParameter(paramName.getName(), paramValue, contextInfo);
+    }
+
     public DynamicTemplateParameterContext appendParameter(String paramName, String paramValue, ContextInfo contextInfo) {
         paramName = parameterResolver.resolveTemplateParameter(paramName, contextInfo);
         paramValue = parameterResolver.resolveTemplateParameter(paramValue, contextInfo);
@@ -66,8 +75,25 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         return this;
     }
 
+    public String getParameterValue(String templateParameterName) {
+        return getParameterValue(new TemplateParameter(TemplateParameterContext.DYNAMIC, templateParameterName));
+    }
+
+    public String getParameterValue(DynamicContextParameters dynamicParameter) {
+        return getParameterValue(new TemplateParameter(TemplateParameterContext.DYNAMIC, dynamicParameter.getName()));
+    }
+
+
     @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo) {
+        return getParameterValue(templateParameter);
+    }
+
+    public Collection<String> getAllParameters() {
+        return params.values();
+    }
+
+    private String getParameterValue(TemplateParameter templateParameter) {
         String paramValue = params.get(templateParameter.getName());
         if (paramValue == null) {
             throw new TemplateParameterNotFoundException(
@@ -75,14 +101,6 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
                     String.format("'%s' parameter is not defined.", templateParameter.getName()));
         }
         return paramValue;
-    }
-
-    public Collection<String> getAllParameters() {
-        return params.values();
-    }
-
-    public String getParameterValue(String parameterName) {
-        return params.get(parameterName);
     }
 
 }

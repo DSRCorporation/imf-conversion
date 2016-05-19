@@ -22,6 +22,11 @@ public class TemplateParameter {
         return parameterString.matches(TEMPLATE_PARAM_WITH_SUBPARAM);
     }
 
+    public TemplateParameter(TemplateParameterContext context, String name) {
+        this.context = context;
+        this.name = name;
+    }
+
     public TemplateParameter(String parameterString) {
         Pattern p = Pattern.compile(TEMPLATE_PARAM);
         Matcher m = p.matcher(parameterString);

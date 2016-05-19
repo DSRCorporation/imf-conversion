@@ -1,4 +1,4 @@
-package com.netflix.imfutility.conversion.templateParameter.context;
+package com.netflix.imfutility.conversion.templateParameter.context.parameters;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -8,11 +8,23 @@ import java.util.stream.Collectors;
  */
 public enum SequenceContextParameters {
 
+    // common
     UUID("uuid"),
-
     NUM("num"),
+    TYPE("type"),
 
-    TYPE("type");
+    // audio
+    CHANNELS_NUM("channels_num"),
+    BITS_PER_SAMPLE("bits_per_sample"),
+    SAMPLE_RATE("sample_rate"),
+
+    // video
+    WIDTH("width"),
+    HEIGHT("height"),
+    BIT_DEPTH("bit_depth"),
+    PIXEL_FORMAT("pixel_format"),
+    FRAME_RATE("frame_rate");
+
 
     private final String name;
 

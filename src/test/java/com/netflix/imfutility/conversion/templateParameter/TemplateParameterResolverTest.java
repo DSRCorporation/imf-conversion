@@ -5,7 +5,7 @@ import com.netflix.imfutility.config.ConfigProvider;
 import com.netflix.imfutility.conversion.ConversionProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.OutputTemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.ResourceContextParameters;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.exception.InvalidTemplateParameterException;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;

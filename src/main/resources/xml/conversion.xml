@@ -14,16 +14,19 @@
                 <param id="mediaInfoOutput">mediaInfo.xml</param>
             </tmpContext>
 
-            <mediaInfoCommand>%{tool.ffprobe} -show_streams -print_format xml %{dynamic.mediaInfoInput} %{tmp.mediaInfoOutput}</mediaInfoCommand>
+            <mediaInfoCommandVideo>%{tool.ffprobe} -select_streams v:0 -show_streams -noprivate -print_format xml=x=1 %{output.mediaInfoInput}</mediaInfoCommandVideo>
+            <mediaInfoCommandAudio>%{tool.ffprobe} -select_streams a:0 -show_streams -noprivate -print_format xml=x=1 %{output.mediaInfoInput}</mediaInfoCommandAudio>
+            <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams s:0 -show_streams -noprivate -print_format xml=x=1 %{output.mediaInfoInput}</mediaInfoCommandSubtitle>
 
             <!--
                 Destination parameters for conversion
              -->
             <conversionParameters>
                 <video>
-                    <size>1920:1080</size>
-                    <fps>25</fps>
-                    <pixelFormat>422</pixelFormat>
+                    <width>1920</width>
+                    <height>1080</height>
+                    <frameRate>25</frameRate>
+                    <pixelFormat>yuv422p10le</pixelFormat>
                     <bitDepth>10</bitDepth>
                 </video>
                 <audio>

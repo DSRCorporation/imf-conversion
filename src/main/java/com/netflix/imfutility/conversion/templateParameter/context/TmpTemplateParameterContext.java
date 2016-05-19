@@ -2,6 +2,7 @@ package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
+import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.xsd.conversion.FormatType;
 import com.netflix.imfutility.xsd.conversion.ParamType;
@@ -24,8 +25,20 @@ public class TmpTemplateParameterContext implements ITemplateParameterContext {
         this.format = format;
     }
 
+    public String getParameterValue(String templateParameterName) {
+        return getParameterValue(new TemplateParameter(TemplateParameterContext.TMP, templateParameterName));
+    }
+
     @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo) {
+        return getParameterValue(templateParameter);
+    }
+
+    public Collection<ParamType> getAllParameters() {
+        return format.getTmpContext().getMap().values();
+    }
+
+    private String getParameterValue(TemplateParameter templateParameter) {
         if (format.getTmpContext() == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(), "Conversion.xml doesn't contain any tmp context parameters.");
@@ -49,10 +62,6 @@ public class TmpTemplateParameterContext implements ITemplateParameterContext {
         }
 
         return paramValue;
-    }
-
-    public Collection<ParamType> getAllParameters() {
-        return format.getTmpContext().getMap().values();
     }
 
 }

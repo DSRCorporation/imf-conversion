@@ -44,7 +44,7 @@ public class ConversionEngine {
         }
     }
 
-    protected ExecuteStrategyFactory getExecuteStrategyFactory() {
+    public ExecuteStrategyFactory getExecuteStrategyFactory() {
         return new ExecuteStrategyFactory();
     }
 

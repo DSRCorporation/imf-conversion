@@ -1,6 +1,7 @@
 package com.netflix.imfutility.util;
 
 import com.netflix.imfutility.conversion.templateParameter.context.*;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;

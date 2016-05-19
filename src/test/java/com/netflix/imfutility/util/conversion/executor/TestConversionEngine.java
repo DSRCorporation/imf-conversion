@@ -10,7 +10,7 @@ public class TestConversionEngine extends ConversionEngine {
     private final TestExecutorLogger executorLogger = new TestExecutorLogger();
 
     @Override
-    protected TestExecuteStrategyFactory getExecuteStrategyFactory() {
+    public TestExecuteStrategyFactory getExecuteStrategyFactory() {
         return new TestExecuteStrategyFactory(executorLogger);
     }
 

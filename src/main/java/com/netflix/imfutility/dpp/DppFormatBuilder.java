@@ -20,14 +20,14 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     }
 
     @Override
-    protected void doFillOutputContext() {
+    protected void doBuildOutputContext() {
         // FIXME
         OutputTemplateParameterContext outputContext = contextProvider.getOutputContext();
         outputContext.addParameter("mxf", "output.mxf");
     }
 
     @Override
-    protected void doFillDynamicContext() {
+    protected void doBuildDynamicContext() {
         // FIXME
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         dynamicContext.addParameter("audioChannels", "2", ContextInfo.EMPTY);

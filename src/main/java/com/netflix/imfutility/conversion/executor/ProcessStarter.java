@@ -16,7 +16,7 @@ public class ProcessStarter {
 
     private final Logger logger = LoggerFactory.getLogger(ProcessStarter.class);
 
-    public Process startProcess(ExternalProcess.ExternalProcessInfo processInfo, List<String> execAndParams, String workingDir) throws IOException {
+    public Process startProcess(ExternalProcess.ExternalProcessInfo processInfo, List<String> execAndParams, String workingDir, File output) throws IOException {
         logger.info("Starting {}", processInfo.toString());
         logger.info("\t{}", processInfo.getProcessString());
 
@@ -27,6 +27,9 @@ public class ProcessStarter {
         if (logFile != null) {
             logger.info("\tRedirecting stderr to {}", logFile.getAbsolutePath());
             pb.redirectError(ProcessBuilder.Redirect.to(logFile));
+        }
+        if (output != null) {
+            pb.redirectOutput(ProcessBuilder.Redirect.to(output));
         }
 
         return pb.start();

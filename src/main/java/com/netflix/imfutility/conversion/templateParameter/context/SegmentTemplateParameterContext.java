@@ -2,6 +2,8 @@ package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
+import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.SegmentContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
@@ -58,8 +60,27 @@ public class SegmentTemplateParameterContext implements ITemplateParameterContex
         return segments.keySet();
     }
 
+    public String getParameterValue(SegmentContextParameters segmParameter, ContextInfo contextInfo) {
+        return getParameterValue(
+                new TemplateParameter(TemplateParameterContext.SEGMENT, segmParameter.getName()),
+                segmParameter,
+                contextInfo);
+    }
+
     @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo) {
+        SegmentContextParameters segmentParameter = SegmentContextParameters.fromName(templateParameter.getName());
+        if (segmentParameter == null) {
+            throw new UnknownTemplateParameterNameException(
+                    templateParameter.toString(),
+                    String.format("Unknown Segment Template Parameter Name '%s'. Supported Segment Parameter Names: %s'",
+                            templateParameter.getName(), SegmentContextParameters.getSupportedContextParameters()));
+        }
+
+        return getParameterValue(templateParameter, segmentParameter, contextInfo);
+    }
+
+    private String getParameterValue(TemplateParameter templateParameter, SegmentContextParameters segmParameter, ContextInfo contextInfo) {
         if (contextInfo.getSegmentUuid() == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(), "Segment UUID is not specified. Segment UUID is required for a segment template parameter.");
@@ -73,15 +94,7 @@ public class SegmentTemplateParameterContext implements ITemplateParameterContex
                             contextInfo.getSegmentUuid(), segments.size()));
         }
 
-        SegmentContextParameters segmentParameterName = SegmentContextParameters.fromName(templateParameter.getName());
-        if (segmentParameterName == null) {
-            throw new UnknownTemplateParameterNameException(
-                    templateParameter.toString(),
-                    String.format("Unknown Segment Template Parameter Name '%s'. Supported Segment Parameter Names: %s'",
-                            templateParameter.getName(), SegmentContextParameters.getSupportedContextParameters()));
-        }
-
-        String parameterValue = segmentData.getParameterValue(segmentParameterName);
+        String parameterValue = segmentData.getParameterValue(segmParameter);
         if (parameterValue == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(),

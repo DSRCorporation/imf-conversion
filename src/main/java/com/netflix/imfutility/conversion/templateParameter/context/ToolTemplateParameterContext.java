@@ -2,10 +2,13 @@ package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
+import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.xsd.config.ConfigType;
 import com.netflix.imfutility.xsd.config.ToolType;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Collection;
 
 /**
  * Tool Template Parameter Context.
@@ -22,8 +25,20 @@ public class ToolTemplateParameterContext implements ITemplateParameterContext {
         this.config = config;
     }
 
+    public String getParameterValue(String templateParameterName) {
+        return getParameterValue(new TemplateParameter(TemplateParameterContext.TOOL, templateParameterName));
+    }
+
     @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo) {
+        return getParameterValue(templateParameter);
+    }
+
+    public Collection<ToolType> getAllParameters() {
+        return config.getExternalTools().getMap().values();
+    }
+
+    private String getParameterValue(TemplateParameter templateParameter) {
         if (config.getExternalTools() == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(), "Config doesn't contain any external tools.");
@@ -48,5 +63,6 @@ public class ToolTemplateParameterContext implements ITemplateParameterContext {
 
         return paramValue;
     }
+
 
 }
