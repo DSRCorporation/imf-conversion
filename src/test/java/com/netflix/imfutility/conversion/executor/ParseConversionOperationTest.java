@@ -217,9 +217,9 @@ public class ParseConversionOperationTest {
     @Test
     public void testAddQuotes() {
         String conversionOperation =
-                "exec %{tool.toolWhitespace} %{tmp.tmpParamWhitespace} %{dynamic.dynamicWhitespace}";
+                "exec \"%{tool.toolWhitespace}\" \"%{tmp.tmpParamWhitespace}\" \"%{dynamic.dynamicWhitespace}\"";
 
-        List<String> actual = parser.parseOperation(conversionOperation, ContextInfo.EMPTY);
+        List<String> actual = parser.parseWithQuotes(conversionOperation, ContextInfo.EMPTY);
         List<String> expected = Arrays.asList(
                 "exec",
                 "\"root\\tool whitespace\"",
@@ -232,9 +232,9 @@ public class ParseConversionOperationTest {
     @Test
     public void testAddQuotesOnlyWhenNeeded() {
         String conversionOperation =
-                "exec \"%{tool.toolSimple}\" \"%{tool.toolWhitespace}\" '%{tmp.tmpParamWhitespace}' %{dynamic.dynamicWhitespace}";
+                "exec \"%{tool.toolSimple}\" \"%{tool.toolWhitespace}\" '%{tmp.tmpParamWhitespace}' \"%{dynamic.dynamicWhitespace}\"";
 
-        List<String> actual = parser.parseOperation(conversionOperation, ContextInfo.EMPTY);
+        List<String> actual = parser.parseWithQuotes(conversionOperation, ContextInfo.EMPTY);
         List<String> expected = Arrays.asList(
                 "exec",
                 "\"root\\toolSimple\"",
@@ -264,12 +264,12 @@ public class ParseConversionOperationTest {
     public void testAddQuotesWhenNeededForComplexParameters() {
         String conversionOperation =
                 "exec " +
-                        "arg1=%{tool.toolWhitespace} arg2=\"%{tool.toolWhitespace}\" arg3='%{tool.toolWhitespace}' " +
-                        "arg4=%{dynamic.dynamicSimple}/%{tmp.tmpParamWhitespace}" +
-                        " %{dynamic.dynamicSimple}=%{tmp.tmpParamWhitespace} %{dynamic.dynamicSimple}=\"%{tmp.tmpParamWhitespace}\" " +
+                        "arg1=\"%{tool.toolWhitespace}\" arg2=\"%{tool.toolWhitespace}\" arg3='%{tool.toolWhitespace}' " +
+                        "arg4=\"%{dynamic.dynamicSimple}/%{tmp.tmpParamWhitespace}\"" +
+                        " %{dynamic.dynamicSimple}=\"%{tmp.tmpParamWhitespace}\" %{dynamic.dynamicSimple}=\"%{tmp.tmpParamWhitespace}\" " +
                         "%{dynamic.dynamicSimple}='%{tmp.tmpParamWhitespace}'";
 
-        List<String> actual = parser.parseOperation(conversionOperation, ContextInfo.EMPTY);
+        List<String> actual = parser.parseWithQuotes(conversionOperation, ContextInfo.EMPTY);
         List<String> expected = Arrays.asList(
                 "exec",
                 "arg1=\"root\\tool whitespace\"",
