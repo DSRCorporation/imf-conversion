@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.assertTrue;
-
 /**
  * DPP format builder (see {@link AbstractFormatBuilder}). It's used for conversion to DPP format.
  */
@@ -58,14 +56,8 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         File temp = null;
         try {
             temp = File.createTempFile(UUID.randomUUID().toString(), ".xml");
-
-            assertTrue("Temporary file cannot be deleted.", temp.delete());
-
             //try to generate Dpp metadata.xml
             MetadataXml.GenerateEmptyXml(temp.getAbsolutePath());
-
-            //check it is not empty
-            assertTrue("Generated metadata.xml is zero size.", temp.length() > 0);
 
             //get generated temporary files
             Map<MetadataXml.DMFramework, File> dppParameters = MetadataXml.getBmxDppParameters(temp);
@@ -82,6 +74,5 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         }
 
     }
-
 
 }

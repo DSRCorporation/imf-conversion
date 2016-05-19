@@ -15,6 +15,7 @@ import com.netflix.imfutility.xsd.conversion.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * An executor for {@link ExecEachSequenceSegmentType} conversion operation.
@@ -98,15 +99,11 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
         executeStrategyFactory.createExecutePipeStrategy(contextProvider).execute(pipeInfo);
     }
 
-    private void execEachSegmentInPipe(ExecEachSegmentType execSegment, PipeOperationInfo pipeInfo) throws IOException {
+    private void execEachSegmentInPipe(ExecEachSegmentType execSegment, PipeOperationInfo pipeInfo) {
         if (execSegment.getExecOnce() != null) {
-            for (OperationInfo headOperation : getExecSegmentOnceOperations(execSegment)) {
-                pipeInfo.addCycleOperation(headOperation);
-            }
+            getExecSegmentOnceOperations(execSegment).forEach(pipeInfo::addCycleOperation);
         } else if (execSegment.getPipe() != null) {
-            for (List<OperationInfo> headOperations : getExecSegmentPipeOperations(execSegment)) {
-                pipeInfo.addCycleOperation(headOperations);
-            }
+            getExecSegmentPipeOperations(execSegment).forEach(pipeInfo::addCycleOperation);
         }
     }
 
@@ -133,10 +130,9 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
                 .setSequenceUuid(currentSeqUuid)
                 .setSequenceType(seqType)
                 .build();
-        for (ExecOnceType execOnce : subPipe.getExecOnce()) {
-            result.add(new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(),
-                    contextInfo));
-        }
+        result.addAll(subPipe.getExecOnce().stream()
+                .map(execOnce -> new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(), contextInfo))
+                .collect(Collectors.toList()));
         return result;
     }
 

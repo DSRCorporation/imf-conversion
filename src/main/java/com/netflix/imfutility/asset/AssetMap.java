@@ -1,7 +1,6 @@
 package com.netflix.imfutility.asset;
 
 import com.netflix.imfutility.cpl.uuid.UUID;
-import com.netflix.imfutility.xsd.imf.assetmap.AssetType;
 
 import java.util.HashMap;
 import java.util.Map;

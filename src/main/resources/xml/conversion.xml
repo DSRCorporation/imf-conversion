@@ -18,25 +18,26 @@
             <mediaInfoCommandAudio>%{tool.ffprobe} -select_streams a:0 -show_streams -noprivate -print_format xml=x=1 %{output.mediaInfoInput}</mediaInfoCommandAudio>
             <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams s:0 -show_streams -noprivate -print_format xml=x=1 %{output.mediaInfoInput}</mediaInfoCommandSubtitle>
 
-            <!--
-                Destination parameters for conversion
-             -->
-            <conversionParameters>
-                <video>
-                    <width>1920</width>
-                    <height>1080</height>
-                    <frameRate>25</frameRate>
-                    <pixelFormat>yuv422p10le</pixelFormat>
-                    <bitDepth>10</bitDepth>
-                </video>
-                <audio>
-                    <sampleRate>48000</sampleRate>
-                    <bitsSample>24</bitsSample>
-                </audio>
-            </conversionParameters>
 
             <formatConfigurations>
                 <formatConfiguration name="main">
+
+                    <!--
+                        Destination parameters for conversion
+                     -->
+                    <conversionParameters>
+                        <video>
+                            <width>1920</width>
+                            <height>1080</height>
+                            <frameRate>25</frameRate>
+                            <pixelFormat>yuv422p10le</pixelFormat>
+                            <bitDepth>10</bitDepth>
+                        </video>
+                        <audio>
+                            <sampleRate>48000</sampleRate>
+                            <bitsSample>24</bitsSample>
+                        </audio>
+                    </conversionParameters>
 
                     <!--
                         1. decode each video segment and redirect output to encode's input
@@ -47,8 +48,8 @@
                             <cycle>
                                 <execEachSegment name="decode_video">
                                     <execOnce name="decode_video">
-                                        %{tool.ffmpeg} -y -i "%{resource.essence}" -map 0:0 -ss %{resource.startTime}
-                                        -t %{resource.duration} -an
+                                        %{tool.ffmpeg} -y -i "%{resource.essence}" -map 0:0 -ss %{resource.startTimeTC}
+                                        -t %{resource.durationTC} -an
                                         -vf "scale=iw*sar*min(1920/(iw*sar)\,1080/ih):ih*min(1920/(iw*sar)\,1080/ih),pad=1920:1080:(ow-iw)/2:(oh-ih)/2,fps=25"
                                         -pix_fmt yuv422p10le -f rawvideo -
                                     </execOnce>

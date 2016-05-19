@@ -23,7 +23,7 @@
     <conversionParameters>
         <video>
             <size>yes</size>
-            <fps>no</fps>
+            <frameRate>yes</frameRate>
             <pixelFormat>yes</pixelFormat>
             <bitDepth>yes</bitDepth>
         </video>

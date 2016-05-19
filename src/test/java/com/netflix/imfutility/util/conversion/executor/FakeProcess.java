@@ -17,6 +17,8 @@ public class FakeProcess extends Process {
     private final TestExecutorLogger executorLogger;
     private final ExternalProcess.ExternalProcessInfo processInfo;
 
+    private volatile boolean closed = false;
+
     public FakeProcess(TestExecutorLogger executorLogger, ExternalProcess.ExternalProcessInfo processInfo) {
         this.executorLogger = executorLogger;
         this.processInfo = processInfo;
@@ -31,7 +33,10 @@ public class FakeProcess extends Process {
             @Override
             public void close() throws IOException {
                 super.close();
-                executorLogger.finishProcess(processInfo);
+                if (!closed) {
+                    executorLogger.finishProcess(processInfo);
+                    closed = true;
+                }
             }
 
         };
@@ -49,7 +54,10 @@ public class FakeProcess extends Process {
 
     @Override
     public int waitFor() throws InterruptedException {
-        executorLogger.finishProcess(processInfo);
+        if (!closed) {
+            executorLogger.finishProcess(processInfo);
+            closed = true;
+        }
         return 0;
     }
 
