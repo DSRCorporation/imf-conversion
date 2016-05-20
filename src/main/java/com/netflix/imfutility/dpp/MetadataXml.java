@@ -65,12 +65,12 @@ public class MetadataXml {
 
             //Editorial section
             EditorialType editorial = new EditorialType();
-            editorial.setSeriesTitle("");
-            editorial.setEpisodeTitleNumber("");
-            editorial.setProgrammeTitle("");
-            editorial.setProductionNumber("");
-            editorial.setSynopsis("");
-            editorial.setOriginator("");
+            editorial.setSeriesTitle("Required Title");
+            editorial.setEpisodeTitleNumber("Required Number");
+            editorial.setProgrammeTitle("Required Programme Title");
+            editorial.setProductionNumber("Required Production Number");
+            editorial.setSynopsis("Required Synopsis");
+            editorial.setOriginator("Required Originator");
             editorial.setCopyrightYear(Calendar.getInstance().get(Calendar.YEAR));
             editorial.setOtherIdentifier("");
             editorial.setOtherIdentifierType("");
@@ -257,7 +257,7 @@ public class MetadataXml {
             if (!temp.delete()) {
                 throw new RuntimeException(String.format("Could not delete temporary file: %s", temp.getAbsolutePath()));
             }
-            temp.deleteOnExit();
+//            temp.deleteOnExit();
 
             // Result
             writer = new FileWriter(temp);
