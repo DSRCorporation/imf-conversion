@@ -12,8 +12,16 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="NotEmptyString127">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="127"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="String250">
         <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
             <xs:maxLength value="250"/>
         </xs:restriction>
     </xs:simpleType>

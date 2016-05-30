@@ -11,7 +11,7 @@
             <Id>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0</Id>
             <ChunkList>
                 <Chunk>
-                    <Path>G:\Netflix\content\TEST\Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV\Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV\Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio.mxf</Path>
+                    <Path>D:\DSR\G\_DCA_media\Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV\Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV\chimera50_ftr_c_en_xg-nr_20_4k_20150622_ov_audio.mxf</Path>
                     <VolumeIndex>1</VolumeIndex>
                 </Chunk>
             </ChunkList>
@@ -20,7 +20,7 @@
             <Id>urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e946</Id>
             <ChunkList>
                 <Chunk>
-                    <Path>G:\Netflix\test\encode\Aladdin_trailer_ATT.ts</Path>
+                    <Path>D:\DSR\G\_DCA_media\Aladdin_trailer_ATT.ts</Path>
                     <VolumeIndex>1</VolumeIndex>
                 </Chunk>
             </ChunkList>

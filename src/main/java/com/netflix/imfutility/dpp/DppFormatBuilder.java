@@ -56,10 +56,8 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         File temp = null;
         try {
             temp = File.createTempFile(UUID.randomUUID().toString(), ".xml");
-
             //try to generate Dpp metadata.xml
             MetadataXml.GenerateEmptyXml(temp.getAbsolutePath());
-
 
             //get generated temporary files
             Map<MetadataXml.DMFramework, File> dppParameters = MetadataXml.getBmxDppParameters(temp);
@@ -76,4 +74,5 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         }
 
     }
+
 }

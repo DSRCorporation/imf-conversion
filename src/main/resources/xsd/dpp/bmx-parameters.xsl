@@ -4,6 +4,9 @@
 
     <xsl:param name="framework" />
 
+    <!--
+        A list with dpp framework nodes.
+    -->
     <xsl:variable name="dppNodes">
         <item>ProductionNumber</item>
         <item>Synopsis</item>
@@ -46,6 +49,9 @@
         <item>ContactTelephoneNumber</item>
     </xsl:variable>
 
+    <!--
+        A list with as11 core framework nodes.
+    -->
     <xsl:variable name="as11Nodes">
         <item>SeriesTitle</item>
         <item>ProgrammeTitle</item>
@@ -59,16 +65,96 @@
         <item>ClosedCaptionsLanguage</item>
     </xsl:variable>
 
+    <!--
+        A template to convert human-readable enum values to numbers for BMXLib
+    -->
+    <xsl:template name="putValue">
+        <xsl:variable name="nodename" select="local-name()" />
+        <xsl:variable name="stringName" select="current()" />
+        <xsl:variable name="enumValue" select="$toIntEnumerations/enum[@name=$nodename]/item[.=$stringName]/@value" />
+
+        <xsl:choose>
+            <xsl:when test="$enumValue">
+                <xsl:value-of select="$enumValue"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$stringName" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <!--
+        A map of Human-readable enum values to numbers for BMXLib
+    -->
+    <xsl:variable name="toIntEnumerations">
+        <enum name="PictureRatio">
+            <item value="4/3">4:3</item>
+            <item value="14/9">14:9</item>
+            <item value="15/9">15:9</item>
+            <item value="16/9">16:9</item>
+            <item value="37/20">37:20</item>
+            <item value="21/9">21:9</item>
+            <item value="12/5">12:5</item>
+        </enum>
+        <enum name="PSEPass">
+            <item value="0">Yes</item>
+            <item value="1">No</item>
+            <item value="2">Not tested</item>
+        </enum>
+        <enum name="ThreeDType">
+            <item value="0">Side by side</item>
+            <item value="1">Dual</item>
+            <item value="2">Left eye only</item>
+            <item value="3">Right eye only</item>
+        </enum>
+        <enum name="AudioTrackLayout">
+            <item value="3">EBU R 48: 2a</item>
+            <item value="9">EBU R 48: 4b</item>
+            <item value="10">EBU R 48: 4c</item>
+            <item value="49">EBU R 123: 16c</item>
+            <item value="50">EBU R 123: 16d</item>
+            <item value="52">EBU R 123: 16f</item>
+        </enum>
+        <enum name="AudioLoudnessStandard">
+            <item value="0">None</item>
+            <item value="1">EBU R 128</item>
+        </enum>
+        <enum name="AudioDescriptionType">
+            <item value="0">Control data / Narration</item>
+            <item value="1">AD Mix</item>
+        </enum>
+        <enum name="ClosedCaptionsType">
+            <item value="0">Hard of Hearing</item>
+            <item value="1">Translation</item>
+        </enum>
+        <enum name="OpenCaptionsType">
+            <item value="0">Hard of Hearing</item>
+            <item value="1">Translation</item>
+        </enum>
+        <enum name="SigningPresent">
+            <item value="0">Yes</item>
+            <item value="1">No</item>
+            <item value="2">Signer only</item>
+        </enum>
+        <enum name="SignLanguage">
+            <item value="0">BSL (British Sign Language)</item>
+            <item value="1">BSL (Makaton)</item>
+        </enum>
+    </xsl:variable>
+
+    <!--
+        A template to select particular framework's nodes.
+    -->
     <xsl:template name="iterateNodes">
         <xsl:if test="$framework='UKDPP'">
             <xsl:if test="index-of($dppNodes/item, local-name())">
-                <xsl:value-of select="local-name()"/><xsl:text>: </xsl:text><xsl:value-of select="current()"/><xsl:text>&#xa;</xsl:text>
+                <xsl:value-of select="local-name()"/><xsl:text>: </xsl:text><xsl:call-template name="putValue"/><xsl:text>&#xa;</xsl:text>
             </xsl:if>
         </xsl:if>
 
         <xsl:if test="$framework='AS11Core'">
             <xsl:if test="index-of($as11Nodes/item, local-name())">
-                <xsl:value-of select="local-name()"/><xsl:text>: </xsl:text><xsl:value-of select="current()"/><xsl:text>&#xa;</xsl:text>
+                <xsl:value-of select="local-name()"/><xsl:text>: </xsl:text><xsl:call-template name="putValue"/><xsl:text>&#xa;</xsl:text>
             </xsl:if>
         </xsl:if>
 
@@ -81,6 +167,9 @@
         </xsl:if>
     </xsl:template>
 
+    <!--
+        Entry point.
+    -->
     <xsl:template match="/">
         <xsl:for-each select="Dpp/Editorial/*">
             <xsl:call-template name="iterateNodes"/>
@@ -92,4 +181,5 @@
             <xsl:call-template name="iterateNodes"/>
         </xsl:for-each>
     </xsl:template>
+
 </xsl:stylesheet>

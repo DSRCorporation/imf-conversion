@@ -7,11 +7,11 @@
         May be used in both code and conversion.xml template operations.
      -->
     <externalTools>
-        <tool id="ffmpeg">G:\Netflix\test\encode\test\ffmpeg.exe</tool>
-        <tool id="ffprobe">G:\Netflix\test\encode\test\ffprobe.exe</tool>
-        <tool id="bmx">G:\Netflix\test\encode\test\raw2bmx.exe</tool>
-        <tool id="mxf2raw">G:\Netflix\test\encode\test\mxf2raw.exe</tool>
-        <tool id="x264">G:\Netflix\test\encode\test\x264.exe</tool>
+        <tool id="ffmpeg">D:\DSR\Project\_Netflix\test\ffmpeg\bin\ffmpeg.exe</tool>
+        <tool id="ffprobe">D:\DSR\Project\_Netflix\test\ffmpeg\bin\ffprobe.exe</tool>
+        <tool id="bmx">D:\DSR\Project\_Netflix\test\bmx\raw2bmx.exe</tool>
+        <tool id="mxf2raw">D:\DSR\Project\_Netflix\test\bmx\mxf2raw.exe</tool>
+        <tool id="x264">D:\DSR\Project\_Netflix\test\x264\x264-10b.exe</tool>
         <tool id="ttmlToStl">ttmlToStl path</tool>
         <tool id="photon">photon path</tool>
     </externalTools>
@@ -39,6 +39,6 @@
     -->
     <conversionConfig>path to conversion.xml</conversionConfig>
 
-    <workingDirectory>G:\Netflix\test\encode\tmp</workingDirectory>
+    <workingDirectory>D:\DSR\G\Tmp\</workingDirectory>
 
 </Config>

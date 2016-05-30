@@ -21,12 +21,12 @@
 
     <xs:complexType name="EditorialType">
         <xs:sequence>
-            <xs:element name="SeriesTitle" type="String127"/>
-            <xs:element name="ProgrammeTitle" type="String127"/>
-            <xs:element name="EpisodeTitleNumber" type="String127"/>
-            <xs:element name="ProductionNumber" type="String127"/>
+            <xs:element name="SeriesTitle" type="NotEmptyString127"/>
+            <xs:element name="ProgrammeTitle" type="NotEmptyString127"/>
+            <xs:element name="EpisodeTitleNumber" type="NotEmptyString127"/>
+            <xs:element name="ProductionNumber" type="NotEmptyString127"/>
             <xs:element name="Synopsis" type="String250"/>
-            <xs:element name="Originator" type="String127"/>
+            <xs:element name="Originator" type="NotEmptyString127"/>
             <xs:element name="CopyrightYear" type="Uint16Type"/>
             <xs:element name="OtherIdentifier" type="String127" minOccurs="0"/>
             <xs:element name="OtherIdentifierType" type="String127" minOccurs="0"/>

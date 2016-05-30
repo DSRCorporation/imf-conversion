@@ -30,6 +30,7 @@ public class ConversionOperationParser {
         return splitParameters(conversionOperation);
     }
 
+
     public List<String> parseWithQuotes(String conversionOperation, ContextInfo contextInfo) {
         // 1. resolve parameters BEFORE splitting since resolved values may contain multiple sub-paramaters!
         conversionOperation = parameterResolver.resolveTemplateParameter(conversionOperation, contextInfo);
