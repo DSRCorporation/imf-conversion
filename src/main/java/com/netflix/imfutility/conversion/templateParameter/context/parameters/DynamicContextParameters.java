@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
  */
 public enum DynamicContextParameters {
 
-    ;
+    MEDIA_INFO_INPUT("mediaInfoInput"),
+
+    MEDIA_INFO_OUTPUT("mediaInfoOutput");
 
     private final String name;
 

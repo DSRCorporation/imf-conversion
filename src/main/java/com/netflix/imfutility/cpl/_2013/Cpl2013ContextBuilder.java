@@ -1,5 +1,6 @@
 package com.netflix.imfutility.cpl._2013;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.asset.AssetMap;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
@@ -19,6 +20,9 @@ import javax.xml.bind.JAXBElement;
 import java.io.File;
 import java.math.BigInteger;
 
+import static com.netflix.imfutility.Constants.CPL_2013_PACKAGE;
+import static com.netflix.imfutility.Constants.XSD_CPL_2013_XSD;
+
 /**
  * A CPL parser for 2013 namespace.
  * <ul>
@@ -27,9 +31,6 @@ import java.math.BigInteger;
  * </ul>
  */
 public class Cpl2013ContextBuilder {
-
-    private static final String XSD_CPL_2013_XSD = "xsd/imf/2013/imf-cpl-2013.xsd";
-    private static final String CPL_2013_PACKAGE = "com.netflix.imfutility.xsd.imf._2013.cpl";
 
     private final TemplateParameterContextProvider contextProvider;
     private final AssetMap assetMap;
@@ -45,9 +46,8 @@ public class Cpl2013ContextBuilder {
         this.assetMap = assetMap;
     }
 
-    public void build(String cplXml) throws XmlParsingException {
-        CompositionPlaylistType cpl2013 = XmlParser.parse(
-                new File(cplXml), XSD_CPL_2013_XSD, CPL_2013_PACKAGE, CompositionPlaylistType.class);
+    public void build(File cplFile) throws XmlParsingException {
+        CompositionPlaylistType cpl2013 = XmlParser.parse(cplFile, XSD_CPL_2013_XSD, CPL_2013_PACKAGE, CompositionPlaylistType.class);
 
         this.compositionEditRate = ConversionHelper.parseEditRate(cpl2013.getEditRate());
 
@@ -74,7 +74,7 @@ public class Cpl2013ContextBuilder {
 
     private void processSequence() {
         if (currentSequenceType == null) {
-            throw new RuntimeException(String.format("Sequence '%s': Unknown sequence type", currentSequence.getId()));
+            throw new ConversionException(String.format("Sequence '%s': Unknown sequence type", currentSequence.getId()));
         }
         contextProvider.getSequenceContext().initSequence(currentSequenceType, currentSequenceUuid);
 
@@ -97,7 +97,7 @@ public class Cpl2013ContextBuilder {
         UUID trackId = UUID.create(trackFileResource.getTrackFileId());
         String assetPath = assetMap.getAsset(trackId);
         if (assetPath == null) {
-            throw new RuntimeException(String.format(
+            throw new ConversionException(String.format(
                     "Resource track file '%s' isn't present in assetmap.xml", trackId));
         }
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,

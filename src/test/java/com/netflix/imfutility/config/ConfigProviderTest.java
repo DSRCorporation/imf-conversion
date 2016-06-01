@@ -4,6 +4,8 @@ import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
+
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 
@@ -19,7 +21,7 @@ public class ConfigProviderTest {
 
     @Test
     public void testParseCorrectConfig() throws Exception {
-        ConfigProvider configProvider = new ConfigProvider(ConfigUtils.getCorrectConfigXml());
+        ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml());
 
         assertNotNull(configProvider.getConfig());
         assertNotNull(configProvider.getConfig().getExternalTools());
@@ -33,12 +35,17 @@ public class ConfigProviderTest {
 
     @Test(expected = XmlParsingException.class)
     public void testParseBrokenXml() throws Exception {
-        new ConfigProvider(ConfigUtils.getBrokenXmlConfigXml());
+        new ConfigXmlProvider(ConfigUtils.getBrokenXmlConfigXml());
     }
 
     @Test(expected = XmlParsingException.class)
     public void testParseInvalidXsd() throws Exception {
-        new ConfigProvider(ConfigUtils.getInvalidXsdConfigXml());
+        new ConfigXmlProvider(ConfigUtils.getInvalidXsdConfigXml());
+    }
+
+    @Test(expected = FileNotFoundException.class)
+    public void testParseInvalidFilePath() throws Exception {
+        new ConfigXmlProvider("C:/invalid-path");
     }
 
 }

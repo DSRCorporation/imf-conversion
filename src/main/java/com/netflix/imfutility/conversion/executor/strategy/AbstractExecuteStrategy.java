@@ -1,6 +1,7 @@
 package com.netflix.imfutility.conversion.executor.strategy;
 
 import com.netflix.imfutility.conversion.executor.ConversionOperationParser;
+import com.netflix.imfutility.conversion.executor.ExecutionException;
 import com.netflix.imfutility.conversion.executor.ExternalProcess;
 import com.netflix.imfutility.conversion.executor.ProcessStarter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
@@ -34,7 +35,7 @@ public class AbstractExecuteStrategy {
     ExternalProcess startProcess(OperationInfo operationInfo) throws IOException {
         List<String> execAndParams = conversionOperationParser.parseOperation(operationInfo.getOperation(), operationInfo.getContextInfo());
         if (execAndParams.isEmpty()) {
-            throw new RuntimeException(String.format("No parameters for process '%s'", operationInfo.getOperationName()));
+            throw new ExecutionException(String.format("No parameters for process '%s'", operationInfo.getOperationName()));
         }
 
         ExternalProcess.ExternalProcessInfo processInfo = createProcessInfo(operationInfo, execAndParams);

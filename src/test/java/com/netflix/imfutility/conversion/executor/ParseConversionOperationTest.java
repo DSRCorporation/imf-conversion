@@ -1,8 +1,8 @@
 package com.netflix.imfutility.conversion.executor;
 
-import com.netflix.imfutility.config.ConfigProvider;
+import com.netflix.imfutility.config.ConfigXmlProvider;
 import com.netflix.imfutility.Format;
-import com.netflix.imfutility.conversion.ConversionProvider;
+import com.netflix.imfutility.conversion.ConversionXmlProvider;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
@@ -32,8 +32,8 @@ public class ParseConversionOperationTest {
 
     @BeforeClass
     public static void setUpAll() throws Exception {
-        ConversionProvider conversionProvider = new ConversionProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
-        ConfigProvider configProvider = new ConfigProvider(ConfigUtils.getCorrectConfigXml());
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
+        ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml());
 
         TemplateParameterContextProvider contextProvider = new TemplateParameterContextProvider(
                 configProvider.getConfig(), conversionProvider.getFormat(), ".");

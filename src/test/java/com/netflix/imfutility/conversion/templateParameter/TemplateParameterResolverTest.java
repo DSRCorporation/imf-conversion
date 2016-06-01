@@ -1,19 +1,13 @@
 package com.netflix.imfutility.conversion.templateParameter;
 
-import com.netflix.imfutility.Format;
-import com.netflix.imfutility.config.ConfigProvider;
-import com.netflix.imfutility.conversion.ConversionProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.OutputTemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.exception.InvalidTemplateParameterException;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterContextException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
-import com.netflix.imfutility.util.ConfigUtils;
-import com.netflix.imfutility.util.ConversionUtils;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,13 +36,8 @@ public class TemplateParameterResolverTest {
 
     @BeforeClass
     public static void setUpAll() throws Exception {
-        ConfigProvider configProvider = new ConfigProvider(ConfigUtils.getCorrectConfigXml());
-        ConversionProvider conversionProvider = new ConversionProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
-
-        contextProvider = new TemplateParameterContextProvider(
-                configProvider.getConfig(), conversionProvider.getFormat(), ".");
+        contextProvider = createDefaultTemplateParameterContextProvider();
         fillDynamic(contextProvider);
-        fillOutput(contextProvider);
         fillCPLContext(contextProvider,
                 SEGMENT_COUNT,
                 SEQ_COUNT,
@@ -62,12 +51,6 @@ public class TemplateParameterResolverTest {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         dynamicContext.addParameter("dynamic1", "dynamicValue1", ContextInfo.EMPTY);
         dynamicContext.addParameter("dynamic2", "dynamicValue2", ContextInfo.EMPTY);
-    }
-
-    private static void fillOutput(TemplateParameterContextProvider contextProvider) {
-        OutputTemplateParameterContext outputContext = contextProvider.getOutputContext();
-        outputContext.addParameter("output1", "outputValue1");
-        outputContext.addParameter("output2", "outputValue2");
     }
 
     @Test
@@ -137,17 +120,6 @@ public class TemplateParameterResolverTest {
 
         assertNotNull(resolved1);
         assertEquals("valueWithSubparameters", resolved1);
-    }
-
-    @Test
-    public void resolvesCorrectOutputContext() {
-        String resolved1 = resolver.resolveTemplateParameter("%{output.output1}", ContextInfo.EMPTY);
-        String resolved2 = resolver.resolveTemplateParameter("%{output.output2}", ContextInfo.EMPTY);
-
-        assertNotNull(resolved1);
-        assertEquals("outputValue1", resolved1);
-        assertNotNull(resolved2);
-        assertEquals("outputValue2", resolved2);
     }
 
     @Test
@@ -266,11 +238,6 @@ public class TemplateParameterResolverTest {
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnIncorrectDynamicParameterName() {
         resolver.resolveTemplateParameter("%{dynamic.xxxx}", ContextInfo.EMPTY);
-    }
-
-    @Test(expected = TemplateParameterNotFoundException.class)
-    public void exceptionOnIncorrectOutputParameterName() {
-        resolver.resolveTemplateParameter("%{output.xxxx}", ContextInfo.EMPTY);
     }
 
     @Test(expected = UnknownTemplateParameterNameException.class)

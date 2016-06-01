@@ -43,14 +43,15 @@
     -->
     <xs:complexType name="tmpContextType">
         <xs:sequence>
-            <xs:element type="paramType" name="param" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="tmpParamType" name="param" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="paramType">
+    <xs:complexType name="tmpParamType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="id" use="required"/>
+                <xs:attribute type="xs:boolean" name="deleteOnExit" default="false"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -252,6 +253,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="name" use="required"/>
+                <xs:attribute type="xs:boolean" name="deleteOnExit" default="false"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -261,6 +263,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="name" use="required"/>
                 <xs:attribute type="xs:boolean" name="concat" use="optional"/>
+                <xs:attribute type="xs:boolean" name="deleteOnExit" default="false"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

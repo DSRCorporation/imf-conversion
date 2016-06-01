@@ -1,5 +1,6 @@
 package com.netflix.imfutility.conversion.executor.strategy;
 
+import com.netflix.imfutility.conversion.executor.ExecutionException;
 import com.netflix.imfutility.conversion.executor.ExternalProcess;
 import com.netflix.imfutility.conversion.executor.ProcessStarter;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
@@ -122,7 +123,7 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
                     }
                 }
             } catch (IOException e) {
-                throw new RuntimeException(
+                throw new ExecutionException(
                         String.format("Broken pipe. Input process: %s. Output Process: %s", inputProcess.toString(), outputProcess.toString()),
                         e);
             }

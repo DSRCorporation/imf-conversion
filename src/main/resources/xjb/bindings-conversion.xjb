@@ -19,7 +19,7 @@
 
         <jaxb:bindings node="//xs:element[@name='tmpContext']">
             <jaxb:property>
-                <jaxb:baseType name="com.netflix.imfutility.xsd.conversion.TmpContextTypeMap&lt;String,ParamType&gt;" />
+                <jaxb:baseType name="com.netflix.imfutility.xsd.conversion.TmpContextTypeMap&lt;String,TmpParamType&gt;" />
             </jaxb:property>
         </jaxb:bindings>
 

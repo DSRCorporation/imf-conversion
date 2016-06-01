@@ -8,11 +8,11 @@ import java.util.Map;
  * Custom map for generated {@link TmpContextType}.
  */
 @XmlJavaTypeAdapter(TmpContextTypeMapAdapter.class)
-public class TmpContextTypeMap<String, ParamType> {
+public class TmpContextTypeMap<String, TmpParamType> {
 
-    private final Map<String, ParamType> map = new HashMap<>();
+    private final Map<String, TmpParamType> map = new HashMap<>();
 
-    public Map<String, ParamType> getMap() {
+    public Map<String, TmpParamType> getMap() {
         return map;
     }
 

@@ -1,5 +1,6 @@
 package com.netflix.imfutility.util;
 
+import com.netflix.imfutility.ConversionException;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.math.BigInteger;
@@ -60,7 +61,7 @@ public final class ConversionHelper {
      */
     public static BigFraction parseEditRate(List<Long> editRate) {
         if (editRate.size() != 2) {
-            throw new RuntimeException("Incorrect edit rate! Edit rate must consist of two values.");
+            throw new ConversionException("Incorrect edit rate! Edit rate must consist of two values.");
         }
         return new BigFraction(editRate.get(0), editRate.get(1));
     }

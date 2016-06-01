@@ -2,41 +2,37 @@ package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.Format;
-import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.OutputTemplateParameterContext;
+import com.netflix.imfutility.dpp.MetadataXmlProvider.DMFramework;
+import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
 import com.netflix.imfutility.xml.XmlParsingException;
+import com.netflix.imfutility.xsd.dpp.metadata.AudioTrackLayoutDmAs11Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Map;
-import java.util.UUID;
+
+import static com.netflix.imfutility.dpp.DppConversionConstants.*;
 
 /**
  * DPP format builder (see {@link AbstractFormatBuilder}). It's used for conversion to DPP format.
  */
 public class DppFormatBuilder extends AbstractFormatBuilder {
 
-    private final Logger logger = LoggerFactory.getLogger(AbstractFormatBuilder.class);
+    private final Logger logger = LoggerFactory.getLogger(DppFormatBuilder.class);
 
-    public DppFormatBuilder(String configXml, String conversionXml) {
-        super(Format.DPP, configXml, conversionXml);
-    }
+    private final DppInputParameters dppInputParameters;
 
-    @Override
-    protected void doBuildOutputContext() {
-        // FIXME
-        OutputTemplateParameterContext outputContext = contextProvider.getOutputContext();
-        outputContext.addParameter("mxf", "output.mxf");
+    public DppFormatBuilder(DppInputParameters dppInputParameters) {
+        super(Format.DPP, dppInputParameters);
+        this.dppInputParameters = dppInputParameters;
     }
 
     @Override
     protected void doBuildDynamicContext() {
-        // FIXME
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
-        dynamicContext.addParameter("audioChannels", "2", ContextInfo.EMPTY);
+        // fill output.mxf parameter
+        dynamicContext.addParameter(DYNAMIC_PARAM_OUTPUT_MXF, DYNAMIC_PARAM_VALUE_OUTPUT_MXF, false);
     }
 
     @Override
@@ -45,34 +41,35 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     }
 
     @Override
-    protected void preConvert() {
+    protected void preConvert() throws IOException, XmlParsingException {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
-        dynamicContext.addParameter("panParameter", "2c|c0=c0|c1=c1", ContextInfo.EMPTY);
 
-        dynamicContext.addParameter("ebuAudioTracks", "2", ContextInfo.EMPTY);
+        // 1. load metadata.xml
+        MetadataXmlProvider metadataXmlProvider = new MetadataXmlProvider(dppInputParameters.getMetadataXml(), contextProvider.getWorkingDir());
 
+        // 2. load audiomap.xml
+        AudioTrackLayoutDmAs11Type audioTrackLayout = metadataXmlProvider.getDpp().getTechnical().getAudio().getAudioTrackLayout();
+        AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(dppInputParameters.getAudiomapXml(), audioTrackLayout, contextProvider);
 
-        //create a temp file
-        File temp = null;
-        try {
-            temp = File.createTempFile(UUID.randomUUID().toString(), ".xml");
-            //try to generate Dpp metadata.xml
-            MetadataXml.GenerateEmptyXml(temp.getAbsolutePath());
+        // 3. fill audio map parameters
+        dynamicContext.addParameter(DYNAMIC_PARAM_PAN, audioMapXmlProvider.getPanParameter());
 
-            //get generated temporary files
-            Map<MetadataXml.DMFramework, File> dppParameters = MetadataXml.getBmxDppParameters(temp);
+        // 4. fill ebuAudioTracks parameter
+        Integer audioTracksNum = audioMapXmlProvider.getEBUAudioTracks();
+        dynamicContext.addParameter(DYNAMIC_PARAM_EBU_AUDIO_TRACKS, String.valueOf(audioTracksNum));
 
-            dynamicContext.addParameter("ukDppFramework", dppParameters.get(MetadataXml.DMFramework.UKDPP).getPath(), ContextInfo.EMPTY);
-            dynamicContext.addParameter("as11CoreFramework", dppParameters.get(MetadataXml.DMFramework.AS11CORE).getPath(), ContextInfo.EMPTY);
-            dynamicContext.addParameter("as11SegmentationFramework", dppParameters.get(MetadataXml.DMFramework.AS11Segmentation).getPath(), ContextInfo.EMPTY);
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XmlParsingException e) {
-            e.printStackTrace();
-        }
-
+        // 5. fill bmx metadata files parameters
+        metadataXmlProvider.createBmxDppParameterFiles();
+        dynamicContext.addParameter(DYNAMIC_PARAM_UK_DPP_FILE,
+                metadataXmlProvider.getBmxDppParameterFile(DMFramework.UKDPP).getAbsolutePath(), true);
+        dynamicContext.addParameter(DYNAMIC_PARAM_AS11_CORE_FILE,
+                metadataXmlProvider.getBmxDppParameterFile(DMFramework.AS11CORE).getAbsolutePath(), true);
+        dynamicContext.addParameter(DYNAMIC_PARAM_AS11_SEGM_FILE,
+                metadataXmlProvider.getBmxDppParameterFile(DMFramework.AS11Segmentation).getAbsolutePath(), true);
     }
 
+    @Override
+    protected void postConvert() throws IOException, XmlParsingException {
+        // nothing to do
+    }
 }

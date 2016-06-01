@@ -5,10 +5,11 @@ import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.xsd.conversion.FormatType;
-import com.netflix.imfutility.xsd.conversion.ParamType;
+import com.netflix.imfutility.xsd.conversion.TmpParamType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Tmp Template Parameter Context.
@@ -25,26 +26,26 @@ public class TmpTemplateParameterContext implements ITemplateParameterContext {
         this.format = format;
     }
 
-    public String getParameterValue(String templateParameterName) {
-        return getParameterValue(new TemplateParameter(TemplateParameterContext.TMP, templateParameterName));
-    }
-
     @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo) {
-        return getParameterValue(templateParameter);
+        return getParameterValueAsString(templateParameter);
     }
 
-    public Collection<ParamType> getAllParameters() {
-        return format.getTmpContext().getMap().values();
+    public String getParameterValueAsString(String templateParameterName) {
+        return getParameterValueAsString(new TemplateParameter(TemplateParameterContext.TMP, templateParameterName));
     }
 
-    private String getParameterValue(TemplateParameter templateParameter) {
+    public String getParameterValueAsString(TemplateParameter templateParameter) {
+        return getParameterValue(templateParameter).getValue();
+    }
+
+    public CustomParameterValue getParameterValue(TemplateParameter templateParameter) {
         if (format.getTmpContext() == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(), "Conversion.xml doesn't contain any tmp context parameters.");
         }
 
-        ParamType param = format.getTmpContext().getMap().get(templateParameter.getName());
+        TmpParamType param = format.getTmpContext().getMap().get(templateParameter.getName());
         if (param == null) {
             throw new TemplateParameterNotFoundException(
                     templateParameter.toString(), "Conversion.xml doesn't contain '%s' tmp parameter.");
@@ -61,7 +62,20 @@ public class TmpTemplateParameterContext implements ITemplateParameterContext {
                     templateParameter.toString(), "Conversion.xml contains an empty '%s' tmp parameter value.");
         }
 
-        return paramValue;
+        return new CustomParameterValue(paramValue, param.isDeleteOnExit());
+    }
+
+    public Collection<String> getAllParametersAsString() {
+        return format.getTmpContext().getMap().values().stream()
+                .map(TmpParamType::getValue)
+                .collect(Collectors.toList());
+
+    }
+
+    public Collection<CustomParameterValue> getAllParameters() {
+        return format.getTmpContext().getMap().values().stream()
+                .map((TmpParamType param) -> new CustomParameterValue(param.getValue(), param.isDeleteOnExit()))
+                .collect(Collectors.toList());
     }
 
 }

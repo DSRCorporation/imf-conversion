@@ -9,14 +9,20 @@
                 tmp context for temporary template parameters
             -->
             <tmpContext>
-                <param id="videoEncoded">output.x264</param>
-                <param id="audioEncoded">output.pcm</param>
-                <param id="mediaInfoOutput">mediaInfo.xml</param>
+                <param id="videoEncoded" deleteOnExit="true">output.x264</param>
+                <param id="audioEncoded" deleteOnExit="true">output.pcm</param>
+                <param id="mediaInfoOutput" deleteOnExit="true">mediaInfo.xml</param>
             </tmpContext>
 
-            <mediaInfoCommandVideo>%{tool.ffprobe} -select_streams v:0 -show_streams -noprivate -print_format xml=x=1 %{output.mediaInfoInput}</mediaInfoCommandVideo>
-            <mediaInfoCommandAudio>%{tool.ffprobe} -select_streams a:0 -show_streams -noprivate -print_format xml=x=1 %{output.mediaInfoInput}</mediaInfoCommandAudio>
-            <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams s:0 -show_streams -noprivate -print_format xml=x=1 %{output.mediaInfoInput}</mediaInfoCommandSubtitle>
+            <mediaInfoCommandVideo>%{tool.ffprobe} -select_streams v:0 -show_streams -noprivate -print_format xml=x=1
+                %{dynamic.mediaInfoInput}
+            </mediaInfoCommandVideo>
+            <mediaInfoCommandAudio>%{tool.ffprobe} -select_streams a:0 -show_streams -noprivate -print_format xml=x=1
+                %{dynamic.mediaInfoInput}
+            </mediaInfoCommandAudio>
+            <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams s:0 -show_streams -noprivate -print_format xml=x=1
+                %{dynamic.mediaInfoInput}
+            </mediaInfoCommandSubtitle>
 
 
             <formatConfigurations>
@@ -50,7 +56,8 @@
                                     <execOnce name="decode_video">
                                         %{tool.ffmpeg} -y -i "%{resource.essence}" -map 0:0 -ss %{resource.startTimeTC}
                                         -t %{resource.durationTC} -an
-                                        -vf "scale=iw*sar*min(1920/(iw*sar)\,1080/ih):ih*min(1920/(iw*sar)\,1080/ih),pad=1920:1080:(ow-iw)/2:(oh-ih)/2,fps=25"
+                                        -vf
+                                        "scale=iw*sar*min(1920/(iw*sar)\,1080/ih):ih*min(1920/(iw*sar)\,1080/ih),pad=1920:1080:(ow-iw)/2:(oh-ih)/2,fps=25"
                                         -pix_fmt yuv422p10le -f rawvideo -
                                     </execOnce>
                                 </execEachSegment>
@@ -63,7 +70,7 @@
                             </execOnce>
                         </pipe>
                     </execEachSequence>
-
+                    
                     <!--
                         2. Extract each audio segment from MXF due to FFMPEG mxf reading issue
                     -->
@@ -74,7 +81,9 @@
                                 --dur %{resource.durationEU} "%{resource.essence}"
                             </execOnce>
                             <!-- to delete intermediate files at the end -->
-                            <dynamicParameter name="tmp-%{seq.num}-%{segm.num}">%{seq.num}-%{segm.num}_a0.raw</dynamicParameter>
+                            <dynamicParameter name="audio-segment-tmp-%{seq.num}-%{segm.num}" deleteOnExit="true">
+                                %{seq.num}-%{segm.num}_a0.raw
+                            </dynamicParameter>
                         </execEachSegment>
                     </execEachSequence>
 
@@ -94,13 +103,17 @@
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_audio">
-                                %{tool.ffmpeg} -f s24le -ar %{seq.sample_rate} -ac %{seq.channels_num} -i - -vn -c:a copy -f wav %{seq.num}-audio-encoded.wav
+                                %{tool.ffmpeg} -f s24le -ar %{seq.sample_rate} -ac %{seq.channels_num} -i - -vn -c:a
+                                copy -f wav %{seq.num}-audio-encoded.wav
                             </execOnce>
                         </pipe>
-                        <dynamicParameter name="concatAudioInput" concat="true"> -i "%{seq.num}-audio-encoded.wav"</dynamicParameter>
+                        <dynamicParameter name="concatAudioInput" concat="true">-i "%{seq.num}-audio-encoded.wav"
+                        </dynamicParameter>
                         <dynamicParameter name="concatAudioMap" concat="true">[%{seq.num}:a]</dynamicParameter>
                         <!-- to delete intermediate files at the end -->
-                        <dynamicParameter name="tmp-%{seq.num}-audio-encoded">%{seq.num}-audio-encoded.wav</dynamicParameter>
+                        <dynamicParameter name="audio-virtual-track-wav-%{seq.num}" deleteOnExit="true">
+                            %{seq.num}-audio-encoded.wav
+                        </dynamicParameter>
                     </execEachSequence>
 
                     <!--
@@ -108,15 +121,16 @@
                     -->
                     <execOnce name="audioMaping">
                         <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
-                        %{tool.ffmpeg} %{dynamic.concatAudioInput} -filter_complex "%{dynamic.concatAudioMap}[0:a]amerge,pan=%{dynamic.panParameter}[aout]"
-                        -map "[aout]" -acodec pcm_s24le -ar 48000 -f wav "%{tmp.audioEncoded}"
+                        %{tool.ffmpeg} %{dynamic.concatAudioInput} -filter_complex
+                        "%{dynamic.concatAudioMap}[0:a]amerge,pan=%{dynamic.panParameter}[aout]"
+                        -map "[aout]" -acodec pcm_s24le -ar 48000 -f s24le "%{tmp.audioEncoded}"
                     </execOnce>
 
                     <!--
                         5. create output .mxf from flatten encoded video and audio
                     -->
                     <execOnce name="muxing_mxf">
-                        %{tool.bmx} -t as11op1a -o "%{output.mxf}"
+                        %{tool.bmx} -t as11op1a -o "%{dynamic.output}"
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"

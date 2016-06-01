@@ -47,7 +47,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:simpleType name="allowDisalow">
+    <xs:simpleType name="allowDisallow">
         <xs:restriction base="xs:string">
             <xs:enumeration value="yes"/>
             <xs:enumeration value="no"/>
@@ -56,17 +56,17 @@
 
     <xs:complexType name="videoConversionParametersType">
         <xs:sequence>
-            <xs:element type="allowDisalow" name="size" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="allowDisalow" name="frameRate" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="allowDisalow" name="pixelFormat" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="allowDisalow" name="bitDepth" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="allowDisallow" name="size" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="allowDisallow" name="frameRate" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="allowDisallow" name="pixelFormat" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="allowDisallow" name="bitDepth" maxOccurs="1" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="audioConversionParametersType">
         <xs:sequence>
-            <xs:element type="allowDisalow" name="sampleRate" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="allowDisalow" name="bitsSample" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="allowDisallow" name="sampleRate" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="allowDisallow" name="bitsSample" maxOccurs="1" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
