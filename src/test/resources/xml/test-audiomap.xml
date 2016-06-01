@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AudioMap>
+    <EBUTrack>
+        <Number>1</Number>
+        <CPLVirtualTrackId>urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711</CPLVirtualTrackId>
+        <CPLVirtualTrackChannel>2</CPLVirtualTrackChannel>
+    </EBUTrack>
+    <EBUTrack>
+        <Number>2</Number>
+        <CPLVirtualTrackId>urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711</CPLVirtualTrackId>
+        <CPLVirtualTrackChannel>1</CPLVirtualTrackChannel>
+    </EBUTrack>
+    <EBUTrack>
+        <Number>3</Number>
+        <CPLVirtualTrackId>urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712</CPLVirtualTrackId>
+        <CPLVirtualTrackChannel>2</CPLVirtualTrackChannel>
+    </EBUTrack>
+    <EBUTrack>
+        <Number>4</Number>
+    </EBUTrack>
+</AudioMap>

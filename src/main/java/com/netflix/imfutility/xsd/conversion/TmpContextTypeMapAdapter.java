@@ -6,21 +6,21 @@ import java.util.Map;
 /**
  * Maps generated {@link TmpContextType} to {@link TmpContextTypeMap}.
  */
-public class TmpContextTypeMapAdapter extends XmlAdapter<TmpContextType, TmpContextTypeMap<String, ParamType>> {
+public class TmpContextTypeMapAdapter extends XmlAdapter<TmpContextType, TmpContextTypeMap<String, TmpParamType>> {
 
     @Override
-    public TmpContextTypeMap<String, ParamType> unmarshal(TmpContextType tmpContextTypes) throws Exception {
-        TmpContextTypeMap<String, ParamType> map = new TmpContextTypeMap<>();
-        for (ParamType pt : tmpContextTypes.getParam()) {
+    public TmpContextTypeMap<String, TmpParamType> unmarshal(TmpContextType tmpContextTypes) throws Exception {
+        TmpContextTypeMap<String, TmpParamType> map = new TmpContextTypeMap<>();
+        for (TmpParamType pt : tmpContextTypes.getParam()) {
             map.getMap().put(pt.getId(), pt);
         }
         return map;
     }
 
     @Override
-    public TmpContextType marshal(TmpContextTypeMap<String, ParamType> map) throws Exception {
+    public TmpContextType marshal(TmpContextTypeMap<String, TmpParamType> map) throws Exception {
         TmpContextType tmpContextType = new TmpContextType();
-        for (Map.Entry<String, ParamType> entry : map.getMap().entrySet()) {
+        for (Map.Entry<String, TmpParamType> entry : map.getMap().entrySet()) {
             tmpContextType.getParam().add(entry.getValue());
         }
         return tmpContextType;

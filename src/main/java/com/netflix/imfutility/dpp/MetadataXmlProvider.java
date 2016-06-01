@@ -16,20 +16,19 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
+
+import static com.netflix.imfutility.Constants.*;
 
 /**
  * Created by Alexandr on 4/28/2016.
  * Provides functionality to generate empty metadata.xml for DPP format and transform it into BMXLib parameters.
  */
-public class MetadataXml {
-
-    private static final String METADATA_XML_SCHEME = "xsd/dpp/metadata.xsd";
-    private static final String BMX_PARAMETERS_TRANSFORMATION = "xsd/dpp/bmx-parameters.xsl";
-    private static final String XSLT2_TRANSFORMER_IMPLEMENTATION = "net.sf.saxon.TransformerFactoryImpl";
-    private static final String METADATA_CONFIG_PACKAGE = "com.netflix.imfutility.xsd.dpp.metadata";
+public class MetadataXmlProvider {
 
     /**
      * MXF frameworks enumeration
@@ -55,7 +54,7 @@ public class MetadataXml {
      *
      * @param path a path to the output metadata.xml file
      */
-    public static void GenerateEmptyXml(String path) {
+    public static void generateEmptyXml(String path) {
         File file = new File(path);
         JAXBContext jaxbContext;
         try {
@@ -165,70 +164,69 @@ public class MetadataXml {
         }
     }
 
+    private final Dpp dpp;
+    private final String workingDir;
+    private Map<DMFramework, File> bmxDppParameters = new HashMap<>();
+
+    /**
+     * Loads and validates metadata.xml.
+     * Transforms metadata.xml into a set of parameter files for BMXLib tool.
+     * The parameter files are created within the provided working directory.
+     *
+     * @param metadataXml a path to the metadata.xml file
+     * @param workingDir  current working directory where parameter files are created.
+     * @throws XmlParsingException   an exception in case of metadata.xml parsing error
+     * @throws FileNotFoundException if the metadataXml doesn't define an existing file.
+     */
+    public MetadataXmlProvider(String metadataXml, String workingDir) throws XmlParsingException, FileNotFoundException {
+        this.workingDir = workingDir;
+        this.dpp = loadDpp(metadataXml);
+    }
+
+    /**
+     * Gets the loaded DPP instances created from a provided metadata.xml.
+     *
+     * @return a loaded DPP instances created from a provided metadata.xml
+     */
+    public Dpp getDpp() {
+        return dpp;
+    }
+
     /**
      * Transform metadata.xml into a set of parameter files for BMXLib tool.
-     *
-     * @param metadataXmlFile the metadata.xml file
-     * @return a map with the parameter files for BMXLib
-     * @throws XmlParsingException an exception in case of metadata.xml parsing error
+     * The parameter files are created within the provided working directory.
      */
-    public static Map<DMFramework, File> getBmxDppParameters(File metadataXmlFile) throws XmlParsingException {
+    public void createBmxDppParameterFiles() {
+        JAXBSource source = dppToJaxbSource(dpp);
 
-        JAXBSource source = loadMetadataXml(metadataXmlFile);
-
-        Map<DMFramework, File> frameworkParameters = new HashMap<>();
-
-        frameworkParameters.put(DMFramework.UKDPP, getBmxFrameworkParameters(source, DMFramework.UKDPP));
-        frameworkParameters.put(DMFramework.AS11CORE, getBmxFrameworkParameters(source, DMFramework.AS11CORE));
-        frameworkParameters.put(DMFramework.AS11Segmentation, getBmxFrameworkParameters(source, DMFramework.AS11Segmentation));
-
-        return frameworkParameters;
+        bmxDppParameters = new HashMap<>();
+        bmxDppParameters.put(DMFramework.UKDPP, createBmxFrameworkParameterFile(source, DMFramework.UKDPP, workingDir));
+        bmxDppParameters.put(DMFramework.AS11CORE, createBmxFrameworkParameterFile(source, DMFramework.AS11CORE, workingDir));
+        bmxDppParameters.put(DMFramework.AS11Segmentation, createBmxFrameworkParameterFile(source, DMFramework.AS11Segmentation, workingDir));
     }
 
     /**
-     * Loads and validates metadata.xml.
+     * Gets a parameter files for BMXLib tool for the given framework.
+     * The parameter files are created within the provided working directory.
      *
-     * @param metadataXmlFile the metadata.xml file
-     * @return Dpp a Dpp instance with loaded metadata.xml
-     * @throws XmlParsingException an exception in case of metadata.xml parsing error
+     * @param framework a framework get a parameter file for.
+     * @return a parameter file withing the current working directory.
      */
-    public static Dpp getDpp(File metadataXmlFile) throws XmlParsingException {
-        try {
-            JAXBContext jc = JAXBContext.newInstance(Dpp.class);
-            return loadMetadataXmlToDpp(metadataXmlFile);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
+    public File getBmxDppParameterFile(DMFramework framework) {
+        return bmxDppParameters.get(framework);
+    }
+
+    public Collection<File> getBmxDppParameterFiles() {
+        return bmxDppParameters.values();
+    }
+
+    private Dpp loadDpp(String metadataXml) throws XmlParsingException, FileNotFoundException {
+        File metadataFile = new File(metadataXml);
+        if (!metadataFile.isFile()) {
+            throw new FileNotFoundException(String.format("Invalid metadata.xml file: '%s' not found", metadataFile.getAbsolutePath()));
         }
-    }
 
-    /**
-     * Loads and validates metadata.xml.
-     *
-     * @param metadataXmlFile the metadata.xml file
-     * @return JAXBSource with loaded and mapped metadata.xml
-     * @throws XmlParsingException an exception in case of metadata.xml parsing error
-     */
-    private static JAXBSource loadMetadataXml(File metadataXmlFile) throws XmlParsingException {
-        JAXBContext jaxbContext;
-        try {
-            Dpp dpp = loadMetadataXmlToDpp(metadataXmlFile);
-            jaxbContext = JAXBContext.newInstance(METADATA_CONFIG_PACKAGE);
-            return new JAXBSource(jaxbContext, dpp);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Loads and validates metadata.xml.
-     *
-     * @param metadataXmlFile the metadata.xml file
-     * @return Dpp a Dpp instance with loaded metadata.xml
-     * @throws XmlParsingException an exception in case of metadata.xml parsing error
-     */
-    private static Dpp loadMetadataXmlToDpp(File metadataXmlFile) throws XmlParsingException {
-        return XmlParser.parse(
-                metadataXmlFile, METADATA_XML_SCHEME, METADATA_CONFIG_PACKAGE, Dpp.class);
+        return XmlParser.parse(metadataFile, METADATA_XML_SCHEME, METADATA_PACKAGE, Dpp.class);
     }
 
     /**
@@ -238,36 +236,36 @@ public class MetadataXml {
      * @param framework the framework for which the parameters must be transformed.
      * @return a temporary file to be used as BMXLib input parameter for particular framework.
      */
-    private static File getBmxFrameworkParameters(JAXBSource source, DMFramework framework) {
+    private File createBmxFrameworkParameterFile(JAXBSource source, DMFramework framework, String workingDir) {
         FileWriter writer = null;
         try {
             //Get file from resources folder
-            ClassLoader classLoader = MetadataXml.class.getClassLoader();
+            ClassLoader classLoader = MetadataXmlProvider.class.getClassLoader();
 
             // Create Transformer
             TransformerFactory tf = TransformerFactory.newInstance(XSLT2_TRANSFORMER_IMPLEMENTATION, null);
-            StreamSource xslt = new StreamSource(classLoader.getResource(BMX_PARAMETERS_TRANSFORMATION).getFile());
+            URL transformationFileUrl = classLoader.getResource(BMX_PARAMETERS_TRANSFORMATION);
+            if (transformationFileUrl == null) {
+                throw new FileNotFoundException(String.format("Metadata.xml to BMX transformation file is absent: %s", BMX_PARAMETERS_TRANSFORMATION));
+            }
+            StreamSource xslt = new StreamSource(transformationFileUrl.getFile());
             Transformer transformer = tf.newTransformer(xslt);
 
             //Set framework
             transformer.setParameter("framework", framework.value());
 
-            //Prepare empty temporary file
-            File temp = File.createTempFile(UUID.randomUUID().toString(), ".txt");
-            if (!temp.delete()) {
-                throw new RuntimeException(String.format("Could not delete temporary file: %s", temp.getAbsolutePath()));
-            }
-//            temp.deleteOnExit();
+            //Prepare a parameter file
+            File result = new File(workingDir, framework.value + ".txt");
 
             // Result
-            writer = new FileWriter(temp);
-            StreamResult result = new StreamResult(writer);
+            writer = new FileWriter(result);
+            StreamResult streamResult = new StreamResult(writer);
 
             // Transform
-            transformer.transform(source, result);
+            transformer.transform(source, streamResult);
             writer.flush();
 
-            return temp;
+            return result;
         } catch (TransformerException | IOException e) {
             throw new RuntimeException(e);
         } finally {
@@ -278,6 +276,14 @@ public class MetadataXml {
                     throw new RuntimeException(e);
                 }
             }
+        }
+    }
+
+    private JAXBSource dppToJaxbSource(Dpp dpp) {
+        try {
+            return new JAXBSource(JAXBContext.newInstance(METADATA_PACKAGE), dpp);
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
         }
     }
 }

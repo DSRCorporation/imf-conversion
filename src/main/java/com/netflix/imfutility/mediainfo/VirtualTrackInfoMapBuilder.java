@@ -11,13 +11,13 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.netflix.imfutility.Constants.MEDIAINFO_PACKAGE;
+import static com.netflix.imfutility.Constants.MEDIAINFO_XSD;
+
 /**
  * A helper class to build virtual track parameters (media info) for each sequence (virtual track).
  */
 class VirtualTrackInfoMapBuilder {
-
-    private static final String MEDIAINFO_XSD = "xsd/media-info.xsd";
-    private static final String MEDIAINFO_PACKAGE = "com.netflix.imfutility.xsd.mediainfo";
 
     private final Map<SequenceUUID, VirtualTrackInfo> virtualTrackInfoMap = new HashMap<>();
 

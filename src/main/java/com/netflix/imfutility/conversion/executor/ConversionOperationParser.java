@@ -22,7 +22,7 @@ public class ConversionOperationParser {
     }
 
     public List<String> parseOperation(String conversionOperation, ContextInfo contextInfo) {
-        // 1. resolve parameters BEFORE splitting since resolved values may contain multiple sub-paramaters!
+        // 1. resolve parameters BEFORE splitting since resolved values may contain multiple sub-parameters!
         conversionOperation = parameterResolver.resolveTemplateParameter(conversionOperation, contextInfo);
 
         // 2. split params
@@ -32,7 +32,7 @@ public class ConversionOperationParser {
 
 
     public List<String> parseWithQuotes(String conversionOperation, ContextInfo contextInfo) {
-        // 1. resolve parameters BEFORE splitting since resolved values may contain multiple sub-paramaters!
+        // 1. resolve parameters BEFORE splitting since resolved values may contain multiple sub-parameters!
         conversionOperation = parameterResolver.resolveTemplateParameter(conversionOperation, contextInfo);
 
         // 2. split params and add quotes if needed

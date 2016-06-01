@@ -1,6 +1,5 @@
 package com.netflix.imfutility.mediainfo;
 
-import com.netflix.imfutility.Constants;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
@@ -8,7 +7,7 @@ import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.OutputContextParameters;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
@@ -32,9 +31,6 @@ import java.util.Map;
  * </ul>
  */
 public class MediaInfoContextBuilder {
-
-    private static final String MEDIAINFO_XSD = "xsd/media-info.xsd";
-    private static final String MEDIAINFO_PACKAGE = "com.netflix.imfutility.xsd.mediainfo";
 
     private final TemplateParameterContextProvider contextProvider;
     private final ExecuteStrategyFactory executeStrategyFactory;
@@ -67,7 +63,6 @@ public class MediaInfoContextBuilder {
             }
         }
 
-
         buildSequenceContext();
     }
 
@@ -77,8 +72,11 @@ public class MediaInfoContextBuilder {
                 ResourceContextParameters.ESSENCE, contextInfo);
 
         // 2. fill dynamic context's mediaInfoInput and Output
-        contextProvider.getOutputContext().addParameter(OutputContextParameters.MEDIA_INFO_INPUT, essence);
-        File outputFile = new File(contextProvider.getWorkingDir(), Constants.MEDIA_INFO_FILE);
+        contextProvider.getDynamicContext().addParameter(DynamicContextParameters.MEDIA_INFO_INPUT, essence, false);
+        File outputFile = new File(contextProvider.getWorkingDir(), "mediaInfo" + contextInfo.getSequenceType().value() + ".xml");
+        contextProvider.getDynamicContext().addParameter(
+                DynamicContextParameters.MEDIA_INFO_OUTPUT.getName() + contextInfo.getSequenceType().value(),
+                outputFile.getAbsolutePath(), true);  // add output as a dynamic parameter to delete on exit
 
         // 3. execute media info command. the output will be in %{tmp.mediaInfoOutput}
         executeMediaInfoCommand(contextInfo, outputFile);

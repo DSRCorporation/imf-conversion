@@ -1,5 +1,6 @@
 package com.netflix.imfutility.conversion;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorOnce;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorPipe;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorSegment;
@@ -33,7 +34,7 @@ public class ConversionEngine {
             } else if (operation instanceof DynamicParameterType) {
                 contextProvider.getDynamicContext().addParameter((DynamicParameterType) operation, ContextInfo.EMPTY);
             } else {
-                throw new RuntimeException(String.format("Unknown Conversion Operation type: %s", operation.toString()));
+                throw new ConversionException(String.format("Unknown Conversion Operation type: %s", operation.toString()));
             }
         }
     }

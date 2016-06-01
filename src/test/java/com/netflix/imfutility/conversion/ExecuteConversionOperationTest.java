@@ -1,7 +1,7 @@
 package com.netflix.imfutility.conversion;
 
-import com.netflix.imfutility.config.ConfigProvider;
 import com.netflix.imfutility.Format;
+import com.netflix.imfutility.config.ConfigXmlProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.util.ConversionUtils;
@@ -27,7 +27,7 @@ public class ExecuteConversionOperationTest {
     private static final int SEQ_COUNT = 2;
     private static final int RESOURCE_COUNT = 2;
 
-    private static ConversionProvider conversionProvider;
+    private static ConversionXmlProvider conversionProvider;
     private static TemplateParameterContextProvider contextProvider;
 
     private static TestConversionEngine conversionEngine;
@@ -47,9 +47,10 @@ public class ExecuteConversionOperationTest {
     }
 
     private static void initContext() throws Exception {
-        conversionProvider = new ConversionProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
-        ConfigProvider configProvider = new ConfigProvider(ConfigUtils.getCorrectConfigXml());
-        contextProvider = new TemplateParameterContextProvider(configProvider.getConfig(), conversionProvider.getFormat(), ".");
+        conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
+        ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml());
+        contextProvider = new TemplateParameterContextProvider(configProvider.getConfig(), conversionProvider.getFormat(),
+                TemplateParameterContextCreator.getCurrentTmpDir());
     }
 
     @Before

@@ -14,12 +14,11 @@ public class ImfUtility {
     public static void main(String... args) {
         //TODO: add command line parameter processing logic
         String configXml = ClassLoader.getSystemClassLoader().getResource("xml/config.xml").getPath();
-        String conversionXml = ClassLoader.getSystemClassLoader().getResource("xml/conversion.xml").getPath();
+        String imp = ClassLoader.getSystemClassLoader().getResource("xml/IMP-test").getPath();
+        String cplXml = "CPL-test.xml";
+        String metadataXml = ClassLoader.getSystemClassLoader().getResource("xml/metadata.xml").getPath();
 
-        String cplXml = ClassLoader.getSystemClassLoader().getResource("xml/CPL-test.xml").getPath();
-        String assetmapXml = ClassLoader.getSystemClassLoader().getResource("xml/ASSETMAP-test.xml").getPath();
-
-        new DppFormatBuilder(configXml, conversionXml).build(cplXml, assetmapXml);
+        new DppFormatBuilder(configXml, metadataXml).build(imp, cplXml);
     }
 
 }

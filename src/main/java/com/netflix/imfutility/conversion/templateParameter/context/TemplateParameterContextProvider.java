@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A holder of all template parameter contexts: tool, tmp, dynamic, segment.
+ * A holder of all template parameter contexts: tool, tmp, dynamic, segment, etc.
  */
 public class TemplateParameterContextProvider {
 
@@ -53,10 +53,6 @@ public class TemplateParameterContextProvider {
         return (ResourceTemplateParameterContext) contexts.get(TemplateParameterContext.RESOURCE);
     }
 
-    public OutputTemplateParameterContext getOutputContext() {
-        return (OutputTemplateParameterContext) contexts.get(TemplateParameterContext.OUTPUT);
-    }
-
     public String getWorkingDir() {
         return workingDir;
     }
@@ -84,8 +80,6 @@ public class TemplateParameterContextProvider {
                 return new SequenceTemplateParameterContext();
             case RESOURCE:
                 return new ResourceTemplateParameterContext();
-            case OUTPUT:
-                return new OutputTemplateParameterContext();
         }
         return null;
     }

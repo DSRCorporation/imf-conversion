@@ -1,5 +1,8 @@
 package com.netflix.imfutility.util;
 
+import com.netflix.imfutility.Format;
+import com.netflix.imfutility.config.ConfigXmlProvider;
+import com.netflix.imfutility.conversion.ConversionXmlProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.*;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
@@ -23,6 +26,21 @@ public final class TemplateParameterContextCreator {
     public static final String RESOURCE_PARAMETER_FORMAT = "%s-%s";
 
     private TemplateParameterContextCreator() {
+    }
+
+    public static TemplateParameterContextProvider createDefaultTemplateParameterContextProvider() throws Exception {
+        ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml());
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
+        return new TemplateParameterContextProvider(configProvider.getConfig(), conversionProvider.getFormat(),
+                TemplateParameterContextCreator.getCurrentTmpDir());
+    }
+
+    public static String getCurrentTmpDir() {
+        String tempDir = System.getProperty("java.io.tmpdir");
+        if (tempDir == null) {
+            return ".";
+        }
+        return tempDir;
     }
 
     public static void fillCPLContext(TemplateParameterContextProvider contextProvider, int segmentCount, int seqCount, int resourceCount) {
