@@ -10,6 +10,7 @@ import com.netflix.imfutility.conversion.SilentConversionChecker;
 import com.netflix.imfutility.conversion.templateParameter.context.CustomParameterValue;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.cpl.CplContextBuilder;
+import com.netflix.imfutility.inputparameters.InputParameters;
 import com.netflix.imfutility.mediainfo.MediaInfoContextBuilder;
 import com.netflix.imfutility.mediainfo.MediaInfoException;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -28,10 +29,10 @@ import java.net.URL;
  * <ul>
  * <li>Contains logic common for all formats</li>
  * <li>Designed for inheritance</li>
- * <li>Provides a common conversion workflow in a {@link #build(String, String)} method</li>
+ * <li>Provides a common conversion workflow in a {@link #build()} method</li>
  * <li>Subclasses must provide logic related to context creation: {@link #buildDynamicContext()} and {@link }</li>
  * <li>Subclasses may customize the workflow using {@link #preConvert()} and {@link #postConvert()} methods</li>
- * <li>Common workflow ({@link #build(String, String)}):
+ * <li>Common workflow ({@link #build()}):
  * <ul>
  * <li>Initializing config and conversion (reading, parsing and validating config.xml and conversion,xml)</li>
  * <li>Clearing the specified working dir</li>
@@ -48,37 +49,25 @@ public abstract class AbstractFormatBuilder {
     private final Logger logger = LoggerFactory.getLogger(AbstractFormatBuilder.class);
 
     protected final Format format;
-    protected final String configXml;
+    protected final InputParameters inputParameters;
 
     protected ConfigXmlProvider configProvider;
     protected ConversionXmlProvider conversionProvider;
     protected FormatConfigurationType formatConfigurationType;
     protected TemplateParameterContextProvider contextProvider;
-
-    protected String conversionXml;
-    protected String workingDir;
     protected AssetMap assetMap;
 
-    public AbstractFormatBuilder(Format format, String configXml) {
-        this(format, configXml, null);
-    }
-
-    public AbstractFormatBuilder(Format format, String configXml, String defaultWorkingDirectory) {
+    public AbstractFormatBuilder(Format format, InputParameters inputParameters) {
         this.format = format;
-        this.configXml = configXml;
-        URL defaultConversionXmlUrl = ClassLoader.getSystemClassLoader().getResource("xml/conversion.xml");
-        if (defaultConversionXmlUrl != null) {
-            this.conversionXml = defaultConversionXmlUrl.getPath();
-        }
-        this.workingDir = defaultWorkingDirectory;
+        this.inputParameters = inputParameters;
     }
 
-    public final void build(String impFolder, String cplXml) {
+    public final void build() {
         try {
             logger.info("Starting conversion to '{}' format\n", format.getName());
 
             // 1. init config and conversion.
-            init(configXml, conversionXml);
+            init();
 
             // 2. clear working dir
             cleanWorkingDir();
@@ -87,7 +76,7 @@ public abstract class AbstractFormatBuilder {
             createLogsDir();
 
             // 4. build IMF CPL contexts
-            buildCplContext(impFolder, cplXml);
+            buildCplContext();
 
             // 5. fill dynamic context
             buildDynamicContext();
@@ -107,29 +96,39 @@ public abstract class AbstractFormatBuilder {
             postConvert();
 
             // 10. delete tmp files.
-            deleteTmpFiles();
+            if (inputParameters.isDeleteTmpFilesOnExit()) {
+                deleteTmpFiles();
+            }
 
             logger.info("Conversion to '{}' format: OK\n", format.getName());
         } catch (Exception e) {
             logger.error(String.format("Conversion to '%s' format aborted", format.getName()), e);
+            if (inputParameters.isDeleteTmpFilesOnFail()) {
+                deleteTmpFiles();
+            }
         }
 
     }
 
-    protected void init(String configXml, String conversionXml) throws XmlParsingException, FileNotFoundException {
+    protected void init() throws XmlParsingException, FileNotFoundException {
         logger.info("Initializing...");
 
         // 1. Reading and parsing config.xml
-        logger.info("Reading config.xml: {}", configXml);
-        this.configProvider = new ConfigXmlProvider(configXml);
+        logger.info("Reading config.xml: {}", inputParameters.getConfigXml());
+        this.configProvider = new ConfigXmlProvider(inputParameters.getConfigXml());
         logger.info("Config.xml is processed: OK");
 
         // 2. check for alternative conversion.xml
+        URL defaultConversionXmlUrl = ClassLoader.getSystemClassLoader().getResource(Constants.DEFAULT_CONVERSION_XML);
+        String conversionXml = null;
+        if (defaultConversionXmlUrl != null) {
+            conversionXml = defaultConversionXmlUrl.getPath();
+        }
         if (configProvider.getConfig().getConversionConfig() != null) {
-            this.conversionXml = configProvider.getConfig().getConversionConfig();
+            conversionXml = configProvider.getConfig().getConversionConfig();
             logger.info("Using alternative conversion.xml: {}", conversionXml);
         }
-        if (this.conversionXml == null) {
+        if (conversionXml == null) {
             throw new ConversionException("Conversion.xml is not found in neither default location nor config.xml");
         }
 
@@ -139,11 +138,14 @@ public abstract class AbstractFormatBuilder {
         logger.info("Conversion.xml is processed: OK");
 
         // 4. setting working directory
-        this.workingDir = configProvider.getConfig().getWorkingDirectory();
-        if (this.workingDir == null) {
+        String workingDir = inputParameters.getDefaultWorkingDirectory();
+        if (workingDir == null) {
+            workingDir = configProvider.getConfig().getWorkingDirectory();
+        }
+        if (workingDir == null) {
             throw new ConversionException("Working directory must be specified either in config.xml or as an input parameter");
         }
-        logger.info("Working directory: {}", this.workingDir);
+        logger.info("Working directory: {}", workingDir);
 
         // 5. Init the context provider
         this.contextProvider =
@@ -154,14 +156,14 @@ public abstract class AbstractFormatBuilder {
 
     private void cleanWorkingDir() throws IOException {
         logger.info("Cleaning working directory...");
-        FileUtils.cleanDirectory(new File(workingDir));
+        FileUtils.cleanDirectory(new File(contextProvider.getWorkingDir()));
         logger.info("Cleaned working directory: OK\n");
     }
 
     private void createLogsDir() {
         logger.info("Creating external tools logging directory...");
 
-        File logsDir = new File(workingDir, Constants.LOGS_DIR);
+        File logsDir = new File(contextProvider.getWorkingDir(), Constants.LOGS_DIR);
         logger.info("External tools logging directory: {}", logsDir);
         if (!logsDir.mkdir()) {
             logger.warn("Couldn't create External tools logging directory!");
@@ -170,20 +172,20 @@ public abstract class AbstractFormatBuilder {
         logger.info("Created external tools logging directory: OK\n");
     }
 
-    private void buildCplContext(String impFolder, String cplXml) throws XmlParsingException, FileNotFoundException {
+    private void buildCplContext() throws XmlParsingException, FileNotFoundException {
         logger.info("Building CPL contexts...");
 
-        File impDir = new File(impFolder);
+        File impDir = new File(inputParameters.getImpDirectory());
         if (!impDir.isDirectory()) {
             throw new FileNotFoundException(String.format("Invalid IMP directory: '%s' not found or not a directory", impDir.getAbsolutePath()));
         }
 
-        File assetMapFile = new File(impFolder, Constants.ASSETMAP_FILE);
+        File assetMapFile = new File(inputParameters.getImpDirectory(), Constants.ASSETMAP_FILE);
         logger.info("Parsing ASSETMAP.xml ('{}')...", assetMapFile.getAbsolutePath());
         this.assetMap = new AssetMapParser().parse(assetMapFile.getAbsolutePath());
         logger.info("Parsed ASSETMAP.xml: OK");
 
-        File cplFile = new File(impFolder, cplXml);
+        File cplFile = new File(inputParameters.getImpDirectory(), inputParameters.getCplXml());
         logger.info("Parsing CPL ('{}')...", cplFile.getAbsolutePath());
         new CplContextBuilder(contextProvider, assetMap).build(cplFile.getAbsolutePath());
         logger.info("Parsed CPL: OK");
@@ -257,7 +259,7 @@ public abstract class AbstractFormatBuilder {
 
         File tmpFile = new File(paramValue);
         if (!tmpFile.isAbsolute() || !tmpFile.isFile()) {
-            tmpFile = new File(workingDir, paramValue);
+            tmpFile = new File(contextProvider.getWorkingDir(), paramValue);
         }
 
         if (!tmpFile.isAbsolute() || !tmpFile.isFile()) {

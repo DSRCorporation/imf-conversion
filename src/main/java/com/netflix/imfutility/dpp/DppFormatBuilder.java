@@ -4,6 +4,7 @@ import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.Format;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.dpp.MetadataXmlProvider.DMFramework;
+import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.dpp.metadata.AudioTrackLayoutDmAs11Type;
 import org.slf4j.Logger;
@@ -20,21 +21,11 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
 
     private final Logger logger = LoggerFactory.getLogger(DppFormatBuilder.class);
 
-    private final String metadataXml;
-    private final String audioMapXml;
+    private final DppInputParameters dppInputParameters;
 
-    public DppFormatBuilder(String configXml, String metadataXml) {
-        this(configXml, null, metadataXml, null);
-    }
-
-    public DppFormatBuilder(String configXml, String metadataXml, String audioMapXml) {
-        this(configXml, null, metadataXml, audioMapXml);
-    }
-
-    public DppFormatBuilder(String configXml, String defaultWorkingDirectory, String metadataXml, String audioMapXml) {
-        super(Format.DPP, configXml, defaultWorkingDirectory);
-        this.metadataXml = metadataXml;
-        this.audioMapXml = audioMapXml;
+    public DppFormatBuilder(DppInputParameters dppInputParameters) {
+        super(Format.DPP, dppInputParameters);
+        this.dppInputParameters = dppInputParameters;
     }
 
     @Override
@@ -54,11 +45,11 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
 
         // 1. load metadata.xml
-        MetadataXmlProvider metadataXmlProvider = new MetadataXmlProvider(metadataXml, workingDir);
+        MetadataXmlProvider metadataXmlProvider = new MetadataXmlProvider(dppInputParameters.getMetadataXml(), contextProvider.getWorkingDir());
 
         // 2. load audiomap.xml
         AudioTrackLayoutDmAs11Type audioTrackLayout = metadataXmlProvider.getDpp().getTechnical().getAudio().getAudioTrackLayout();
-        AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(audioMapXml, audioTrackLayout, contextProvider);
+        AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(dppInputParameters.getAudiomapXml(), audioTrackLayout, contextProvider);
 
         // 3. fill audio map parameters
         dynamicContext.addParameter(DYNAMIC_PARAM_PAN, audioMapXmlProvider.getPanParameter());

@@ -1,5 +1,6 @@
 package com.netflix.imfutility.dpp;
 
+import com.netflix.imfutility.Constants;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.dpp.metadata.*;
@@ -252,7 +253,7 @@ public class MetadataXmlProvider {
             Transformer transformer = tf.newTransformer(xslt);
 
             //Set framework
-            transformer.setParameter("framework", framework.value());
+            transformer.setParameter(Constants.BMX_FRAMEWORK_PARAM, framework.value());
 
             //Prepare a parameter file
             File result = new File(workingDir, framework.value + ".txt");
