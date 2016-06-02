@@ -28,12 +28,28 @@ public final class TemplateParameterContextCreator {
     private TemplateParameterContextCreator() {
     }
 
-    public static TemplateParameterContextProvider createDefaultTemplateParameterContextProvider() throws Exception {
+    public static TemplateParameterContextProvider createDefaultContextProvider() throws Exception {
         ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml());
         ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
-        return new TemplateParameterContextProvider(configProvider.getConfig(), conversionProvider.getFormat(),
-                TemplateParameterContextCreator.getCurrentTmpDir());
+        return new TemplateParameterContextProvider(
+                configProvider.getConfig(), conversionProvider.getFormat(), TemplateParameterContextCreator.getCurrentTmpDir());
     }
+
+
+    public static TemplateParameterContextProvider createDefaultContextProviderWithCPLContext(
+            int segmentCount, int seqCount, int resourceCount) throws Exception {
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
+        fillCPLContext(contextProvider, segmentCount, seqCount, resourceCount);
+        return contextProvider;
+    }
+
+    public static TemplateParameterContextProvider createDefaultContextProviderWithCPLContext(
+            int segmentCount, int seqCount, int resourceCount, EnumSet<SequenceType> sequenceTypes) throws Exception {
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
+        fillCPLContext(contextProvider, segmentCount, seqCount, resourceCount, sequenceTypes);
+        return contextProvider;
+    }
+
 
     public static String getCurrentTmpDir() {
         String tempDir = System.getProperty("java.io.tmpdir");

@@ -11,7 +11,7 @@ import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -28,7 +28,7 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
     private static class SequenceData extends ContextData<SequenceUUID, SequenceContextParameters> {
     }
 
-    private final Map<SequenceType, SequenceData> sequences = new HashMap<>();
+    private final Map<SequenceType, SequenceData> sequences = new LinkedHashMap<>();
 
     public SequenceTemplateParameterContext initSequence(SequenceType seqType, SequenceUUID uuid) {
         if (!sequences.containsKey(seqType) || !sequences.get(seqType).contains(uuid)) {

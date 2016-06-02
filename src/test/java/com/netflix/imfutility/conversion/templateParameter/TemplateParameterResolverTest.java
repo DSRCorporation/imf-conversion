@@ -36,7 +36,7 @@ public class TemplateParameterResolverTest {
 
     @BeforeClass
     public static void setUpAll() throws Exception {
-        contextProvider = createDefaultTemplateParameterContextProvider();
+        contextProvider = createDefaultContextProvider();
         fillDynamic(contextProvider);
         fillCPLContext(contextProvider,
                 SEGMENT_COUNT,

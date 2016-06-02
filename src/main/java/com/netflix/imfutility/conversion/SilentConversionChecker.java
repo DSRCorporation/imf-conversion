@@ -1,16 +1,12 @@
 package com.netflix.imfutility.conversion;
 
-import com.netflix.imfutility.config.ConfigXmlProvider;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.xsd.config.AllowDisallow;
-import com.netflix.imfutility.xsd.config.AudioConversionParametersType;
-import com.netflix.imfutility.xsd.config.ConversionParametersType;
-import com.netflix.imfutility.xsd.config.VideoConversionParametersType;
+import com.netflix.imfutility.xsd.config.*;
 import com.netflix.imfutility.xsd.conversion.*;
 
 import java.util.Objects;
@@ -24,10 +20,10 @@ public class SilentConversionChecker {
     private final DestinationConversionParametersType destConversionParams;
     private final ConversionParametersType configConversionParams;
 
-    public SilentConversionChecker(TemplateParameterContextProvider contextProvider, FormatConfigurationType formatConfigurationType, ConfigXmlProvider configProvider) {
+    public SilentConversionChecker(TemplateParameterContextProvider contextProvider, FormatConfigurationType formatConfiguration, ConfigType config) {
         this.sequenceContext = contextProvider.getSequenceContext();
-        this.destConversionParams = formatConfigurationType.getConversionParameters();
-        this.configConversionParams = configProvider.getConfig().getConversionParameters();
+        this.destConversionParams = formatConfiguration.getConversionParameters();
+        this.configConversionParams = config.getConversionParameters();
     }
 
     public void check() throws ConversionNotAllowedException {
@@ -106,7 +102,7 @@ public class SilentConversionChecker {
     }
 
     private void checkParameter(SequenceContextParameters param, String destinationParamValue, ContextInfo contextInfo) throws ConversionNotAllowedException {
-        if (destinationParamValue == null) {
+        if (destinationParamValue == null || destinationParamValue.isEmpty()) {
             return;
         }
 

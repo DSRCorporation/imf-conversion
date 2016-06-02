@@ -205,7 +205,7 @@ public abstract class AbstractFormatBuilder {
         logger.info("Building Metadata Info contexts...");
 
         new MediaInfoContextBuilder(
-                contextProvider, new ConversionEngine().getExecuteStrategyFactory(), conversionProvider.getFormat()).build();
+                contextProvider, new ConversionEngine().getExecuteStrategyFactory()).build();
 
         logger.info("Built Metadata Info contexts: OK");
     }
@@ -218,7 +218,7 @@ public abstract class AbstractFormatBuilder {
 
     private void checkForSilentConversion() throws ConversionNotAllowedException {
         logger.info("Checking whether it's allowed by config.xml to silently convert to destination parameters if they don't match...");
-        new SilentConversionChecker(contextProvider, formatConfigurationType, configProvider).check();
+        new SilentConversionChecker(contextProvider, formatConfigurationType, configProvider.getConfig()).check();
         logger.info("Checked: silent conversion is either allowed or not needed.");
     }
 

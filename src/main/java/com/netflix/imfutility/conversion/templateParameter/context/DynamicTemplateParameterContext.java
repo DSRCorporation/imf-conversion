@@ -143,6 +143,10 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         return getParameterValue(templateParameter).getValue();
     }
 
+    public CustomParameterValue getParameterValue(String templateParameterName) {
+        return getParameterValue(new TemplateParameter(TemplateParameterContext.DYNAMIC, templateParameterName));
+    }
+
     public CustomParameterValue getParameterValue(TemplateParameter templateParameter) {
         CustomParameterValue paramValue = params.get(templateParameter.getName());
         if (paramValue == null) {

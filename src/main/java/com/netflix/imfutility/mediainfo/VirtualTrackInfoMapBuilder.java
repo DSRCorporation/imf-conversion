@@ -8,6 +8,7 @@ import com.netflix.imfutility.xsd.mediainfo.FfprobeType;
 import com.netflix.imfutility.xsd.mediainfo.StreamType;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ class VirtualTrackInfoMapBuilder {
 
     private final Map<SequenceUUID, VirtualTrackInfo> virtualTrackInfoMap = new HashMap<>();
 
-    void addResourceInfo(File inputFile, File outputFile, ContextInfo contextInfo) throws XmlParsingException, MediaInfoException {
+    void addResourceInfo(File inputFile, File outputFile, ContextInfo contextInfo) throws XmlParsingException, MediaInfoException, FileNotFoundException {
         // 1. parse output xml
         FfprobeType mediaInfo = parseOutputFile(outputFile);
 
@@ -51,7 +52,11 @@ class VirtualTrackInfoMapBuilder {
         return virtualTrackInfoMap;
     }
 
-    private FfprobeType parseOutputFile(File outputFile) throws XmlParsingException {
+    private FfprobeType parseOutputFile(File outputFile) throws XmlParsingException, FileNotFoundException {
+        if (!outputFile.isFile()) {
+            throw new FileNotFoundException(String.format("Invalid media info output file: '%s' not found", outputFile.getAbsolutePath()));
+        }
+
         return XmlParser.parse(outputFile, MEDIAINFO_XSD, MEDIAINFO_PACKAGE, FfprobeType.class);
     }
 

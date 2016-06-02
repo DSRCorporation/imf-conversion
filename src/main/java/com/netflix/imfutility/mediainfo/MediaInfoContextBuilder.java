@@ -39,10 +39,10 @@ public class MediaInfoContextBuilder {
 
     private final VirtualTrackInfoMapBuilder virtualTrackInfoMapBuilder;
 
-    public MediaInfoContextBuilder(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory executeStrategyFactory, FormatType format) {
+    public MediaInfoContextBuilder(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory executeStrategyFactory) {
         this.contextProvider = contextProvider;
         this.executeStrategyFactory = executeStrategyFactory;
-        this.format = format;
+        this.format = contextProvider.getFormat();
         this.virtualTrackInfoMapBuilder = new VirtualTrackInfoMapBuilder();
     }
 
@@ -72,21 +72,23 @@ public class MediaInfoContextBuilder {
         String essence = contextProvider.getResourceContext().getParameterValue(
                 ResourceContextParameters.ESSENCE, contextInfo);
 
-        // 2. fill dynamic context's mediaInfoInput and Output
+        // 2. fill dynamic context's mediaInfoInput
         contextProvider.getDynamicContext().addParameter(DynamicContextParameters.MEDIA_INFO_INPUT, essence, false);
-        File outputFile = new File(contextProvider.getWorkingDir(), Constants.MEDIA_INFO_SUFFIX + contextInfo.getSequenceType().value() + ".xml");
-        contextProvider.getDynamicContext().addParameter(
-                DynamicContextParameters.MEDIA_INFO_OUTPUT.getName() + contextInfo.getSequenceType().value(),
-                outputFile.getAbsolutePath(), true);  // add output as a dynamic parameter to delete on exit
 
         // 3. execute media info command. the output will be in %{tmp.mediaInfoOutput}
-        executeMediaInfoCommand(contextInfo, outputFile);
+        File outputFile = executeMediaInfoCommand(contextInfo);
 
-        // 4. build sequence map
+        // 4. add output as a dynamic parameter to delete on exit
+        contextProvider.getDynamicContext().addParameter(
+                DynamicContextParameters.MEDIA_INFO_OUTPUT.getName() + contextInfo.getSequenceType().value(),
+                outputFile.getAbsolutePath(), true);
+
+        // 5. build sequence map
         virtualTrackInfoMapBuilder.addResourceInfo(new File(essence), outputFile, contextInfo);
     }
 
-    void executeMediaInfoCommand(ContextInfo contextInfo, File outputFile) throws IOException {
+    File executeMediaInfoCommand(ContextInfo contextInfo) throws IOException {
+        File outputFile = new File(contextProvider.getWorkingDir(), Constants.MEDIA_INFO_SUFFIX + contextInfo.getSequenceType().value() + ".xml");
         MediaInfoCommandType mediaInfoCommand = null;
         switch (contextInfo.getSequenceType()) {
             case VIDEO:
@@ -103,6 +105,8 @@ public class MediaInfoContextBuilder {
         OperationInfo operationInfo = new OperationInfo(
                 mediaInfoCommand.getValue(), mediaInfoCommand.getClass().getSimpleName(), mediaInfoCommand.getClass(), contextInfo, outputFile);
         executeStrategyFactory.createExecuteOnceStrategy(contextProvider).execute(operationInfo);
+
+        return outputFile;
     }
 
     private void buildSequenceContext() {
