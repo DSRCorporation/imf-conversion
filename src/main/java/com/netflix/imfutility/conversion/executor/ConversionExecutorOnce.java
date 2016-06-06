@@ -10,7 +10,8 @@ import java.io.IOException;
 
 /**
  * An executor for {@link ExecOnceType} conversion operation.
- * It simply starts the conversion operation and waits until it's finished.
+ * It simply starts the conversion operation and waits until it's finished
+ * (see {@link com.netflix.imfutility.conversion.executor.strategy.ExecuteOnceStrategy}).
  */
 public class ConversionExecutorOnce extends AbstractConversionExecutor {
 

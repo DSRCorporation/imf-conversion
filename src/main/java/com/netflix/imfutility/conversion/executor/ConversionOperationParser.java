@@ -21,6 +21,15 @@ public class ConversionOperationParser {
         this.parameterResolver = parameterResolver;
     }
 
+    /**
+     * Resolves all parameters in the given conversion operation string, and splits arguments.
+     * It doesn't add any quotes, so it's assumed that all quotes are added at the conversion.xml level.
+     * If quotes should be be auto-added, then use {@link #parseWithQuotes(String, ContextInfo)}.
+     *
+     * @param conversionOperation a conversion operation string as defined in conversion.xml.
+     * @param contextInfo         a context info to resolve template parameters.
+     * @return process and arguments for the input conversion operation. The first element is the process, the other elements are the arguments for the process.
+     */
     public List<String> parseOperation(String conversionOperation, ContextInfo contextInfo) {
         // 1. resolve parameters BEFORE splitting since resolved values may contain multiple sub-parameters!
         conversionOperation = parameterResolver.resolveTemplateParameter(conversionOperation, contextInfo);
@@ -30,7 +39,16 @@ public class ConversionOperationParser {
         return splitParameters(conversionOperation);
     }
 
-
+    /**
+     * Resolves all parameters in the given conversion operation string, and splits arguments.
+     * <p>
+     * Unlike {@link #parseOperation(String, ContextInfo)}, it adds quotes where needed.
+     * </p>
+     *
+     * @param conversionOperation a conversion operation string as defined in conversion.xml.
+     * @param contextInfo         a context info to resolve template parameters.
+     * @return process and arguments for the input conversion operation. The first element is the process, the other elements are the arguments for the process.
+     */
     public List<String> parseWithQuotes(String conversionOperation, ContextInfo contextInfo) {
         // 1. resolve parameters BEFORE splitting since resolved values may contain multiple sub-parameters!
         conversionOperation = parameterResolver.resolveTemplateParameter(conversionOperation, contextInfo);

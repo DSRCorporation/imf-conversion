@@ -13,6 +13,27 @@ import java.util.List;
 
 /**
  * Execute all operations in a pipeline.
+ * <p>
+ * Example of the input {@link PipeOperationInfo}:
+ * <ul>
+ * <li>cycleOperations: {{cycle11, cycle12, cycle13}, {cycle21, cycle22}},</li>
+ * <li>pipeOperations: {pipe1, pipe2, pipe3}.</li>
+ * <li>Execution order:
+ * <ol>
+ * <li>start pipe1, pipe2, pipe3;</li>
+ * <li>start cycle11, cycle12, cycle13</li>
+ * <li>create a pipeline:  cycle11 -> cycle12 -> cycle13 -> pipe1 -> pipe2 -> pipe3</li>
+ * <li>wait until the first operation (cycle11) is finished</li>
+ * <li>finish cycle 12 and cycle 13 (pipe1, pipe2 and pipe3 are still running)</li>
+ * <li>start cycle21, cycle22</li>
+ * <li>create a pipeline:  cycle21 -> cycle22 -> pipe1 -> pipe2 -> pipe3</li>
+ * <li>wait until the first operation (cycle21) is finished</li>
+ * <li>finish cycle 22</li>
+ * <li>finish pipe1, pipe2 and pipe3</li>
+ * </ol>
+ * </li>
+ * </ul>
+ * </p>
  */
 public class ExecutePipeStrategy extends AbstractExecuteStrategy {
 

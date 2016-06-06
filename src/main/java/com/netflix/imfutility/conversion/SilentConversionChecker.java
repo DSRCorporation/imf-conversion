@@ -13,6 +13,10 @@ import java.util.Objects;
 
 /**
  * Checks whether it's allowed (in config.xml) to silently convert source parameters to destination ones if they don't match.
+ * Example: input video essence has 50 fps; destination fps (as defined in conversion.xml) is 25 fps.
+ * If config.xml says that silent conversion is not allowed => {@link ConversionNotAllowedException} is thrown.
+ * If config.xml says that silent conversion is allowed, then no exception is thrown, and the fps will be silently converted (for example, by FFMPEG)
+ * as defined in conversion.xml.
  */
 public class SilentConversionChecker {
 
@@ -26,6 +30,14 @@ public class SilentConversionChecker {
         this.configConversionParams = config.getConversionParameters();
     }
 
+    /**
+     * Whether it's allowed to silently convert source parameters to destination ones if they don't match.
+     * {@link ConversionNotAllowedException} is thrown if it's not allowed.
+     *
+     * @throws ConversionNotAllowedException if there are mismatched parameters,
+     *                                       For example, source fps is 25, and the destination one (as defined by conversion.xml), is 50,
+     *                                       and config.xml says that silent conversion of fps is not allowed.
+     */
     public void check() throws ConversionNotAllowedException {
         if (destConversionParams == null) {
             return;

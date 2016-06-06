@@ -6,7 +6,8 @@ import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 /**
- * A current state depending on the conversion operation type (sequence, segment, etc.).
+ * A current state that helps to resolve a parameter by {@link com.netflix.imfutility.conversion.templateParameter.context.ITemplateParameterContext}.
+ * All fields are optional there.  It depends on the conversion operation type (sequence, segment, etc.) what fields must be filled to be able to resolve a template parameter.
  */
 public class ContextInfo {
 

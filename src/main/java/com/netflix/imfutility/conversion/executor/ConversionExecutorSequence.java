@@ -20,8 +20,14 @@ import java.util.stream.Collectors;
 
 /**
  * An executor for {@link ExecEachSequenceSegmentType} conversion operation.
+ * <p>
  * It reads all sub-conversion operations for the input sequence conversion operation and executes them
- * either once or in a pipe using an appropriate execute strategy.
+ * either once or in a pipe using an appropriate execute strategy for each segment.
+ * A sub-conversion operation may be executed either once, in a pipeline, or for each segment.
+ * <p>
+ * See {@link com.netflix.imfutility.conversion.executor.strategy.ExecuteOnceStrategy} and
+ * {@link com.netflix.imfutility.conversion.executor.strategy.ExecutePipeStrategy}.
+ * </p>
  */
 public class ConversionExecutorSequence extends AbstractConversionExecutor {
 

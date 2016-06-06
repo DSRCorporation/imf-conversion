@@ -19,6 +19,12 @@ import java.util.Map;
  * <li>It's used to replace segment template parameters in conversion operations</li>
  * <li>May contain any only supported segment parameters (see {@link SegmentContextParameters}</li>
  * <li>Created dynamically in the code when analyzing CPL.</li>
+ * <li>Contains the following information for each segment:
+ * <ul>
+ * <li>Segment UUID</li>
+ * <li>Segment number</li>
+ * </ul>
+ * </li>
  * </ul>
  */
 public class SegmentTemplateParameterContext implements ITemplateParameterContext {
@@ -28,12 +34,14 @@ public class SegmentTemplateParameterContext implements ITemplateParameterContex
 
     private final Map<SegmentUUID, SegmentParameterData> segments = new LinkedHashMap<>();
 
-    public SegmentTemplateParameterContext addSegmentParameter(SegmentUUID uuid, SegmentContextParameters paramName, String paramValue) {
-        initSegment(uuid);
-        doAddParameter(uuid, paramName, paramValue);
-        return this;
-    }
 
+    /**
+     * Inits a segment parameter defined by the given UUID. Defines default parameters (such as Segment UUID and number).
+     * The method must be called for each segment before adding another parameters.
+     *
+     * @param uuid segment UUID.
+     * @return this segment template parameters context.
+     */
     public SegmentTemplateParameterContext initSegment(SegmentUUID uuid) {
         if (!segments.containsKey(uuid)) {
             int segmNum = segments.size();
@@ -42,6 +50,21 @@ public class SegmentTemplateParameterContext implements ITemplateParameterContex
         }
         return this;
     }
+
+    /**
+     * Adds a segment parameter.
+     *
+     * @param uuid       segment UUID.
+     * @param paramName  a enum defining the parameter name.
+     * @param paramValue parameter value
+     * @return this segment template parameters context.
+     */
+    public SegmentTemplateParameterContext addSegmentParameter(SegmentUUID uuid, SegmentContextParameters paramName, String paramValue) {
+        initSegment(uuid);
+        doAddParameter(uuid, paramName, paramValue);
+        return this;
+    }
+
 
     private void doAddParameter(SegmentUUID uuid, SegmentContextParameters paramName, String paramValue) {
         SegmentParameterData segmentData = segments.get(uuid);
@@ -52,14 +75,25 @@ public class SegmentTemplateParameterContext implements ITemplateParameterContex
         segmentData.addParameter(paramName, paramValue);
     }
 
+    /**
+     * @return total count of segments.
+     */
     public int getSegmentsNum() {
         return segments.size();
     }
 
+    /**
+     * @return all Segment UUIDs. The order of the UUIDS is the order as they were added.
+     */
     public Collection<SegmentUUID> getUuids() {
         return segments.keySet();
     }
 
+    /**
+     * @param segmParameter a enum defining the parameter name.
+     * @param contextInfo   a context info. Must  contain information about the segment.
+     * @return resolved parameter value as a string. Never null.
+     */
     public String getParameterValue(SegmentContextParameters segmParameter, ContextInfo contextInfo) {
         return getParameterValue(
                 new TemplateParameter(TemplateParameterContext.SEGMENT, segmParameter.getName()),
@@ -67,6 +101,15 @@ public class SegmentTemplateParameterContext implements ITemplateParameterContex
                 contextInfo);
     }
 
+    /**
+     * Resolves the given parameter.
+     * The returned value is never null.
+     * A runtime exception is thrown if parameter can not be resolved.
+     *
+     * @param templateParameter the template parameter to be resolved.
+     * @param contextInfo       a context info. Must  contain information about the segment.
+     * @return resolved parameter value as a string. Never null.
+     */
     @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo) {
         SegmentContextParameters segmentParameter = SegmentContextParameters.fromName(templateParameter.getName());

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * All supported segment template parameter names.
+ * All supported resource template parameter names.
  */
 public enum ResourceContextParameters {
 
@@ -14,13 +14,13 @@ public enum ResourceContextParameters {
 
     ESSENCE("essence"),
 
-    START_TIME_TIMECODE("startTimeTC"),
+    START_TIME_TIMECODE("startTimeTC"), // in time code
 
-    START_TIME_EDIT_UNIT("startTimeEU"),
+    START_TIME_EDIT_UNIT("startTimeEU"), // in edit units
 
-    DURATION_TIMECODE("durationTC"),
+    DURATION_TIMECODE("durationTC"), // in time code
 
-    DURATION_EDIT_UNIT("durationEU");
+    DURATION_EDIT_UNIT("durationEU"); // in edit units
 
     private final String name;
 

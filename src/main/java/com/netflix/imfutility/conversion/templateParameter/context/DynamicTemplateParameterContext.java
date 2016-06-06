@@ -19,7 +19,13 @@ import java.util.stream.Collectors;
  * <ul>
  * <li>It's used to replace dynamic template parameters in conversion operations</li>
  * <li>May contain any key-value map</li>
- * <li>Created dynamically in the code</li>
+ * <li>May be created dynamically in the code</li>
+ * <li>May be created dynamically in conversion.xml</li>
+ * <li>Supports deleteOnExit flag to delete a tmp file on exit (if the parameter defines a valid path).</li>
+ * <li>It's possible to either add a parameter value for the given parameter name, or append the parameter value.
+ * In the first case the previous value for the parameter name will be replaced. In the second case the new value will be appended to the previous value.</li>
+ * <li>A dynamic parameter value may contain template parameters. All template parameters are resolved before adding a parameter.</li>
+ * <li>A dynamic parameter name may contain template parameters. All template parameters are resolved before adding a parameter.</li>
  * </ul>
  */
 public class DynamicTemplateParameterContext implements ITemplateParameterContext {
@@ -32,6 +38,17 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         this.parameterResolver = new TemplateParameterResolver(contextProvider);
     }
 
+    /**
+     * Adds a dynamic parameter defined in conversion.xml.
+     * <ul>
+     * <li>All template parameters within the parameter value and name are resolved.</li>
+     * <li>The parameter value replaces the previous parameter value.</li>
+     * </ul>
+     *
+     * @param dynamicParameter a dynamic parameter defined in the conversion.xml.
+     * @param contextInfo      a context info to resolved template parameters within the given parameter value.
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext addParameter(DynamicParameterType dynamicParameter, ContextInfo contextInfo) {
         return addParameter(
                 dynamicParameter.getName().trim(),
@@ -40,6 +57,18 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
                 contextInfo);
     }
 
+    /**
+     * Adds a dynamic parameter defined in conversion.xml, that supports concatenation.
+     * <ul>
+     * <li>All template parameters within the parameter value and name are resolved.</li>
+     * <li>The parameter value either replaces the previous parameter value or is appended to the previous parameter value
+     * depending on the flag.</li>
+     * </ul>
+     *
+     * @param dynamicParameter a dynamic parameter defined in the conversion.xml.
+     * @param contextInfo      a context info to resolved template parameters within the given parameter value.
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext addParameter(DynamicParameterConcatType dynamicParameter, ContextInfo contextInfo) {
         String paramName = dynamicParameter.getName().trim();
         String paramValue = dynamicParameter.getValue().trim();
@@ -51,22 +80,85 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         return this;
     }
 
+    /**
+     * Adds a dynamic parameter value.
+     * <ul>
+     * <li>All template parameters within the parameter value and name are resolved.</li>
+     * <li>The parameter value replaces the previous parameter value.</li>
+     * </ul>
+     *
+     * @param param        enum defining the parameter name.
+     * @param paramValue   parameter value
+     * @param deleteOnExit whether a file defined by the parameter value must be deleted on exit (must be true for tmp files).
+     * @param contextInfo  a context info to resolved template parameters within the given parameter value.
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext addParameter(DynamicContextParameters param, String paramValue, boolean deleteOnExit, ContextInfo contextInfo) {
         return addParameter(param.getName(), paramValue, deleteOnExit, contextInfo);
     }
 
+    /**
+     * Adds a dynamic parameter value.
+     * <ul>
+     * <li>All template parameters within the parameter value and name are resolved.</li>
+     * <li>The parameter value replaces the previous parameter value.</li>
+     * <li>A file defined by the parameter will not be deleted on exit.</li>
+     * </ul>
+     *
+     * @param param       enum defining the parameter name.
+     * @param paramValue  parameter value
+     * @param contextInfo a context info to resolved template parameters within the given parameter value.
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext addParameter(DynamicContextParameters param, String paramValue, ContextInfo contextInfo) {
         return addParameter(param, paramValue, false, contextInfo);
     }
 
+    /**
+     * Adds a dynamic parameter value.
+     * <ul>
+     * <li>It doesn't expect any template parameters within the parameter value.</li>
+     * <li>The parameter value replaces the previous parameter value.</li>
+     * </ul>
+     *
+     * @param param        enum defining the parameter name.
+     * @param paramValue   parameter value
+     * @param deleteOnExit whether a file defined by the parameter value must be deleted on exit (must be true for tmp files).
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext addParameter(DynamicContextParameters param, String paramValue, boolean deleteOnExit) {
         return addParameter(param, paramValue, deleteOnExit, ContextInfo.EMPTY);
     }
 
+    /**
+     * Adds a dynamic parameter value.
+     * <ul>
+     * <li>It doesn't expect any template parameters within the parameter value.</li>
+     * <li>The parameter value replaces the previous parameter value.</li>
+     * <li>A file defined by the parameter will not be deleted on exit.</li>
+     * </ul>
+     *
+     * @param param      enum defining the parameter name.
+     * @param paramValue parameter value
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext addParameter(DynamicContextParameters param, String paramValue) {
         return addParameter(param, paramValue, ContextInfo.EMPTY);
     }
 
+    /**
+     * Adds a dynamic parameter value.
+     * <ul>
+     * <li>All template parameters within the parameter value and name are resolved.</li>
+     * <li>The parameter value replaces the previous parameter value.</li>
+     * </ul>
+     *
+     * @param paramName    parameter name
+     * @param paramValue   parameter value
+     * @param deleteOnExit whether a file defined by the parameter value must be deleted on exit (must be true for tmp files).
+     * @param contextInfo  a context info to resolved template parameters within the given parameter value.
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext addParameter(String paramName, String paramValue, boolean deleteOnExit, ContextInfo contextInfo) {
         paramName = parameterResolver.resolveTemplateParameter(paramName, contextInfo);
         paramValue = parameterResolver.resolveTemplateParameter(paramValue, contextInfo);
@@ -74,34 +166,134 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         return this;
     }
 
+    /**
+     * Adds a dynamic parameter value.
+     * <ul>
+     * <li>It doesn't expect any template parameters within the parameter value.</li>
+     * <li>The parameter value replaces the previous parameter value.</li>
+     * </ul>
+     *
+     * @param paramName    parameter name
+     * @param paramValue   parameter value
+     * @param deleteOnExit whether a file defined by the parameter value must be deleted on exit (must be true for tmp files).
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext addParameter(String paramName, String paramValue, boolean deleteOnExit) {
         return addParameter(paramName, paramValue, deleteOnExit, ContextInfo.EMPTY);
     }
 
+    /**
+     * Adds a dynamic parameter value.
+     * <ul>
+     * <li>All template parameters within the parameter value and name are resolved.</li>
+     * <li>The parameter value replaces the previous parameter value.</li>
+     * <li>A file defined by the parameter will not be deleted on exit.</li>
+     * </ul>
+     *
+     * @param paramName   parameter name
+     * @param paramValue  parameter value
+     * @param contextInfo a context info to resolved template parameters within the given parameter value.
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext addParameter(String paramName, String paramValue, ContextInfo contextInfo) {
         return addParameter(paramName, paramValue, false, contextInfo);
     }
 
+    /**
+     * Adds a dynamic parameter value.
+     * <ul>
+     * <li>It doesn't expect any template parameters within the parameter value.</li>
+     * <li>The parameter value replaces the previous parameter value.</li>
+     * <li>A file defined by the parameter will not be deleted on exit.</li>
+     * </ul>
+     *
+     * @param paramName  parameter name
+     * @param paramValue parameter value
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext addParameter(String paramName, String paramValue) {
         return addParameter(paramName, paramValue, ContextInfo.EMPTY);
     }
 
+    /**
+     * Appends a dynamic parameter value.
+     * <ul>
+     * <li>All template parameters within the parameter value and name are resolved.</li>
+     * <li>The parameter value is appended to the previous parameter value.</li>
+     * </ul>
+     *
+     * @param param        enum defining the parameter name.
+     * @param paramValue   parameter value
+     * @param deleteOnExit whether a file defined by the parameter value must be deleted on exit (must be true for tmp files).
+     * @param contextInfo  a context info to resolved template parameters within the given parameter value.
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext appendParameter(DynamicContextParameters param, String paramValue, boolean deleteOnExit, ContextInfo contextInfo) {
         return appendParameter(param.getName(), paramValue, deleteOnExit, contextInfo);
     }
 
+    /**
+     * Appends a dynamic parameter value.
+     * <ul>
+     * <li>All template parameters within the parameter value and name are resolved.</li>
+     * <li>The parameter value is appended to the previous parameter value.</li>
+     * <li>A file defined by the parameter will not be deleted on exit.</li>
+     * </ul>
+     *
+     * @param param       enum defining the parameter name.
+     * @param paramValue  parameter value
+     * @param contextInfo a context info to resolved template parameters within the given parameter value.
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext appendParameter(DynamicContextParameters param, String paramValue, ContextInfo contextInfo) {
         return appendParameter(param, paramValue, false, contextInfo);
     }
 
+    /**
+     * Appends a dynamic parameter value.
+     * <ul>
+     * <li>It doesn't expect any template parameters within the parameter value.</li>
+     * <li>The parameter value is appended to the previous parameter value.</li>
+     * </ul>
+     *
+     * @param param        enum defining the parameter name.
+     * @param paramValue   parameter value
+     * @param deleteOnExit whether a file defined by the parameter value must be deleted on exit (must be true for tmp files).
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext appendParameter(DynamicContextParameters param, String paramValue, boolean deleteOnExit) {
         return appendParameter(param, paramValue, deleteOnExit, ContextInfo.EMPTY);
     }
 
+    /**
+     * Appends a dynamic parameter value.
+     * <ul>
+     * <li>It doesn't expect any template parameters within the parameter value.</li>
+     * <li>The parameter value is appended to the previous parameter value.</li>
+     * <li>A file defined by the parameter will not be deleted on exit.</li>
+     * </ul>
+     *
+     * @param param      enum defining the parameter name.
+     * @param paramValue parameter value
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext appendParameter(DynamicContextParameters param, String paramValue) {
         return appendParameter(param, paramValue, ContextInfo.EMPTY);
     }
 
+    /**
+     * Appends a dynamic parameter value.
+     * <ul>
+     * <li>All template parameters within the parameter value and name are resolved.</li>
+     * <li>The parameter value is appended to the previous parameter value.</li>
+     * </ul>
+     *
+     * @param paramName    parameter name
+     * @param paramValue   parameter value
+     * @param deleteOnExit whether a file defined by the parameter value must be deleted on exit (must be true for tmp files).
+     * @param contextInfo  a context info to resolved template parameters within the given parameter value.
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext appendParameter(String paramName, String paramValue, boolean deleteOnExit, ContextInfo contextInfo) {
         paramName = parameterResolver.resolveTemplateParameter(paramName, contextInfo);
         paramValue = parameterResolver.resolveTemplateParameter(paramValue, contextInfo);
@@ -114,14 +306,51 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         return this;
     }
 
+    /**
+     * Appends a dynamic parameter value.
+     * <ul>
+     * <li>All template parameters within the parameter value and name are resolved.</li>
+     * <li>The parameter value is appended to the previous parameter value.</li>
+     * <li>A file defined by the parameter will not be deleted on exit.</li>
+     * </ul>
+     *
+     * @param paramName   parameter name
+     * @param paramValue  parameter value
+     * @param contextInfo a context info to resolved template parameters within the given parameter value.
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext appendParameter(String paramName, String paramValue, ContextInfo contextInfo) {
         return appendParameter(paramName, paramValue, false, contextInfo);
     }
 
+    /**
+     * Appends a dynamic parameter value.
+     * <ul>
+     * <li>It doesn't expect any template parameters within the parameter value.</li>
+     * <li>The parameter value is appended to the previous parameter value.</li>
+     * </ul>
+     *
+     * @param paramName    parameter name
+     * @param paramValue   parameter value
+     * @param deleteOnExit whether a file defined by the parameter value must be deleted on exit (must be true for tmp files).
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext appendParameter(String paramName, String paramValue, boolean deleteOnExit) {
         return appendParameter(paramName, paramValue, deleteOnExit, ContextInfo.EMPTY);
     }
 
+    /**
+     * Appends a dynamic parameter value.
+     * <ul>
+     * <li>It doesn't expect any template parameters within the parameter value.</li>
+     * <li>The parameter value is appended to the previous parameter value.</li>
+     * <li>A file defined by the parameter will not be deleted on exit.</li>
+     * </ul>
+     *
+     * @param paramName  parameter name
+     * @param paramValue parameter value
+     * @return this dynamic parameter context.
+     */
     public DynamicTemplateParameterContext appendParameter(String paramName, String paramValue) {
         return appendParameter(paramName, paramValue, ContextInfo.EMPTY);
     }
@@ -131,26 +360,65 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         return getParameterValueAsString(templateParameter);
     }
 
+    /**
+     * Gets the parameter value as a string.  All template parameters within the parameter value are resolved.
+     *
+     * @param templateParameterName parameter name
+     * @return a parameter value as a string.
+     */
     public String getParameterValueAsString(String templateParameterName) {
         return getParameterValueAsString(new TemplateParameter(TemplateParameterContext.DYNAMIC, templateParameterName));
     }
 
+    /**
+     * Gets the parameter value as a string.  All template parameters within the parameter value are resolved.
+     *
+     * @param dynamicParameter enum defining  parameter name
+     * @return a parameter value as a string.
+     */
     public String getParameterValueAsString(DynamicContextParameters dynamicParameter) {
         return getParameterValueAsString(new TemplateParameter(TemplateParameterContext.DYNAMIC, dynamicParameter.getName()));
     }
 
+    /**
+     * Gets the parameter value as a string.  All template parameters within the parameter value are resolved.
+     *
+     * @param templateParameter template parameter instance.
+     * @return a parameter value as a string.
+     */
     public String getParameterValueAsString(TemplateParameter templateParameter) {
         return getParameterValue(templateParameter).getValue();
     }
 
+    /**
+     * Gets the parameter value as {@link CustomParameterValue} instance.  All template parameters within the parameter value are resolved.
+     * The returned parameter value contains additional information about the parameter, such as whether it should be deleted on exit.
+     *
+     * @param templateParameterName parameter name
+     * @return a parameter value instance with additional information besides parameter value string.
+     */
     public CustomParameterValue getParameterValue(String templateParameterName) {
         return getParameterValue(new TemplateParameter(TemplateParameterContext.DYNAMIC, templateParameterName));
     }
 
+    /**
+     * Gets the parameter value as {@link CustomParameterValue} instance.  All template parameters within the parameter value are resolved.
+     * The returned parameter value contains additional information about the parameter, such as whether it should be deleted on exit.
+     *
+     * @param dynamicParameter enum defining  parameter name
+     * @return a parameter value instance with additional information besides parameter value string.
+     */
     public CustomParameterValue getParameterValue(DynamicContextParameters dynamicParameter) {
         return getParameterValue(dynamicParameter.getName());
     }
 
+    /**
+     * Gets the parameter value as {@link CustomParameterValue} instance.  All template parameters within the parameter value are resolved.
+     * The returned parameter value contains additional information about the parameter, such as whether it should be deleted on exit.
+     *
+     * @param templateParameter template parameter instance.
+     * @return a parameter value instance with additional information besides parameter value string.
+     */
     public CustomParameterValue getParameterValue(TemplateParameter templateParameter) {
         CustomParameterValue paramValue = params.get(templateParameter.getName());
         if (paramValue == null) {
@@ -161,12 +429,18 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         return paramValue;
     }
 
+    /**
+     * @return Gets all template parameter values as a string
+     */
     public Collection<String> getAllParametersAsString() {
         return params.values().stream()
                 .map(CustomParameterValue::getValue)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * @return gets all parameter value instances with additional information besides parameter value string.
+     */
     public Collection<CustomParameterValue> getAllParameters() {
         return params.values();
     }

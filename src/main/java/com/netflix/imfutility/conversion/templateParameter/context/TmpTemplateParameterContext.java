@@ -31,14 +31,29 @@ public class TmpTemplateParameterContext implements ITemplateParameterContext {
         return getParameterValueAsString(templateParameter);
     }
 
+    /**
+     * @param templateParameterName parameter name
+     * @return a parameter value as a string
+     */
     public String getParameterValueAsString(String templateParameterName) {
         return getParameterValueAsString(new TemplateParameter(TemplateParameterContext.TMP, templateParameterName));
     }
 
+    /**
+     * @param templateParameter a enum defining the parameter name
+     * @return a parameter value as a string
+     */
     public String getParameterValueAsString(TemplateParameter templateParameter) {
         return getParameterValue(templateParameter).getValue();
     }
 
+    /**
+     * Gets the parameter value as {@link CustomParameterValue} instance.
+     * The returned parameter value contains additional information about the parameter, such as whether it should be deleted on exit.
+     *
+     * @param templateParameter a enum defining the parameter name
+     * @return a parameter value instance with additional information besides parameter value string.
+     */
     public CustomParameterValue getParameterValue(TemplateParameter templateParameter) {
         if (format.getTmpContext() == null) {
             throw new TemplateParameterNotFoundException(
@@ -65,6 +80,9 @@ public class TmpTemplateParameterContext implements ITemplateParameterContext {
         return new CustomParameterValue(paramValue, param.isDeleteOnExit());
     }
 
+    /**
+     * @return Gets all template parameter values as a string
+     */
     public Collection<String> getAllParametersAsString() {
         return format.getTmpContext().getMap().values().stream()
                 .map(TmpParamType::getValue)
@@ -72,6 +90,9 @@ public class TmpTemplateParameterContext implements ITemplateParameterContext {
 
     }
 
+    /**
+     * @return gets all parameter value instances with additional information besides parameter value string.
+     */
     public Collection<CustomParameterValue> getAllParameters() {
         return format.getTmpContext().getMap().values().stream()
                 .map((TmpParamType param) -> new CustomParameterValue(param.getValue(), param.isDeleteOnExit()))

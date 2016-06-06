@@ -21,6 +21,13 @@ public class ConfigXmlProvider {
 
     private ConfigType config;
 
+    /**
+     * Parses the given config.xml file to a Java model. Performs XSD validation.
+     *
+     * @param configXml a full path to the input config.xml
+     * @throws XmlParsingException   if the input is not a valid XML or it doesn't pass XSD validation
+     * @throws FileNotFoundException if the input path doesn't define a file.
+     */
     public ConfigXmlProvider(String configXml) throws XmlParsingException, FileNotFoundException {
         File configFile = new File(configXml);
         if (!configFile.isFile()) {
@@ -30,6 +37,9 @@ public class ConfigXmlProvider {
         this.config = XmlParser.parse(configFile, CONFIG_XSD, CONFIG_PACKAGE, ConfigType.class);
     }
 
+    /**
+     * @return a Config instance corresponding to the input from config.xml
+     */
     public ConfigType getConfig() {
         return config;
     }

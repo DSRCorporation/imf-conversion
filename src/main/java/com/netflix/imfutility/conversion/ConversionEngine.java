@@ -39,6 +39,9 @@ public class ConversionEngine {
         }
     }
 
+    /**
+     * @return a factory to create execute strategies to execute external conversion operations.
+     */
     public ExecuteStrategyFactory getExecuteStrategyFactory() {
         return new ExecuteStrategyFactory();
     }

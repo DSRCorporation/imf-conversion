@@ -24,8 +24,11 @@ public class AbstractExecuteStrategy {
     protected final TemplateParameterResolver parameterResolver;
     protected final ProcessStarter processStarter;
 
-    private static int count = 1;
+    private static int count = 1; // the current number of executed conversion operations.
 
+    /**
+     * Resets the current number of executed conversion operations.
+     */
     public static void resetCount() {
         count = 1;
     }

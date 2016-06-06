@@ -217,6 +217,12 @@ public class MetadataXmlProvider {
         return bmxDppParameters.get(framework);
     }
 
+    /**
+     * Gets all parameter files for BMXLib tool for all frameworks (see {@link DMFramework}).
+     * The parameter files are created within the provided working directory.
+     *
+     * @return a collection of all parameter files for BMXLib within the working directory.
+     */
     public Collection<File> getBmxDppParameterFiles() {
         return bmxDppParameters.values();
     }
