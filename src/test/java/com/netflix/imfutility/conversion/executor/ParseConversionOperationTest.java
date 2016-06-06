@@ -9,6 +9,7 @@ import com.netflix.imfutility.conversion.templateParameter.context.DynamicTempla
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.util.ConversionUtils;
+import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,11 +33,7 @@ public class ParseConversionOperationTest {
 
     @BeforeClass
     public static void setUpAll() throws Exception {
-        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
-        ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml());
-
-        TemplateParameterContextProvider contextProvider = new TemplateParameterContextProvider(
-                configProvider.getConfig(), conversionProvider.getFormat(), ".");
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         fillDynamic(contextProvider);
 
         parser = new ConversionOperationParser(new TemplateParameterResolver(contextProvider));

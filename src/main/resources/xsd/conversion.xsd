@@ -30,9 +30,9 @@
     <xs:complexType name="formatType">
         <xs:sequence>
             <xs:element type="tmpContextType" name="tmpContext"/>
-            <xs:element type="mediaInfoCommandType" name="mediaInfoCommandVideo"/>
-            <xs:element type="mediaInfoCommandType" name="mediaInfoCommandAudio"/>
-            <xs:element type="mediaInfoCommandType" name="mediaInfoCommandSubtitle"/>
+            <xs:element type="mediaInfoCommandVideoType" name="mediaInfoCommandVideo"/>
+            <xs:element type="mediaInfoCommandAudioType" name="mediaInfoCommandAudio"/>
+            <xs:element type="mediaInfoCommandSubtitleType" name="mediaInfoCommandSubtitle"/>
             <xs:element type="formatConfigurationTypes" name="formatConfigurations" maxOccurs="1" minOccurs="1"/>
         </xs:sequence>
         <xs:attribute type="xs:string" name="name" use="required"/>
@@ -57,14 +57,45 @@
     </xs:complexType>
 
     <!--
-        A command to gather media info parameters (such as channels num, fps, etc.)
-    -->
+    A command to gather media info parameters (such as channels num, fps, etc.).
+-->
     <xs:complexType name="mediaInfoCommandType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
+    <!--
+        A command to gather media info parameters (such as channels num, fps, etc.) for video tracks.
+    -->
+    <xs:complexType name="mediaInfoCommandVideoType">
+        <xs:simpleContent>
+            <xs:extension base="mediaInfoCommandType">
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <!--
+    A command to gather media info parameters (such as channels num, fps, etc.) for audio tracks.
+-->
+    <xs:complexType name="mediaInfoCommandAudioType">
+        <xs:simpleContent>
+            <xs:extension base="mediaInfoCommandType">
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <!--
+    A command to gather media info parameters (such as channels num, fps, etc.) for subtitle tracks.
+-->
+    <xs:complexType name="mediaInfoCommandSubtitleType">
+        <xs:simpleContent>
+            <xs:extension base="mediaInfoCommandType">
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
 
     <!--
       defines destination format video/audio parameters for conversion.

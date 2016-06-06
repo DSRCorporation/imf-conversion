@@ -182,7 +182,7 @@ public abstract class AbstractFormatBuilder {
 
         File assetMapFile = new File(inputParameters.getImpDirectory(), Constants.ASSETMAP_FILE);
         logger.info("Parsing ASSETMAP.xml ('{}')...", assetMapFile.getAbsolutePath());
-        this.assetMap = new AssetMapParser().parse(assetMapFile.getAbsolutePath());
+        this.assetMap = new AssetMapParser().parse(impDir, assetMapFile.getAbsolutePath());
         logger.info("Parsed ASSETMAP.xml: OK");
 
         File cplFile = new File(inputParameters.getImpDirectory(), inputParameters.getCplXml());
@@ -205,7 +205,7 @@ public abstract class AbstractFormatBuilder {
         logger.info("Building Metadata Info contexts...");
 
         new MediaInfoContextBuilder(
-                contextProvider, new ConversionEngine().getExecuteStrategyFactory(), conversionProvider.getFormat()).build();
+                contextProvider, new ConversionEngine().getExecuteStrategyFactory()).build();
 
         logger.info("Built Metadata Info contexts: OK");
     }
@@ -218,7 +218,7 @@ public abstract class AbstractFormatBuilder {
 
     private void checkForSilentConversion() throws ConversionNotAllowedException {
         logger.info("Checking whether it's allowed by config.xml to silently convert to destination parameters if they don't match...");
-        new SilentConversionChecker(contextProvider, formatConfigurationType, configProvider).check();
+        new SilentConversionChecker(contextProvider, formatConfigurationType, configProvider.getConfig()).check();
         logger.info("Checked: silent conversion is either allowed or not needed.");
     }
 

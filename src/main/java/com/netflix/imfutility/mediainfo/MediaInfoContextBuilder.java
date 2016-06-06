@@ -10,18 +10,27 @@ import com.netflix.imfutility.conversion.templateParameter.context.SequenceTempl
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
+import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
+import com.netflix.imfutility.xsd.conversion.ExecOnceType;
 import com.netflix.imfutility.xsd.conversion.FormatType;
 import com.netflix.imfutility.xsd.conversion.MediaInfoCommandType;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
+import com.netflix.imfutility.xsd.mediainfo.FfprobeType;
+import com.netflix.imfutility.xsd.mediainfo.StreamType;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+
+import static com.netflix.imfutility.Constants.MEDIAINFO_PACKAGE;
+import static com.netflix.imfutility.Constants.MEDIAINFO_XSD;
 
 /**
  * Builds template parameters context related to Media Info.
@@ -37,13 +46,30 @@ public class MediaInfoContextBuilder {
     private final ExecuteStrategyFactory executeStrategyFactory;
     private final FormatType format;
 
-    private final VirtualTrackInfoMapBuilder virtualTrackInfoMapBuilder;
+    private final Map<ImmutablePair<SequenceType, String>, VirtualTrackInfo> processedMediaInfo = new HashMap<>();
+    private final Map<SequenceUUID, VirtualTrackInfo> mediaInfoForTrack = new HashMap<>();
 
-    public MediaInfoContextBuilder(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory executeStrategyFactory, FormatType format) {
+    public static File getOutputFile(SequenceType seqType, String essence, String workingDir) {
+        return new File(workingDir, getOutputFileName(seqType, essence));
+    }
+
+    public static String getOutputDynamicParamName(SequenceType seqType, String essence) {
+        return String.format("%s_%s",
+                DynamicContextParameters.MEDIA_INFO_OUTPUT.getName(),
+                getOutputFileName(seqType, essence));
+    }
+
+    static String getOutputFileName(SequenceType seqType, String essence) {
+        return String.format("%s_%s_%s.xml",
+                Constants.MEDIA_INFO_SUFFIX,
+                seqType.value(),
+                new File(essence).getName());
+    }
+
+    public MediaInfoContextBuilder(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory executeStrategyFactory) {
         this.contextProvider = contextProvider;
         this.executeStrategyFactory = executeStrategyFactory;
-        this.format = format;
-        this.virtualTrackInfoMapBuilder = new VirtualTrackInfoMapBuilder();
+        this.format = contextProvider.getFormat();
     }
 
     public void build() throws IOException, XmlParsingException, MediaInfoException {
@@ -63,32 +89,45 @@ public class MediaInfoContextBuilder {
                 }
             }
         }
-
-        buildSequenceContext();
     }
 
     private void doBuild(ContextInfo contextInfo) throws IOException, XmlParsingException, MediaInfoException {
-        // 1. the next essence get media info for.
+        // 1. get the corresponding essence
         String essence = contextProvider.getResourceContext().getParameterValue(
                 ResourceContextParameters.ESSENCE, contextInfo);
 
-        // 2. fill dynamic context's mediaInfoInput and Output
-        contextProvider.getDynamicContext().addParameter(DynamicContextParameters.MEDIA_INFO_INPUT, essence, false);
-        File outputFile = new File(contextProvider.getWorkingDir(), Constants.MEDIA_INFO_SUFFIX + contextInfo.getSequenceType().value() + ".xml");
-        contextProvider.getDynamicContext().addParameter(
-                DynamicContextParameters.MEDIA_INFO_OUTPUT.getName() + contextInfo.getSequenceType().value(),
-                outputFile.getAbsolutePath(), true);  // add output as a dynamic parameter to delete on exit
+        // 2. check if we already have media info loaded for this track. If no - load it by executing an external program.
+        VirtualTrackInfo processedInfo = processedMediaInfo.get(ImmutablePair.of(contextInfo.getSequenceType(), essence));
+        if (processedInfo == null) {
+            File outputFile = getMediaInfo(contextInfo.getSequenceType(), essence);
+            processedInfo = getTrackInfo(outputFile, contextInfo, essence);
+            processedMediaInfo.put(ImmutablePair.of(contextInfo.getSequenceType(), essence), processedInfo);
+        }
 
-        // 3. execute media info command. the output will be in %{tmp.mediaInfoOutput}
-        executeMediaInfoCommand(contextInfo, outputFile);
-
-        // 4. build sequence map
-        virtualTrackInfoMapBuilder.addResourceInfo(new File(essence), outputFile, contextInfo);
+        // 3. add to sequence context
+        buildSequenceContext(processedInfo, contextInfo);
     }
 
-    void executeMediaInfoCommand(ContextInfo contextInfo, File outputFile) throws IOException {
+    private File getMediaInfo(SequenceType seqType, String essence) throws IOException, XmlParsingException, MediaInfoException {
+        // 1. fill dynamic context's mediaInfoInput
+        contextProvider.getDynamicContext().addParameter(DynamicContextParameters.MEDIA_INFO_INPUT, essence, false);
+
+        // 2. prepare the output file
+        File outputFile = getOutputFile(seqType, essence, contextProvider.getWorkingDir());
+
+        // 2. execute media info command. the output will be the provided file.
+        executeMediaInfoCommand(seqType, essence, outputFile);
+
+        // 3. add output as a dynamic parameter to delete on exit
+        contextProvider.getDynamicContext().addParameter(
+                getOutputDynamicParamName(seqType, essence), outputFile.getAbsolutePath(), true);
+
+        return outputFile;
+    }
+
+    private void executeMediaInfoCommand(SequenceType seqType, String essence, File outputFile) throws IOException {
         MediaInfoCommandType mediaInfoCommand = null;
-        switch (contextInfo.getSequenceType()) {
+        switch (seqType) {
             case VIDEO:
                 mediaInfoCommand = format.getMediaInfoCommandVideo();
                 break;
@@ -100,23 +139,54 @@ public class MediaInfoContextBuilder {
                 break;
         }
 
+        String operationName = String.format("%s_%s", mediaInfoCommand.getClass().getSimpleName(), new File(essence).getName());
         OperationInfo operationInfo = new OperationInfo(
-                mediaInfoCommand.getValue(), mediaInfoCommand.getClass().getSimpleName(), mediaInfoCommand.getClass(), contextInfo, outputFile);
+                mediaInfoCommand.getValue(), operationName, ContextInfo.EMPTY, outputFile);
         executeStrategyFactory.createExecuteOnceStrategy(contextProvider).execute(operationInfo);
     }
 
-    private void buildSequenceContext() {
-        for (Map.Entry<SequenceUUID, VirtualTrackInfo> entry : virtualTrackInfoMapBuilder.getVirtualTrackInfoMap().entrySet()) {
-            SequenceUUID seqUuid = entry.getKey();
-            VirtualTrackInfo virtualTrackInfo = entry.getValue();
-            for (Map.Entry<SequenceContextParameters, String> paramEntry : virtualTrackInfo.getParameters().entrySet()) {
-                contextProvider.getSequenceContext().addSequenceParameter(
-                        virtualTrackInfo.getSeqType(),
-                        seqUuid,
-                        paramEntry.getKey(),
-                        paramEntry.getValue());
-            }
+    private VirtualTrackInfo getTrackInfo(File outputFile, ContextInfo contextInfo, String essence) throws XmlParsingException, MediaInfoException, FileNotFoundException {
+        // 1. parse output xml
+        FfprobeType mediaInfo = parseOutputFile(outputFile, contextInfo);
+
+        // 2. check that info is available
+        if (mediaInfo.getStreams() == null || mediaInfo.getStreams().getStream().isEmpty()) {
+            throw new MediaInfoException("No streams output", essence);
         }
+        StreamType stream = mediaInfo.getStreams().getStream().get(0);
+
+        // 3. fill info
+        VirtualTrackInfo virtualTrackInfo = new VirtualTrackInfo(contextInfo.getSequenceType(), stream);
+
+        // 4. check that virtual info for all resources within a virtual tracks are the same, that is have the same parameters.
+        VirtualTrackInfo existingInfoForSeq = mediaInfoForTrack.get(contextInfo.getSequenceUuid());
+        if (existingInfoForSeq != null && !existingInfoForSeq.equals(virtualTrackInfo)) {
+            throw new MediaInfoException("All resource tracks within a sequence (virtual track) must have the same parameters!", essence);
+        }
+        mediaInfoForTrack.put(contextInfo.getSequenceUuid(), virtualTrackInfo);
+
+        return virtualTrackInfo;
+    }
+
+    FfprobeType parseOutputFile(File outputFile, ContextInfo contextInfo) throws XmlParsingException, FileNotFoundException {
+        if (!outputFile.isFile()) {
+            throw new FileNotFoundException(String.format("Invalid media info output file: '%s' not found", outputFile.getAbsolutePath()));
+        }
+
+        return XmlParser.parse(outputFile, MEDIAINFO_XSD, MEDIAINFO_PACKAGE, FfprobeType.class);
+    }
+
+    private void buildSequenceContext(VirtualTrackInfo virtualTrackInfo, ContextInfo contextInfo) {
+        SequenceUUID seqUuid = contextInfo.getSequenceUuid();
+        virtualTrackInfo.getParameters().forEach(
+                (paramName, paramValue) -> {
+                    contextProvider.getSequenceContext().addSequenceParameter(
+                            virtualTrackInfo.getSeqType(),
+                            seqUuid,
+                            paramName,
+                            paramValue);
+
+                });
     }
 
 }

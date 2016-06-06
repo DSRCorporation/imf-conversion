@@ -2,6 +2,7 @@ package com.netflix.imfutility.conversion;
 
 import com.netflix.imfutility.Format;
 import com.netflix.imfutility.config.ConfigXmlProvider;
+import com.netflix.imfutility.conversion.executor.strategy.AbstractExecuteStrategy;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.util.ConversionUtils;
@@ -56,6 +57,7 @@ public class ExecuteConversionOperationTest {
     @Before
     public void setUp() throws Exception {
         executorLogger.reset();
+        AbstractExecuteStrategy.resetCount();
     }
 
     @Test
@@ -63,79 +65,79 @@ public class ExecuteConversionOperationTest {
     public void testExec() throws Exception {
         conversionEngine.convert(conversionProvider.getFormatConfigurationType("1"), contextProvider);
 
-        assertEquals("START: External Process 1: execOnce1, ExecOnceType, execOnce1Exec", executorLogger.getNext());
-        assertEquals("FINISH: External Process 1: execOnce1, ExecOnceType, execOnce1Exec", executorLogger.getNext());
+        assertEquals("START: External Process 1: execOnce1, ExecuteOnceStrategy, execOnce1Exec", executorLogger.getNext());
+        assertEquals("FINISH: External Process 1: execOnce1, ExecuteOnceStrategy, execOnce1Exec", executorLogger.getNext());
 
         // Start Sequence 0:
 
-        assertEquals("START: External Process 2: seqVideoExecOnce1, ExecOnceType, seqVideoExecOnce1Exec", executorLogger.getNext());
-        assertEquals("FINISH: External Process 2: seqVideoExecOnce1, ExecOnceType, seqVideoExecOnce1Exec", executorLogger.getNext());
+        assertEquals("START: External Process 2: seqVideoExecOnce1, ExecuteOnceStrategy, seqVideoExecOnce1Exec", executorLogger.getNext());
+        assertEquals("FINISH: External Process 2: seqVideoExecOnce1, ExecuteOnceStrategy, seqVideoExecOnce1Exec", executorLogger.getNext());
 
         // start pipe
-        assertEquals("START: External Process 3: seqVideoPipeExecOnce1, ExecOnceType, seqVideoPipeExecOnce1Exec", executorLogger.getNext());
-        assertEquals("START: External Process 4: seqVideoPipeExecOnce2, ExecOnceType, seqVideoPipeExecOnce2Exec", executorLogger.getNext());
+        assertEquals("START: External Process 3: seqVideoPipeExecOnce1, ExecutePipeStrategy, seqVideoPipeExecOnce1Exec", executorLogger.getNext());
+        assertEquals("START: External Process 4: seqVideoPipeExecOnce2, ExecutePipeStrategy, seqVideoPipeExecOnce2Exec", executorLogger.getNext());
 
         // pipe cycle
-        assertEquals("START: External Process 5: seqVideoPipeCycleExecOnce1, ExecOnceType, seqVideoPipeCycleExecOnce1Exec", executorLogger.getNext());
-        assertEquals("FINISH: External Process 5: seqVideoPipeCycleExecOnce1, ExecOnceType, seqVideoPipeCycleExecOnce1Exec", executorLogger.getNext());
+        assertEquals("START: External Process 5: seqVideoPipeCycleExecOnce1, ExecutePipeStrategy, seqVideoPipeCycleExecOnce1Exec", executorLogger.getNext());
+        assertEquals("FINISH: External Process 5: seqVideoPipeCycleExecOnce1, ExecutePipeStrategy, seqVideoPipeCycleExecOnce1Exec", executorLogger.getNext());
 
         // we have 2 segments and 2 resources in each segment
         for (int i = 1; i <= SEGMENT_COUNT * RESOURCE_COUNT; i++) {
             assertEquals(String.format(
-                    "START: External Process %d: seqVideoPipeCycleExecSegment, ExecEachSegmentType, seqVideoPipeCycleExecSegmentExec",
+                    "START: External Process %d: seqVideoPipeCycleExecSegment, ExecutePipeStrategy, seqVideoPipeCycleExecSegmentExec",
                     5 + i),
                     executorLogger.getNext());
             assertEquals(String.format(
-                    "FINISH: External Process %d: seqVideoPipeCycleExecSegment, ExecEachSegmentType, seqVideoPipeCycleExecSegmentExec",
+                    "FINISH: External Process %d: seqVideoPipeCycleExecSegment, ExecutePipeStrategy, seqVideoPipeCycleExecSegmentExec",
                     5 + i),
                     executorLogger.getNext());
         }
 
         // finish pipe
-        assertEquals("FINISH: External Process 3: seqVideoPipeExecOnce1, ExecOnceType, seqVideoPipeExecOnce1Exec", executorLogger.getNext());
-        assertEquals("FINISH: External Process 4: seqVideoPipeExecOnce2, ExecOnceType, seqVideoPipeExecOnce2Exec", executorLogger.getNext());
+        assertEquals("FINISH: External Process 3: seqVideoPipeExecOnce1, ExecutePipeStrategy, seqVideoPipeExecOnce1Exec", executorLogger.getNext());
+        assertEquals("FINISH: External Process 4: seqVideoPipeExecOnce2, ExecutePipeStrategy, seqVideoPipeExecOnce2Exec", executorLogger.getNext());
 
-        assertEquals("START: External Process 10: seqVideoExecOnce2, ExecOnceType, seqVideoExecOnce2Exec", executorLogger.getNext());
-        assertEquals("FINISH: External Process 10: seqVideoExecOnce2, ExecOnceType, seqVideoExecOnce2Exec", executorLogger.getNext());
+        assertEquals("START: External Process 10: seqVideoExecOnce2, ExecuteOnceStrategy, seqVideoExecOnce2Exec", executorLogger.getNext());
+        assertEquals("FINISH: External Process 10: seqVideoExecOnce2, ExecuteOnceStrategy, seqVideoExecOnce2Exec", executorLogger.getNext());
 
         // End Sequence 0:
 
         // Start Sequence 1:
 
-        assertEquals("START: External Process 11: seqVideoExecOnce1, ExecOnceType, seqVideoExecOnce1Exec", executorLogger.getNext());
-        assertEquals("FINISH: External Process 11: seqVideoExecOnce1, ExecOnceType, seqVideoExecOnce1Exec", executorLogger.getNext());
+        assertEquals("START: External Process 11: seqVideoExecOnce1, ExecuteOnceStrategy, seqVideoExecOnce1Exec", executorLogger.getNext());
+        assertEquals("FINISH: External Process 11: seqVideoExecOnce1, ExecuteOnceStrategy, seqVideoExecOnce1Exec", executorLogger.getNext());
 
         // start pipe
-        assertEquals("START: External Process 12: seqVideoPipeExecOnce1, ExecOnceType, seqVideoPipeExecOnce1Exec", executorLogger.getNext());
-        assertEquals("START: External Process 13: seqVideoPipeExecOnce2, ExecOnceType, seqVideoPipeExecOnce2Exec", executorLogger.getNext());
+        assertEquals("START: External Process 12: seqVideoPipeExecOnce1, ExecutePipeStrategy, seqVideoPipeExecOnce1Exec", executorLogger.getNext());
+        assertEquals("START: External Process 13: seqVideoPipeExecOnce2, ExecutePipeStrategy, seqVideoPipeExecOnce2Exec", executorLogger.getNext());
 
         // pipe cycle
-        assertEquals("START: External Process 14: seqVideoPipeCycleExecOnce1, ExecOnceType, seqVideoPipeCycleExecOnce1Exec", executorLogger.getNext());
-        assertEquals("FINISH: External Process 14: seqVideoPipeCycleExecOnce1, ExecOnceType, seqVideoPipeCycleExecOnce1Exec", executorLogger.getNext());
+        assertEquals("START: External Process 14: seqVideoPipeCycleExecOnce1, ExecutePipeStrategy, seqVideoPipeCycleExecOnce1Exec", executorLogger.getNext());
+        assertEquals("FINISH: External Process 14: seqVideoPipeCycleExecOnce1, ExecutePipeStrategy, seqVideoPipeCycleExecOnce1Exec", executorLogger.getNext());
 
         // we have 2 segments and 2 resources in each segment
         for (int i = 1; i <= SEGMENT_COUNT * RESOURCE_COUNT; i++) {
             assertEquals(String.format(
-                    "START: External Process %d: seqVideoPipeCycleExecSegment, ExecEachSegmentType, seqVideoPipeCycleExecSegmentExec",
+                    "START: External Process %d: seqVideoPipeCycleExecSegment, ExecutePipeStrategy, seqVideoPipeCycleExecSegmentExec",
                     14 + i),
                     executorLogger.getNext());
             assertEquals(String.format(
-                    "FINISH: External Process %d: seqVideoPipeCycleExecSegment, ExecEachSegmentType, seqVideoPipeCycleExecSegmentExec",
+                    "FINISH: External Process %d: seqVideoPipeCycleExecSegment, ExecutePipeStrategy, seqVideoPipeCycleExecSegmentExec",
                     14 + i),
                     executorLogger.getNext());
         }
 
         // finish pipe
-        assertEquals("FINISH: External Process 12: seqVideoPipeExecOnce1, ExecOnceType, seqVideoPipeExecOnce1Exec", executorLogger.getNext());
-        assertEquals("FINISH: External Process 13: seqVideoPipeExecOnce2, ExecOnceType, seqVideoPipeExecOnce2Exec", executorLogger.getNext());
+        assertEquals("FINISH: External Process 12: seqVideoPipeExecOnce1, ExecutePipeStrategy, seqVideoPipeExecOnce1Exec", executorLogger.getNext());
+        assertEquals("FINISH: External Process 13: seqVideoPipeExecOnce2, ExecutePipeStrategy, seqVideoPipeExecOnce2Exec", executorLogger.getNext());
 
-        assertEquals("START: External Process 19: seqVideoExecOnce2, ExecOnceType, seqVideoExecOnce2Exec", executorLogger.getNext());
-        assertEquals("FINISH: External Process 19: seqVideoExecOnce2, ExecOnceType, seqVideoExecOnce2Exec", executorLogger.getNext());
+        assertEquals("START: External Process 19: seqVideoExecOnce2, ExecuteOnceStrategy, seqVideoExecOnce2Exec", executorLogger.getNext());
+        assertEquals("FINISH: External Process 19: seqVideoExecOnce2, ExecuteOnceStrategy, seqVideoExecOnce2Exec", executorLogger.getNext());
 
         // End Sequence 1
 
-        assertEquals("START: External Process 20: execOnce2, ExecOnceType, execOnce2Exec", executorLogger.getNext());
-        assertEquals("FINISH: External Process 20: execOnce2, ExecOnceType, execOnce2Exec", executorLogger.getNext());
+        assertEquals("START: External Process 20: execOnce2, ExecuteOnceStrategy, execOnce2Exec", executorLogger.getNext());
+        assertEquals("FINISH: External Process 20: execOnce2, ExecuteOnceStrategy, execOnce2Exec", executorLogger.getNext());
 
         assertFalse("There are more executed processes than expected!", executorLogger.hasNext());
     }

@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * Asset Map containing a path to an asset (resource, essence) for each asset UUID.
+ * Asset map contains full absolute paths.
  */
 public class AssetMap {
 

@@ -21,4 +21,11 @@ public class ConversionHelperTest {
         assertEquals("00:00:00.200", ConversionHelper.editUnitToTimecode(BigInteger.valueOf(10), new BigFraction(50)));
     }
 
+    @Test
+    public void rFrameRateToEditRate() {
+        assertEquals("50 1", ConversionHelper.rFrameRateToEditRate("50/1"));
+        assertEquals("50 1", ConversionHelper.rFrameRateToEditRate("50"));
+        assertEquals("25 2", ConversionHelper.rFrameRateToEditRate("25/2"));
+    }
+
 }

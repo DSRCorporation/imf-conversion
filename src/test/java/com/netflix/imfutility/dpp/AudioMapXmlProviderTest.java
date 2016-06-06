@@ -16,7 +16,7 @@ import java.io.FileNotFoundException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.netflix.imfutility.util.TemplateParameterContextCreator.createDefaultTemplateParameterContextProvider;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.createDefaultContextProvider;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -41,7 +41,7 @@ public class AudioMapXmlProviderTest {
         //Try to load and validate
         AudioMapXmlProvider audioMapProvider = new AudioMapXmlProvider(
                 AudioMapUtils.getCorrectAudiomapXml(), AudioTrackLayoutDmAs11Type.EBU_R_48_2_A,
-                createDefaultTemplateParameterContextProvider());
+                createDefaultContextProvider());
 
         AudioMap audioMap = audioMapProvider.getAudioMap();
 
@@ -52,19 +52,19 @@ public class AudioMapXmlProviderTest {
     @Test(expected = XmlParsingException.class)
     public void testParseBrokenXml() throws Exception {
         new AudioMapXmlProvider(AudioMapUtils.getBrokenXmlAudiomapXml(), AudioTrackLayoutDmAs11Type.EBU_R_48_2_A,
-                createDefaultTemplateParameterContextProvider());
+                createDefaultContextProvider());
     }
 
     @Test(expected = XmlParsingException.class)
     public void testParseInvalidXsd() throws Exception {
         new AudioMapXmlProvider(AudioMapUtils.getInvalidXsdAudiomapXml(), AudioTrackLayoutDmAs11Type.EBU_R_48_2_A,
-                createDefaultTemplateParameterContextProvider());
+                createDefaultContextProvider());
     }
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
         new AudioMapXmlProvider("C:/invalid-path", AudioTrackLayoutDmAs11Type.EBU_R_48_2_A,
-                createDefaultTemplateParameterContextProvider());
+                createDefaultContextProvider());
     }
 
     /**
@@ -75,7 +75,7 @@ public class AudioMapXmlProviderTest {
     @Test
     public void getAudioMapParameter2A() throws Exception {
         // fil CPL context with the number of channels for each virtual track
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
                 new LinkedHashMap<String, Integer>() {{
                     put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
@@ -98,7 +98,7 @@ public class AudioMapXmlProviderTest {
     @Test
     public void getAudioMapParameter4B() throws Exception {
         // fil CPL context with the number of channels for each virtual track
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
                 new LinkedHashMap<String, Integer>() {{
                     put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
@@ -121,7 +121,7 @@ public class AudioMapXmlProviderTest {
     @Test
     public void getAudioMapParameter16C() throws Exception {
         // fil CPL context with the number of channels for each virtual track
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
                 new LinkedHashMap<String, Integer>() {{
                     put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
@@ -146,7 +146,7 @@ public class AudioMapXmlProviderTest {
     @Test
     public void generateDefaultAudiomap2AEqualChannels() throws Exception {
         // fil CPL context with the number of channels for each virtual track
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
                 new LinkedHashMap<String, Integer>() {{
                     put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
@@ -179,7 +179,7 @@ public class AudioMapXmlProviderTest {
     @Test
     public void generateDefaultAudiomap2ALessChannelsOneTrack() throws Exception {
         // fil CPL context with the number of channels for each virtual track
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
                 new LinkedHashMap<String, Integer>() {{
                     put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
@@ -211,7 +211,7 @@ public class AudioMapXmlProviderTest {
     @Test
     public void generateDefaultAudiomap2ALessTwoTracks() throws Exception {
         // fil CPL context with the number of channels for each virtual track
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
                 new LinkedHashMap<String, Integer>() {{
                     put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 1);
@@ -243,7 +243,7 @@ public class AudioMapXmlProviderTest {
     @Test
     public void generateDefaultAudiomap2AMoreOneTrack() throws Exception {
         // fil CPL context with the number of channels for each virtual track
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
                 new LinkedHashMap<String, Integer>() {{
                     put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 10);
@@ -274,7 +274,7 @@ public class AudioMapXmlProviderTest {
     @Test
     public void generateDefaultAudiomap2AMoreTwoTracks() throws Exception {
         // fil CPL context with the number of channels for each virtual track
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
                 new LinkedHashMap<String, Integer>() {{
                     put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 3);
@@ -305,7 +305,7 @@ public class AudioMapXmlProviderTest {
     @Test
     public void generateDefaultAudiomap16C() throws Exception {
         // fil CPL context with the number of channels for each virtual track
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
                 new LinkedHashMap<String, Integer>() {{
                     put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);

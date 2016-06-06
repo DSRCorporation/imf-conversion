@@ -42,7 +42,7 @@ public class ProcessStarter {
                 processInfo.getProcessNum(), processInfo.getOperationName(), processInfo.getOperationType(), processInfo.getProgramName());
         File logFile = new File(logsDir, logFileName);
 
-        String errorDesc = String.format("Couldn't create log file for %s", toString());
+        String errorDesc = String.format("Couldn't create log file '%s' for %s", logFile.getAbsolutePath(), processInfo.toString());
         try {
             boolean created = logFile.createNewFile();
             if (!created) {

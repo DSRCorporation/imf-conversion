@@ -8,10 +8,7 @@ import com.netflix.imfutility.conversion.templateParameter.exception.TemplatePar
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Resource Template Parameter Context.
@@ -26,7 +23,7 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
     private static class ResourceData extends ContextData<ResourceUUID, ResourceContextParameters> {
     }
 
-    private final Map<ResourceKey, ResourceData> resources = new HashMap<>();
+    private final Map<ResourceKey, ResourceData> resources = new LinkedHashMap<>();
 
     public ResourceTemplateParameterContext initResource(ResourceKey resourceKey, ResourceUUID uuid) {
         if (!resources.containsKey(resourceKey) || !resources.get(resourceKey).contains(uuid)) {

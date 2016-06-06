@@ -9,6 +9,10 @@ public class TestExecuteStrategyFactory extends ExecuteStrategyFactory {
 
     private final TestExecutorLogger executorLogger;
 
+    public TestExecuteStrategyFactory() {
+        this(new TestExecutorLogger());
+    }
+
     public TestExecuteStrategyFactory(TestExecutorLogger executorLogger) {
         this.executorLogger = executorLogger;
     }

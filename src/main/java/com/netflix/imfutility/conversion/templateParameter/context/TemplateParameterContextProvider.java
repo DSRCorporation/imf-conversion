@@ -57,6 +57,14 @@ public class TemplateParameterContextProvider {
         return workingDir;
     }
 
+    public ConfigType getConfig() {
+        return config;
+    }
+
+    public FormatType getFormat() {
+        return format;
+    }
+
     private void initContexts() {
         for (TemplateParameterContext contextType : TemplateParameterContext.values()) {
             ITemplateParameterContext context = createContext(contextType);

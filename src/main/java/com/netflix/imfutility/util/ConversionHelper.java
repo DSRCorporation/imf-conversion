@@ -66,6 +66,20 @@ public final class ConversionHelper {
         return new BigFraction(editRate.get(0), editRate.get(1));
     }
 
+    /**
+     * Converts rFrameRate in a form "50/1" or "50" to the edit rate form "50 1".
+     *
+     * @param rFrameRate input in a form "50/1" or "50"
+     * @return output in a form "50 1"
+     */
+    public static String rFrameRateToEditRate(String rFrameRate) {
+        String[] parts = rFrameRate.split("/");
+        if (parts.length == 2) {
+            return String.format("%s %s", parts[0], parts[1]);
+        }
+        return String.format("%s %s", rFrameRate, 1);
+    }
+
     public static String zeroTimecode() {
         return "00:00:00.000";
     }

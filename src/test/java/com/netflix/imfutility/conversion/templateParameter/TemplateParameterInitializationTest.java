@@ -5,12 +5,13 @@ import com.netflix.imfutility.conversion.templateParameter.context.parameters.Se
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
+import com.netflix.imfutility.xsd.conversion.DynamicParameterConcatType;
+import com.netflix.imfutility.xsd.conversion.DynamicParameterType;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 import org.junit.Test;
 
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.*;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Tests whether each context can initialize or create parameters correctly.
@@ -19,7 +20,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testAddDynamicParameterSimple() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         contextProvider.getDynamicContext()
                 .addParameter("addDynamicSimple1", "addDynamicValue1", ContextInfo.EMPTY)
                 .addParameter("addDynamicSimple2", "addDynamicValue2", ContextInfo.EMPTY);
@@ -31,7 +32,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testAppendDynamicParameterSimple() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
 
         contextProvider.getDynamicContext()
                 .appendParameter("appendDynamicSimple1", "appendDynamicValue1_1", ContextInfo.EMPTY)
@@ -49,7 +50,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testAddDynamicParameterWithParamsInValue() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         fillCPLContext(contextProvider, 2, 2, 2);
 
         contextProvider.getDynamicContext().addParameter(
@@ -71,7 +72,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testAddDynamicParameterWithParamsInName() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         fillCPLContext(contextProvider, 2, 2, 2);
 
         contextProvider.getDynamicContext().addParameter(
@@ -93,7 +94,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testAddDynamicParameterWithParamsInNameAndValue() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         fillCPLContext(contextProvider, 2, 2, 2);
 
         contextProvider.getDynamicContext().addParameter(
@@ -115,7 +116,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testAppendDynamicParameterWithParamsInValue() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         fillCPLContext(contextProvider, 2, 2, 2);
 
         contextProvider.getDynamicContext().appendParameter("appendDynamicWithParam1", "%{tmp.tmpParamSimple}_1", ContextInfo.EMPTY);
@@ -148,7 +149,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testAppendDynamicParameterWithParamsInName() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         fillCPLContext(contextProvider, 2, 2, 2);
 
         contextProvider.getDynamicContext().appendParameter("%{tmp.tmpParamSimple}", "appendDynamicWithParam1", ContextInfo.EMPTY);
@@ -181,7 +182,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testAppendDynamicParameterWithParamsInNameAndValue() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         fillCPLContext(contextProvider, 2, 2, 2);
 
         contextProvider.getDynamicContext().appendParameter(
@@ -208,8 +209,84 @@ public class TemplateParameterInitializationTest {
     }
 
     @Test
+    public void testAddDynamicParameterDeleteOnExit() throws Exception {
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
+        contextProvider.getDynamicContext()
+                .addParameter("addDynamicSimple1", "addDynamicValue1", false, ContextInfo.EMPTY)
+                .addParameter("addDynamicSimple2", "addDynamicValue2", true, ContextInfo.EMPTY);
+
+        assertFalse(contextProvider.getDynamicContext().getParameterValue("addDynamicSimple1").isDeleteOnExit());
+        assertTrue(contextProvider.getDynamicContext().getParameterValue("addDynamicSimple2").isDeleteOnExit());
+    }
+
+    @Test
+    public void testAddDynamicParameterFromConversionXml() throws Exception {
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
+
+        DynamicParameterType dynamicParameter1 = new DynamicParameterType();
+        dynamicParameter1.setName("addDynamicSimple1");
+        dynamicParameter1.setValue("addDynamicValue1");
+        dynamicParameter1.setDeleteOnExit(false);
+
+        DynamicParameterType dynamicParameter2 = new DynamicParameterType();
+        dynamicParameter2.setName("addDynamicSimple2");
+        dynamicParameter2.setValue("addDynamicValue2");
+        dynamicParameter2.setDeleteOnExit(true);
+
+
+        contextProvider.getDynamicContext().addParameter(dynamicParameter1, ContextInfo.EMPTY);
+        contextProvider.getDynamicContext().addParameter(dynamicParameter2, ContextInfo.EMPTY);
+
+        assertEquals("addDynamicValue1", contextProvider.getDynamicContext().getParameterValueAsString("addDynamicSimple1"));
+        assertEquals("addDynamicValue2", contextProvider.getDynamicContext().getParameterValueAsString("addDynamicSimple2"));
+        assertEquals(2, contextProvider.getDynamicContext().getAllParametersAsString().size());
+        assertFalse(contextProvider.getDynamicContext().getParameterValue("addDynamicSimple1").isDeleteOnExit());
+        assertTrue(contextProvider.getDynamicContext().getParameterValue("addDynamicSimple2").isDeleteOnExit());
+    }
+
+    @Test
+    public void testAppendDynamicParameterFromConversionXml() throws Exception {
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
+
+        DynamicParameterConcatType dynamicParameter1 = new DynamicParameterConcatType();
+        dynamicParameter1.setName("addDynamicSimple1");
+        dynamicParameter1.setValue("addDynamicValue1");
+        dynamicParameter1.setConcat(true);
+        dynamicParameter1.setDeleteOnExit(false);
+
+        DynamicParameterConcatType dynamicParameter2 = new DynamicParameterConcatType();
+        dynamicParameter2.setName("addDynamicSimple1");
+        dynamicParameter2.setValue("addDynamicValue1_1");
+        dynamicParameter2.setConcat(false);
+        dynamicParameter2.setDeleteOnExit(true);
+
+        DynamicParameterConcatType dynamicParameter3 = new DynamicParameterConcatType();
+        dynamicParameter3.setName("appendDynamicSimple3");
+        dynamicParameter3.setValue("addDynamicValue3");
+        dynamicParameter3.setConcat(false);
+        dynamicParameter3.setDeleteOnExit(true);
+
+        DynamicParameterConcatType dynamicParameter4 = new DynamicParameterConcatType();
+        dynamicParameter4.setName("appendDynamicSimple3");
+        dynamicParameter4.setValue("addDynamicValue4");
+        dynamicParameter4.setConcat(true);
+        dynamicParameter4.setDeleteOnExit(true);
+
+        contextProvider.getDynamicContext().addParameter(dynamicParameter1, ContextInfo.EMPTY);
+        contextProvider.getDynamicContext().addParameter(dynamicParameter2, ContextInfo.EMPTY);
+        contextProvider.getDynamicContext().addParameter(dynamicParameter3, ContextInfo.EMPTY);
+        contextProvider.getDynamicContext().addParameter(dynamicParameter4, ContextInfo.EMPTY);
+
+        assertEquals("addDynamicValue1_1", contextProvider.getDynamicContext().getParameterValueAsString("addDynamicSimple1"));
+        assertEquals("addDynamicValue3addDynamicValue4", contextProvider.getDynamicContext().getParameterValueAsString("appendDynamicSimple3"));
+        assertEquals(2, contextProvider.getDynamicContext().getAllParametersAsString().size());
+        assertTrue(contextProvider.getDynamicContext().getParameterValue("addDynamicSimple1").isDeleteOnExit());
+        assertTrue(contextProvider.getDynamicContext().getParameterValue("appendDynamicSimple3").isDeleteOnExit());
+    }
+
+    @Test
     public void testInitSegmentsOrder() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:3333"));
         contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:1111"));
         contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:2222"));
@@ -225,7 +302,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testInitSegmentsNoDuplicate() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:3333"));
         contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:1111"));
         contextProvider.getSegmentContext().initSegment(SegmentUUID.create("urn:uuid:2222"));
@@ -243,7 +320,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testInitDefaultSegmentParameters() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         contextProvider.getSegmentContext().initSegment(
                 SegmentUUID.create("urn:uuid:3333"));
         contextProvider.getSegmentContext().initSegment(
@@ -272,7 +349,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testAddSegmentParametersInitsSegment() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         contextProvider.getSegmentContext().addSegmentParameter(
                 SegmentUUID.create("urn:uuid:3333"), SegmentContextParameters.NUM, "5");
 
@@ -286,7 +363,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testInitSequenceOrder() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:3333"));
         contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:1111"));
         contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:2222"));
@@ -316,7 +393,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testInitSequenceNoDuplicate() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:3333"));
         contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:1111"));
         contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:2222"));
@@ -351,7 +428,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testInitDefaultSequenceParameters() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:3333"));
         contextProvider.getSequenceContext().initSequence(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:1111"));
 
@@ -385,7 +462,7 @@ public class TemplateParameterInitializationTest {
 
     @Test
     public void testAddSequenceParameterInitsSequence() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultTemplateParameterContextProvider();
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("urn:uuid:3333"),
                 SequenceContextParameters.NUM, "5");
 

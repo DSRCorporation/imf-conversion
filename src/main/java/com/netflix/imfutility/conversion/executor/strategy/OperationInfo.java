@@ -11,18 +11,16 @@ public final class OperationInfo {
 
     private final String operation;
     private final String operationName;
-    private final Class<?> operationClass;
     private final ContextInfo contextInfo;
     private final File output;
 
-    public OperationInfo(String operation, String operationName, Class<?> operationClass, ContextInfo contextInfo) {
-        this(operation, operationName, operationClass, contextInfo, null);
+    public OperationInfo(String operation, String operationName, ContextInfo contextInfo) {
+        this(operation, operationName, contextInfo, null);
     }
 
-    public OperationInfo(String operation, String operationName, Class<?> operationClass, ContextInfo contextInfo, File output) {
+    public OperationInfo(String operation, String operationName, ContextInfo contextInfo, File output) {
         this.operation = operation;
         this.operationName = operationName;
-        this.operationClass = operationClass;
         this.contextInfo = contextInfo;
         this.output = output;
     }
@@ -33,10 +31,6 @@ public final class OperationInfo {
 
     public String getOperationName() {
         return operationName;
-    }
-
-    public Class<?> getOperationClass() {
-        return operationClass;
     }
 
     public ContextInfo getContextInfo() {

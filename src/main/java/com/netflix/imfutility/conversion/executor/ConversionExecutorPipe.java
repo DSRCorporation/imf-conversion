@@ -51,13 +51,12 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
 
 
     private OperationInfo getExecOnceOperation(ExecOnceType execOnce) {
-        return new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(),
-                ContextInfo.EMPTY);
+        return new OperationInfo(execOnce.getValue(), execOnce.getName(), ContextInfo.EMPTY);
     }
 
     private List<OperationInfo> getSubPipeOperations(SubPipeType subPipe) {
         return subPipe.getExecOnce().stream()
-                .map(execOnce -> new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(), ContextInfo.EMPTY))
+                .map(execOnce -> new OperationInfo(execOnce.getValue(), execOnce.getName(), ContextInfo.EMPTY))
                 .collect(Collectors.toList());
     }
 

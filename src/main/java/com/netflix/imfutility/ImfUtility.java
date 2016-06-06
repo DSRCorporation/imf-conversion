@@ -19,8 +19,8 @@ public class ImfUtility {
                 .setConfigXml(ClassLoader.getSystemClassLoader().getResource("test/config.xml").getPath())
                 .setImpDirectory(ClassLoader.getSystemClassLoader().getResource("test/IMP-test").getPath())
                 .setCplXml("CPL-test.xml")
-                //.setDeleteTmpFilesOnExit(false)
-                //.setDeleteTmpFilesOnExit(false)
+                .setDeleteTmpFilesOnExit(false)
+                .setDeleteTmpFilesOnExit(false)
                 .setMetadataXml(ClassLoader.getSystemClassLoader().getResource("test/metadata.xml").getPath())
                 .build();
 
