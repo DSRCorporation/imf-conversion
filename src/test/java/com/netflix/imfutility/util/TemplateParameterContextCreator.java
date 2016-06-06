@@ -3,8 +3,12 @@ package com.netflix.imfutility.util;
 import com.netflix.imfutility.Format;
 import com.netflix.imfutility.config.ConfigXmlProvider;
 import com.netflix.imfutility.conversion.ConversionXmlProvider;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.*;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.SegmentContextParameters;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
@@ -114,6 +118,54 @@ public final class TemplateParameterContextCreator {
     public static ResourceUUID getResourceUuid(int segm, int seq, SequenceType seqType, int res) {
         return ResourceUUID.create(
                 String.format(RESOURCE_UUID_FORMAT, segm, seq, seqType.value(), res));
+    }
+
+    public static void addResourceContextParameter(TemplateParameterContextProvider contextProvider, int segm, int seq, SequenceType seqType, int res,
+                                                   ResourceContextParameters param, String paramValue) {
+        contextProvider.getResourceContext().addResourceParameter(
+                ResourceKey.create(getSegmentUuid(segm), getSequenceUuid(seq, seqType), seqType),
+                getResourceUuid(segm, seq, seqType, res),
+                param,
+                paramValue);
+    }
+
+    public static void addSequenceContextParameter(TemplateParameterContextProvider contextProvider, int seq, SequenceType seqType,
+                                                   SequenceContextParameters param, String paramValue) {
+        contextProvider.getSequenceContext().addSequenceParameter(
+                seqType,
+                getSequenceUuid(seq, seqType),
+                param,
+                paramValue);
+    }
+
+    public static void addSegmentContextParameter(TemplateParameterContextProvider contextProvider, int segm,
+                                                  SegmentContextParameters param, String paramValue) {
+        contextProvider.getSegmentContext().addSegmentParameter(
+                getSegmentUuid(segm),
+                param,
+                paramValue);
+    }
+
+    public static ContextInfo createResourceContextInfo(int segm, int seq, SequenceType seqType, int res) {
+        return new ContextInfoBuilder()
+                .setSequenceType(seqType)
+                .setSegmentUuid(getSegmentUuid(segm))
+                .setSequenceUuid(getSequenceUuid(seq, seqType))
+                .setResourceUuid(getResourceUuid(segm, seq, seqType, res))
+                .build();
+    }
+
+    public static ContextInfo createSequenceContextInfo(int seq, SequenceType seqType) {
+        return new ContextInfoBuilder()
+                .setSequenceType(seqType)
+                .setSequenceType(seqType)
+                .build();
+    }
+
+    public static ContextInfo createSegmentContextInfo(int segm) {
+        return new ContextInfoBuilder()
+                .setSegmentUuid(getSegmentUuid(segm))
+                .build();
     }
 
     private static void fillResourceParam(ResourceTemplateParameterContext resourceContext, ResourceKey resourceKey,

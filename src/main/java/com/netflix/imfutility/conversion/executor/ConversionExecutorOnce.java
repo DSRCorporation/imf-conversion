@@ -23,8 +23,7 @@ public class ConversionExecutorOnce extends AbstractConversionExecutor {
 
     @Override
     public void execute() throws IOException {
-        OperationInfo operationInfo = new OperationInfo(operation.getValue(), operation.getName(), operation.getClass(),
-                ContextInfo.EMPTY);
+        OperationInfo operationInfo = new OperationInfo(operation.getValue(), operation.getName(), ContextInfo.EMPTY);
         executeStrategyFactory.createExecuteOnceStrategy(contextProvider).execute(operationInfo);
     }
 

@@ -9,7 +9,7 @@ public final class CplUtils {
     }
 
     public static String getCorrectCpl() {
-        return ClassLoader.getSystemClassLoader().getResource("xml/CPL.xml").getPath();
+        return ClassLoader.getSystemClassLoader().getResource("imp/CPL.xml").getPath();
     }
 
     public static String getBrokenXmlCpl() {

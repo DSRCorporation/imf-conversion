@@ -25,9 +25,9 @@
                 <param id="tmpParam6">"tmpParam6 Value"</param>
             </tmpContext>
 
-            <mediaInfoCommandVideo></mediaInfoCommandVideo>
-            <mediaInfoCommandAudio></mediaInfoCommandAudio>
-            <mediaInfoCommandSubtitle></mediaInfoCommandSubtitle>
+            <mediaInfoCommandVideo>mediaInfoCommandVideo %{dynamic.mediaInfoInput}</mediaInfoCommandVideo>
+            <mediaInfoCommandAudio>mediaInfoCommandAudio %{dynamic.mediaInfoInput}</mediaInfoCommandAudio>
+            <mediaInfoCommandSubtitle>mediaInfoCommandSubtitle %{dynamic.mediaInfoInput}</mediaInfoCommandSubtitle>
 
 
             <formatConfigurations>

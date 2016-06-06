@@ -55,13 +55,14 @@ public class CplContextBuilderTest {
     @Test
     public void testSequenceContextCreatedCorrectly() throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
-        AssetMap assetMap = new AssetMapParser().parse(AssetmapUtils.getCorrectAssetmap());
+        AssetMap assetMap = new AssetMapParser().parse(AssetmapUtils.getImpFolder(), AssetmapUtils.getCorrectAssetmap());
         new CplContextBuilder(contextProvider, assetMap).build(CplUtils.getCorrectCpl());
 
         SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
         assertEquals(2, sequenceContext.getSequenceCount(SequenceType.AUDIO));
         assertEquals(1, sequenceContext.getSequenceCount(SequenceType.VIDEO));
 
+        // UUIDs as defined in CPL.xml
         assertArrayEquals(
                 new SequenceType[]{SequenceType.VIDEO, SequenceType.AUDIO},
                 sequenceContext.getSequenceTypes().toArray(new SequenceType[]{}));
@@ -106,12 +107,13 @@ public class CplContextBuilderTest {
     @Test
     public void testSegmentContextCreatedCorrectly() throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
-        AssetMap assetMap = new AssetMapParser().parse(AssetmapUtils.getCorrectAssetmap());
+        AssetMap assetMap = new AssetMapParser().parse(AssetmapUtils.getImpFolder(), AssetmapUtils.getCorrectAssetmap());
         new CplContextBuilder(contextProvider, assetMap).build(CplUtils.getCorrectCpl());
 
         SegmentTemplateParameterContext segmentContext = contextProvider.getSegmentContext();
         assertEquals(2, segmentContext.getSegmentsNum());
 
+        // UUIDs as defined in CPL.xml
         assertArrayEquals(
                 new SegmentUUID[]{
                         SegmentUUID.create("urn:uuid:20544b5c-be3c-4274-8633-249ee8a5ad16"),
@@ -139,10 +141,12 @@ public class CplContextBuilderTest {
     @Test
     public void testResourceContextUuidsAndCountCreatedCorrectly() throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
-        AssetMap assetMap = new AssetMapParser().parse(AssetmapUtils.getCorrectAssetmap());
+        AssetMap assetMap = new AssetMapParser().parse(AssetmapUtils.getImpFolder(), AssetmapUtils.getCorrectAssetmap());
         new CplContextBuilder(contextProvider, assetMap).build(CplUtils.getCorrectCpl());
 
         ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
+
+        // UUIDs as defined in CPL.xml
 
         // first audio segment of the fist audio track
         ResourceKey resKey = ResourceKey.create(
@@ -215,10 +219,13 @@ public class CplContextBuilderTest {
     @Test
     public void testResourceContextAudioParametersCreatedCorrectly() throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
-        AssetMap assetMap = new AssetMapParser().parse(AssetmapUtils.getCorrectAssetmap());
+        AssetMap assetMap = new AssetMapParser().parse(AssetmapUtils.getImpFolder(), AssetmapUtils.getCorrectAssetmap());
         new CplContextBuilder(contextProvider, assetMap).build(CplUtils.getCorrectCpl());
 
         ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
+
+        // UUIDs as defined in CPL.xml.
+        // essence must be a full path!
 
         // first segment of the first audio track
         ContextInfo contextInfo = new ContextInfoBuilder()
@@ -231,7 +238,7 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
         assertEquals("0",
                 resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
-        assertEquals("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio.mxf",
+        assertEquals(AssetmapUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio.mxf"),
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("0",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
@@ -253,7 +260,7 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
         assertEquals("0",
                 resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
-        assertEquals("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio.mxf",
+        assertEquals(AssetmapUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio.mxf"),
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("0",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
@@ -275,7 +282,7 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
         assertEquals("1",
                 resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
-        assertEquals("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio_2.mxf",
+        assertEquals(AssetmapUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio_2.mxf"),
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("288000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
@@ -297,7 +304,7 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
         assertEquals("0",
                 resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
-        assertEquals("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio.mxf",
+        assertEquals(AssetmapUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio.mxf"),
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("576000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
@@ -319,7 +326,7 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
         assertEquals("0",
                 resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
-        assertEquals("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio.mxf",
+        assertEquals(AssetmapUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio.mxf"),
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("864000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
@@ -334,10 +341,13 @@ public class CplContextBuilderTest {
     @Test
     public void testResourceContextVideoParametersCreatedCorrectly() throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
-        AssetMap assetMap = new AssetMapParser().parse(AssetmapUtils.getCorrectAssetmap());
+        AssetMap assetMap = new AssetMapParser().parse(AssetmapUtils.getImpFolder(), AssetmapUtils.getCorrectAssetmap());
         new CplContextBuilder(contextProvider, assetMap).build(CplUtils.getCorrectCpl());
 
         ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
+
+        // UUIDs as defined in CPL.xml
+        // essence must be a full path!
 
         // first segment of the video track: 1st resource
         ContextInfo contextInfo = new ContextInfoBuilder()
@@ -350,7 +360,7 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
         assertEquals("0",
                 resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
-        assertEquals("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV.mxf",
+        assertEquals(AssetmapUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV.mxf"),
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("0",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
@@ -372,7 +382,7 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
         assertEquals("1",
                 resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
-        assertEquals("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_2.mxf",
+        assertEquals(AssetmapUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_2.mxf"),
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("300",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
@@ -394,7 +404,7 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
         assertEquals("0",
                 resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
-        assertEquals("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV.mxf",
+        assertEquals(AssetmapUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV.mxf"),
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("600",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
@@ -408,7 +418,7 @@ public class CplContextBuilderTest {
 
     private CplContextBuilder createCplContextBuilder() throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
-        AssetMap assetMap = new AssetMapParser().parse(AssetmapUtils.getCorrectAssetmap());
+        AssetMap assetMap = new AssetMapParser().parse(AssetmapUtils.getImpFolder(), AssetmapUtils.getCorrectAssetmap());
         return new CplContextBuilder(contextProvider, assetMap);
     }
 

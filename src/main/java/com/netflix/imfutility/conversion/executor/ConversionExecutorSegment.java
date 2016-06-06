@@ -116,8 +116,7 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
         ContextInfo contextInfo = new ContextInfoBuilder()
                 .setSegmentUuid(currentSegmentUuid)
                 .build();
-        return new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(),
-                contextInfo);
+        return new OperationInfo(execOnce.getValue(), execOnce.getName(), contextInfo);
     }
 
 
@@ -126,7 +125,7 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
                 .setSegmentUuid(currentSegmentUuid)
                 .build();
         return subPipe.getExecOnce().stream()
-                .map(execOnce -> new OperationInfo(execOnce.getValue(), execOnce.getName(), execOnce.getClass(), contextInfo))
+                .map(execOnce -> new OperationInfo(execOnce.getValue(), execOnce.getName(), contextInfo))
                 .collect(Collectors.toList());
     }
 
@@ -151,8 +150,7 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
 
                 // executable: operation info
                 if (execSequence.getExecOnce() != null) {
-                    OperationInfo operationInfo = new OperationInfo(execSequence.getExecOnce().getValue(), execSequence.getName(), execSequence.getClass(),
-                            contextInfo);
+                    OperationInfo operationInfo = new OperationInfo(execSequence.getExecOnce().getValue(), execSequence.getName(), contextInfo);
                     result.add(operationInfo);
                 }
 
@@ -191,8 +189,7 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
                 if (execSequence.getPipe() != null) {
                     List<OperationInfo> pipeOperations = new ArrayList<>();
                     for (ExecOnceType execOnceType : execSequence.getPipe().getExecOnce()) {
-                        OperationInfo operationInfo = new OperationInfo(execOnceType.getValue(), execOnceType.getName(), execSequence.getClass(),
-                                contextInfo);
+                        OperationInfo operationInfo = new OperationInfo(execOnceType.getValue(), execOnceType.getName(), contextInfo);
                         pipeOperations.add(operationInfo);
                     }
                     result.add(pipeOperations);

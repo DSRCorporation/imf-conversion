@@ -14,11 +14,11 @@ import static com.netflix.imfutility.Constants.ASSETMAP_PACKAGE;
 import static com.netflix.imfutility.Constants.XSD_ASSETMAP_XSD;
 
 /**
- * Parses ASSETMAP.xml and creates a {@link AssetMap} with location of each asset.
+ * Parses ASSETMAP.xml and creates a {@link AssetMap} with location of each asset. Asset map contains full absolute paths.
  */
 public class AssetMapParser {
 
-    public AssetMap parse(String assetMapXml) throws XmlParsingException, FileNotFoundException {
+    public AssetMap parse(File impDirectory, String assetMapXml) throws XmlParsingException, FileNotFoundException {
         File assetMapFile = new File(assetMapXml);
         if (!assetMapFile.isFile()) {
             throw new FileNotFoundException(String.format("Invalid ASSETMAP file: '%s' not found", assetMapFile.getAbsolutePath()));
@@ -33,9 +33,27 @@ public class AssetMapParser {
             if (asset.getChunkList() == null || (asset.getChunkList().getChunk().size() != 1)) {
                 throw new ConversionException(String.format(
                         "'%s' must have exactly one chunk for asset '%s'",
-                        assetMapFile.getAbsolutePath(), uuid.toString()));
+                        uuid.toString(), assetMapFile.getAbsolutePath()));
             }
-            result.addAsset(uuid, asset.getChunkList().getChunk().get(0).getPath());
+
+            String assetPath = asset.getChunkList().getChunk().get(0).getPath();
+
+            // we should add a full absolute path
+            String assetFullPath = null;
+            File assetAbsoluteFile = new File(assetPath);
+            File assetRelativeFile = new File(impDirectory, assetPath);
+            if (assetAbsoluteFile.isFile()) {
+                // assetmap.xml contains full path?
+                assetFullPath = assetAbsoluteFile.getAbsolutePath();
+            } else if (assetRelativeFile.isFile()) {
+                // assetmap.xml contains a path relative to IMP folder?
+                assetFullPath = assetRelativeFile.getAbsolutePath();
+            } else {
+                throw new ConversionException(String.format(
+                        "'%s' must point to an existing file: '%s'", uuid.toString(), assetPath));
+            }
+
+            result.addAsset(uuid, assetFullPath);
         }
 
         return result;

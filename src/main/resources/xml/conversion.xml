@@ -35,7 +35,7 @@
                         <video>
                             <width>1920</width>
                             <height>1080</height>
-                            <frameRate>25</frameRate>
+                            <frameRate>25 1</frameRate>
                             <pixelFormat>yuv422p10le</pixelFormat>
                             <bitDepth>10</bitDepth>
                         </video>

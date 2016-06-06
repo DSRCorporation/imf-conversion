@@ -182,7 +182,7 @@ public abstract class AbstractFormatBuilder {
 
         File assetMapFile = new File(inputParameters.getImpDirectory(), Constants.ASSETMAP_FILE);
         logger.info("Parsing ASSETMAP.xml ('{}')...", assetMapFile.getAbsolutePath());
-        this.assetMap = new AssetMapParser().parse(assetMapFile.getAbsolutePath());
+        this.assetMap = new AssetMapParser().parse(impDir, assetMapFile.getAbsolutePath());
         logger.info("Parsed ASSETMAP.xml: OK");
 
         File cplFile = new File(inputParameters.getImpDirectory(), inputParameters.getCplXml());

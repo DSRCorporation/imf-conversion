@@ -1,6 +1,7 @@
 package com.netflix.imfutility.mediainfo;
 
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
+import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 import com.netflix.imfutility.xsd.mediainfo.StreamType;
 
@@ -29,7 +30,10 @@ public class VirtualTrackInfo {
         addParameter(SequenceContextParameters.HEIGHT, stream.getHeight());
         addParameter(SequenceContextParameters.BIT_DEPTH, stream.getBitsPerRawSample());
         addParameter(SequenceContextParameters.PIXEL_FORMAT, stream.getPixFmt());
-        addParameter(SequenceContextParameters.FRAME_RATE, stream.getRFrameRate());
+        String rFrameRate = stream.getRFrameRate();
+        if (rFrameRate != null) {
+            addParameter(SequenceContextParameters.FRAME_RATE, ConversionHelper.rFrameRateToEditRate(rFrameRate));
+        }
     }
 
     private void addParameter(SequenceContextParameters paramName, Object paramValue) {

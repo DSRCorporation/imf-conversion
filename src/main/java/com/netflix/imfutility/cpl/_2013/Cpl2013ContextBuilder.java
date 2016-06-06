@@ -94,6 +94,7 @@ public class Cpl2013ContextBuilder {
 
 
         // 2. Init essence parameter. Check that we have a corresponding track file in assetmap
+        // asset map already contains full absolute paths
         UUID trackId = UUID.create(trackFileResource.getTrackFileId());
         String assetPath = assetMap.getAsset(trackId);
         if (assetPath == null) {
@@ -130,6 +131,5 @@ public class Cpl2013ContextBuilder {
                 ResourceContextParameters.DURATION_EDIT_UNIT, durationEditUnit.toString());
 
     }
-
 
 }

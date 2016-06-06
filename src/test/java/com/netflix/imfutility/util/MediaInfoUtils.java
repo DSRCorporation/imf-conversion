@@ -12,8 +12,17 @@ public final class MediaInfoUtils {
         return ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoAudio.xml").getPath();
     }
 
+    public static String getCorrectMediaInfoAudio2() {
+        return ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoAudio2.xml").getPath();
+    }
+
+
     public static String getCorrectMediaInfoVideo() {
         return ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoVideo.xml").getPath();
+    }
+
+    public static String getCorrectMediaInfoVideo2() {
+        return ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoVideo2.xml").getPath();
     }
 
     public static String getBrokenXmlMediaInfoAudio() {
