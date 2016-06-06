@@ -8,14 +8,26 @@ import com.netflix.imfutility.conversion.templateParameter.exception.TemplatePar
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Resource Template Parameter Context.
  * <ul>
  * <li>It's used to replace resource template parameters in conversion operations</li>
- * <li>May contain any only supported resource parameters (see {@link ResourceContextParameters}</li>
+ * <li>May contain only supported resource parameters (see {@link ResourceContextParameters}</li>
  * <li>Created dynamically in the code when analyzing CPL.</li>
+ * <li>Contains the following information for each resource within each segment of each sequence (virtual track):
+ * <ul>
+ * <li>Essence full path</li>
+ * <li>Start time</li>
+ * <li>Duration</li>
+ * <li>Resource UUID</li>
+ * <li>Resource number</li>
+ * </ul>
+ * </li>
  * </ul>
  */
 public class ResourceTemplateParameterContext implements ITemplateParameterContext {
@@ -25,6 +37,14 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
 
     private final Map<ResourceKey, ResourceData> resources = new LinkedHashMap<>();
 
+    /**
+     * Inits a resource parameter defined by the given key and UUID. Defines default parameters (such as Resource UUID and number).
+     * The method must be called for each resource before adding another parameters.
+     *
+     * @param resourceKey a resource key defining the parameter.
+     * @param uuid        resource UUID.
+     * @return this resource template parameters context.
+     */
     public ResourceTemplateParameterContext initResource(ResourceKey resourceKey, ResourceUUID uuid) {
         if (!resources.containsKey(resourceKey) || !resources.get(resourceKey).contains(uuid)) {
             int resourceNum = getResourceCount(resourceKey);
@@ -34,6 +54,15 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
         return this;
     }
 
+    /**
+     * Adds a resource parameter.
+     *
+     * @param resourceKey a resource key defining the parameter.
+     * @param uuid        resource UUID.
+     * @param paramName   a enum defining the parameter name.
+     * @param paramValue  parameter value
+     * @return this resource template parameters context.
+     */
     public ResourceTemplateParameterContext addResourceParameter(ResourceKey resourceKey, ResourceUUID uuid, ResourceContextParameters paramName, String paramValue) {
         initResource(resourceKey, uuid);
         doAddParameter(resourceKey, uuid, paramName, paramValue);
@@ -49,6 +78,10 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
         resourceData.addParameter(uuid, paramName, paramValue);
     }
 
+    /**
+     * @param resourceKey a resource key defining the parameter.
+     * @return total count of resources for the segment and sequence (virtual track) defined by the given key.
+     */
     public int getResourceCount(ResourceKey resourceKey) {
         ResourceData resourceData = resources.get(resourceKey);
         if (resourceData == null) {
@@ -57,6 +90,11 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
         return resourceData.getCount();
     }
 
+    /**
+     * @param resourceKey a resource key defining the parameter.
+     * @return all Resource UUIDs for the segment and sequence (virtual track) defined by the given key.
+     * The order of the UUIDS is the order as they were added.
+     */
     public Collection<ResourceUUID> getUuids(ResourceKey resourceKey) {
         ResourceData resourceData = resources.get(resourceKey);
         if (resourceData == null) {
@@ -65,6 +103,11 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
         return resourceData.getUuids();
     }
 
+    /**
+     * @param resourceParameter a enum defining the parameter name.
+     * @param contextInfo       a context info. Must  contain information about segment, sequence and resource.
+     * @return resolved parameter value as a string. Never null.
+     */
     public String getParameterValue(ResourceContextParameters resourceParameter, ContextInfo contextInfo) {
         return getParameterValue(
                 new TemplateParameter(TemplateParameterContext.RESOURCE, resourceParameter.getName()),
@@ -72,6 +115,15 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
                 contextInfo);
     }
 
+    /**
+     * Resolves the given parameter.
+     * The returned value is never null.
+     * A runtime exception is thrown if parameter can not be resolved.
+     *
+     * @param templateParameter the template parameter to be resolved.
+     * @param contextInfo       a context info. Must  contain information about segment, sequence and resource.
+     * @return resolved parameter value as a string. Never null.
+     */
     @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo) {
         ResourceContextParameters resourceParameter = ResourceContextParameters.fromName(templateParameter.getName());

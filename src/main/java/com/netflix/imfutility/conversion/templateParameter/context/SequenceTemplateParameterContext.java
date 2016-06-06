@@ -16,11 +16,23 @@ import java.util.Map;
 
 
 /**
- * Sequence Template Parameter Context.
+ * Sequence (virtual track) Template Parameter Context.
  * <ul>
  * <li>It's used to replace sequence template parameters in conversion operations</li>
  * <li>May contain any only supported sequence parameters (see {@link SequenceContextParameters}</li>
  * <li>Created dynamically in the code when analyzing CPL.</li>
+ * <li>Contains the following information for each sequence:
+ * <ul>
+ * <li>Sequence UUID</li>
+ * <li>Sequence number</li>
+ * <li>Sequence type</li>
+ * <li>Audio source parameters (such sample rate, bits per sample, etc.)</li>
+ * <li>Video source parameters (such as fps, size, bit depth, pixel format, etc.)</li>
+ * </ul>
+ * </li>
+ * <li>Audio and video source parameters are filled by {@link com.netflix.imfutility.mediainfo.MediaInfoContextBuilder}
+ * while calling an external media info tool for each essence and each type.</li>
+ * <li>It's assumed that all segments from a sequence (virtual track) must have equal audio and video parameters.</li>
  * </ul>
  */
 public class SequenceTemplateParameterContext implements ITemplateParameterContext {
@@ -30,6 +42,14 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
 
     private final Map<SequenceType, SequenceData> sequences = new LinkedHashMap<>();
 
+    /**
+     * Inits a sequence (virtual track) parameter defined by the given UUID. Defines default parameters (such as Sequence UUID, type and number).
+     * The method must be called for each sequence before adding another parameters.
+     *
+     * @param seqType sequence type
+     * @param uuid    sequence UUID.
+     * @return this sequence template parameters context.
+     */
     public SequenceTemplateParameterContext initSequence(SequenceType seqType, SequenceUUID uuid) {
         if (!sequences.containsKey(seqType) || !sequences.get(seqType).contains(uuid)) {
             int seqNum = getSequenceCount(seqType);
@@ -40,6 +60,15 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
         return this;
     }
 
+    /**
+     * Adds a sequence (virtual track) parameter.
+     *
+     * @param seqType    sequence type
+     * @param uuid       sequence UUID.
+     * @param paramName  a enum defining the parameter name.
+     * @param paramValue parameter value
+     * @return this sequence template parameters context.
+     */
     public SequenceTemplateParameterContext addSequenceParameter(SequenceType seqType, SequenceUUID uuid, SequenceContextParameters paramName, String paramValue) {
         initSequence(seqType, uuid);
         doAddParameter(seqType, uuid, paramName, paramValue);
@@ -55,6 +84,10 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
         sequenceData.addParameter(uuid, paramName, paramValue);
     }
 
+    /**
+     * @param sequenceType sequence type
+     * @return total count of sequences (virtual tracks) of the given type.
+     */
     public int getSequenceCount(SequenceType sequenceType) {
         SequenceData sequenceData = sequences.get(sequenceType);
         if (sequenceData == null) {
@@ -63,6 +96,10 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
         return sequenceData.getCount();
     }
 
+    /**
+     * @param sequenceType sequence type
+     * @return all Sequences UUIDs of the given type. The order of the UUIDS is the order as they were added.
+     */
     public Collection<SequenceUUID> getUuids(SequenceType sequenceType) {
         SequenceData sequenceData = sequences.get(sequenceType);
         if (sequenceData == null) {
@@ -71,6 +108,9 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
         return sequenceData.getUuids();
     }
 
+    /**
+     * @return all added sequence types.
+     */
     public Collection<SequenceType> getSequenceTypes() {
         return sequences.keySet();
     }
@@ -82,6 +122,15 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
                 contextInfo);
     }
 
+    /**
+     * Resolves the given parameter.
+     * The returned value is never null.
+     * A runtime exception is thrown if parameter can not be resolved.
+     *
+     * @param templateParameter the template parameter to be resolved.
+     * @param contextInfo       a context info. Must contain information about the sequence (UUID and type).
+     * @return resolved parameter value as a string. Never null.
+     */
     @Override
     public String resolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo) {
         SequenceContextParameters sequenceParameter = SequenceContextParameters.fromName(templateParameter.getName());

@@ -134,7 +134,7 @@
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
-                        --avci100_1080i "%{tmp.videoEncoded}"
+                        --afd 10 --avci100_1080i "%{tmp.videoEncoded}"
                         -q 24 -s 48000 --audio-chan %{dynamic.ebuAudioTracks}
                         --pcm "%{tmp.audioEncoded}"
                     </execOnce>

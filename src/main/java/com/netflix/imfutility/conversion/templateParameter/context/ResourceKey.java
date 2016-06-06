@@ -5,7 +5,7 @@ import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 /**
- * Unique identifier ofa resource within a sequence and a segment.
+ * Unique identifier of a resource within a segment of a sequence (virtual track). It's used in {@link ResourceTemplateParameterContext}.
  */
 public class ResourceKey {
 

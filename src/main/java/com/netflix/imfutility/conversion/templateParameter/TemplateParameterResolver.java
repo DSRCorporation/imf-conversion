@@ -8,7 +8,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Resolves a given template parameter using an appropriate template parameter context.
+ * Resolves a given template parameter using an appropriate {@link ITemplateParameterContext}.
+ * <ul>
+ * <li>A simple parameter has the following form: %{paramContext.paramName}</li>
+ * <li>The parameter is resolved by finding a value for the parameter "paramName" in the
+ * {@link ITemplateParameterContext} associated with the "paramContext".</li>
+ * <li>The parameter may contain sub-parameters, such as %{dynamic.%{segm.num}}</li>
+ * </ul>
  */
 public class TemplateParameterResolver {
 
@@ -22,6 +28,19 @@ public class TemplateParameterResolver {
         return contextProvider;
     }
 
+    /**
+     * Resolves the given parameter using an appropriate {@link ITemplateParameterContext}.
+     * <ul>
+     * <li>A simple parameter has the following form: %{paramContext.paramName}</li>
+     * <li>The parameter is resolved by finding a value for the parameter "paramName" in the
+     * {@link ITemplateParameterContext} associated with the "paramContext".</li>
+     * <li>The parameter may contain sub-parameters, such as %{dynamic.%{segm.num}}</li>
+     * </ul>
+     *
+     * @param parameterStr the parameter to be resolved
+     * @param contextInfo  a context info helping to resolved the parameter.
+     * @return resolved parameter value as a string.
+     */
     public String resolveTemplateParameter(String parameterStr, ContextInfo contextInfo) {
         String unresolvedParam = parameterStr;
         String resolvedParam = null;

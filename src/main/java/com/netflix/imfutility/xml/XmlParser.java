@@ -25,6 +25,13 @@ import java.net.URL;
  */
 public class XmlParser {
 
+    /**
+     * Gets the namespace of the root element.
+     *
+     * @param xml a full path tp the input XML
+     * @return a namespace URI string or null if the XML doesn't contain a namespace.
+     * @throws XmlParsingException if input is not a valid XML or it doesn't pass XSD validation
+     */
     public static String getNamespace(File xml) throws XmlParsingException {
         // 1. create an error and content handler
         XmlParsingNamespaceHandler contentErrorHandler = new XmlParsingNamespaceHandler(xml);
@@ -35,6 +42,18 @@ public class XmlParser {
         return contentErrorHandler.getNamespace();
     }
 
+    /**
+     * Parses the given XML to a Java model (JAXB unmarshalling).
+     * Performs XSD validation.
+     *
+     * @param xml         a full path to the input XML
+     * @param xsd         a full path to an XSD corresponding to the given XML
+     * @param pkg         a package containing the corresponding Java model classes.
+     * @param resultClass a corresponding Java model class.
+     * @param <T>         a corresponding Java model class.
+     * @return a corresponding Java model instance.
+     * @throws XmlParsingException if input is not a valid XML or it doesn't pass XSD validation
+     */
     public static <T> T parse(File xml, String xsd, String pkg, Class<T> resultClass) throws XmlParsingException {
         try {
             // 1. create JAXB unmarshaller

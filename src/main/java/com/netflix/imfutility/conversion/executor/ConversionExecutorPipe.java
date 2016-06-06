@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 /**
  * Executor of {@link PipeType} conversion operation.
- * Execute all operations in a pipeline.
+ * Execute all operations in a pipeline (see {@link com.netflix.imfutility.conversion.executor.strategy.ExecutePipeStrategy}).
  */
 public class ConversionExecutorPipe extends AbstractConversionExecutor {
 

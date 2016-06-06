@@ -28,6 +28,14 @@ public class ConversionXmlProvider {
 
     private FormatType formatType;
 
+    /**
+     * Parses the given conversion.xml file to a Java model. Performs XSD validation.
+     *
+     * @param conversionXml a full path to the input conversion.xml
+     * @param format        a destination format within conversion.xml
+     * @throws XmlParsingException   if the input is not a valid XML or it doesn't pass XSD validation
+     * @throws FileNotFoundException if the input path doesn't define a file.
+     */
     public ConversionXmlProvider(String conversionXml, Format format) throws XmlParsingException, FileNotFoundException {
         File conversionFile = new File(conversionXml);
         if (!conversionFile.isFile()) {
@@ -43,10 +51,16 @@ public class ConversionXmlProvider {
         }
     }
 
+    /**
+     * @return a format instance corresponding to the input conversion.xml
+     */
     public FormatType getFormat() {
         return formatType;
     }
 
+    /**
+     * @return a list of all conversion configuration for the given format ({@link #getFormat()}).
+     */
     public List<String> getConvertConfiguration() {
         if (formatType == null) {
             return Collections.emptyList();
@@ -54,6 +68,12 @@ public class ConversionXmlProvider {
         return new ArrayList<>(formatType.getFormatConfigurations().getMap().keySet());
     }
 
+    /**
+     * Gets a Format Configuration instance corresponding to the given format configuration name.
+     *
+     * @param configuration a format configuration name.
+     * @return a format configuration instance.
+     */
     public FormatConfigurationType getFormatConfigurationType(String configuration) {
         FormatConfigurationType formatConfigurationType = formatType.getFormatConfigurations().getMap().get(configuration);
         if (formatConfigurationType == null) {

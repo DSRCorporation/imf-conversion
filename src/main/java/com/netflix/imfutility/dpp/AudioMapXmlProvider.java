@@ -32,7 +32,7 @@ import static com.netflix.imfutility.Constants.AUDIOMAP_XML_SCHEME;
 public class AudioMapXmlProvider {
 
     /**
-     * Generates sample audiomap.xml file.
+     * Generates a sample audiomap.xml file.
      *
      * @param path a path to the output audiomap.xml file
      */

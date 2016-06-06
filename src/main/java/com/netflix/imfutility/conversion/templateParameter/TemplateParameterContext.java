@@ -19,9 +19,7 @@ public enum TemplateParameterContext {
 
     SEQUENCE("seq"),
 
-    RESOURCE("resource"),
-
-    OUTPUT("output");
+    RESOURCE("resource");
 
     private final String name;
 

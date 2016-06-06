@@ -15,7 +15,6 @@ import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.xsd.conversion.ExecOnceType;
 import com.netflix.imfutility.xsd.conversion.FormatType;
 import com.netflix.imfutility.xsd.conversion.MediaInfoCommandType;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
@@ -49,10 +48,26 @@ public class MediaInfoContextBuilder {
     private final Map<ImmutablePair<SequenceType, String>, VirtualTrackInfo> processedMediaInfo = new HashMap<>();
     private final Map<SequenceUUID, VirtualTrackInfo> mediaInfoForTrack = new HashMap<>();
 
+    /**
+     * Gets a media info XML file name created for the given sequence of the given type. The file is created in the working directory.
+     *
+     * @param seqType    a virtual track type (video, audio, subtitle)
+     * @param essence    a full path to the essence file
+     * @param workingDir a full path to the working directory.
+     * @return media info XML file name for the given sequence of the given type
+     */
     public static File getOutputFile(SequenceType seqType, String essence, String workingDir) {
         return new File(workingDir, getOutputFileName(seqType, essence));
     }
 
+    /**
+     * Gets a unique name of a dynamic parameter to store the output media info XML file created to the given essence of the given type
+     * (see {@link #getOutputFileName(SequenceType, String)}).
+     *
+     * @param seqType a virtual track type (video, audio, subtitle)
+     * @param essence a full path to the essence file
+     * @return a unique dynamic parameter name.
+     */
     public static String getOutputDynamicParamName(SequenceType seqType, String essence) {
         return String.format("%s_%s",
                 DynamicContextParameters.MEDIA_INFO_OUTPUT.getName(),
@@ -72,6 +87,20 @@ public class MediaInfoContextBuilder {
         this.format = contextProvider.getFormat();
     }
 
+    /**
+     * Invoke an external command from conversion.xml for each essence and each track type (video, audio, subtitle) participating in CPL
+     * to create a media info XML ({@link #getOutputFile(SequenceType, String, String)}).
+     * <ul>
+     * <li>XSD validation is performed for the created media info xml file.</li>
+     * <li>The created media info xml file is added to the dynamic context to be deleted on exit.</li>
+     * <li>The media info XML file is parsed and Sequence context is filled with the values from media info XML (such as fps, sample rate, size, etc..)</li>
+     * <li>Each virtual track must have the same parameters (such as fps, sample rate, etc.) Otherwise a {@link MediaInfoException} is thrown.</li>
+     * </ul>
+     *
+     * @throws IOException         if creation of media info XML files or calling of external media info tools fail.
+     * @throws XmlParsingException if created media info XML file is not a valid XML or it doesn't pass XSD validation
+     * @throws MediaInfoException  if a virtual track contains mismatched parameters (such as fps, sample rate, etc.,) for different segments.
+     */
     public void build() throws IOException, XmlParsingException, MediaInfoException {
         SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
         for (SequenceType seqType : sequenceContext.getSequenceTypes()) {
@@ -108,7 +137,7 @@ public class MediaInfoContextBuilder {
         buildSequenceContext(processedInfo, contextInfo);
     }
 
-    private File getMediaInfo(SequenceType seqType, String essence) throws IOException, XmlParsingException, MediaInfoException {
+    private File getMediaInfo(SequenceType seqType, String essence) throws IOException {
         // 1. fill dynamic context's mediaInfoInput
         contextProvider.getDynamicContext().addParameter(DynamicContextParameters.MEDIA_INFO_INPUT, essence, false);
 
@@ -179,14 +208,12 @@ public class MediaInfoContextBuilder {
     private void buildSequenceContext(VirtualTrackInfo virtualTrackInfo, ContextInfo contextInfo) {
         SequenceUUID seqUuid = contextInfo.getSequenceUuid();
         virtualTrackInfo.getParameters().forEach(
-                (paramName, paramValue) -> {
-                    contextProvider.getSequenceContext().addSequenceParameter(
-                            virtualTrackInfo.getSeqType(),
-                            seqUuid,
-                            paramName,
-                            paramValue);
-
-                });
+                (paramName, paramValue) ->
+                        contextProvider.getSequenceContext().addSequenceParameter(
+                                virtualTrackInfo.getSeqType(),
+                                seqUuid,
+                                paramName,
+                                paramValue));
     }
 
 }

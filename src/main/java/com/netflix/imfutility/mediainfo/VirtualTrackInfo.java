@@ -10,6 +10,7 @@ import java.util.Map;
 
 /**
  * A helper class to wrap required parameters (media info).
+ * It's also used to check whether a virtual track has equal parameters (such as fps, sample rate, etc.) for each segment.
  */
 public class VirtualTrackInfo {
 

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * All supported segment template parameter names.
+ * All supported sequence (virtual track) template parameter names.
  */
 public enum SequenceContextParameters {
 

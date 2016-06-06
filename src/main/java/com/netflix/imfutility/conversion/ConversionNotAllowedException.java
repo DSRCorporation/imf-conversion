@@ -4,6 +4,7 @@ import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 
 /**
  * The exception thrown when it's not allowed (in config.xml) to silently convert source parameters to destination ones if they don't match.
+ * Example: source fps is 25, and the destination one (as defined by conversion.xml), is 50, and config.xml says that silent conversion of fps is not allowed.
  */
 public class ConversionNotAllowedException extends Exception {
 

@@ -27,7 +27,10 @@ import static com.netflix.imfutility.Constants.XSD_CPL_2013_XSD;
  * A CPL parser for 2013 namespace.
  * <ul>
  * <li>Parses the given CPL</li>
- * <li>Fills segment, sequence and resource contexts, so conversion can be started using context parameters.</li>
+ * <li>Fills segment, sequence and resource contexts, so conversion can be started using context parameters
+ * (see {@link com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext},
+ * {@link com.netflix.imfutility.conversion.templateParameter.context.SegmentTemplateParameterContext},
+ * {@link com.netflix.imfutility.conversion.templateParameter.context.ResourceTemplateParameterContext}).</li>
  * </ul>
  */
 public class Cpl2013ContextBuilder {
@@ -46,6 +49,12 @@ public class Cpl2013ContextBuilder {
         this.assetMap = assetMap;
     }
 
+    /**
+     * Parses the given CPL file and fills sequence, segment and resource contexts.
+     *
+     * @param cplFile an input CPL file.
+     * @throws XmlParsingException if the input is not a valid XML or it doesn't pass XSD validation
+     */
     public void build(File cplFile) throws XmlParsingException {
         CompositionPlaylistType cpl2013 = XmlParser.parse(cplFile, XSD_CPL_2013_XSD, CPL_2013_PACKAGE, CompositionPlaylistType.class);
 

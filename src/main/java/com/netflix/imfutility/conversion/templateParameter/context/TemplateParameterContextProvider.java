@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A holder of all template parameter contexts: tool, tmp, dynamic, segment, etc.
+ * A holder of all template parameter contexts: tool, tmp, dynamic, segment, sequence  etc.
  */
 public class TemplateParameterContextProvider {
 
@@ -18,6 +18,11 @@ public class TemplateParameterContextProvider {
 
     private final Map<TemplateParameterContext, ITemplateParameterContext> contexts = new HashMap<>();
 
+    /**
+     * @param config     a config instance corresponding to config.xml
+     * @param format     a format instance corresponding to conversion.xml.
+     * @param workingDir a working directory where the output file as well as all tmp files are created.
+     */
     public TemplateParameterContextProvider(ConfigType config, FormatType format, String workingDir) {
         this.config = config;
         this.format = format;
@@ -53,14 +58,23 @@ public class TemplateParameterContextProvider {
         return (ResourceTemplateParameterContext) contexts.get(TemplateParameterContext.RESOURCE);
     }
 
+    /**
+     * @return the working directory where the output file as well as all tmp files are created.
+     */
     public String getWorkingDir() {
         return workingDir;
     }
 
+    /**
+     * @return the config instance corresponding to config.xml
+     */
     public ConfigType getConfig() {
         return config;
     }
 
+    /**
+     * @return the format instance corresponding to conversion.xml.
+     */
     public FormatType getFormat() {
         return format;
     }
