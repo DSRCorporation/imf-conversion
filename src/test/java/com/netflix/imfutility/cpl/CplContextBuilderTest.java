@@ -242,10 +242,14 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("0",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
+        assertEquals("0",
+                resourceContext.getParameterValue(ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:00.000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_TIMECODE, contextInfo));
         assertEquals("288000",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_EDIT_UNIT, contextInfo));
+        assertEquals("288000",
+                resourceContext.getParameterValue(ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:06.000",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_TIMECODE, contextInfo));
 
@@ -264,10 +268,14 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("0",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
+        assertEquals("0",
+                resourceContext.getParameterValue(ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:00.000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_TIMECODE, contextInfo));
         assertEquals("288000",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_EDIT_UNIT, contextInfo));
+        assertEquals("288000",
+                resourceContext.getParameterValue(ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:06.000",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_TIMECODE, contextInfo));
 
@@ -286,10 +294,14 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("288000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
+        assertEquals("288000",
+                resourceContext.getParameterValue(ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:06.000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_TIMECODE, contextInfo));
         assertEquals("288000",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_EDIT_UNIT, contextInfo));
+        assertEquals("288000",
+                resourceContext.getParameterValue(ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:06.000",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_TIMECODE, contextInfo));
 
@@ -308,10 +320,14 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("576000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
+        assertEquals("576000",
+                resourceContext.getParameterValue(ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:12.000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_TIMECODE, contextInfo));
         assertEquals("1053120",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_EDIT_UNIT, contextInfo));
+        assertEquals("1053120",
+                resourceContext.getParameterValue(ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:21.940",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_TIMECODE, contextInfo));
 
@@ -330,10 +346,14 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("864000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
+        assertEquals("864000",
+                resourceContext.getParameterValue(ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:18.000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_TIMECODE, contextInfo));
         assertEquals("765120",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_EDIT_UNIT, contextInfo));
+        assertEquals("765120",
+                resourceContext.getParameterValue(ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:15.940",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_TIMECODE, contextInfo));
     }
@@ -364,10 +384,14 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("0",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
+        assertEquals("0",
+                resourceContext.getParameterValue(ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:00.000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_TIMECODE, contextInfo));
         assertEquals("300",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_EDIT_UNIT, contextInfo));
+        assertEquals("300",
+                resourceContext.getParameterValue(ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:06.000",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_TIMECODE, contextInfo));
 
@@ -386,10 +410,14 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("300",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
+        assertEquals("300",
+                resourceContext.getParameterValue(ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:06.000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_TIMECODE, contextInfo));
         assertEquals("150",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_EDIT_UNIT, contextInfo));
+        assertEquals("150",
+                resourceContext.getParameterValue(ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:03.000",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_TIMECODE, contextInfo));
 
@@ -408,12 +436,76 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.ESSENCE, contextInfo));
         assertEquals("600",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_EDIT_UNIT, contextInfo));
+        assertEquals("600",
+                resourceContext.getParameterValue(ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:12.000",
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_TIMECODE, contextInfo));
         assertEquals("1097",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_EDIT_UNIT, contextInfo));
+        assertEquals("1097",
+                resourceContext.getParameterValue(ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("00:00:21.940",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_TIMECODE, contextInfo));
+    }
+
+    @Test
+    public void testResourceContextFrameStartTimeAndDurationCreatedCorrectly() throws Exception {
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        AssetMap assetMap = new AssetMapParser().parse(AssetmapUtils.getImpFolder(), AssetmapUtils.getCorrectAssetmap());
+        // get a CPL that uses one essence for both audio and video
+        new CplContextBuilder(contextProvider, assetMap).build(CplUtils.getCorrectCplOneEssence());
+
+        ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
+
+        // UUIDs as defined in CPL.xml.
+
+        // first segment of the video track
+        ContextInfo contextInfo = new ContextInfoBuilder()
+                .setSegmentUuid(SegmentUUID.create("urn:uuid:20544b5c-be3c-4274-8633-249ee8a5ad16"))
+                .setSequenceUuid(SequenceUUID.create("urn:uuid:a4f226e7-adac-45a4-adbf-83335cf02d0d"))
+                .setSequenceType(SequenceType.VIDEO)
+                .setResourceUuid(ResourceUUID.create("urn:uuid:2404d06b-4d65-4511-9cac-42d41196a1ea"))
+                .build();
+        assertEquals("0",
+                resourceContext.getParameterValue(ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, contextInfo));
+        assertEquals("300",
+                resourceContext.getParameterValue(ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, contextInfo));
+
+        // first segment of the audio track (the values are the same as for video!)
+        contextInfo = new ContextInfoBuilder()
+                .setSegmentUuid(SegmentUUID.create("urn:uuid:20544b5c-be3c-4274-8633-249ee8a5ad16"))
+                .setSequenceUuid(SequenceUUID.create("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711"))
+                .setSequenceType(SequenceType.AUDIO)
+                .setResourceUuid(ResourceUUID.create("urn:uuid:895820ef-e379-4021-a69e-8a898b0a9094"))
+                .build();
+        assertEquals("0",
+                resourceContext.getParameterValue(ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, contextInfo));
+        assertEquals("300",
+                resourceContext.getParameterValue(ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, contextInfo));
+
+        // second segment of the video track
+        contextInfo = new ContextInfoBuilder()
+                .setSegmentUuid(SegmentUUID.create("urn:uuid:20544b5c-be3c-4274-8633-249ee8a5ad17"))
+                .setSequenceUuid(SequenceUUID.create("urn:uuid:a4f226e7-adac-45a4-adbf-83335cf02d0d"))
+                .setSequenceType(SequenceType.VIDEO)
+                .setResourceUuid(ResourceUUID.create("urn:uuid:2404d06b-4d65-4511-9cac-42d41196a1ea"))
+                .build();
+        assertEquals("600",
+                resourceContext.getParameterValue(ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, contextInfo));
+        assertEquals("1097",
+                resourceContext.getParameterValue(ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, contextInfo));
+
+        // second segment of the audio track (the values are the same as for video!)
+        contextInfo = new ContextInfoBuilder()
+                .setSegmentUuid(SegmentUUID.create("urn:uuid:20544b5c-be3c-4274-8633-249ee8a5ad17"))
+                .setSequenceUuid(SequenceUUID.create("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711"))
+                .setSequenceType(SequenceType.AUDIO)
+                .setResourceUuid(ResourceUUID.create("urn:uuid:895820ef-e379-4021-a69e-8a898b0a9094"))
+                .build();
+        assertEquals("600",
+                resourceContext.getParameterValue(ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, contextInfo));
+        assertEquals("1097",
+                resourceContext.getParameterValue(ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, contextInfo));
     }
 
     private CplContextBuilder createCplContextBuilder() throws Exception {

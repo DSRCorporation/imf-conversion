@@ -14,13 +14,26 @@ public enum ResourceContextParameters {
 
     ESSENCE("essence"),
 
-    START_TIME_TIMECODE("startTimeTC"), // in time code
+    EDIT_RATE("editRate"),
 
-    START_TIME_EDIT_UNIT("startTimeEU"), // in edit units
+    // in time code
+    START_TIME_TIMECODE("startTimeTC"),
 
-    DURATION_TIMECODE("durationTC"), // in time code
+    // in edit units (audio or video depending on the type)
+    START_TIME_EDIT_UNIT("startTimeEU"),
 
-    DURATION_EDIT_UNIT("durationEU"); // in edit units
+    // in time code
+    DURATION_TIMECODE("durationTC"),
+
+    // in edit units (audio or video depending on the type)
+    DURATION_EDIT_UNIT("durationEU"),
+
+    // in frame edit units (audio samples if essence contains audio only; video frames if essence contains video only or both video and audio)
+    START_TIME_FRAME_EDIT_UNIT("startTimeFrameEU"),
+
+    // in frame edit units (audio samples if essence contains audio only; video frames if essence contains video only or both video and audio)
+    DURATION_FRAME_EDIT_UNIT("durationFrameEU");
+
 
     private final String name;
 

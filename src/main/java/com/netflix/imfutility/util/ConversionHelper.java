@@ -53,6 +53,20 @@ public final class ConversionHelper {
     }
 
     /**
+     * Converts the given number of edit units in old edit rate to a new edit rate.
+     * It can be used to convert audio samples to video frames.
+     *
+     * @param eu            edit units number in oldUnitsInSec edit rate
+     * @param oldUnitsInSec old edit rate specifying the current edit units
+     * @param newUnitsInSec new edit rate
+     * @return edit units number in newUnitsInSec edit rate.
+     */
+    public static long toNewEditRate(BigInteger eu, BigFraction oldUnitsInSec, BigFraction newUnitsInSec) {
+        BigFraction editUnits = new BigFraction(eu);
+        return editUnits.divide(oldUnitsInSec).multiply(newUnitsInSec).longValue();
+    }
+
+    /**
      * Returns a fraction corresponding to the given edit rate string.
      * The edit rate is assumed to be a list containing of two elements: numerator and denominator.
      *
@@ -64,6 +78,36 @@ public final class ConversionHelper {
             throw new ConversionException("Incorrect edit rate! Edit rate must consist of two values.");
         }
         return new BigFraction(editRate.get(0), editRate.get(1));
+    }
+
+    /**
+     * Converts the edit rate as a fraction instance to the edit rate form such as "50 1".
+     *
+     * @param editRate input
+     * @return output in a form "50 1"
+     */
+    public static String toEditRate(BigFraction editRate) {
+        return String.format("%s %s", String.valueOf(editRate.getNumeratorAsLong()), String.valueOf(editRate.getDenominatorAsLong()));
+    }
+
+    /**
+     * Returns a fraction corresponding to the given edit rate string.
+     *
+     * @param editRate input in a form "50 1"
+     * @return a fraction object representing the edit rate.
+     */
+    public static BigFraction parseEditRate(String editRate) {
+        String[] parts = editRate.split(" ");
+        try {
+            if (parts.length == 2) {
+                return new BigFraction(Long.valueOf(parts[0]), Long.valueOf(parts[1]));
+            } else if (parts.length == 1) {
+                return new BigFraction(Long.valueOf(parts[0]));
+            }
+        } catch (NumberFormatException e) {
+            throw new ConversionException("Incorrect edit rate! Edit rate must consist of two numbers.", e);
+        }
+        throw new ConversionException("Incorrect edit rate! Edit rate must consist of two values.");
     }
 
     /**
