@@ -31,9 +31,10 @@
                     <ResourceList>
                         <Resource xsi:type="TrackFileResourceType">
                             <Id>urn:uuid:2404d06b-4d65-4511-9cac-42d41196a1ea</Id>
-                            <EditRate>50 1</EditRate>
-                            <IntrinsicDuration>1697</IntrinsicDuration>
-                            <SourceDuration>300</SourceDuration>
+                            <EditRate>24000 1001</EditRate>
+                            <IntrinsicDuration>8929</IntrinsicDuration>
+                            <EntryPoint>200</EntryPoint>
+                            <SourceDuration>200</SourceDuration>
                             <SourceEncoding>urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f8</SourceEncoding>
                             <TrackFileId>urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e946</TrackFileId>
                         </Resource>
@@ -46,8 +47,9 @@
                         <Resource xsi:type="TrackFileResourceType">
                             <Id>urn:uuid:895820ef-e379-4021-a69e-8a898b0a9094</Id>
                             <EditRate>48000 1</EditRate>
-                            <IntrinsicDuration>1629120</IntrinsicDuration>
-                            <SourceDuration>288000</SourceDuration>
+                            <IntrinsicDuration>17875858</IntrinsicDuration>
+                            <EntryPoint>400400</EntryPoint>
+                            <SourceDuration>400400</SourceDuration>
                             <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602794</SourceEncoding>
                             <TrackFileId>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0</TrackFileId>
                         </Resource>
@@ -65,10 +67,10 @@
                     <ResourceList>
                         <Resource xsi:type="TrackFileResourceType">
                             <Id>urn:uuid:2404d06b-4d65-4511-9cac-42d41196a1ea</Id>
-                            <EditRate>50 1</EditRate>
-                            <IntrinsicDuration>1697</IntrinsicDuration>
-                            <EntryPoint>600</EntryPoint>
-                            <SourceDuration>300</SourceDuration>
+                            <EditRate>24000 1001</EditRate>
+                            <IntrinsicDuration>8929</IntrinsicDuration>
+                            <EntryPoint>1000</EntryPoint>
+                            <SourceDuration>200</SourceDuration>
                             <SourceEncoding>urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f8</SourceEncoding>
                             <TrackFileId>urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e946</TrackFileId>
                         </Resource>
@@ -81,9 +83,9 @@
                         <Resource xsi:type="TrackFileResourceType">
                             <Id>urn:uuid:895820ef-e379-4021-a69e-8a898b0a9094</Id>
                             <EditRate>48000 1</EditRate>
-                            <IntrinsicDuration>1629120</IntrinsicDuration>
-                            <EntryPoint>576000</EntryPoint>
-                            <SourceDuration>288000</SourceDuration>
+                            <IntrinsicDuration>17875858</IntrinsicDuration>
+                            <EntryPoint>2002000</EntryPoint>
+                            <SourceDuration>400400</SourceDuration>
                             <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602794</SourceEncoding>
                             <TrackFileId>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0</TrackFileId>
                         </Resource>

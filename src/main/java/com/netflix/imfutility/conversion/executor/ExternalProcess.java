@@ -27,9 +27,9 @@ public final class ExternalProcess {
     }
 
 
-    public int finishWaitFor() {
+    public void finishWaitFor() {
         if (closed) {
-            return 0;
+            return;
         }
         int result = 0;
         try {
@@ -37,23 +37,24 @@ public final class ExternalProcess {
             closed = true;
             logFinishedSuccess();
         } catch (InterruptedException e) {
-            logFinishedFailure(e);
+            finishedFailureWithException(e);
         }
-        return result;
+        if (result != 0) {
+            finishedFailureWithExitCode(result);
+        }
     }
 
-    public int finishClose() {
+    public void finishClose() {
         if (closed) {
-            return 0;
+            return;
         }
         int result = 0;
         try {
             process.getOutputStream().close();
-            result = finishWaitFor();
+            finishWaitFor();
         } catch (IOException e) {
-            logFinishedFailure(e);
+            finishedFailureWithException(e);
         }
-        return result;
     }
 
     private void logStarted() {
@@ -64,10 +65,15 @@ public final class ExternalProcess {
         logger.info("Finished {}: OK\n", toString());
     }
 
-    private void logFinishedFailure(Exception e) {
+    private void finishedFailureWithException(Exception e) {
         logger.info("Finished {}: FAILURE\n", toString());
         String errorDesc = String.format("Exception while finishing %s. External Process may be not finished correctly.", toString());
-        logger.error(errorDesc, e);
+        throw new ProcessFailedException(errorDesc, e);
+    }
+
+    private void finishedFailureWithExitCode(int exitCode) {
+        logger.info("Finished {}: FAILURE\n", toString());
+        throw new ProcessFailedException(this, exitCode);
     }
 
 
