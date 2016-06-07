@@ -16,8 +16,6 @@ public enum ResourceContextParameters {
 
     EDIT_RATE("editRate"),
 
-    VIDEO_AND_AUDIO("videoAndAudio"),
-
     // in time code
     START_TIME_TIMECODE("startTimeTC"),
 
