@@ -12,6 +12,10 @@ public final class CplUtils {
         return ClassLoader.getSystemClassLoader().getResource("imp/CPL.xml").getPath();
     }
 
+    public static String getCorrectCplOneEssence() {
+        return ClassLoader.getSystemClassLoader().getResource("imp/CPL-one-essence.xml").getPath();
+    }
+
     public static String getBrokenXmlCpl() {
         return ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-CPL.xml").getPath();
     }
