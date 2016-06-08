@@ -19,7 +19,7 @@
         <TimecodeRate>50</TimecodeRate>
         <TimecodeStartAddress>00:00:00:00</TimecodeStartAddress>
     </CompositionTimecode>
-    <EditRate>30000 1001</EditRate>
+    <EditRate>50 1</EditRate>
     <SegmentList>
 
         <Segment>
@@ -56,7 +56,7 @@
                             <Id>urn:uuid:895820ef-e379-4021-a69e-8a898b0a9094</Id>
                             <EditRate>48000 1</EditRate>
                             <IntrinsicDuration>1629120</IntrinsicDuration>
-                            <SourceDuration>288000</SourceDuration>
+                            <SourceDuration>432000</SourceDuration>
                             <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602794</SourceEncoding>
                             <TrackFileId>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0</TrackFileId>
                         </Resource>
@@ -79,7 +79,7 @@
                             <EditRate>48000 1</EditRate>
                             <IntrinsicDuration>1629120</IntrinsicDuration>
                             <EntryPoint>288000</EntryPoint>
-                            <SourceDuration>288000</SourceDuration>
+                            <SourceDuration>144000</SourceDuration>
                             <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602794</SourceEncoding>
                             <TrackFileId>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b1</TrackFileId>
                         </Resource>
