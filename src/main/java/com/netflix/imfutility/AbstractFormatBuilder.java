@@ -62,7 +62,12 @@ public abstract class AbstractFormatBuilder {
         this.inputParameters = inputParameters;
     }
 
-    public final void build() {
+    /**
+     * Perform conversion.
+     *
+     * @return exit code
+     */
+    public final int build() {
         try {
             logger.info("Starting conversion to '{}' format\n", format.getName());
 
@@ -101,11 +106,14 @@ public abstract class AbstractFormatBuilder {
             }
 
             logger.info("Conversion to '{}' format: OK\n", format.getName());
+
+            return 0;
         } catch (Exception e) {
             logger.error(String.format("Conversion to '%s' format aborted", format.getName()), e);
             if (inputParameters.isDeleteTmpFilesOnFail()) {
                 deleteTmpFiles();
             }
+            return 1;
         }
 
     }

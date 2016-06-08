@@ -24,7 +24,8 @@ public class ImfUtility {
                 .setMetadataXml(ClassLoader.getSystemClassLoader().getResource("test/metadata.xml").getPath())
                 .build();
 
-        new DppFormatBuilder(inputParameters).build();
+        int exitCode = new DppFormatBuilder(inputParameters).build();
+        System.exit(exitCode);
     }
 
 }
