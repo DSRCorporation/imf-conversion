@@ -23,10 +23,24 @@ public enum ResourceContextParameters {
     START_TIME_EDIT_UNIT("startTimeEU"),
 
     // in time code
+    END_TIME_TIMECODE("endTimeTC"),
+
+    // in edit units (audio or video depending on the type)
+    END_TIME_EDIT_UNIT("endTimeEU"),
+
+    // in time code
     DURATION_TIMECODE("durationTC"),
 
     // in edit units (audio or video depending on the type)
     DURATION_EDIT_UNIT("durationEU"),
+
+    // offset of the segment the resource belongs to (in edit units)
+    // it equals to the sum of durations of all segments prior the one containing the resource
+    OFFSET_TIMECODE("offsetTC"),
+
+    // offset of the segment the resource belongs to (in time code)
+    // it equals to the sum of durations of all segments prior the one containing the resource
+    OFFSET_EDIT_UNIT("offsetEU"),
 
     // in frame edit units (audio samples if essence contains audio only; video frames if essence contains video only or both video and audio)
     START_TIME_FRAME_EDIT_UNIT("startTimeFrameEU"),
