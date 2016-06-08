@@ -51,6 +51,9 @@ public class Cpl2013ContextBuilder {
 
     private Map<String, BigFraction> videoEssences = new HashMap<>();
 
+    private Map<SequenceUUID, BigInteger> lastSegmentDuration = new HashMap<>();
+    private BigInteger currentSegmentDuration;
+
     public Cpl2013ContextBuilder(TemplateParameterContextProvider contextProvider, AssetMap assetMap) {
         this.contextProvider = contextProvider;
         this.assetMap = assetMap;
@@ -69,7 +72,7 @@ public class Cpl2013ContextBuilder {
         // 2. get a composition edit rate (it's used if no specific edit rate is specified for a segment).
         this.compositionEditRate = ConversionHelper.parseEditRate(cpl2013.getEditRate());
 
-        // 3. go through all segments and all sequences and build segment, sequence and resource contextx.
+        // 3. go through all segments and all sequences and build segment, sequence and resource contexts.
         for (SegmentType segment : cpl2013.getSegmentList().getSegment()) {
             this.currentSegmentUuid = SegmentUUID.create(segment.getId());
 
@@ -95,12 +98,25 @@ public class Cpl2013ContextBuilder {
     }
 
     private void processSequence() {
+        // 1. check that the sequence type is known
         if (currentSequenceType == null) {
             throw new ConversionException(String.format("Sequence '%s': Unknown sequence type", currentSequence.getId()));
         }
+
+        // 2. prepare the data for current segment duration calculation
+        if (!lastSegmentDuration.containsKey(currentSequenceUuid)) {
+            lastSegmentDuration.put(currentSequenceUuid, BigInteger.valueOf(0L));
+        }
+        currentSegmentDuration = BigInteger.valueOf(0L);
+
+        // 3. init the sequence
         contextProvider.getSequenceContext().initSequence(currentSequenceType, currentSequenceUuid);
 
+        // 4. process all resources within the sequence and segment and fill the Resource context
         currentSequence.getResourceList().getResource().forEach(this::processResource);
+
+        // 5. save the duration of this segment for this sequence
+        lastSegmentDuration.put(currentSequenceUuid, currentSegmentDuration);
     }
 
     private void processResource(BaseResourceType resource) {
@@ -156,11 +172,28 @@ public class Cpl2013ContextBuilder {
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
                 ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, durationEditUnit.toString());
 
-        // 5. init edit rate parameter
+        // 5. init endTime parameter
+        BigInteger endTimeEditUnit = startTimeEditUnit.add(durationEditUnit);
+        contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
+                ResourceContextParameters.END_TIME_EDIT_UNIT, endTimeEditUnit.toString());
+        contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
+                ResourceContextParameters.END_TIME_TIMECODE, ConversionHelper.editUnitToTimecode(endTimeEditUnit, editRate));
+
+        // 6. init offset parameter
+        BigInteger offsetEditUnit = lastSegmentDuration.get(currentSequenceUuid);
+        contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
+                ResourceContextParameters.OFFSET_EDIT_UNIT, offsetEditUnit.toString());
+        contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
+                ResourceContextParameters.OFFSET_TIMECODE, ConversionHelper.editUnitToTimecode(offsetEditUnit, editRate));
+
+        // 7. init edit rate parameter
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
                 ResourceContextParameters.EDIT_RATE, ConversionHelper.toEditRate(editRate));
 
-        // 6. save all video essences to later re-check DURATION_FRAME_EDIT_UNIT and START_TIME_FRAME_EDIT_UNIT for
+        // 8. calculate the total duration of the current segment
+        currentSegmentDuration = currentSegmentDuration.add(durationEditUnit);
+
+        // 9. save all video essences to later re-check DURATION_FRAME_EDIT_UNIT and START_TIME_FRAME_EDIT_UNIT for
         // audio sequences which has essences containing both audio and video (the values must be calculated in video frames in this case)
         if (currentSequenceType == com.netflix.imfutility.xsd.conversion.SequenceType.VIDEO) {
             videoEssences.put(assetPath, editRate);
