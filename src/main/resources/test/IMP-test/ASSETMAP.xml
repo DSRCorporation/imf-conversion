@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <AssetMap xmlns="http://www.smpte-ra.org/schemas/429-9/2007/AM">
-    <Id>urn:uuid:b38bbac8-21a6-41cf-8da5-fc2e56773034</Id>
-    <AnnotationText>Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV</AnnotationText>
+    <Id>urn:uuid:f35953fb-deea-4267-826a-3ab5e06c334f</Id>
+    <AnnotationText>Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV</AnnotationText>
     <Creator>Clipster 5.9.3.4 (build 91860)</Creator>
     <VolumeCount>1</VolumeCount>
-    <IssueDate>2015-06-22T20:54:45-00:00</IssueDate>
+    <IssueDate>2015-06-03T17:00:14-00:00</IssueDate>
     <Issuer>fotokem</Issuer>
     <AssetList>
         <Asset>
-            <Id>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0</Id>
+            <Id>urn:uuid:423f703f-6ba7-44f4-a4bc-cd683356b60e</Id>
             <ChunkList>
                 <Chunk>
-                    <Path>G:\Netflix\content\TEST\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV_Audio.mxf</Path>
+                    <Path>Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV.mxf</Path>
                     <VolumeIndex>1</VolumeIndex>
                 </Chunk>
             </ChunkList>
         </Asset>
         <Asset>
-            <Id>urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e946</Id>
+            <Id>urn:uuid:8a270edd-4f9d-4681-b15c-adcf0c7d5cf7</Id>
             <ChunkList>
                 <Chunk>
-                    <Path>G:\Netflix\content\TEST\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV.mxf</Path>
+                    <Path>CPL_8a270edd-4f9d-4681-b15c-adcf0c7d5cf7.xml</Path>
                     <VolumeIndex>1</VolumeIndex>
                 </Chunk>
             </ChunkList>
         </Asset>
         <Asset>
-            <Id>urn:uuid:6f548f17-48c5-452a-94ea-9bb58c6c5b5b</Id>
-            <ChunkList>
-                <Chunk>
-                    <Path>CPL-test.xml</Path>
-                    <VolumeIndex>1</VolumeIndex>
-                </Chunk>
-            </ChunkList>
-        </Asset>
-        <Asset>
-            <Id>urn:uuid:805f2969-0356-4e70-88a0-8d9f724681d7</Id>
+            <Id>urn:uuid:b3016100-a8c4-423b-8018-0763c242df71</Id>
             <PackingList>true</PackingList>
             <ChunkList>
                 <Chunk>
-                    <Path>PKL_805f2969-0356-4e70-88a0-8d9f724681d7.xml</Path>
+                    <Path>PKL_b3016100-a8c4-423b-8018-0763c242df71.xml</Path>
+                    <VolumeIndex>1</VolumeIndex>
+                </Chunk>
+            </ChunkList>
+        </Asset>
+        <Asset>
+            <Id>urn:uuid:ffb57dce-cc21-41f5-b419-a3ec8b81ad4c</Id>
+            <ChunkList>
+                <Chunk>
+                    <Path>Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV_Audio.mxf</Path>
                     <VolumeIndex>1</VolumeIndex>
                 </Chunk>
             </ChunkList>

@@ -20,40 +20,47 @@ public class ProcessStarter {
         logger.info("Starting {}", processInfo.toString());
         logger.info("\t{}", processInfo.getProcessString());
 
+        // 1. create process builder
         ProcessBuilder pb = new ProcessBuilder(execAndParams);
+
+        // 2. set working dir
         pb.directory(new File(workingDir));
 
-        File logFile = createLogFile(processInfo, workingDir);
+        // both stderr and stdout must be redirected to either a file or INHERIT!
+        // Otherwise a Process may hang if it writes to stderr/stdout
+
+        // 3. redirect stderr
+        File logFile = getLogFile(processInfo, workingDir);
         if (logFile != null) {
             logger.info("\tRedirecting stderr to {}", logFile.getAbsolutePath());
             pb.redirectError(ProcessBuilder.Redirect.to(logFile));
-        }
-        if (output != null) {
-            pb.redirectOutput(ProcessBuilder.Redirect.to(output));
+        } else {
+            logger.info("\tRedirecting stderr to IMF Utility stderr");
+            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
         }
 
+        // 4. redirect stdout
+        if (output != null) {
+            logger.info("\tRedirecting stdout to {}", output.getAbsolutePath());
+            pb.redirectOutput(ProcessBuilder.Redirect.to(output));
+        } else if (logFile != null) {
+            logger.info("\tRedirecting stdout to {}", logFile.getAbsolutePath());
+            pb.redirectOutput(ProcessBuilder.Redirect.to(logFile));
+        } else {
+            logger.info("\tRedirecting stdout to IMF Utility stdout");
+            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+        }
+
+        // 5. start process
         return pb.start();
     }
 
-    private File createLogFile(ExternalProcess.ExternalProcessInfo processInfo, String workingDir) {
+    private File getLogFile(ExternalProcess.ExternalProcessInfo processInfo, String workingDir) {
         File logsDir = new File(workingDir, Constants.LOGS_DIR);
         String logFileName = String.format(
                 Constants.LOG_TEMPLATE,
                 processInfo.getProcessNum(), processInfo.getOperationName(), processInfo.getOperationType(), processInfo.getProgramName());
-        File logFile = new File(logsDir, logFileName);
-
-        String errorDesc = String.format("Couldn't create log file '%s' for %s", logFile.getAbsolutePath(), processInfo.toString());
-        try {
-            boolean created = logFile.createNewFile();
-            if (!created) {
-                logger.warn(errorDesc);
-                return null;
-            }
-        } catch (IOException e) {
-            logger.warn(errorDesc, e);
-            return null;
-        }
-        return logFile;
+        return new File(logsDir, logFileName);
     }
 
 }

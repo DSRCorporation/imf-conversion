@@ -36,7 +36,7 @@
                             <EntryPoint>200</EntryPoint>
                             <SourceDuration>200</SourceDuration>
                             <SourceEncoding>urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f8</SourceEncoding>
-                            <TrackFileId>urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e946</TrackFileId>
+                            <TrackFileId>urn:uuid:423f703f-6ba7-44f4-a4bc-cd683356b60e</TrackFileId>
                         </Resource>
                     </ResourceList>
                 </cc:MainImageSequence>
@@ -51,7 +51,7 @@
                             <EntryPoint>400400</EntryPoint>
                             <SourceDuration>400400</SourceDuration>
                             <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602794</SourceEncoding>
-                            <TrackFileId>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0</TrackFileId>
+                            <TrackFileId>urn:uuid:ffb57dce-cc21-41f5-b419-a3ec8b81ad4c</TrackFileId>
                         </Resource>
                     </ResourceList>
                 </cc:MainAudioSequence>
@@ -72,7 +72,7 @@
                             <EntryPoint>1000</EntryPoint>
                             <SourceDuration>200</SourceDuration>
                             <SourceEncoding>urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f8</SourceEncoding>
-                            <TrackFileId>urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e946</TrackFileId>
+                            <TrackFileId>urn:uuid:423f703f-6ba7-44f4-a4bc-cd683356b60e</TrackFileId>
                         </Resource>
                     </ResourceList>
                 </cc:MainImageSequence>
@@ -87,7 +87,7 @@
                             <EntryPoint>2002000</EntryPoint>
                             <SourceDuration>400400</SourceDuration>
                             <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602794</SourceEncoding>
-                            <TrackFileId>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0</TrackFileId>
+                            <TrackFileId>urn:uuid:ffb57dce-cc21-41f5-b419-a3ec8b81ad4c</TrackFileId>
                         </Resource>
                     </ResourceList>
                 </cc:MainAudioSequence>

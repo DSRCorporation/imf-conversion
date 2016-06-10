@@ -17,7 +17,7 @@ public class ImfUtility {
         //TODO: add command line parameter processing logic
         DppInputParameters inputParameters = new DppInputParametersBuilder()
                 .setConfigXml(ClassLoader.getSystemClassLoader().getResource("test/config.xml").getPath())
-                .setImpDirectory(ClassLoader.getSystemClassLoader().getResource("test/IMP-test").getPath())
+                .setImpDirectory("G:\\Netflix\\content\\TEST\\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV\\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV")
                 .setCplXml("CPL-test.xml")
                 .setDeleteTmpFilesOnExit(false)
                 .setDeleteTmpFilesOnExit(false)

@@ -196,7 +196,7 @@ public abstract class AbstractFormatBuilder {
         dynamicContext.addParameter(DynamicContextParameters.CPL,
                 new File(inputParameters.getImpDirectory(), inputParameters.getCplXml()).getAbsolutePath());
         dynamicContext.addParameter(DynamicContextParameters.WORKING_DIR, contextProvider.getWorkingDir());
-        dynamicContext.addParameter(DynamicContextParameters.OUTPUT_VALIDATION_FILE, Constants.DEFAULT_OUTPUT_VALIDATION_FILE);
+        dynamicContext.addParameter(DynamicContextParameters.OUTPUT_VALIDATION_FILE, Constants.DEFAULT_OUTPUT_VALIDATION_FILE, true);
         dynamicContext.addParameter(DynamicContextParameters.VALIDATION_TOOL, ImfValidator.getValidationToolPath(configProvider));
 
         // build format-specific dynamic parameters
