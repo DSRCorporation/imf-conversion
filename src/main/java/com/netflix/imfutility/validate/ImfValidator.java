@@ -112,9 +112,12 @@ public class ImfValidator {
             List<String> errors = new ArrayList<>();
             for (int i = 0; i < errorNodes.getLength(); i++) {
                 Element errorNode = (Element) errorNodes.item(i);
-                errors.add(errorNode.getNodeValue());
+                if (errorNode.getFirstChild() != null) {
+                    errors.add(errorNode.getFirstChild().getNodeValue());
+                }
             }
             throw new ImfValidationException(errors);
+
         } catch (ParserConfigurationException | SAXException e) {
             throw new ConversionException("Can not read result of IMF validation", e);
         }
