@@ -19,7 +19,7 @@
         <TimecodeRate>50</TimecodeRate>
         <TimecodeStartAddress>00:00:00:00</TimecodeStartAddress>
     </CompositionTimecode>
-    <EditRate>30000 1001</EditRate>
+    <EditRate>24000 1001</EditRate>
     <SegmentList>
 
         <Segment>

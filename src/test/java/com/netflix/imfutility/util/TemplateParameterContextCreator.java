@@ -36,7 +36,7 @@ public final class TemplateParameterContextCreator {
         ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml());
         ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
         return new TemplateParameterContextProvider(
-                configProvider.getConfig(), conversionProvider.getFormat(), TemplateParameterContextCreator.getCurrentTmpDir());
+                configProvider, conversionProvider, TemplateParameterContextCreator.getCurrentTmpDir());
     }
 
 

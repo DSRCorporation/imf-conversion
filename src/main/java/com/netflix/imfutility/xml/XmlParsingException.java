@@ -2,6 +2,7 @@ package com.netflix.imfutility.xml;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Alexandr on 5/10/2016.
@@ -40,4 +41,10 @@ public class XmlParsingException extends Exception {
     public List<String> getErrors() {
         return this.errors;
     }
+
+    @Override
+    public String getMessage() {
+        return errors.stream().collect(Collectors.joining("\n", "\n[", "]"));
+    }
+
 }
