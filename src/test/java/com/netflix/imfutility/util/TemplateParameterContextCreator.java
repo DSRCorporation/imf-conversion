@@ -14,6 +14,7 @@ import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 
+import java.io.File;
 import java.util.EnumSet;
 
 import static junit.framework.TestCase.assertEquals;
@@ -29,6 +30,8 @@ public final class TemplateParameterContextCreator {
     public static final String RESOURCE_UUID_FORMAT = "urn:uuid:res:segm-%d-seq-%d-%s-%d";
     public static final String RESOURCE_PARAMETER_FORMAT = "%s-%s";
 
+    public static final String WORKING_DIR = "ImfUtilityTest";
+
     private TemplateParameterContextCreator() {
     }
 
@@ -36,7 +39,11 @@ public final class TemplateParameterContextCreator {
         ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml());
         ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
         return new TemplateParameterContextProvider(
-                configProvider, conversionProvider, TemplateParameterContextCreator.getCurrentTmpDir());
+                configProvider, conversionProvider, getWorkingDir().getAbsolutePath());
+    }
+
+    public static File getWorkingDir() {
+        return new File(TemplateParameterContextCreator.getCurrentTmpDir(), WORKING_DIR);
     }
 
 
