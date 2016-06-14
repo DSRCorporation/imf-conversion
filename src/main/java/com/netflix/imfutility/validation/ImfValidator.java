@@ -2,12 +2,24 @@ package com.netflix.imfutility.validation;
 
 import com.lexicalscope.jewel.cli.CliFactory;
 import com.lexicalscope.jewel.cli.HelpRequestedException;
+import com.netflix.imflibrary.IMFConstraints;
 import com.netflix.imflibrary.IMFErrorLogger;
+import com.netflix.imflibrary.IMFErrorLogger.IMFErrors.ErrorCodes;
+import com.netflix.imflibrary.IMFErrorLogger.IMFErrors.ErrorLevels;
 import com.netflix.imflibrary.IMFErrorLoggerImpl;
+import com.netflix.imflibrary.MXFOperationalPattern1A;
 import com.netflix.imflibrary.RESTfulInterfaces.IMPValidator;
 import com.netflix.imflibrary.RESTfulInterfaces.PayloadRecord;
 import com.netflix.imflibrary.RESTfulInterfaces.PayloadRecord.PayloadAssetType;
+import com.netflix.imflibrary.exceptions.IMFException;
+import com.netflix.imflibrary.exceptions.MXFException;
+import com.netflix.imflibrary.imp_validation.IMFMasterPackage;
+import com.netflix.imflibrary.st0377.HeaderPartition;
+import com.netflix.imflibrary.st0429_8.PackingList;
+import com.netflix.imflibrary.st0429_9.AssetMap;
 import com.netflix.imflibrary.st2067_2.CompositionPlaylist;
+import com.netflix.imflibrary.utils.ByteArrayByteRangeProvider;
+import com.netflix.imflibrary.utils.ByteArrayDataProvider;
 import com.netflix.imflibrary.utils.ErrorLogger.ErrorObject;
 import com.netflix.imflibrary.utils.FileByteRangeProvider;
 import com.netflix.imflibrary.utils.ResourceByteRangeProvider;
@@ -113,32 +125,128 @@ public class ImfValidator {
         return result;
     }
 
-    private List<ErrorObject> validateCpl(File cpl) throws IOException {
-        return IMPValidator.validateCPL(
-                createPayloadRecord(cpl, PayloadAssetType.CompositionPlaylist));
-    }
-
-    private List<ErrorObject> validatePkl(File pkl) throws IOException {
-        return IMPValidator.validatePKL(
-                createPayloadRecord(pkl, PayloadAssetType.PackingList));
-    }
-
-    private List<ErrorObject> validateAssetMap(File assetMap) throws IOException {
-        return IMPValidator.validateAssetMap(
-                createPayloadRecord(assetMap, PayloadAssetType.AssetMap));
-    }
-
-    private List<ErrorObject> validatePklAndAssetMap(File assetMap, List<File> pkls) throws IOException {
-        PayloadRecord assetMapPayloadRecord = createPayloadRecord(assetMap, PayloadAssetType.AssetMap);
-        List<PayloadRecord> pklPayloadRecords = new ArrayList<>();
-        for (File pkl : pkls) {
-            pklPayloadRecords.add(createPayloadRecord(pkl, PayloadAssetType.PackingList));
+    private List<ErrorObject> doValidate(ErrorCodes errCode, IValidator validator) {
+        // IMPValidator.validateXXX just throws IMFException or MXFException, and information about errors is lost.
+        IMFErrorLogger imfErrorLogger = new IMFErrorLoggerImpl();
+        try {
+            return validator.validate(imfErrorLogger);
+        } catch (SAXException | JAXBException | URISyntaxException | IOException e) {
+            imfErrorLogger.addError(errCode, ErrorLevels.FATAL, e.getMessage());
+            return imfErrorLogger.getErrors();
+        } catch (IMFException e) {
+            if (!imfErrorLogger.getErrors().isEmpty()) {
+                return imfErrorLogger.getErrors();
+            }
+            imfErrorLogger.addError(errCode, ErrorLevels.FATAL, e.getMessage());
+            return imfErrorLogger.getErrors();
+        } catch (MXFException e) {
+            if (!imfErrorLogger.getErrors().isEmpty()) {
+                return imfErrorLogger.getErrors();
+            }
+            imfErrorLogger.addError(errCode, ErrorLevels.FATAL, e.getMessage());
+            return imfErrorLogger.getErrors();
+        } catch (Exception e) {
+            imfErrorLogger.addError(errCode, ErrorLevels.FATAL, e.getMessage());
+            return imfErrorLogger.getErrors();
         }
-        return IMPValidator.validatePKLAndAssetMap(assetMapPayloadRecord, pklPayloadRecords);
     }
 
 
-    private PayloadRecord getHeaderPartition(File mxf, List<ErrorObject> errors) throws IOException {
+    private List<ErrorObject> validateCpl(File cpl) {
+        return doValidate(ErrorCodes.IMF_CPL_ERROR,
+                imfErrorLogger -> {
+                    PayloadRecord payloadRecord = createPayloadRecord(cpl, PayloadAssetType.CompositionPlaylist);
+                    new CompositionPlaylist(new ByteArrayByteRangeProvider(payloadRecord.getPayload()), imfErrorLogger);
+                    return imfErrorLogger.getErrors();
+                });
+    }
+
+    private List<ErrorObject> validatePkl(File pkl) {
+        return doValidate(ErrorCodes.IMF_PKL_ERROR,
+                imfErrorLogger -> {
+                    PayloadRecord payloadRecord = createPayloadRecord(pkl, PayloadAssetType.PackingList);
+                    new PackingList(new ByteArrayByteRangeProvider(payloadRecord.getPayload()), imfErrorLogger);
+                    return imfErrorLogger.getErrors();
+                });
+    }
+
+    private List<ErrorObject> validateAssetMap(File assetMap) {
+        return doValidate(ErrorCodes.IMF_AM_ERROR,
+                imfErrorLogger -> {
+                    PayloadRecord payloadRecord = createPayloadRecord(assetMap, PayloadAssetType.AssetMap);
+                    new AssetMap(new ByteArrayByteRangeProvider(payloadRecord.getPayload()), imfErrorLogger);
+                    return imfErrorLogger.getErrors();
+                });
+    }
+
+    private List<ErrorObject> validatePklAndAssetMap(File assetMap, List<File> pkls) {
+        return doValidate(ErrorCodes.IMF_MASTER_PACKAGE_ERROR,
+                imfErrorLogger -> {
+                    List<ResourceByteRangeProvider> resourceByteRangeProviders = new ArrayList<>();
+                    resourceByteRangeProviders.add(new ByteArrayByteRangeProvider(
+                            createPayloadRecord(assetMap, PayloadAssetType.AssetMap).getPayload()));
+                    for (File pkl : pkls) {
+                        resourceByteRangeProviders.add(new ByteArrayByteRangeProvider(
+                                createPayloadRecord(pkl, PayloadAssetType.PackingList).getPayload()));
+                    }
+
+                    new IMFMasterPackage(resourceByteRangeProviders, imfErrorLogger);
+                    return imfErrorLogger.getErrors();
+                });
+    }
+
+
+    private List<ErrorObject> validateMxf(File mxf) {
+        return doValidate(ErrorCodes.IMF_ESSENCE_COMPONENT_ERROR,
+                imfErrorLogger -> {
+                    PayloadRecord headerPartitionPayloadRecord = getHeaderPartition(mxf, imfErrorLogger);
+                    if (!imfErrorLogger.getErrors().isEmpty() || (headerPartitionPayloadRecord == null)) {
+                        return imfErrorLogger.getErrors();
+                    }
+
+                    HeaderPartition headerPartition = new HeaderPartition(new ByteArrayDataProvider(headerPartitionPayloadRecord.getPayload()),
+                            0L,
+                            (long) headerPartitionPayloadRecord.getPayload().length,
+                            imfErrorLogger);
+                    MXFOperationalPattern1A.HeaderPartitionOP1A headerPartitionOP1A = MXFOperationalPattern1A.checkOperationalPattern1ACompliance(headerPartition);
+                    IMFConstraints.checkIMFCompliance(headerPartitionOP1A);
+                    return imfErrorLogger.getErrors();
+                });
+    }
+
+    private List<ErrorObject> validateCplConformance(File cpl, List<File> mxfs) {
+        return doValidate(ErrorCodes.IMF_CPL_ERROR,
+                imfErrorLogger -> {
+                    List<PayloadRecord> headerPayloadRecords = new ArrayList<>();
+                    for (File mxf : mxfs) {
+                        PayloadRecord headerPartitionPayloadRecord = getHeaderPartition(mxf, imfErrorLogger);
+                        if (headerPartitionPayloadRecord != null) {
+                            headerPayloadRecords.add(headerPartitionPayloadRecord);
+                        }
+                    }
+                    if (!imfErrorLogger.getErrors().isEmpty()) {
+                        return imfErrorLogger.getErrors();
+                    }
+
+                    PayloadRecord cplPayloadRecord = createPayloadRecord(cpl, PayloadAssetType.CompositionPlaylist);
+
+                    return IMPValidator.isCPLConformed(cplPayloadRecord, headerPayloadRecords);
+                });
+    }
+
+    private PayloadRecord createPayloadRecord(File inputFile, PayloadAssetType assetType) throws IOException {
+        ResourceByteRangeProvider resourceByteRangeProvider = new FileByteRangeProvider(inputFile);
+        byte[] bytes = resourceByteRangeProvider.getByteRangeAsBytes(0, resourceByteRangeProvider.getResourceSize() - 1);
+        return new PayloadRecord(bytes, assetType, 0L, resourceByteRangeProvider.getResourceSize());
+    }
+
+    private PayloadRecord createPayloadRecord(File inputFile) throws IOException {
+        ResourceByteRangeProvider resourceByteRangeProvider = new FileByteRangeProvider(inputFile);
+        byte[] bytes = resourceByteRangeProvider.getByteRangeAsBytes(0, resourceByteRangeProvider.getResourceSize() - 1);
+        return new PayloadRecord(bytes, PayloadAssetType.Unknown, 0L, resourceByteRangeProvider.getResourceSize());
+    }
+
+    private PayloadRecord getHeaderPartition(File mxf, IMFErrorLogger imfErrorLogger) throws IOException {
         ResourceByteRangeProvider resourceByteRangeProvider = new FileByteRangeProvider(mxf);
         long archiveFileSize = resourceByteRangeProvider.getResourceSize();
         long rangeEnd = archiveFileSize - 1;
@@ -155,9 +263,9 @@ public class ImfValidator {
         List<Long> partitionByteOffsets = IMPValidator.getEssencePartitionOffsets(randomIndexPackPayload, randomIndexPackSize);
 
         if (partitionByteOffsets.size() < 2) {
-            errors.add(new ErrorObject(
+            imfErrorLogger.addError(
                     IMFErrorLogger.IMFErrors.ErrorCodes.IMF_ESSENCE_COMPONENT_ERROR, IMFErrorLogger.IMFErrors.ErrorLevels.FATAL,
-                    String.format("Can not get essence component header for '%s'", mxf.getAbsolutePath())));
+                    String.format("Can not get essence component header for '%s'", mxf.getAbsolutePath()));
             return null;
         }
         long headerRangeStart = partitionByteOffsets.get(0);
@@ -166,55 +274,20 @@ public class ImfValidator {
         return new PayloadRecord(headerPartitionBytes, PayloadRecord.PayloadAssetType.EssencePartition, headerRangeStart, headerRangeEnd);
     }
 
-    private List<ErrorObject> validateMxf(File mxf) throws IOException {
-        List<ErrorObject> errors = new ArrayList<>();
-        PayloadRecord headerPartitionPayloadRecord = getHeaderPartition(mxf, errors);
-        if (!errors.isEmpty()) {
-            return errors;
-        }
-
-        List<PayloadRecord> headerPartitions = new ArrayList<>();
-        headerPartitions.add(headerPartitionPayloadRecord);
-
-        return IMPValidator.validateIMFEssenceComponentHeaderMetadata(headerPartitions);
-    }
-
-    private List<ErrorObject> validateCplConformance(File cpl, List<File> mxfs) throws IOException {
-        List<ErrorObject> errors = new ArrayList<>();
-        List<PayloadRecord> headerPayloadRecords = new ArrayList<>();
-        for (File mxf : mxfs) {
-            PayloadRecord headerPartitionPayloadRecord = getHeaderPartition(mxf, errors);
-            if (!errors.isEmpty()) {
-                return errors;
-            }
-            headerPayloadRecords.add(headerPartitionPayloadRecord);
-        }
-
-        PayloadRecord cplPayloadRecord = createPayloadRecord(cpl, PayloadAssetType.CompositionPlaylist);
-
-        return IMPValidator.isCPLConformed(cplPayloadRecord, headerPayloadRecords);
-    }
-
-    private PayloadRecord createPayloadRecord(File inputFile, PayloadAssetType assetType) throws IOException {
-        ResourceByteRangeProvider resourceByteRangeProvider = new FileByteRangeProvider(inputFile);
-        byte[] bytes = resourceByteRangeProvider.getByteRangeAsBytes(0, resourceByteRangeProvider.getResourceSize() - 1);
-        return new PayloadRecord(bytes, assetType, 0L, resourceByteRangeProvider.getResourceSize());
-    }
-
-    private PayloadRecord createPayloadRecord(File inputFile) throws IOException {
-        ResourceByteRangeProvider resourceByteRangeProvider = new FileByteRangeProvider(inputFile);
-        byte[] bytes = resourceByteRangeProvider.getByteRangeAsBytes(0, resourceByteRangeProvider.getResourceSize() - 1);
-        return new PayloadRecord(bytes, PayloadAssetType.Unknown, 0L, resourceByteRangeProvider.getResourceSize());
-    }
-
     private boolean shouldCheckCplConformance(File cpl) {
         // check for conformance only if the CPL has EssenceDescriptorList
         try {
             return new CompositionPlaylist(cpl, new IMFErrorLoggerImpl())
                     .getCompositionPlaylistType().getEssenceDescriptorList() != null;
-        } catch (IOException | JAXBException | URISyntaxException | SAXException e) {
+        } catch (IOException | JAXBException | URISyntaxException | SAXException | IMFException | MXFException e) {
             return false;
         }
+    }
+
+    private interface IValidator {
+
+        List<ErrorObject> validate(IMFErrorLogger imfErrorLogger) throws IOException, SAXException, JAXBException, URISyntaxException;
+
     }
 
 }
