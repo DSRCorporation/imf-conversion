@@ -29,6 +29,7 @@ public class TemplateParameterResolverTest {
     private static final int SEGMENT_COUNT = 2;
     private static final int SEQ_COUNT = 2;
     private static final int RESOURCE_COUNT = 2;
+    private static final int REPEAT_COUNT = 2;
     private static final EnumSet<SequenceType> SEQUENCE_TYPES = EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO); // do not fill subtitle type!
 
     private static TemplateParameterResolver resolver;
@@ -42,6 +43,7 @@ public class TemplateParameterResolverTest {
                 SEGMENT_COUNT,
                 SEQ_COUNT,
                 RESOURCE_COUNT,
+                REPEAT_COUNT,
                 SEQUENCE_TYPES);
 
         resolver = new TemplateParameterResolver(contextProvider);
@@ -177,8 +179,13 @@ public class TemplateParameterResolverTest {
                         String resolvedNum = resolver.resolveTemplateParameter("%{resource.num}", contextInfo);
                         String resolvedUuid = resolver.resolveTemplateParameter("%{resource.uuid}", contextInfo);
                         String resolvedEssence = resolver.resolveTemplateParameter("%{resource.essence}", contextInfo);
-                        String resolvedStartTime = resolver.resolveTemplateParameter("%{resource.startTimeTC}", contextInfo);
-                        String resolvedDuration = resolver.resolveTemplateParameter("%{resource.durationTC}", contextInfo);
+                        String resolvedStartTimeTC = resolver.resolveTemplateParameter("%{resource.startTimeTC}", contextInfo);
+                        String resolvedDurationTC = resolver.resolveTemplateParameter("%{resource.durationTC}", contextInfo);
+                        String resolvedStartTimeEU = resolver.resolveTemplateParameter("%{resource.startTimeEU}", contextInfo);
+                        String resolvedDurationEU = resolver.resolveTemplateParameter("%{resource.durationEU}", contextInfo);
+                        String resolvedStartTimeFrame = resolver.resolveTemplateParameter("%{resource.startTimeFrameEU}", contextInfo);
+                        String resolvedDurationFrame = resolver.resolveTemplateParameter("%{resource.durationFrameEU}", contextInfo);
+                        String resolvedRepeatCount = resolver.resolveTemplateParameter("%{resource.repeatCount}", contextInfo);
 
                         assertNotNull(resolvedNum);
                         assertEquals(String.valueOf(res), resolvedNum);
@@ -186,9 +193,16 @@ public class TemplateParameterResolverTest {
                         assertNotNull(resolvedUuid);
                         assertEquals(resourceUuid.getUuid(), resolvedUuid);
 
+                        assertNotNull(resolvedRepeatCount);
+                        assertEquals(String.valueOf(REPEAT_COUNT), resolvedRepeatCount);
+
                         assertResourceParameter(resolvedEssence, resourceUuid, ResourceContextParameters.ESSENCE);
-                        assertResourceParameter(resolvedStartTime, resourceUuid, ResourceContextParameters.START_TIME_TIMECODE);
-                        assertResourceParameter(resolvedDuration, resourceUuid, ResourceContextParameters.DURATION_TIMECODE);
+                        assertResourceParameter(resolvedStartTimeTC, resourceUuid, ResourceContextParameters.START_TIME_TIMECODE);
+                        assertResourceParameter(resolvedDurationTC, resourceUuid, ResourceContextParameters.DURATION_TIMECODE);
+                        assertResourceParameter(resolvedStartTimeEU, resourceUuid, ResourceContextParameters.START_TIME_EDIT_UNIT);
+                        assertResourceParameter(resolvedDurationEU, resourceUuid, ResourceContextParameters.DURATION_EDIT_UNIT);
+                        assertResourceParameter(resolvedStartTimeFrame, resourceUuid, ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT);
+                        assertResourceParameter(resolvedDurationFrame, resourceUuid, ResourceContextParameters.DURATION_FRAME_EDIT_UNIT);
                     }
                 }
             }

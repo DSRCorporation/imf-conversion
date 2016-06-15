@@ -259,6 +259,9 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_EDIT_UNIT, contextInfo));
         assertEquals("00:00:00.000",
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_TIMECODE, contextInfo));
+        assertEquals("2",
+                resourceContext.getParameterValue(ResourceContextParameters.REPEAT_COUNT, contextInfo));
+
 
         // first segment of the second audio track: 1st resource
         contextInfo = new ContextInfoBuilder()
@@ -293,6 +296,8 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_EDIT_UNIT, contextInfo));
         assertEquals("00:00:00.000",
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_TIMECODE, contextInfo));
+        assertEquals("1",
+                resourceContext.getParameterValue(ResourceContextParameters.REPEAT_COUNT, contextInfo));
 
         // first segment of the second audio track: 2st resource
         contextInfo = new ContextInfoBuilder()
@@ -327,6 +332,8 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_EDIT_UNIT, contextInfo));
         assertEquals("00:00:00.000",
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_TIMECODE, contextInfo));
+        assertEquals("1",
+                resourceContext.getParameterValue(ResourceContextParameters.REPEAT_COUNT, contextInfo));
 
         // second segment of the first audio track
         contextInfo = new ContextInfoBuilder()
@@ -361,6 +368,8 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_EDIT_UNIT, contextInfo));
         assertEquals("00:00:09.000",
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_TIMECODE, contextInfo));
+        assertEquals("1",
+                resourceContext.getParameterValue(ResourceContextParameters.REPEAT_COUNT, contextInfo));
 
         // second segment of the second audio track
         contextInfo = new ContextInfoBuilder()
@@ -395,6 +404,8 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_EDIT_UNIT, contextInfo));
         assertEquals("00:00:09.000",
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_TIMECODE, contextInfo));
+        assertEquals("1",
+                resourceContext.getParameterValue(ResourceContextParameters.REPEAT_COUNT, contextInfo));
     }
 
     @Test
@@ -441,6 +452,8 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_EDIT_UNIT, contextInfo));
         assertEquals("00:00:00.000",
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_TIMECODE, contextInfo));
+        assertEquals("1",
+                resourceContext.getParameterValue(ResourceContextParameters.REPEAT_COUNT, contextInfo));
 
         // first segment of the video track: 2st resource
         contextInfo = new ContextInfoBuilder()
@@ -475,6 +488,8 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_EDIT_UNIT, contextInfo));
         assertEquals("00:00:00.000",
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_TIMECODE, contextInfo));
+        assertEquals("1",
+                resourceContext.getParameterValue(ResourceContextParameters.REPEAT_COUNT, contextInfo));
 
         // second segment of the video track
         contextInfo = new ContextInfoBuilder()
@@ -509,6 +524,8 @@ public class CplContextBuilderTest {
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_EDIT_UNIT, contextInfo));
         assertEquals("00:00:09.000",
                 resourceContext.getParameterValue(ResourceContextParameters.OFFSET_TIMECODE, contextInfo));
+        assertEquals("2",
+                resourceContext.getParameterValue(ResourceContextParameters.REPEAT_COUNT, contextInfo));
     }
 
     @Test

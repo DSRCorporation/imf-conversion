@@ -43,6 +43,7 @@
                             <IntrinsicDuration>1697</IntrinsicDuration>
                             <EntryPoint>300</EntryPoint>
                             <SourceDuration>150</SourceDuration>
+                            <RepeatCount>1</RepeatCount>
                             <SourceEncoding>urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f8</SourceEncoding>
                             <TrackFileId>urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e947</TrackFileId>
                         </Resource>
@@ -57,6 +58,7 @@
                             <EditRate>48000 1</EditRate>
                             <IntrinsicDuration>1629120</IntrinsicDuration>
                             <SourceDuration>432000</SourceDuration>
+                            <RepeatCount>2</RepeatCount>
                             <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602794</SourceEncoding>
                             <TrackFileId>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0</TrackFileId>
                         </Resource>
@@ -71,6 +73,7 @@
                             <EditRate>48000 1</EditRate>
                             <IntrinsicDuration>1629120</IntrinsicDuration>
                             <SourceDuration>288000</SourceDuration>
+                            <RepeatCount>1</RepeatCount>
                             <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602794</SourceEncoding>
                             <TrackFileId>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0</TrackFileId>
                         </Resource>
@@ -100,6 +103,7 @@
                             <EditRate>50 1</EditRate>
                             <IntrinsicDuration>1697</IntrinsicDuration>
                             <EntryPoint>600</EntryPoint>
+                            <RepeatCount>2</RepeatCount>
                             <SourceEncoding>urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f8</SourceEncoding>
                             <TrackFileId>urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e946</TrackFileId>
                         </Resource>
