@@ -8,11 +8,15 @@ import com.netflix.imfutility.conversion.ConversionNotAllowedException;
 import com.netflix.imfutility.conversion.ConversionXmlProvider;
 import com.netflix.imfutility.conversion.SilentConversionChecker;
 import com.netflix.imfutility.conversion.templateParameter.context.CustomParameterValue;
+import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.cpl.CplContextBuilder;
 import com.netflix.imfutility.inputparameters.InputParameters;
 import com.netflix.imfutility.mediainfo.MediaInfoContextBuilder;
 import com.netflix.imfutility.mediainfo.MediaInfoException;
+import com.netflix.imfutility.validate.ImfValidationException;
+import com.netflix.imfutility.validate.ImfValidator;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.FormatConfigurationType;
 import org.apache.commons.io.FileUtils;
@@ -80,27 +84,30 @@ public abstract class AbstractFormatBuilder {
             // 3. create logs dir in the working dir
             createLogsDir();
 
-            // 4. build IMF CPL contexts
-            buildCplContext();
-
-            // 5. fill dynamic context
+            // 4. fill dynamic context
             buildDynamicContext();
 
-            // 6. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
+            // 5. perform validation of the input IMP and CPL
+            validateImpAndCpl();
+
+            // 6. build IMF CPL contexts
+            buildCplContext();
+
+            // 7. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
             buildMediaInfoContext();
 
-            // 7. select a conversion config within format.
+            // 8. select a conversion config within format.
             selectConversionConfig();
 
-            // 8. check whether we can silently convert to destination parameters
+            // 9. check whether we can silently convert to destination parameters
             checkForSilentConversion();
 
-            // 9. convert
+            // 10. convert
             preConvert();
             convert();
             postConvert();
 
-            // 10. delete tmp files.
+            // 11. delete tmp files.
             if (inputParameters.isDeleteTmpFilesOnExit()) {
                 deleteTmpFiles();
             }
@@ -157,7 +164,7 @@ public abstract class AbstractFormatBuilder {
 
         // 5. Init the context provider
         this.contextProvider =
-                new TemplateParameterContextProvider(configProvider.getConfig(), conversionProvider.getFormat(), workingDir);
+                new TemplateParameterContextProvider(configProvider, conversionProvider, workingDir);
 
         logger.info("Initialized: OK\n");
     }
@@ -180,6 +187,31 @@ public abstract class AbstractFormatBuilder {
         logger.info("Created external tools logging directory: OK\n");
     }
 
+    private void buildDynamicContext() {
+        logger.info("Building Dynamic context...");
+
+        // build default dynamic parameters
+        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
+        dynamicContext.addParameter(DynamicContextParameters.IMP, new File(inputParameters.getImpDirectory()).getAbsolutePath());
+        dynamicContext.addParameter(DynamicContextParameters.CPL,
+                new File(inputParameters.getImpDirectory(), inputParameters.getCplXml()).getAbsolutePath());
+
+        // build format-specific dynamic parameters
+        doBuildDynamicContext();
+
+        logger.info("Built Dynamic context: OK\n");
+    }
+
+    protected abstract void doBuildDynamicContext();
+
+    private void validateImpAndCpl() throws XmlParsingException, IOException, ImfValidationException {
+        logger.info("Validating input IMP and CPL...");
+
+        new ImfValidator(contextProvider, new ConversionEngine().getExecuteStrategyFactory()).validate();
+
+        logger.info("Validating input IMP and CPL: OK\n");
+    }
+
     private void buildCplContext() throws XmlParsingException, FileNotFoundException {
         logger.info("Building CPL contexts...");
 
@@ -198,16 +230,8 @@ public abstract class AbstractFormatBuilder {
         new CplContextBuilder(contextProvider, assetMap).build(cplFile.getAbsolutePath());
         logger.info("Parsed CPL: OK");
 
-        logger.info("Built CPL contexts: OK");
+        logger.info("Built CPL contexts: OK\n");
     }
-
-    private void buildDynamicContext() {
-        logger.info("Building Dynamic context...");
-        doBuildDynamicContext();
-        logger.info("Built Dynamic context: OK");
-    }
-
-    protected abstract void doBuildDynamicContext();
 
     private void buildMediaInfoContext() throws XmlParsingException, IOException, MediaInfoException {
         logger.info("Building Metadata Info contexts...");
@@ -215,7 +239,7 @@ public abstract class AbstractFormatBuilder {
         new MediaInfoContextBuilder(
                 contextProvider, new ConversionEngine().getExecuteStrategyFactory()).build();
 
-        logger.info("Built Metadata Info contexts: OK");
+        logger.info("Built Metadata Info contexts: OK\n");
     }
 
     private void selectConversionConfig() {
@@ -227,7 +251,7 @@ public abstract class AbstractFormatBuilder {
     private void checkForSilentConversion() throws ConversionNotAllowedException {
         logger.info("Checking whether it's allowed by config.xml to silently convert to destination parameters if they don't match...");
         new SilentConversionChecker(contextProvider, formatConfigurationType, configProvider.getConfig()).check();
-        logger.info("Checked: silent conversion is either allowed or not needed.");
+        logger.info("Checked: silent conversion is either allowed or not needed.\n");
     }
 
     protected abstract void preConvert() throws IOException, XmlParsingException;

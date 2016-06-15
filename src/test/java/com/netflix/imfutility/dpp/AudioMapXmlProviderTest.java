@@ -1,5 +1,6 @@
 package com.netflix.imfutility.dpp;
 
+import com.netflix.imfutility.ImfUtilityTest;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
@@ -29,7 +30,7 @@ import static org.junit.Assert.assertNotNull;
  * <li>Tests that default audio map is generated correctly based on CPL virtual tracks and audio layout.</li>
  * </ul>
  */
-public class AudioMapXmlProviderTest {
+public class AudioMapXmlProviderTest extends ImfUtilityTest {
 
     /**
      * Tests audiomap.xml loading and validation.
