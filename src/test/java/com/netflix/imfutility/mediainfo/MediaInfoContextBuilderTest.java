@@ -112,23 +112,23 @@ public class MediaInfoContextBuilderTest {
         new TestMediaInfoContextBuilder(contextProvider, testExecutorLogger).build();
 
         // media info command must be run once for each sequenceType-essence pair
-        assertEquals("START: External Process 1: MediaInfoCommandVideoType_essence1, ExecuteOnceStrategy, mediaInfoCommandVideo", testExecutorLogger.getNext());
-        assertEquals("FINISH: External Process 1: MediaInfoCommandVideoType_essence1, ExecuteOnceStrategy, mediaInfoCommandVideo", testExecutorLogger.getNext());
+        assertEquals("START: External Process 1: MediaInfoCommandVideoType_essence1, ExecuteOnceStrategy, mediaInfoCommandVideo FILE", testExecutorLogger.getNext());
+        assertEquals("FINISH: External Process 1: MediaInfoCommandVideoType_essence1, ExecuteOnceStrategy, mediaInfoCommandVideo FILE", testExecutorLogger.getNext());
 
-        assertEquals("START: External Process 2: MediaInfoCommandVideoType_essence2, ExecuteOnceStrategy, mediaInfoCommandVideo", testExecutorLogger.getNext());
-        assertEquals("FINISH: External Process 2: MediaInfoCommandVideoType_essence2, ExecuteOnceStrategy, mediaInfoCommandVideo", testExecutorLogger.getNext());
+        assertEquals("START: External Process 2: MediaInfoCommandVideoType_essence2, ExecuteOnceStrategy, mediaInfoCommandVideo FILE", testExecutorLogger.getNext());
+        assertEquals("FINISH: External Process 2: MediaInfoCommandVideoType_essence2, ExecuteOnceStrategy, mediaInfoCommandVideo FILE", testExecutorLogger.getNext());
 
-        assertEquals("START: External Process 3: MediaInfoCommandVideoType_essence4, ExecuteOnceStrategy, mediaInfoCommandVideo", testExecutorLogger.getNext());
-        assertEquals("FINISH: External Process 3: MediaInfoCommandVideoType_essence4, ExecuteOnceStrategy, mediaInfoCommandVideo", testExecutorLogger.getNext());
+        assertEquals("START: External Process 3: MediaInfoCommandVideoType_essence4, ExecuteOnceStrategy, mediaInfoCommandVideo FILE", testExecutorLogger.getNext());
+        assertEquals("FINISH: External Process 3: MediaInfoCommandVideoType_essence4, ExecuteOnceStrategy, mediaInfoCommandVideo FILE", testExecutorLogger.getNext());
 
-        assertEquals("START: External Process 4: MediaInfoCommandAudioType_essence1, ExecuteOnceStrategy, mediaInfoCommandAudio", testExecutorLogger.getNext());
-        assertEquals("FINISH: External Process 4: MediaInfoCommandAudioType_essence1, ExecuteOnceStrategy, mediaInfoCommandAudio", testExecutorLogger.getNext());
+        assertEquals("START: External Process 4: MediaInfoCommandAudioType_essence1, ExecuteOnceStrategy, mediaInfoCommandAudio FILE", testExecutorLogger.getNext());
+        assertEquals("FINISH: External Process 4: MediaInfoCommandAudioType_essence1, ExecuteOnceStrategy, mediaInfoCommandAudio FILE", testExecutorLogger.getNext());
 
-        assertEquals("START: External Process 5: MediaInfoCommandAudioType_essence2, ExecuteOnceStrategy, mediaInfoCommandAudio", testExecutorLogger.getNext());
-        assertEquals("FINISH: External Process 5: MediaInfoCommandAudioType_essence2, ExecuteOnceStrategy, mediaInfoCommandAudio", testExecutorLogger.getNext());
+        assertEquals("START: External Process 5: MediaInfoCommandAudioType_essence2, ExecuteOnceStrategy, mediaInfoCommandAudio FILE", testExecutorLogger.getNext());
+        assertEquals("FINISH: External Process 5: MediaInfoCommandAudioType_essence2, ExecuteOnceStrategy, mediaInfoCommandAudio FILE", testExecutorLogger.getNext());
 
-        assertEquals("START: External Process 6: MediaInfoCommandAudioType_essence3, ExecuteOnceStrategy, mediaInfoCommandAudio", testExecutorLogger.getNext());
-        assertEquals("FINISH: External Process 6: MediaInfoCommandAudioType_essence3, ExecuteOnceStrategy, mediaInfoCommandAudio", testExecutorLogger.getNext());
+        assertEquals("START: External Process 6: MediaInfoCommandAudioType_essence3, ExecuteOnceStrategy, mediaInfoCommandAudio FILE", testExecutorLogger.getNext());
+        assertEquals("FINISH: External Process 6: MediaInfoCommandAudioType_essence3, ExecuteOnceStrategy, mediaInfoCommandAudio FILE", testExecutorLogger.getNext());
 
         assertFalse("There are more executed processes than expected!", testExecutorLogger.hasNext());
     }

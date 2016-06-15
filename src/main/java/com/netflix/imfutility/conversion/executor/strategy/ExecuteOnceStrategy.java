@@ -1,6 +1,7 @@
 package com.netflix.imfutility.conversion.executor.strategy;
 
 import com.netflix.imfutility.conversion.executor.ExternalProcess;
+import com.netflix.imfutility.conversion.executor.OutputRedirect;
 import com.netflix.imfutility.conversion.executor.ProcessStarter;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 
@@ -16,7 +17,7 @@ public class ExecuteOnceStrategy extends AbstractExecuteStrategy {
     }
 
     public void execute(OperationInfo operationInfo) throws IOException {
-        ExternalProcess process = startProcess(operationInfo);
+        ExternalProcess process = startProcess(operationInfo, OutputRedirect.ERR_LOG);
         process.finishWaitFor();
     }
 

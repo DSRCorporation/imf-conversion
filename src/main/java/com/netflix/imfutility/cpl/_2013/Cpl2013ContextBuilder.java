@@ -190,10 +190,16 @@ public class Cpl2013ContextBuilder {
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
                 ResourceContextParameters.EDIT_RATE, ConversionHelper.toEditRate(editRate));
 
-        // 8. calculate the total duration of the current segment
+        // 8. init repeat count parameter
+        BigInteger repeatCount = trackFileResource.getRepeatCount() != null
+                ? trackFileResource.getRepeatCount() : BigInteger.ONE;
+        contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
+                ResourceContextParameters.REPEAT_COUNT, repeatCount.toString());
+
+        // 9. calculate the total duration of the current segment
         currentSegmentDuration = currentSegmentDuration.add(durationEditUnit);
 
-        // 9. save all video essences to later re-check DURATION_FRAME_EDIT_UNIT and START_TIME_FRAME_EDIT_UNIT for
+        // 10. save all video essences to later re-check DURATION_FRAME_EDIT_UNIT and START_TIME_FRAME_EDIT_UNIT for
         // audio sequences which has essences containing both audio and video (the values must be calculated in video frames in this case)
         if (currentSequenceType == com.netflix.imfutility.xsd.conversion.SequenceType.VIDEO) {
             videoEssences.put(assetPath, editRate);
