@@ -3,6 +3,7 @@ package com.netflix.imfutility.conversion.executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -97,13 +98,20 @@ public final class ExternalProcess {
         private final String operationType;
         private final String programName;
         private final String processString;
+        private final String workingDir;
+        private final OutputRedirect outputRedirect;
+        private final File outputRedirectFile;
 
-        public ExternalProcessInfo(int processNum, String operationName, String operationType, String programName, List<String> resolvedParams) {
+        public ExternalProcessInfo(int processNum, String operationName, String operationType, String programName,
+                                   List<String> resolvedParams, String workingDir, OutputRedirect outputRedirect, File outputRedirectFile) {
             this.processNum = processNum;
             this.operationName = operationName;
             this.operationType = operationType;
             this.programName = programName;
             this.processString = getProcessString(resolvedParams);
+            this.workingDir = workingDir;
+            this.outputRedirect = outputRedirect;
+            this.outputRedirectFile = outputRedirectFile;
         }
 
         public int getProcessNum() {
@@ -124,6 +132,18 @@ public final class ExternalProcess {
 
         public String getProcessString() {
             return processString;
+        }
+
+        public String getWorkingDir() {
+            return workingDir;
+        }
+
+        public OutputRedirect getOutputRedirect() {
+            return outputRedirect;
+        }
+
+        public File getOutputRedirectFile() {
+            return outputRedirectFile;
         }
 
         private String getProcessString(List<String> resolvedParams) {
