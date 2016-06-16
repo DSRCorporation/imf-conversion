@@ -5,6 +5,7 @@ import com.netflix.imfutility.Format;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.dpp.MetadataXmlProvider.DMFramework;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
+import com.netflix.imfutility.dpp.inputparameters.DppInputParametersValidator;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.dpp.metadata.AudioTrackLayoutDmAs11Type;
 import org.slf4j.Logger;
@@ -15,17 +16,22 @@ import java.io.IOException;
 import static com.netflix.imfutility.dpp.DppConversionConstants.*;
 
 /**
- * DPP format builder (see {@link AbstractFormatBuilder}). It's used for conversion to DPP format.
+ * DPP format builder (see {@link AbstractFormatBuilder}). It's used for conversion to DPP format ('convert' DPP mode).
  */
 public class DppFormatBuilder extends AbstractFormatBuilder {
 
     private final Logger logger = LoggerFactory.getLogger(DppFormatBuilder.class);
 
-    private final DppInputParameters dppInputParameters;
+    private final DppInputParameters dppCmdLineArgs;
 
-    public DppFormatBuilder(DppInputParameters dppInputParameters) {
-        super(Format.DPP, dppInputParameters);
-        this.dppInputParameters = dppInputParameters;
+    public DppFormatBuilder(DppInputParameters dppCmdLineArgs) {
+        super(Format.dpp, dppCmdLineArgs);
+        this.dppCmdLineArgs = dppCmdLineArgs;
+    }
+
+    @Override
+    protected void doValidateCmdLineArguments() {
+        DppInputParametersValidator.validateCmdLineArguments(dppCmdLineArgs);
     }
 
     @Override
@@ -45,11 +51,14 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
 
         // 1. load metadata.xml
-        MetadataXmlProvider metadataXmlProvider = new MetadataXmlProvider(dppInputParameters.getMetadataXml(), contextProvider.getWorkingDir());
+        MetadataXmlProvider metadataXmlProvider = new MetadataXmlProvider(dppCmdLineArgs.getMetadataFile(), contextProvider.getWorkingDir());
 
         // 2. load audiomap.xml
+        if (dppCmdLineArgs.getAudiomapFile() == null) {
+            logger.warn("No audiomap.xml specified as a command line argument. A default audiomap.xml will be generated.");
+        }
         AudioTrackLayoutDmAs11Type audioTrackLayout = metadataXmlProvider.getDpp().getTechnical().getAudio().getAudioTrackLayout();
-        AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(dppInputParameters.getAudiomapXml(), audioTrackLayout, contextProvider);
+        AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(dppCmdLineArgs.getAudiomapFile(), audioTrackLayout, contextProvider);
 
         // 3. fill audio map parameters
         dynamicContext.addParameter(DYNAMIC_PARAM_PAN, audioMapXmlProvider.getPanParameter());

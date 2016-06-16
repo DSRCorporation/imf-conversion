@@ -56,7 +56,7 @@ public class MediaInfoContextBuilder {
      * @param workingDir a full path to the working directory.
      * @return media info XML file name for the given sequence of the given type
      */
-    public static File getOutputFile(SequenceType seqType, String essence, String workingDir) {
+    public static File getOutputFile(SequenceType seqType, String essence, File workingDir) {
         return new File(workingDir, getOutputFileName(seqType, essence));
     }
 
@@ -89,7 +89,7 @@ public class MediaInfoContextBuilder {
 
     /**
      * Invoke an external command from conversion.xml for each essence and each track type (video, audio, subtitle) participating in CPL
-     * to create a media info XML ({@link #getOutputFile(SequenceType, String, String)}).
+     * to create a media info XML ({@link #getOutputFile(SequenceType, String, File)}).
      * <ul>
      * <li>XSD validation is performed for the created media info xml file.</li>
      * <li>The created media info xml file is added to the dynamic context to be deleted on exit.</li>

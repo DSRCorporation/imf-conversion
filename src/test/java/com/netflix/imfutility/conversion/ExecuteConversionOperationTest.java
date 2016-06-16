@@ -50,7 +50,7 @@ public class ExecuteConversionOperationTest {
     }
 
     private static void initContext() throws Exception {
-        conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
+        conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(), Format.dpp);
         ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml());
         contextProvider = new TemplateParameterContextProvider(configProvider, conversionProvider,
                 TemplateParameterContextCreator.getCurrentTmpDir());

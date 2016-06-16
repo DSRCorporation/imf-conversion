@@ -5,6 +5,7 @@ import com.netflix.imfutility.util.ImpUtils;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
 import static junit.framework.TestCase.assertEquals;
@@ -50,7 +51,7 @@ public class AssetMapParserTest {
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
-        new AssetMapParser().parse(ImpUtils.getImpFolder(), "C:/invalid-path");
+        new AssetMapParser().parse(ImpUtils.getImpFolder(), new File("C:/invalid-path"));
     }
 
 }

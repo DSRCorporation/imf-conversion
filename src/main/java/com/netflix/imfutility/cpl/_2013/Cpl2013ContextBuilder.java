@@ -49,9 +49,9 @@ public class Cpl2013ContextBuilder {
     private SequenceUUID currentSequenceUuid;
     private com.netflix.imfutility.xsd.conversion.SequenceType currentSequenceType;
 
-    private Map<String, BigFraction> videoEssences = new HashMap<>();
+    private final Map<String, BigFraction> videoEssences = new HashMap<>();
 
-    private Map<SequenceUUID, BigInteger> lastSegmentDuration = new HashMap<>();
+    private final Map<SequenceUUID, BigInteger> lastSegmentDuration = new HashMap<>();
     private BigInteger currentSegmentDuration;
 
     public Cpl2013ContextBuilder(TemplateParameterContextProvider contextProvider, AssetMap assetMap) {

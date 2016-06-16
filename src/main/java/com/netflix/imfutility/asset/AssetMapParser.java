@@ -22,13 +22,12 @@ public class AssetMapParser {
      * Parses the given assetmap.xml and fills {@link AssetMap}. The result Asset map contains full absolute paths for each UUID.
      *
      * @param impDirectory the IMP directory
-     * @param assetMapXml  a full path to ASSETMAP.xml
+     * @param assetMapFile  a full path to ASSETMAP.xml
      * @return am  Asset map instance containing full absolute paths for each UUID.
      * @throws XmlParsingException   if input is not a valid XML or it doesn't pass XSD validation
      * @throws FileNotFoundException if the input path doesn't define a file.
      */
-    public AssetMap parse(File impDirectory, String assetMapXml) throws XmlParsingException, FileNotFoundException {
-        File assetMapFile = new File(assetMapXml);
+    public AssetMap parse(File impDirectory, File assetMapFile) throws XmlParsingException, FileNotFoundException {
         if (!assetMapFile.isFile()) {
             throw new FileNotFoundException(String.format("Invalid ASSETMAP file: '%s' not found", assetMapFile.getAbsolutePath()));
         }

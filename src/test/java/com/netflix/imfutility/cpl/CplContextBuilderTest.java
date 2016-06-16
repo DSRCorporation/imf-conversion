@@ -17,6 +17,7 @@ import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.SequenceType;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
 import static junit.framework.TestCase.assertEquals;
@@ -48,7 +49,7 @@ public class CplContextBuilderTest {
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
-        createCplContextBuilder().build("C:/invalid-path");
+        createCplContextBuilder().build(new File("C:/invalid-path"));
     }
 
     @Test

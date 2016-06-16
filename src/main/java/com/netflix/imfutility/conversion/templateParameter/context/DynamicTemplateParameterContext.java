@@ -42,7 +42,7 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
     }
 
     private void initDefaultParameters(TemplateParameterContextProvider contextProvider) {
-        addParameter(DynamicContextParameters.WORKING_DIR, contextProvider.getWorkingDir());
+        addParameter(DynamicContextParameters.WORKING_DIR, contextProvider.getWorkingDir().getAbsolutePath());
         addParameter(DynamicContextParameters.OUTPUT_VALIDATION_FILE, Constants.DEFAULT_OUTPUT_VALIDATION_FILE, true);
         addParameter(DynamicContextParameters.VALIDATION_TOOL, ImfValidator.getValidationToolPath(contextProvider.getConfigProvider()));
 

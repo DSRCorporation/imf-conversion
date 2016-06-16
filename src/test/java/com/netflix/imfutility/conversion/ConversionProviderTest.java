@@ -20,7 +20,7 @@ public class ConversionProviderTest {
 
     @Test
     public void testParseCorrectConversion() throws Exception {
-        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(), Format.dpp);
 
         assertNotNull(conversionProvider.getFormat());
         assertNotNull(conversionProvider.getFormat().getFormatConfigurations());
@@ -29,17 +29,17 @@ public class ConversionProviderTest {
 
     @Test(expected = XmlParsingException.class)
     public void testParseBrokenXml() throws Exception {
-        new ConversionXmlProvider(ConversionUtils.getBrokenXmlConversionXml(), Format.DPP);
+        new ConversionXmlProvider(ConversionUtils.getBrokenXmlConversionXml(), Format.dpp);
     }
 
     @Test(expected = XmlParsingException.class)
     public void testParseInvalidXsd() throws Exception {
-        new ConversionXmlProvider(ConversionUtils.getInvalidXsdConversionXml(), Format.DPP);
+        new ConversionXmlProvider(ConversionUtils.getInvalidXsdConversionXml(), Format.dpp);
     }
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
-        new ConversionXmlProvider("C:/invalid-path", Format.DPP);
+        new ConversionXmlProvider("C:/invalid-path", Format.dpp);
     }
 
 }

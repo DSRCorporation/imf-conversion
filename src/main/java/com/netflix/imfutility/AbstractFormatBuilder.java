@@ -12,7 +12,8 @@ import com.netflix.imfutility.conversion.templateParameter.context.DynamicTempla
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.cpl.CplContextBuilder;
-import com.netflix.imfutility.inputparameters.InputParameters;
+import com.netflix.imfutility.inputparameters.ImfUtilityInputParameters;
+import com.netflix.imfutility.inputparameters.ImfUtilityInputParametersValidator;
 import com.netflix.imfutility.mediainfo.MediaInfoContextBuilder;
 import com.netflix.imfutility.mediainfo.MediaInfoException;
 import com.netflix.imfutility.validate.ImfValidationException;
@@ -33,7 +34,7 @@ import java.net.URL;
  * <ul>
  * <li>Contains logic common for all formats</li>
  * <li>Designed for inheritance</li>
- * <li>Provides a common conversion workflow in a {@link #build()} method</li>
+ * <li>Provides a common conversion workflow in a {@link #build()}  method</li>
  * <li>Subclasses must provide logic related to context creation: {@link #buildDynamicContext()} and {@link }</li>
  * <li>Subclasses may customize the workflow using {@link #preConvert()} and {@link #postConvert()} methods</li>
  * <li>Common workflow ({@link #build()}):
@@ -53,7 +54,7 @@ public abstract class AbstractFormatBuilder {
     private final Logger logger = LoggerFactory.getLogger(AbstractFormatBuilder.class);
 
     protected final Format format;
-    protected final InputParameters inputParameters;
+    protected final ImfUtilityInputParameters inputParameters;
 
     protected ConfigXmlProvider configProvider;
     protected ConversionXmlProvider conversionProvider;
@@ -61,7 +62,7 @@ public abstract class AbstractFormatBuilder {
     protected TemplateParameterContextProvider contextProvider;
     protected AssetMap assetMap;
 
-    public AbstractFormatBuilder(Format format, InputParameters inputParameters) {
+    public AbstractFormatBuilder(Format format, ImfUtilityInputParameters inputParameters) {
         this.format = format;
         this.inputParameters = inputParameters;
     }
@@ -75,40 +76,55 @@ public abstract class AbstractFormatBuilder {
         try {
             logger.info("Starting conversion to '{}' format\n", format.getName());
 
-            // 1. init config and conversion.
-            init();
+            // 1. validate required command line arguments (including path to config.xml)
+            validateCmdLineArguments();
 
-            // 2. clear working dir
-            cleanWorkingDir();
+            // 2. init config (from config.xml)
+            initConfigXml();
 
-            // 3. create logs dir in the working dir
+            // 3. init conversion.xml
+            initConversionXml();
+
+            // 4. init input parameters (such as IMP folder, CPL file, etc.) either from cmd line, or from config.xml.
+            initInputParameters();
+
+            // 5. validate input parameters
+            validateInputParameters();
+
+            // 6. clear working dir
+            if (isCleanWorkingDir()) {
+                cleanWorkingDir();
+            }
+
+            // 7. create logs dir in the working dir
             createLogsDir();
 
-            // 4. fill dynamic context
+            // 8. init template parameter contexts
+            initContexts();
+
+            // 9. fill dynamic context
             buildDynamicContext();
 
-            // 5. perform validation of the input IMP and CPL
+            // 10. perform validation of the input IMP and CPL
             validateImpAndCpl();
 
-            // 6. build IMF CPL contexts
+            // 11. build IMF CPL contexts
             buildCplContext();
 
-            // 7. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
+            // 12. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
             buildMediaInfoContext();
 
-            // 8. select a conversion config within format.
+            // 13. select a conversion config within format.
             selectConversionConfig();
 
-            // 9. check whether we can silently convert to destination parameters
+            // 14. check whether we can silently convert to destination parameters
             checkForSilentConversion();
 
-            // 10. convert
-            preConvert();
-            convert();
-            postConvert();
+            // 15. convert
+            doConvert();
 
-            // 11. delete tmp files.
-            if (inputParameters.isDeleteTmpFilesOnExit()) {
+            // 16. delete tmp files.
+            if (isDeleteTmpFilesOnExit()) {
                 deleteTmpFiles();
             }
 
@@ -117,7 +133,7 @@ public abstract class AbstractFormatBuilder {
             return 0;
         } catch (Exception e) {
             logger.error(String.format("Conversion to '%s' format aborted", format.getName()), e);
-            if (inputParameters.isDeleteTmpFilesOnFail()) {
+            if (isDeleteTmpFilesOnFail()) {
                 deleteTmpFiles();
             }
             return 1;
@@ -125,15 +141,56 @@ public abstract class AbstractFormatBuilder {
 
     }
 
-    protected void init() throws XmlParsingException, FileNotFoundException {
-        logger.info("Initializing...");
+    private boolean isCleanWorkingDir() {
+        if (configProvider == null) {
+            return Constants.DEFAULT_CLEAN_WORKING_DIR;
+        }
+        if (configProvider.getConfig().isCleanWorkingDir() == null) {
+            return Constants.DEFAULT_CLEAN_WORKING_DIR;
+        }
+        return configProvider.getConfig().isCleanWorkingDir();
+    }
 
-        // 1. Reading and parsing config.xml
-        logger.info("Reading config.xml: {}", inputParameters.getConfigXml());
-        this.configProvider = new ConfigXmlProvider(inputParameters.getConfigXml());
-        logger.info("Config.xml is processed: OK");
+    private boolean isDeleteTmpFilesOnExit() {
+        if (configProvider == null) {
+            return Constants.DEFAULT_DELETE_TMP_FILES_ON_EXIT;
+        }
+        if (configProvider.getConfig().isDeleteTmpFilesOnExit() == null) {
+            return Constants.DEFAULT_DELETE_TMP_FILES_ON_EXIT;
+        }
+        return configProvider.getConfig().isDeleteTmpFilesOnExit();
+    }
 
-        // 2. check for alternative conversion.xml
+    private boolean isDeleteTmpFilesOnFail() {
+        if (configProvider == null) {
+            return Constants.DEFAULT_DELETE_TMP_FILES_ON_FAIL;
+        }
+        if (configProvider.getConfig().isDeleteTmpFilesOnFail() == null) {
+            return Constants.DEFAULT_DELETE_TMP_FILES_ON_FAIL;
+        }
+        return configProvider.getConfig().isDeleteTmpFilesOnFail();
+    }
+
+    private void validateCmdLineArguments() {
+        logger.info("Checking required command line arguments for conversion...");
+        ImfUtilityInputParametersValidator.validateCmdLineArguments(inputParameters);
+        doValidateCmdLineArguments();
+        logger.info("Checked required command line arguments for conversion: OK\n");
+    }
+
+    protected abstract void doValidateCmdLineArguments();
+
+
+    private void initConfigXml() throws XmlParsingException, FileNotFoundException {
+        logger.info("Reading config.xml: {}", inputParameters.getConfigFile().getAbsolutePath());
+        this.configProvider = new ConfigXmlProvider(inputParameters.getConfigFile());
+        logger.info("Config.xml is processed: OK\n");
+    }
+
+    private void initConversionXml() throws XmlParsingException, FileNotFoundException {
+        logger.info("Initializing conversion.xml");
+
+        // 1. check for alternative conversion.xml
         URL defaultConversionXmlUrl = ClassLoader.getSystemClassLoader().getResource(Constants.DEFAULT_CONVERSION_XML);
         String conversionXml = null;
         if (defaultConversionXmlUrl != null) {
@@ -147,38 +204,43 @@ public abstract class AbstractFormatBuilder {
             throw new ConversionException("Conversion.xml is not found in neither default location nor config.xml");
         }
 
-        // 3. Reading and parsing conversion.xml
+        // 2. Reading and parsing conversion.xml
         logger.info("Reading conversion.xml: {}", conversionXml);
         this.conversionProvider = new ConversionXmlProvider(conversionXml, format);
-        logger.info("Conversion.xml is processed: OK");
+        logger.info("Conversion.xml is processed: OK\n");
+    }
 
-        // 4. setting working directory
-        String workingDir = inputParameters.getDefaultWorkingDirectory();
-        if (workingDir == null) {
-            workingDir = configProvider.getConfig().getWorkingDirectory();
-        }
-        if (workingDir == null) {
-            throw new ConversionException("Working directory must be specified either in config.xml or as an input parameter");
-        }
-        logger.info("Working directory: {}", workingDir);
+    private void initInputParameters() {
+        logger.info("Initializing input parameters...");
 
-        // 5. Init the context provider
-        this.contextProvider =
-                new TemplateParameterContextProvider(configProvider, conversionProvider, workingDir);
+        // 1. setting working directory (if it's in config.xml)
+        inputParameters.setDefaultWorkingDir(configProvider.getConfig().getWorkingDirectory());
 
-        logger.info("Initialized: OK\n");
+        // 2. setting IMP (if it's in config.xml)
+        inputParameters.setDefaultImp(configProvider.getConfig().getImp());
+
+        // 3. setting CPL (if it's in config.xml)
+        inputParameters.setDefaultCpl(configProvider.getConfig().getCpl());
+
+        logger.info("Initialized input parameters: OK\n");
+    }
+
+    private void validateInputParameters() {
+        logger.info("Checking required input parameters for conversion...");
+        ImfUtilityInputParametersValidator.validateInputParameters(inputParameters);
+        logger.info("Checked required input parameters for conversion: OK\n");
     }
 
     private void cleanWorkingDir() throws IOException {
         logger.info("Cleaning working directory...");
-        FileUtils.cleanDirectory(new File(contextProvider.getWorkingDir()));
+        FileUtils.cleanDirectory(inputParameters.getWorkingDirFile());
         logger.info("Cleaned working directory: OK\n");
     }
 
     private void createLogsDir() {
         logger.info("Creating external tools logging directory...");
 
-        File logsDir = new File(contextProvider.getWorkingDir(), Constants.LOGS_DIR);
+        File logsDir = new File(inputParameters.getWorkingDirFile(), Constants.LOGS_DIR);
         logger.info("External tools logging directory: {}", logsDir);
         if (!logsDir.mkdir()) {
             logger.warn("Couldn't create External tools logging directory!");
@@ -187,14 +249,20 @@ public abstract class AbstractFormatBuilder {
         logger.info("Created external tools logging directory: OK\n");
     }
 
+    private void initContexts() {
+        logger.info("Initializing template parameter contexts...");
+        this.contextProvider =
+                new TemplateParameterContextProvider(configProvider, conversionProvider, inputParameters.getWorkingDirFile());
+        logger.info("Initialized template parameter contexts: OK\n");
+    }
+
     private void buildDynamicContext() {
         logger.info("Building Dynamic context...");
 
         // build default dynamic parameters
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
-        dynamicContext.addParameter(DynamicContextParameters.IMP, new File(inputParameters.getImpDirectory()).getAbsolutePath());
-        dynamicContext.addParameter(DynamicContextParameters.CPL,
-                new File(inputParameters.getImpDirectory(), inputParameters.getCplXml()).getAbsolutePath());
+        dynamicContext.addParameter(DynamicContextParameters.IMP, inputParameters.getImpDirectoryFile().getAbsolutePath());
+        dynamicContext.addParameter(DynamicContextParameters.CPL, inputParameters.getCplFile().getAbsolutePath());
 
         // build format-specific dynamic parameters
         doBuildDynamicContext();
@@ -204,30 +272,22 @@ public abstract class AbstractFormatBuilder {
 
     protected abstract void doBuildDynamicContext();
 
-    private void validateImpAndCpl() throws XmlParsingException, IOException, ImfValidationException {
+    private void validateImpAndCpl() throws IOException, ImfValidationException {
         logger.info("Validating input IMP and CPL...");
-
         new ImfValidator(contextProvider, new ConversionEngine().getExecuteStrategyFactory()).validate();
-
         logger.info("Validating input IMP and CPL: OK\n");
     }
 
     private void buildCplContext() throws XmlParsingException, FileNotFoundException {
         logger.info("Building CPL contexts...");
 
-        File impDir = new File(inputParameters.getImpDirectory());
-        if (!impDir.isDirectory()) {
-            throw new FileNotFoundException(String.format("Invalid IMP directory: '%s' not found or not a directory", impDir.getAbsolutePath()));
-        }
-
-        File assetMapFile = new File(inputParameters.getImpDirectory(), Constants.ASSETMAP_FILE);
+        File assetMapFile = new File(inputParameters.getImpDirectoryFile(), Constants.ASSETMAP_FILE);
         logger.info("Parsing ASSETMAP.xml ('{}')...", assetMapFile.getAbsolutePath());
-        this.assetMap = new AssetMapParser().parse(impDir, assetMapFile.getAbsolutePath());
+        this.assetMap = new AssetMapParser().parse(inputParameters.getImpDirectoryFile(), assetMapFile);
         logger.info("Parsed ASSETMAP.xml: OK");
 
-        File cplFile = new File(inputParameters.getImpDirectory(), inputParameters.getCplXml());
-        logger.info("Parsing CPL ('{}')...", cplFile.getAbsolutePath());
-        new CplContextBuilder(contextProvider, assetMap).build(cplFile.getAbsolutePath());
+        logger.info("Parsing CPL ('{}')...", inputParameters.getCplFile().getAbsolutePath());
+        new CplContextBuilder(contextProvider, assetMap).build(inputParameters.getCplFile());
         logger.info("Parsed CPL: OK");
 
         logger.info("Built CPL contexts: OK\n");
@@ -254,15 +314,18 @@ public abstract class AbstractFormatBuilder {
         logger.info("Checked: silent conversion is either allowed or not needed.\n");
     }
 
+    private void doConvert() throws IOException, XmlParsingException {
+        logger.info("Starting conversion...");
+        preConvert();
+        new ConversionEngine().convert(formatConfigurationType, contextProvider);
+        postConvert();
+        logger.info("Converted: OK\n");
+    }
+
     protected abstract void preConvert() throws IOException, XmlParsingException;
 
     protected abstract void postConvert() throws IOException, XmlParsingException;
 
-    private void convert() throws IOException {
-        logger.info("Starting conversion...");
-        new ConversionEngine().convert(formatConfigurationType, contextProvider);
-        logger.info("Converted: OK\n");
-    }
 
     protected abstract String getConversionConfiguration();
 

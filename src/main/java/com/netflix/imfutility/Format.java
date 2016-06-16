@@ -1,11 +1,14 @@
 package com.netflix.imfutility;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * Supported destination formats.
  */
 public enum Format {
 
-    DPP("dpp");
+    dpp("dpp");
 
     private final String name;
 
@@ -16,4 +19,11 @@ public enum Format {
     public String getName() {
         return name;
     }
+
+    public static String getSupportedFormats() {
+        return Arrays.stream(Format.values())
+                .map(Format::getName)
+                .collect(Collectors.joining(" ", "[", "]"));
+    }
+
 }

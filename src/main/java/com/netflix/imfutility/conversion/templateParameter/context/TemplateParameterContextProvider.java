@@ -4,6 +4,7 @@ import com.netflix.imfutility.config.ConfigXmlProvider;
 import com.netflix.imfutility.conversion.ConversionXmlProvider;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ public class TemplateParameterContextProvider {
 
     private final ConversionXmlProvider conversionProvider;
     private final ConfigXmlProvider configProvider;
-    private final String workingDir;
+    private final File workingDir;
 
     private final Map<TemplateParameterContext, ITemplateParameterContext> contexts = new HashMap<>();
 
@@ -23,7 +24,7 @@ public class TemplateParameterContextProvider {
      * @param conversionProvider a conversion provider corresponding to conversion.xml.
      * @param workingDir         a working directory where the output file as well as all tmp files are created.
      */
-    public TemplateParameterContextProvider(ConfigXmlProvider configProvider, ConversionXmlProvider conversionProvider, String workingDir) {
+    public TemplateParameterContextProvider(ConfigXmlProvider configProvider, ConversionXmlProvider conversionProvider, File workingDir) {
         this.configProvider = configProvider;
         this.conversionProvider = conversionProvider;
         this.workingDir = workingDir;
@@ -61,7 +62,7 @@ public class TemplateParameterContextProvider {
     /**
      * @return the working directory where the output file as well as all tmp files are created.
      */
-    public String getWorkingDir() {
+    public File getWorkingDir() {
         return workingDir;
     }
 

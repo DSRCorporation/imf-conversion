@@ -4,6 +4,7 @@ import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
 import static junit.framework.TestCase.assertEquals;
@@ -45,7 +46,7 @@ public class ConfigProviderTest {
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
-        new ConfigXmlProvider("C:/invalid-path");
+        new ConfigXmlProvider(new File("C:/invalid-path"));
     }
 
 }

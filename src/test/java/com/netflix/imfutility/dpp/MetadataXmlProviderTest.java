@@ -67,7 +67,7 @@ public class MetadataXmlProviderTest {
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
-        this.metadataProvider = new MetadataXmlProvider("C:/invalid-path", TemplateParameterContextCreator.getCurrentTmpDir());
+        this.metadataProvider = new MetadataXmlProvider(new File("C:/invalid-path"), TemplateParameterContextCreator.getCurrentTmpDir());
     }
 
     /**
