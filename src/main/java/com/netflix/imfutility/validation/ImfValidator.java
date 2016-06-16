@@ -56,7 +56,7 @@ public class ImfValidator {
 
             System.exit(0);
         } catch (HelpRequestedException e) {
-            System.err.println(e.getMessage());
+            System.out.println(e.getMessage());
             System.exit(0);
         } catch (Exception e) {
             System.err.println(e.getMessage());
