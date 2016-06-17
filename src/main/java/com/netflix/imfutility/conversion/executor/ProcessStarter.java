@@ -26,7 +26,7 @@ public class ProcessStarter {
         ProcessBuilder pb = new ProcessBuilder(execAndParams);
 
         // 2. set working dir
-        pb.directory(new File(processInfo.getWorkingDir()));
+        pb.directory(processInfo.getWorkingDir());
 
         // both stderr and stdout must be redirected to either a file or INHERIT unless it's a pipe!
         // Otherwise a Process may hang if it writes to stderr/stdout

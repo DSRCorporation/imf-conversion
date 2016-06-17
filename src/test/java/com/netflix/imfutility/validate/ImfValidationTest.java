@@ -29,11 +29,11 @@ public class ImfValidationTest extends ImfUtilityTest {
     }
 
 
-    private ImfValidator createImfValidator(String imp, String cpl) throws Exception {
+    private ImfValidator createImfValidator(File imp, File cpl) throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
-        dynamicContext.addParameter(DynamicContextParameters.IMP, new File(imp).getAbsolutePath());
-        dynamicContext.addParameter(DynamicContextParameters.CPL, new File(cpl).getAbsolutePath());
+        dynamicContext.addParameter(DynamicContextParameters.IMP, imp.getAbsolutePath());
+        dynamicContext.addParameter(DynamicContextParameters.CPL, cpl.getAbsolutePath());
         return new ImfValidator(contextProvider, new ExecuteStrategyFactory());
     }
 

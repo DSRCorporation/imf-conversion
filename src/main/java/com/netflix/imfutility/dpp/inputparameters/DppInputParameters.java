@@ -1,28 +1,43 @@
 package com.netflix.imfutility.dpp.inputparameters;
 
-import com.netflix.imfutility.inputparameters.InputParameters;
+import com.netflix.imfutility.inputparameters.ImfUtilityInputParameters;
+
+import java.io.File;
 
 /**
- * Defines command line parameters specific for DPP format. Some of the parameters are optional.
+ * A wrapper on command line arguments with helper methods to get input parameters obtained from the command line.
  */
-public class DppInputParameters extends InputParameters {
+public class DppInputParameters extends ImfUtilityInputParameters {
 
-    private final String metadataXml;
-    private final String audiomapXml;
+    private final DppCmdLineArgs cmdLineArgs;
 
-    DppInputParameters(String configXml, String impDirectory, String cplXml, String defaultWorkingDirectory, boolean deleteTmpFilesOnExit, boolean deleteTmpFilesOnFail,
-                       String metadataXml, String audiomapXml) {
-        super(configXml, impDirectory, cplXml, defaultWorkingDirectory, deleteTmpFilesOnExit, deleteTmpFilesOnFail);
-        this.metadataXml = metadataXml;
-        this.audiomapXml = audiomapXml;
+    public DppInputParameters(DppCmdLineArgs cmdLineArgs) {
+        super(cmdLineArgs);
+        this.cmdLineArgs = cmdLineArgs;
     }
 
-    public String getMetadataXml() {
-        return metadataXml;
+    /**
+     * @return a metadata file as specified via command line arguments or null if it's not specified.
+     */
+    public File getMetadataFile() {
+        if (cmdLineArgs.getMetadata() == null) {
+            return null;
+        }
+        return new File(cmdLineArgs.getMetadata());
     }
 
-    public String getAudiomapXml() {
-        return audiomapXml;
+    /**
+     * @return an audiomap file as specified via command line arguments or null if it's not specified.
+     */
+    public File getAudiomapFile() {
+        if (cmdLineArgs.getAudioMap() == null) {
+            return null;
+        }
+        return new File(cmdLineArgs.getAudioMap());
     }
 
+    @Override
+    public DppCmdLineArgs getCmdLineArgs() {
+        return cmdLineArgs;
+    }
 }

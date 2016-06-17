@@ -82,7 +82,7 @@ public class AudioMapXmlProvider {
 
     private final TemplateParameterContextProvider contextProvider;
     private final AudioTrackLayoutDmAs11Type audioLayout;
-    private final String audioMapXml;
+    private final File audioMapFile;
 
     private final AudioMap audioMap;
     private final LinkedHashMap<String, Integer> channelsForTracks;
@@ -101,25 +101,25 @@ public class AudioMapXmlProvider {
     /**
      * Loads and validates audiomap.xml. Creates a default audiomap.xml (see {@link #generateDefaultXml()} if audioMapXml is null.
      *
-     * @param audioMapXml     a path to audiomap.xml file. May be null.
+     * @param audioMapFile     a path to audiomap.xml file. May be null.
      * @param contextProvider context provider.
      * @throws XmlParsingException   an exception in case of audiomap.xml parsing error
      * @throws FileNotFoundException if the audioMapXml doesn't define an existing file.
      */
-    public AudioMapXmlProvider(String audioMapXml, AudioTrackLayoutDmAs11Type audioLayout, TemplateParameterContextProvider contextProvider) throws FileNotFoundException, XmlParsingException {
+    public AudioMapXmlProvider(File audioMapFile, AudioTrackLayoutDmAs11Type audioLayout, TemplateParameterContextProvider contextProvider) throws FileNotFoundException, XmlParsingException {
         this.audioLayout = audioLayout;
         this.contextProvider = contextProvider;
 
         this.channelsForTracks = getChannelsForTracks();
 
-        if (audioMapXml == null) {
+        if (audioMapFile == null) {
             // if no audiomap.xml is provided - create a default one for the given input and audio layout specified in metadata.xml
-            audioMapXml = generateDefaultXml().getAbsolutePath();
+            audioMapFile = generateDefaultXml();
             // add as dynamic parameter to delete at the end.
-            contextProvider.getDynamicContext().addParameter(DppConversionConstants.DYNAMIC_AUDIO_MAP_XML, audioMapXml, true);
+            contextProvider.getDynamicContext().addParameter(DppConversionConstants.DYNAMIC_AUDIO_MAP_XML, audioMapFile.getAbsolutePath(), true);
         }
-        this.audioMapXml = audioMapXml;
-        this.audioMap = loadAudioMapXml(audioMapXml);
+        this.audioMapFile = audioMapFile;
+        this.audioMap = loadAudioMapXml();
     }
 
     /**
@@ -127,8 +127,8 @@ public class AudioMapXmlProvider {
      *
      * @return a path to audiomap xml.
      */
-    public String getAudioMapXml() {
-        return audioMapXml;
+    public File getAudioMapFile() {
+        return audioMapFile;
     }
 
     /**
@@ -143,13 +143,11 @@ public class AudioMapXmlProvider {
     /**
      * Loads and validates audiomap.xml.
      *
-     * @param audioMapXml a path to audiomap.xml file
      * @return AudioMapType with loaded and mapped audiomap.xml
      * @throws XmlParsingException   an exception in case of audiomap.xml parsing error
      * @throws FileNotFoundException if the audioMapXml doesn't define an existing file.
      */
-    private AudioMap loadAudioMapXml(String audioMapXml) throws XmlParsingException, FileNotFoundException {
-        File audioMapFile = new File(audioMapXml);
+    private AudioMap loadAudioMapXml() throws XmlParsingException, FileNotFoundException {
         if (!audioMapFile.isFile()) {
             throw new FileNotFoundException(String.format("Invalid audiomap.xml file: '%s' not found", audioMapFile.getAbsolutePath()));
         }

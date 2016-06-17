@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Config xmlns="http://config.imf.netflix.com">
 
+    <imp>G:\Netflix\content\TEST\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV</imp>
+    <cpl>CPL-test.xml</cpl>
+    <workingDirectory>G:\Netflix\TMP</workingDirectory>
 
     <!--
         Path to external executables.
@@ -33,6 +36,8 @@
         </audio>
     </conversionParameters>
 
-    <workingDirectory>G:\Netflix\TMP</workingDirectory>
+    <cleanWorkingDir>false</cleanWorkingDir>
+    <deleteTmpFilesOnExit>false</deleteTmpFilesOnExit>
+    <deleteTmpFilesOnFail>false</deleteTmpFilesOnFail>
 
 </Config>

@@ -166,7 +166,7 @@ public class MetadataXmlProvider {
     }
 
     private final Dpp dpp;
-    private final String workingDir;
+    private final File workingDir;
     private Map<DMFramework, File> bmxDppParameters = new HashMap<>();
 
     /**
@@ -174,14 +174,14 @@ public class MetadataXmlProvider {
      * Transforms metadata.xml into a set of parameter files for BMXLib tool.
      * The parameter files are created within the provided working directory.
      *
-     * @param metadataXml a path to the metadata.xml file
+     * @param metadataFile a path to the metadata.xml file
      * @param workingDir  current working directory where parameter files are created.
      * @throws XmlParsingException   an exception in case of metadata.xml parsing error
      * @throws FileNotFoundException if the metadataXml doesn't define an existing file.
      */
-    public MetadataXmlProvider(String metadataXml, String workingDir) throws XmlParsingException, FileNotFoundException {
+    public MetadataXmlProvider(File metadataFile, File workingDir) throws XmlParsingException, FileNotFoundException {
         this.workingDir = workingDir;
-        this.dpp = loadDpp(metadataXml);
+        this.dpp = loadDpp(metadataFile);
     }
 
     /**
@@ -227,8 +227,7 @@ public class MetadataXmlProvider {
         return bmxDppParameters.values();
     }
 
-    private Dpp loadDpp(String metadataXml) throws XmlParsingException, FileNotFoundException {
-        File metadataFile = new File(metadataXml);
+    private Dpp loadDpp(File metadataFile) throws XmlParsingException, FileNotFoundException {
         if (!metadataFile.isFile()) {
             throw new FileNotFoundException(String.format("Invalid metadata.xml file: '%s' not found", metadataFile.getAbsolutePath()));
         }
@@ -243,7 +242,7 @@ public class MetadataXmlProvider {
      * @param framework the framework for which the parameters must be transformed.
      * @return a temporary file to be used as BMXLib input parameter for particular framework.
      */
-    private File createBmxFrameworkParameterFile(JAXBSource source, DMFramework framework, String workingDir) {
+    private File createBmxFrameworkParameterFile(JAXBSource source, DMFramework framework, File workingDir) {
         FileWriter writer = null;
         try {
             //Get file from resources folder

@@ -49,7 +49,6 @@ public final class ExternalProcess {
         if (closed) {
             return;
         }
-        int result = 0;
         try {
             process.getOutputStream().close();
             finishWaitFor();
@@ -98,12 +97,12 @@ public final class ExternalProcess {
         private final String operationType;
         private final String programName;
         private final String processString;
-        private final String workingDir;
+        private final File workingDir;
         private final OutputRedirect outputRedirect;
         private final File outputRedirectFile;
 
         public ExternalProcessInfo(int processNum, String operationName, String operationType, String programName,
-                                   List<String> resolvedParams, String workingDir, OutputRedirect outputRedirect, File outputRedirectFile) {
+                                   List<String> resolvedParams, File workingDir, OutputRedirect outputRedirect, File outputRedirectFile) {
             this.processNum = processNum;
             this.operationName = operationName;
             this.operationType = operationType;
@@ -134,7 +133,7 @@ public final class ExternalProcess {
             return processString;
         }
 
-        public String getWorkingDir() {
+        public File getWorkingDir() {
             return workingDir;
         }
 

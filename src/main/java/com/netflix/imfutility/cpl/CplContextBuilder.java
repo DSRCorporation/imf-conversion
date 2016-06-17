@@ -37,12 +37,11 @@ public class CplContextBuilder {
     /**
      * Parses the given CPL file and fills sequence, segment and resource contexts.
      *
-     * @param cplXml a full path to the input CPL file.
+     * @param cplFile a full path to the input CPL file.
      * @throws XmlParsingException   if input is not a valid XML or it doesn't pass XSD validation
      * @throws FileNotFoundException if the input path doesn't define a file.
      */
-    public void build(String cplXml) throws XmlParsingException, FileNotFoundException {
-        File cplFile = new File(cplXml);
+    public void build(File cplFile) throws XmlParsingException, FileNotFoundException {
         if (!cplFile.isFile()) {
             throw new FileNotFoundException(String.format("Invalid CPL file: '%s' not found", cplFile.getAbsolutePath()));
         }

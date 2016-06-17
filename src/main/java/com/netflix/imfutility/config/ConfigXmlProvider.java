@@ -24,12 +24,11 @@ public class ConfigXmlProvider {
     /**
      * Parses the given config.xml file to a Java model. Performs XSD validation.
      *
-     * @param configXml a full path to the input config.xml
+     * @param configFile a full path to the input config.xml
      * @throws XmlParsingException   if the input is not a valid XML or it doesn't pass XSD validation
      * @throws FileNotFoundException if the input path doesn't define a file.
      */
-    public ConfigXmlProvider(String configXml) throws XmlParsingException, FileNotFoundException {
-        File configFile = new File(configXml);
+    public ConfigXmlProvider(File configFile) throws XmlParsingException, FileNotFoundException {
         if (!configFile.isFile()) {
             throw new FileNotFoundException(String.format("Invalid config file: '%s' not found", configFile.getAbsolutePath()));
         }

@@ -37,9 +37,8 @@ public final class TemplateParameterContextCreator {
 
     public static TemplateParameterContextProvider createDefaultContextProvider() throws Exception {
         ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml());
-        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(), Format.DPP);
-        return new TemplateParameterContextProvider(
-                configProvider, conversionProvider, getWorkingDir().getAbsolutePath());
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(), Format.dpp);
+        return new TemplateParameterContextProvider(configProvider, conversionProvider, getWorkingDir());
     }
 
     public static File getWorkingDir() {
@@ -69,12 +68,12 @@ public final class TemplateParameterContextCreator {
     }
 
 
-    public static String getCurrentTmpDir() {
+    public static File getCurrentTmpDir() {
         String tempDir = System.getProperty("java.io.tmpdir");
         if (tempDir == null) {
-            return ".";
+            return new File(".");
         }
-        return tempDir;
+        return new File(tempDir);
     }
 
     public static void fillCPLContext(TemplateParameterContextProvider contextProvider, int segmentCount, int seqCount, int resourceCount) {

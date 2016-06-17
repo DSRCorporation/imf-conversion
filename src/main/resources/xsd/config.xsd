@@ -11,11 +11,19 @@
 
     <xs:complexType name="ConfigType">
         <xs:sequence>
+            <xs:element type="xs:string" name="imp" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="xs:string" name="cpl" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="xs:string" name="workingDirectory" maxOccurs="1" minOccurs="0"/>
+
             <xs:element type="externalToolsType" name="externalTools" maxOccurs="1" minOccurs="1"/>
             <xs:element type="preDefinedExternalToolsType" name="preDefinedExternalTools" maxOccurs="1" minOccurs="0"/>
             <xs:element type="conversionParametersType" name="conversionParameters" maxOccurs="1" minOccurs="0"/>
+
             <xs:element type="xs:string" name="conversionConfig" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="xs:string" name="workingDirectory" maxOccurs="1" minOccurs="0"/>
+
+            <xs:element type="xs:boolean" name="cleanWorkingDir" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="xs:boolean" name="deleteTmpFilesOnExit" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="xs:boolean" name="deleteTmpFilesOnFail" maxOccurs="1" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 

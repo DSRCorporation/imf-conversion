@@ -55,6 +55,7 @@ public final class Constants {
     // 4.1 default values
     public static final boolean DEFAULT_DELETE_TMP_FILES_ON_EXIT = true;
     public static final boolean DEFAULT_DELETE_TMP_FILES_ON_FAIL = false;
+    public static final boolean DEFAULT_CLEAN_WORKING_DIR = true;
 
 /* 6. Default values */
 
