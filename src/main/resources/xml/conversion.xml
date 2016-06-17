@@ -155,7 +155,7 @@
                                 %{seq.num}-%{segm.num}.xml
                             </dynamicParameter>
 
-                            <dynamicParameter name="concatTTML" concat="true"> --ttml %{seq.num}-%{segm.num}.xml %{resource.startTimeTC} %{resource.endTimeTC}</dynamicParameter>
+                            <dynamicParameter name="concatTTML" concat="true"> --ttml %{seq.num}-%{segm.num}.xml %{resource.offsetTC} %{resource.startTimeTC} %{resource.endTimeTC}</dynamicParameter>
 
                         </execEachSegment>
 
