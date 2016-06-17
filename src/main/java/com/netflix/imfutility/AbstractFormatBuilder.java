@@ -275,7 +275,7 @@ public abstract class AbstractFormatBuilder {
     private void validateImpAndCpl() throws IOException, ImfValidationException {
         logger.info("Validating input IMP and CPL...");
         new ImfValidator(contextProvider, new ConversionEngine().getExecuteStrategyFactory()).validate();
-        logger.info("Validating input IMP and CPL: OK\n");
+        logger.info("Validated input IMP and CPL: OK\n");
     }
 
     private void buildCplContext() throws XmlParsingException, FileNotFoundException {

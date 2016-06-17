@@ -36,4 +36,8 @@
         </audio>
     </conversionParameters>
 
+    <cleanWorkingDir>false</cleanWorkingDir>
+    <deleteTmpFilesOnExit>false</deleteTmpFilesOnExit>
+    <deleteTmpFilesOnFail>false</deleteTmpFilesOnFail>
+
 </Config>
