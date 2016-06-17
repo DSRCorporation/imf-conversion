@@ -10,7 +10,18 @@ public enum DynamicContextParameters {
 
     MEDIA_INFO_INPUT("mediaInfoInput"),
 
-    MEDIA_INFO_OUTPUT("mediaInfoOutput");
+    MEDIA_INFO_OUTPUT("mediaInfoOutput"),
+
+    VALIDATION_TOOL("validateTool"),
+
+    IMP("imp"),
+
+    CPL("cpl"),
+
+    WORKING_DIR("workingDir"),
+
+    OUTPUT_VALIDATION_FILE("outputValidationFile");
+
 
     private final String name;
 

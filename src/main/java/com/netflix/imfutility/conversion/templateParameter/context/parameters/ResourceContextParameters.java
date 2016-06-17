@@ -16,6 +16,8 @@ public enum ResourceContextParameters {
 
     EDIT_RATE("editRate"),
 
+    REPEAT_COUNT("repeatCount"),
+
     // in time code
     START_TIME_TIMECODE("startTimeTC"),
 

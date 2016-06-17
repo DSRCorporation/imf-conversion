@@ -1,6 +1,7 @@
 package com.netflix.imfutility.conversion.templateParameter;
 
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SegmentContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
@@ -18,6 +19,20 @@ import static org.junit.Assert.*;
  */
 public class TemplateParameterInitializationTest {
 
+    private static final int DEFAULT_PARAMETERS_COUNT = 3;
+
+    @Test
+    public void testDefaultDynamicParameters() throws Exception {
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
+
+        assertEquals(DEFAULT_PARAMETERS_COUNT, contextProvider.getDynamicContext().getAllParametersAsString().size());
+        assertEquals(getWorkingDir().getAbsolutePath(), contextProvider.getDynamicContext().getParameterValueAsString(DynamicContextParameters.WORKING_DIR));
+        assertEquals("errors.xml", contextProvider.getDynamicContext().getParameterValueAsString(DynamicContextParameters.OUTPUT_VALIDATION_FILE));
+        assertNotNull(contextProvider.getDynamicContext().getParameterValueAsString(DynamicContextParameters.VALIDATION_TOOL));
+        assertTrue(contextProvider.getDynamicContext().getParameterValueAsString(DynamicContextParameters.VALIDATION_TOOL).endsWith("imf-validation-1.0.jar"));
+        assertTrue(contextProvider.getDynamicContext().getParameterValueAsString(DynamicContextParameters.VALIDATION_TOOL).contains("java -jar "));
+    }
+
     @Test
     public void testAddDynamicParameterSimple() throws Exception {
         TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
@@ -25,9 +40,9 @@ public class TemplateParameterInitializationTest {
                 .addParameter("addDynamicSimple1", "addDynamicValue1", ContextInfo.EMPTY)
                 .addParameter("addDynamicSimple2", "addDynamicValue2", ContextInfo.EMPTY);
 
+        assertEquals(DEFAULT_PARAMETERS_COUNT + 2, contextProvider.getDynamicContext().getAllParametersAsString().size());
         assertEquals("addDynamicValue1", contextProvider.getDynamicContext().getParameterValueAsString("addDynamicSimple1"));
         assertEquals("addDynamicValue2", contextProvider.getDynamicContext().getParameterValueAsString("addDynamicSimple2"));
-        assertEquals(2, contextProvider.getDynamicContext().getAllParametersAsString().size());
     }
 
     @Test
@@ -43,9 +58,9 @@ public class TemplateParameterInitializationTest {
                 .appendParameter("appendDynamicSimple2", "_2", ContextInfo.EMPTY)
                 .appendParameter("appendDynamicSimple2", "_3", ContextInfo.EMPTY);
 
+        assertEquals(DEFAULT_PARAMETERS_COUNT + 2, contextProvider.getDynamicContext().getAllParametersAsString().size());
         assertEquals("appendDynamicValue1_1_2_3", contextProvider.getDynamicContext().getParameterValueAsString("appendDynamicSimple1"));
         assertEquals("appendDynamicValue2_1_2_3", contextProvider.getDynamicContext().getParameterValueAsString("appendDynamicSimple2"));
-        assertEquals(2, contextProvider.getDynamicContext().getAllParametersAsString().size());
     }
 
     @Test
@@ -140,7 +155,7 @@ public class TemplateParameterInitializationTest {
                         .setResourceUuid(getResourceUuid(1, 1, SequenceType.VIDEO, 1))
                         .setSequenceType(SequenceType.VIDEO).build());
 
-        assertEquals(2, contextProvider.getDynamicContext().getAllParameters().size());
+        assertEquals(DEFAULT_PARAMETERS_COUNT + 2, contextProvider.getDynamicContext().getAllParametersAsString().size());
         assertEquals("tmpParamSimple_1_tmpParamSimple_2",
                 contextProvider.getDynamicContext().getParameterValueAsString("appendDynamicWithParam1"));
         assertEquals("0-0-audio-0-tmpParamSimple_1-1-video-1-tmpParamSimple",
@@ -173,7 +188,7 @@ public class TemplateParameterInitializationTest {
                         .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0))
                         .setSequenceType(SequenceType.AUDIO).build());
 
-        assertEquals(2, contextProvider.getDynamicContext().getAllParameters().size());
+        assertEquals(DEFAULT_PARAMETERS_COUNT + 2, contextProvider.getDynamicContext().getAllParametersAsString().size());
         assertEquals("appendDynamicWithParam1_appendDynamicWithParam1",
                 contextProvider.getDynamicContext().getParameterValueAsString("tmpParamSimple"));
         assertEquals("appendDynamicWithParam2_appendDynamicWithParam2",
@@ -203,7 +218,7 @@ public class TemplateParameterInitializationTest {
                         .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0))
                         .setSequenceType(SequenceType.AUDIO).build());
 
-        assertEquals(1, contextProvider.getDynamicContext().getAllParameters().size());
+        assertEquals(DEFAULT_PARAMETERS_COUNT + 1, contextProvider.getDynamicContext().getAllParametersAsString().size());
         assertEquals("0-0-audio-0-tmpParamSimple_0-0-audio-0-tmpParamSimple",
                 contextProvider.getDynamicContext().getParameterValueAsString("name-0-0-audio-0-tmpParamSimple"));
     }
@@ -237,9 +252,9 @@ public class TemplateParameterInitializationTest {
         contextProvider.getDynamicContext().addParameter(dynamicParameter1, ContextInfo.EMPTY);
         contextProvider.getDynamicContext().addParameter(dynamicParameter2, ContextInfo.EMPTY);
 
+        assertEquals(DEFAULT_PARAMETERS_COUNT + 2, contextProvider.getDynamicContext().getAllParametersAsString().size());
         assertEquals("addDynamicValue1", contextProvider.getDynamicContext().getParameterValueAsString("addDynamicSimple1"));
         assertEquals("addDynamicValue2", contextProvider.getDynamicContext().getParameterValueAsString("addDynamicSimple2"));
-        assertEquals(2, contextProvider.getDynamicContext().getAllParametersAsString().size());
         assertFalse(contextProvider.getDynamicContext().getParameterValue("addDynamicSimple1").isDeleteOnExit());
         assertTrue(contextProvider.getDynamicContext().getParameterValue("addDynamicSimple2").isDeleteOnExit());
     }
@@ -277,9 +292,9 @@ public class TemplateParameterInitializationTest {
         contextProvider.getDynamicContext().addParameter(dynamicParameter3, ContextInfo.EMPTY);
         contextProvider.getDynamicContext().addParameter(dynamicParameter4, ContextInfo.EMPTY);
 
+        assertEquals(DEFAULT_PARAMETERS_COUNT + 2, contextProvider.getDynamicContext().getAllParametersAsString().size());
         assertEquals("addDynamicValue1_1", contextProvider.getDynamicContext().getParameterValueAsString("addDynamicSimple1"));
         assertEquals("addDynamicValue3addDynamicValue4", contextProvider.getDynamicContext().getParameterValueAsString("appendDynamicSimple3"));
-        assertEquals(2, contextProvider.getDynamicContext().getAllParametersAsString().size());
         assertTrue(contextProvider.getDynamicContext().getParameterValue("addDynamicSimple1").isDeleteOnExit());
         assertTrue(contextProvider.getDynamicContext().getParameterValue("appendDynamicSimple3").isDeleteOnExit());
     }

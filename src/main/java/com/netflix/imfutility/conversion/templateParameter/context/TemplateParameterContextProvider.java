@@ -1,8 +1,8 @@
 package com.netflix.imfutility.conversion.templateParameter.context;
 
+import com.netflix.imfutility.config.ConfigXmlProvider;
+import com.netflix.imfutility.conversion.ConversionXmlProvider;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
-import com.netflix.imfutility.xsd.config.ConfigType;
-import com.netflix.imfutility.xsd.conversion.FormatType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,20 +12,20 @@ import java.util.Map;
  */
 public class TemplateParameterContextProvider {
 
-    private final FormatType format;
-    private final ConfigType config;
+    private final ConversionXmlProvider conversionProvider;
+    private final ConfigXmlProvider configProvider;
     private final String workingDir;
 
     private final Map<TemplateParameterContext, ITemplateParameterContext> contexts = new HashMap<>();
 
     /**
-     * @param config     a config instance corresponding to config.xml
-     * @param format     a format instance corresponding to conversion.xml.
-     * @param workingDir a working directory where the output file as well as all tmp files are created.
+     * @param configProvider     a config provider corresponding to config.xml
+     * @param conversionProvider a conversion provider corresponding to conversion.xml.
+     * @param workingDir         a working directory where the output file as well as all tmp files are created.
      */
-    public TemplateParameterContextProvider(ConfigType config, FormatType format, String workingDir) {
-        this.config = config;
-        this.format = format;
+    public TemplateParameterContextProvider(ConfigXmlProvider configProvider, ConversionXmlProvider conversionProvider, String workingDir) {
+        this.configProvider = configProvider;
+        this.conversionProvider = conversionProvider;
         this.workingDir = workingDir;
         initContexts();
     }
@@ -65,18 +65,19 @@ public class TemplateParameterContextProvider {
         return workingDir;
     }
 
+
     /**
-     * @return the config instance corresponding to config.xml
+     * @return a config provider corresponding to config.xml
      */
-    public ConfigType getConfig() {
-        return config;
+    public ConfigXmlProvider getConfigProvider() {
+        return configProvider;
     }
 
     /**
-     * @return the format instance corresponding to conversion.xml.
+     * @return a conversion provider corresponding to conversion.xml.
      */
-    public FormatType getFormat() {
-        return format;
+    public ConversionXmlProvider getConversionProvider() {
+        return conversionProvider;
     }
 
     private void initContexts() {
@@ -91,9 +92,9 @@ public class TemplateParameterContextProvider {
     private ITemplateParameterContext createContext(TemplateParameterContext context) {
         switch (context) {
             case TMP:
-                return new TmpTemplateParameterContext(format);
+                return new TmpTemplateParameterContext(conversionProvider.getFormat());
             case TOOL:
-                return new ToolTemplateParameterContext(config);
+                return new ToolTemplateParameterContext(configProvider.getConfig());
             case DYNAMIC:
                 return new DynamicTemplateParameterContext(this);
             case SEGMENT:

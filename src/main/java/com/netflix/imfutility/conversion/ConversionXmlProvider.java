@@ -27,6 +27,7 @@ import static com.netflix.imfutility.Constants.CONVERSION_XSD;
 public class ConversionXmlProvider {
 
     private FormatType formatType;
+    private ConversionType conversion;
 
     /**
      * Parses the given conversion.xml file to a Java model. Performs XSD validation.
@@ -42,13 +43,20 @@ public class ConversionXmlProvider {
             throw new FileNotFoundException(String.format("Invalid conversion.xml file: '%s' not found", conversionFile.getAbsolutePath()));
         }
 
-        ConversionType conversion = XmlParser.parse(conversionFile, CONVERSION_XSD, CONVERSION_PACKAGE, ConversionType.class);
+        this.conversion = XmlParser.parse(conversionFile, CONVERSION_XSD, CONVERSION_PACKAGE, ConversionType.class);
         this.formatType = conversion.getFormats().getMap().get(format.getName());
 
         if (this.formatType == null) {
             throw new ConversionException(String.format("'%s' doesn't contain configuration for '%s' format.",
                     conversionFile.getAbsolutePath(), format.getName()));
         }
+    }
+
+    /**
+     * @return a root conversion instance corresponding to the input conversion.xml
+     */
+    public ConversionType getConversion() {
+        return conversion;
     }
 
     /**

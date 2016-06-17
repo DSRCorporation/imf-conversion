@@ -1,11 +1,13 @@
 package com.netflix.imfutility.conversion.templateParameter.context;
 
+import com.netflix.imfutility.Constants;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
+import com.netflix.imfutility.validate.ImfValidator;
 import com.netflix.imfutility.xsd.conversion.DynamicParameterConcatType;
 import com.netflix.imfutility.xsd.conversion.DynamicParameterType;
 
@@ -36,6 +38,14 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
 
     public DynamicTemplateParameterContext(TemplateParameterContextProvider contextProvider) {
         this.parameterResolver = new TemplateParameterResolver(contextProvider);
+        initDefaultParameters(contextProvider);
+    }
+
+    private void initDefaultParameters(TemplateParameterContextProvider contextProvider) {
+        addParameter(DynamicContextParameters.WORKING_DIR, contextProvider.getWorkingDir());
+        addParameter(DynamicContextParameters.OUTPUT_VALIDATION_FILE, Constants.DEFAULT_OUTPUT_VALIDATION_FILE, true);
+        addParameter(DynamicContextParameters.VALIDATION_TOOL, ImfValidator.getValidationToolPath(contextProvider.getConfigProvider()));
+
     }
 
     /**

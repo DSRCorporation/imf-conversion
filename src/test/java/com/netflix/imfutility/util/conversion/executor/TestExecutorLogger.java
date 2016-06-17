@@ -18,11 +18,11 @@ public class TestExecutorLogger {
 
 
     public void startProcess(ExternalProcess.ExternalProcessInfo processInfo) {
-        processes.add("START: " + processInfo.toString());
+        processes.add(String.format("START: %s %s", processInfo.toString(), processInfo.getOutputRedirect().toString()));
     }
 
     public void finishProcess(ExternalProcess.ExternalProcessInfo processInfo) {
-        processes.add("FINISH: " + processInfo.toString());
+        processes.add(String.format("FINISH: %s %s", processInfo.toString(), processInfo.getOutputRedirect().toString()));
     }
 
     public int getProcessCount() {

@@ -2,6 +2,7 @@ package com.netflix.imfutility.conversion.executor.strategy;
 
 import com.netflix.imfutility.conversion.executor.ExecutionException;
 import com.netflix.imfutility.conversion.executor.ExternalProcess;
+import com.netflix.imfutility.conversion.executor.OutputRedirect;
 import com.netflix.imfutility.conversion.executor.ProcessStarter;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 
@@ -61,8 +62,13 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
     }
 
     private void startTailProcesses(PipeOperationInfo operations, List<ExternalProcess> tailProcesses) throws IOException {
+        int i = 0;
         for (OperationInfo tailOperation : operations.getTailOperations()) {
-            tailProcesses.add(startProcess(tailOperation));
+            // output can be safely re-directed to stderr's log, if it's the last element in the pipeline.
+            // otherwise output must not be re-directed, as it goes to the next element in the pipeline.
+            OutputRedirect outputRedirect = i < operations.getTailOperations().size() - 1 ? OutputRedirect.PIPE : OutputRedirect.ERR_LOG;
+            i++;
+            tailProcesses.add(startProcess(tailOperation, outputRedirect));
         }
     }
 
@@ -80,7 +86,8 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
         List<ExternalProcess> headProcesses = new ArrayList<>();
         try {
             for (OperationInfo headOperation : cyclePipeOperations) {
-                headProcesses.add(startProcess(headOperation));
+                // output must not be re-directed, as it goes to the next element in the pipeline.
+                headProcesses.add(startProcess(headOperation, OutputRedirect.PIPE));
             }
             pipe(headProcesses, tailProcesses);
         } finally {

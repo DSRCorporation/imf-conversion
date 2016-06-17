@@ -14,8 +14,19 @@
     -->
     <xs:complexType name="ConversionType">
         <xs:sequence>
+            <xs:element type="imfValidationType" name="imfValidation" minOccurs="1" maxOccurs="1"/>
             <xs:element type="formatTypes" name="formats" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
+    </xs:complexType>
+
+    <!--
+        IMF Validation command
+    -->
+    <xs:complexType name="imfValidationType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+            </xs:extension>
+        </xs:simpleContent>
     </xs:complexType>
 
     <!--

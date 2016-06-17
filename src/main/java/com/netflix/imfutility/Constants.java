@@ -44,22 +44,25 @@ public final class Constants {
     public static final String XSD_CPL_2013_XSD = "xsd/imf/2013/imf-cpl-2013.xsd";
     public static final String CPL_2013_PACKAGE = "com.netflix.imfutility.xsd.imf._2013.cpl";
 
-/* 4. Command line args*/
+/* 4. XSLT */
+
+    public static final String BMX_PARAMETERS_TRANSFORMATION = "xsd/dpp/bmx-parameters.xsl";
+    public static final String XSLT2_TRANSFORMER_IMPLEMENTATION = "net.sf.saxon.TransformerFactoryImpl";
+    public static final String BMX_FRAMEWORK_PARAM = "framework";
+
+/* 5. Command line args*/
 
     // 4.1 default values
     public static final boolean DEFAULT_DELETE_TMP_FILES_ON_EXIT = true;
     public static final boolean DEFAULT_DELETE_TMP_FILES_ON_FAIL = false;
 
-/* 5. Other */
+/* 6. Default values */
 
+    public static final String DEFAULT_OUTPUT_VALIDATION_FILE = "errors.xml";
+    public static final String VALIDATION_OUTPUT_XML_ERROR_TAG = "error";
     public static final String DEFAULT_CONVERSION_XML = "xml/conversion.xml";
     public static final String MEDIA_INFO_SUFFIX = "mediaInfo";
 
-/* 6. XSLT */
-
-    public static final String BMX_PARAMETERS_TRANSFORMATION = "xsd/dpp/bmx-parameters.xsl";
-    public static final String XSLT2_TRANSFORMER_IMPLEMENTATION = "net.sf.saxon.TransformerFactoryImpl";
-    public static final String BMX_FRAMEWORK_PARAM = "framework";
 
     private Constants() {
 

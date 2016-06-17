@@ -84,7 +84,7 @@ public class MediaInfoContextBuilder {
     public MediaInfoContextBuilder(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory executeStrategyFactory) {
         this.contextProvider = contextProvider;
         this.executeStrategyFactory = executeStrategyFactory;
-        this.format = contextProvider.getFormat();
+        this.format = contextProvider.getConversionProvider().getFormat();
     }
 
     /**
