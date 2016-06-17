@@ -17,8 +17,15 @@ public class ImfUtilityTest {
     public static void setupAll() throws IOException {
         // create both working directory and logs folder.
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
-        TemplateParameterContextCreator.getWorkingDir().mkdir();
-        new File(TemplateParameterContextCreator.getWorkingDir(), Constants.LOGS_DIR).mkdir();
+        File workingDir = TemplateParameterContextCreator.getWorkingDir();
+        if (!workingDir.mkdir()) {
+            throw new RuntimeException("Could not create a working dir within tmp folder");
+        }
+
+        File logs = new File(TemplateParameterContextCreator.getWorkingDir(), Constants.LOGS_DIR);
+        if (!logs.mkdir()) {
+            throw new RuntimeException("Could not create a log dir within working dir");
+        }
     }
 
     @AfterClass

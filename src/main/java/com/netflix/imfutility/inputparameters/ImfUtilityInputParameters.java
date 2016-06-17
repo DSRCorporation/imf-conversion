@@ -47,6 +47,9 @@ public class ImfUtilityInputParameters {
         }
         // cmd line argument has first priority
         String cpl = cmdLineArgs.getCpl() != null ? cmdLineArgs.getCpl() : defaultCpl;
+        if (cpl == null) {
+            return null;
+        }
         return new File(impDirectory, cpl);
     }
 

@@ -23,6 +23,9 @@ public class ImfUtility {
                 case dpp:
                     int exitCode = new DppFormatProcessor().process(args);
                     System.exit(exitCode);
+                    break;
+                default:
+                    throw new ConversionException("Unsupported format " + imfUtilityInputParameters.getFormat());
             }
 
         } catch (HelpRequestedException e) {
