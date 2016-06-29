@@ -141,6 +141,28 @@
                         -q 24 -s 48000 --audio-chan %{dynamic.ebuAudioTracks}
                         --pcm "%{tmp.audioEncoded}"
                     </execOnce>
+
+                    <!--
+                        6. Extract each subtitle TTML segment from MXF
+                    -->
+                    <execEachSequence type="subtitle" name="extractSubtitleSegments">
+                        <execEachSegment name="extract_ttml">
+                            <execOnce name="extract_ttml">
+                                %{tool.asdcp-test} -x "%{seq.num}-%{segm.num}.xml" %{resource.essence}
+                            </execOnce>
+                            <!-- to delete intermediate files at the end -->
+                            <dynamicParameter name="ttml-segment-tmp-%{seq.num}-%{segm.num}" deleteOnExit="true">
+                                %{seq.num}-%{segm.num}.xml
+                            </dynamicParameter>
+
+                            <dynamicParameter name="concatTTML" concat="true"> --ttml %{seq.num}-%{segm.num}.xml %{resource.offsetTC} %{resource.startTimeTC} %{resource.endTimeTC}</dynamicParameter>
+
+                        </execEachSegment>
+
+                        <execOnce name="convert_ttml_to_stl">
+                            %{tool.java} subtitleConverter.java %{dynamic.concatTTML} --outputSTL %{seq.num}-captions.stl
+                        </execOnce>
+                    </execEachSequence>
                 </formatConfiguration>
             </formatConfigurations>
         </format>

@@ -17,6 +17,8 @@
         <tool id="x264">G:\Netflix\tools\x264.exe</tool>
         <tool id="ttmlToStl">ttmlToStl path</tool>
         <tool id="photon">photon path</tool>
+        <tool id="asdcp-test">D:\asdcplib\asdcp-test.exe</tool>
+        <tool id="java">C:\Program Files (x86)\Java\jre7\bin\java.exe</tool>
     </externalTools>
 
     <!--
