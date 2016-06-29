@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config xmlns="http://config.imf.netflix.com">
+
+    <externalTools>
+        <tooll id="tool1">root\tool1</tooll>
+    </externalTools>
+
+</Config>

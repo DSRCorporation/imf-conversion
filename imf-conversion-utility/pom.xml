@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.netflix.imfutility</groupId>
+    <artifactId>imf-utility</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.6.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
+            <version>9.7.0-4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lexicalscope.jewelcli</groupId>
+            <artifactId>jewelcli</artifactId>
+            <version>0.8.9</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <!-- Generate config.xml classes -->
+                    <execution>
+                        <id>xjc-config</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/config.xsd</source>
+                            </sources>
+                            <xjbSources>
+                                <xjbSource>src/main/resources/xjb/bindings-config.xjb</xjbSource>
+                            </xjbSources>
+                            <packageName>com.netflix.imfutility.xsd.config</packageName>
+                        </configuration>
+                    </execution>
+
+                    <!-- Generate conversion.xml classes -->
+                    <execution>
+                        <id>xjc-conversion</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/conversion.xsd</source>
+                            </sources>
+                            <xjbSources>
+                                <xjbSource>src/main/resources/xjb/bindings-conversion.xjb</xjbSource>
+                            </xjbSources>
+                            <packageName>com.netflix.imfutility.xsd.conversion</packageName>
+                            <!--
+                             Don't clear the output directory before generating the sources.
+                             Clearing the output directory removes the config schema from above.
+                            -->
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
+                    <!-- Generate media info (ffprobe) classes -->
+                    <execution>
+                        <id>media-info-conversion</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/media-info.xsd</source>
+                            </sources>
+                            <packageName>com.netflix.imfutility.xsd.mediainfo</packageName>
+                            <!--
+                             Don't clear the output directory before generating the sources.
+                             Clearing the output directory removes the config schema from above.
+                            -->
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
+
+                    <!-- Generate DPP metadata.xml classes -->
+                    <execution>
+                        <id>xjc-dpp-metadata</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/dpp/metadata.xsd</source>
+                            </sources>
+                            <xjbSources>
+                                <xjbSource>src/main/resources/xsd/dpp/imfutility.xjb</xjbSource>
+                            </xjbSources>
+                            <packageName>com.netflix.imfutility.xsd.dpp.metadata</packageName>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
+                    <!-- Generate DPP audiomap.xml classes -->
+                    <execution>
+                        <id>xjc-dpp-audiomap</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/dpp/audiomap.xsd</source>
+                            </sources>
+                            <packageName>com.netflix.imfutility.xsd.dpp.audiomap</packageName>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
+                    <!-- Generate imf cpl-2013 classes -->
+                    <execution>
+                        <id>xjc-imf-cpl-2013</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/imf/2013</source>
+                            </sources>
+                            <packageName>com.netflix.imfutility.xsd.imf._2013.cpl</packageName>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
+                    <!-- Generate imf cpl-2016 classes -->
+                    <execution>
+                        <id>xjc-imf-cpl-2016</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/imf/2016</source>
+                            </sources>
+                            <packageName>com.netflix.imfutility.xsd.imf._2016.cpl</packageName>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
+
+                    <!-- Generate imf assetmap classes -->
+                    <execution>
+                        <id>xjc-imf-assetmap</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/imf/asset-map.xsd</source>
+                            </sources>
+                            <packageName>com.netflix.imfutility.xsd.imf.assetmap</packageName>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.10</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/generated-sources</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

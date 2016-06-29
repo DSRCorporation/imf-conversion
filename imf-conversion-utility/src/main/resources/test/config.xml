@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config xmlns="http://config.imf.netflix.com">
+
+    <imp>G:\Netflix\content\TEST\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV</imp>
+    <cpl>CPL-test.xml</cpl>
+    <workingDirectory>G:\Netflix\TMP</workingDirectory>
+
+    <!--
+        Path to external executables.
+        May be used in both code and conversion.xml template operations.
+     -->
+    <externalTools>
+        <tool id="ffmpeg">G:\Netflix\tools\ffmpeg.exe</tool>
+        <tool id="ffprobe">G:\Netflix\tools\ffprobe.exe</tool>
+        <tool id="bmx">G:\Netflix\tools\raw2bmx.exe</tool>
+        <tool id="mxf2raw">G:\Netflix\tools\mxf2raw.exe</tool>
+        <tool id="x264">G:\Netflix\tools\x264.exe</tool>
+        <tool id="ttmlToStl">ttmlToStl path</tool>
+        <tool id="photon">photon path</tool>
+        <tool id="asdcp-test">D:\asdcplib\asdcp-test.exe</tool>
+        <tool id="java">C:\Program Files (x86)\Java\jre7\bin\java.exe</tool>
+    </externalTools>
+
+    <!--
+        Allows/disallows silent conversion to format destination parameters if the input doesn't match.
+        Conversion is allowed by default (if not specified here explicitly)
+     -->
+    <conversionParameters>
+        <video>
+            <size>yes</size>
+            <frameRate>yes</frameRate>
+            <pixelFormat>yes</pixelFormat>
+            <bitDepth>yes</bitDepth>
+        </video>
+        <audio>
+            <sampleRate>yes</sampleRate>
+            <bitsSample>yes</bitsSample>
+        </audio>
+    </conversionParameters>
+
+    <cleanWorkingDir>false</cleanWorkingDir>
+    <deleteTmpFilesOnExit>false</deleteTmpFilesOnExit>
+    <deleteTmpFilesOnFail>false</deleteTmpFilesOnFail>
+
+</Config>

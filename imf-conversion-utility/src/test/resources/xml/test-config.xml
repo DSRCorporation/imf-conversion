@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config xmlns="http://config.imf.netflix.com">
+
+
+    <!--
+        Path to external executables.
+        May be used in both code and conversion.xml template operations.
+     -->
+    <externalTools>
+        <tool id="toolSimple">root\toolSimple</tool>
+        <tool id="toolWhitespace">root\tool whitespace</tool>
+        <tool id="toolNewline">
+
+            root\tool newline
+
+        </tool>
+        <tool id="toolEmpty"></tool>
+        <tool id="toolEmptyNewlines">
+
+
+        </tool>
+    </externalTools>
+
+    <!--
+        Allows/disallows silent conversion to format destination parameters if the input doesn't match.
+        Conversion is allowed by default (if not specified here explicitly)
+     -->
+    <conversionParameters>
+    </conversionParameters>
+
+
+</Config>

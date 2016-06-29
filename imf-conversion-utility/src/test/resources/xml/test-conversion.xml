@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<conversion xmlns="http://conversion.imf.netflix.com">
+
+    <imfValidation>%{dynamic.validateTool} -i %{dynamic.imp} -c %{dynamic.cpl} -d %{dynamic.workingDir} -f %{dynamic.outputValidationFile}</imfValidation>
+
+    <formats>
+        <!--
+            specific configuration for each format
+        -->
+        <format name="dpp">
+            <!--
+                tmp context for temporary template parameters
+            -->
+            <tmpContext>
+                <param id="tmpParamSimple">tmpParamSimple</param>
+                <param id="tmpParamWhitespace">tmpParam whitespace</param>
+                <param id="tmpParamNewline">
+
+                    tmpParam newline
+
+                </param>
+                <param id="tmpParamEmpty"></param>
+                <param id="tmpParamEmptyNewline">
+
+
+                </param>
+                <param id="tmpParam6">"tmpParam6 Value"</param>
+            </tmpContext>
+
+            <mediaInfoCommandVideo>mediaInfoCommandVideo %{dynamic.mediaInfoInput}</mediaInfoCommandVideo>
+            <mediaInfoCommandAudio>mediaInfoCommandAudio %{dynamic.mediaInfoInput}</mediaInfoCommandAudio>
+            <mediaInfoCommandSubtitle>mediaInfoCommandSubtitle %{dynamic.mediaInfoInput}</mediaInfoCommandSubtitle>
+
+
+            <formatConfigurations>
+                <formatConfiguration name="1">
+
+                    <!--
+                        Destination parameters for conversion
+                     -->
+                    <conversionParameters>
+                    </conversionParameters>
+
+                    <execOnce name="execOnce1">
+                        execOnce1Exec - param
+                    </execOnce>
+
+                    <execEachSequence type="video" name="seqVideo">
+                        <execOnce name="seqVideoExecOnce1">
+                            seqVideoExecOnce1Exec - param
+                        </execOnce>
+
+                        <pipe>
+                            <cycle>
+                                <execOnce name="seqVideoPipeCycleExecOnce1">
+                                    seqVideoPipeCycleExecOnce1Exec - param
+                                </execOnce>
+                                <execEachSegment name="seqVideoPipeCycleExecSegment">
+                                    <execOnce name="seqVideoPipeCycleExecSegmentExecOnce">
+                                        seqVideoPipeCycleExecSegmentExec - param
+                                    </execOnce>
+                                </execEachSegment>
+                            </cycle>
+
+                            <execOnce name="seqVideoPipeExecOnce1">
+                                seqVideoPipeExecOnce1Exec - param
+                            </execOnce>
+
+                            <execOnce name="seqVideoPipeExecOnce2">
+                                seqVideoPipeExecOnce2Exec - param
+                            </execOnce>
+                        </pipe>
+
+                        <execOnce name="seqVideoExecOnce2">
+                            seqVideoExecOnce2Exec - param
+                        </execOnce>
+                    </execEachSequence>
+
+                    <execOnce name="execOnce2">
+                        execOnce2Exec - param
+                    </execOnce>
+
+                </formatConfiguration>
+            </formatConfigurations>
+
+        </format>
+    </formats>
+</conversion>
+
