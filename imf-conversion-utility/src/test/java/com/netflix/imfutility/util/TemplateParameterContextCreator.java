@@ -12,7 +12,7 @@ import com.netflix.imfutility.conversion.templateParameter.context.parameters.Se
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.xsd.conversion.SequenceType;
+import com.netflix.imfutility.conversion.SequenceType;
 
 import java.io.File;
 import java.util.EnumSet;

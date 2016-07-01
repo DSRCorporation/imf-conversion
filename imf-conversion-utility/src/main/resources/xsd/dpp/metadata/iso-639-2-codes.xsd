@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema
         xmlns:xs="http://www.w3.org/2001/XMLSchema"
-        elementFormDefault="qualified" attributeFormDefault="unqualified">
+        elementFormDefault="qualified" attributeFormDefault="unqualified"
+        targetNamespace="http://iso6392codes.metadata.dpp.imfutility.netflix.com"
+        xmlns="http://iso6392codes.metadata.dpp.imfutility.netflix.com">
 
     <!--
         ISO-639-2 language codes
@@ -10,6 +12,7 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="xx">
                 <xs:annotation>
+
                     <xs:documentation>Afar</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>

@@ -4,8 +4,8 @@ import com.netflix.imfutility.conversion.templateParameter.context.TemplateParam
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
-import com.netflix.imfutility.xsd.config.*;
-import com.netflix.imfutility.xsd.conversion.*;
+import com.netflix.imfutility.config.*;
+import com.netflix.imfutility.conversion.*;
 import org.junit.Test;
 
 /**

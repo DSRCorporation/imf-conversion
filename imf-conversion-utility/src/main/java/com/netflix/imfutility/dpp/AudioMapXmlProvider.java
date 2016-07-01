@@ -1,27 +1,28 @@
 package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.conversion.SequenceType;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
+import com.netflix.imfutility.dpp.audiomap.AudioMapType;
+import com.netflix.imfutility.dpp.audiomap.EBUTrackType;
+import com.netflix.imfutility.dpp.audiomap.ObjectFactory;
+import com.netflix.imfutility.dpp.metadata.AudioTrackLayoutDmAs11Type;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.xsd.conversion.SequenceType;
-import com.netflix.imfutility.xsd.dpp.audiomap.AudioMap;
-import com.netflix.imfutility.xsd.dpp.audiomap.EBUTrackType;
-import com.netflix.imfutility.xsd.dpp.metadata.AudioTrackLayoutDmAs11Type;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-import static com.netflix.imfutility.Constants.AUDIOMAP_PACKAGE;
-import static com.netflix.imfutility.Constants.AUDIOMAP_XML_SCHEME;
+import static com.netflix.imfutility.dpp.DppConversionConstants.*;
 
 /**
  * Created by Alexandr on 5/12/2016.
@@ -40,7 +41,7 @@ public class AudioMapXmlProvider {
         File file = new File(path);
         JAXBContext jaxbContext;
         try {
-            jaxbContext = JAXBContext.newInstance(AudioMap.class);
+            jaxbContext = JAXBContext.newInstance(AudioMapType.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
@@ -68,13 +69,14 @@ public class AudioMapXmlProvider {
             ebuTrack4.setCPLVirtualTrackChannel(null);
 
             // Audiomap XML structure
-            AudioMap audioMap = new AudioMap();
+            AudioMapType audioMap = new AudioMapType();
             audioMap.getEBUTrack().add(ebuTrack1);
             audioMap.getEBUTrack().add(ebuTrack2);
             audioMap.getEBUTrack().add(ebuTrack3);
             audioMap.getEBUTrack().add(ebuTrack4);
 
-            jaxbMarshaller.marshal(audioMap, file);
+            JAXBElement<AudioMapType> audioMapJaxb = new ObjectFactory().createAudioMap(audioMap);
+            jaxbMarshaller.marshal(audioMapJaxb, file);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
@@ -84,7 +86,7 @@ public class AudioMapXmlProvider {
     private final AudioTrackLayoutDmAs11Type audioLayout;
     private final File audioMapFile;
 
-    private final AudioMap audioMap;
+    private final AudioMapType audioMap;
     private final LinkedHashMap<String, Integer> channelsForTracks;
 
     /**
@@ -101,7 +103,7 @@ public class AudioMapXmlProvider {
     /**
      * Loads and validates audiomap.xml. Creates a default audiomap.xml (see {@link #generateDefaultXml()} if audioMapXml is null.
      *
-     * @param audioMapFile     a path to audiomap.xml file. May be null.
+     * @param audioMapFile    a path to audiomap.xml file. May be null.
      * @param contextProvider context provider.
      * @throws XmlParsingException   an exception in case of audiomap.xml parsing error
      * @throws FileNotFoundException if the audioMapXml doesn't define an existing file.
@@ -136,7 +138,7 @@ public class AudioMapXmlProvider {
      *
      * @return a loaded AudioMap instances created from a provided audiomap.xml
      */
-    public AudioMap getAudioMap() {
+    public AudioMapType getAudioMap() {
         return this.audioMap;
     }
 
@@ -147,11 +149,11 @@ public class AudioMapXmlProvider {
      * @throws XmlParsingException   an exception in case of audiomap.xml parsing error
      * @throws FileNotFoundException if the audioMapXml doesn't define an existing file.
      */
-    private AudioMap loadAudioMapXml() throws XmlParsingException, FileNotFoundException {
+    private AudioMapType loadAudioMapXml() throws XmlParsingException, FileNotFoundException {
         if (!audioMapFile.isFile()) {
             throw new FileNotFoundException(String.format("Invalid audiomap.xml file: '%s' not found", audioMapFile.getAbsolutePath()));
         }
-        return XmlParser.parse(audioMapFile, AUDIOMAP_XML_SCHEME, AUDIOMAP_PACKAGE, AudioMap.class);
+        return XmlParser.parse(audioMapFile, AUDIOMAP_XML_SCHEME, AUDIOMAP_PACKAGE, AudioMapType.class);
     }
 
     private LinkedHashMap<String, Integer> getChannelsForTracks() {
@@ -192,11 +194,11 @@ public class AudioMapXmlProvider {
 
         JAXBContext jaxbContext;
         try {
-            jaxbContext = JAXBContext.newInstance(AudioMap.class);
+            jaxbContext = JAXBContext.newInstance(AudioMapType.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            AudioMap audioMap = new AudioMap();
+            AudioMapType audioMap = new AudioMapType();
 
             final int[] currentAudioTrack = {1};
             channelsForTracks.forEach((String trackId, Integer trackChannelCount) -> {
@@ -219,7 +221,8 @@ public class AudioMapXmlProvider {
                 currentAudioTrack[0]++;
             }
 
-            jaxbMarshaller.marshal(audioMap, audiomapFile);
+            JAXBElement<AudioMapType> audioMapJaxb = new ObjectFactory().createAudioMap(audioMap);
+            jaxbMarshaller.marshal(audioMapJaxb, audiomapFile);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }

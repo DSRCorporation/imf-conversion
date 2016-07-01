@@ -6,8 +6,8 @@ import com.netflix.imfutility.conversion.templateParameter.context.DynamicTempla
 import com.netflix.imfutility.dpp.MetadataXmlProvider.DMFramework;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParametersValidator;
+import com.netflix.imfutility.dpp.metadata.AudioTrackLayoutDmAs11Type;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.xsd.dpp.metadata.AudioTrackLayoutDmAs11Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

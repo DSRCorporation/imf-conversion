@@ -13,10 +13,10 @@ import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.cpl.uuid.UUID;
+import com.netflix.imfutility.imf._2013.*;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.xsd.imf._2013.cpl.*;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import javax.xml.bind.JAXBElement;
@@ -47,7 +47,7 @@ public class Cpl2013ContextBuilder {
     private SegmentUUID currentSegmentUuid;
     private SequenceType currentSequence;
     private SequenceUUID currentSequenceUuid;
-    private com.netflix.imfutility.xsd.conversion.SequenceType currentSequenceType;
+    private com.netflix.imfutility.conversion.SequenceType currentSequenceType;
 
     private final Map<String, BigFraction> videoEssences = new HashMap<>();
 
@@ -79,6 +79,10 @@ public class Cpl2013ContextBuilder {
             contextProvider.getSegmentContext().initSegment(currentSegmentUuid);
 
             for (Object anySeqJaxb : segment.getSequenceList().getAny()) {
+                if (!(anySeqJaxb instanceof JAXBElement)) {
+                    throw new ConversionException(String.format("Could not understand a sequence '%s'", anySeqJaxb.toString()));
+                }
+
                 JAXBElement jaxbElement = (JAXBElement) (anySeqJaxb);
                 Object anySeq = jaxbElement.getValue();
 
@@ -201,7 +205,7 @@ public class Cpl2013ContextBuilder {
 
         // 10. save all video essences to later re-check DURATION_FRAME_EDIT_UNIT and START_TIME_FRAME_EDIT_UNIT for
         // audio sequences which has essences containing both audio and video (the values must be calculated in video frames in this case)
-        if (currentSequenceType == com.netflix.imfutility.xsd.conversion.SequenceType.VIDEO) {
+        if (currentSequenceType == com.netflix.imfutility.conversion.SequenceType.VIDEO) {
             videoEssences.put(assetPath, editRate);
         }
     }
@@ -210,7 +214,7 @@ public class Cpl2013ContextBuilder {
         ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
 
         // process only audio
-        com.netflix.imfutility.xsd.conversion.SequenceType seqType = com.netflix.imfutility.xsd.conversion.SequenceType.AUDIO;
+        com.netflix.imfutility.conversion.SequenceType seqType = com.netflix.imfutility.conversion.SequenceType.AUDIO;
         for (SequenceUUID seqUuid : contextProvider.getSequenceContext().getUuids(seqType)) {
             for (SegmentUUID segmUuid : contextProvider.getSegmentContext().getUuids()) {
                 ResourceKey resourceKey = ResourceKey.create(segmUuid, seqUuid, seqType);

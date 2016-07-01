@@ -2,10 +2,10 @@ package com.netflix.imfutility.asset;
 
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.cpl.uuid.UUID;
+import com.netflix.imfutility.imf.assetmap.AssetMapType;
+import com.netflix.imfutility.imf.assetmap.AssetType;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.xsd.imf.assetmap.AssetMapType;
-import com.netflix.imfutility.xsd.imf.assetmap.AssetType;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -4,9 +4,6 @@ import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.Format;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.xsd.conversion.ConversionType;
-import com.netflix.imfutility.xsd.conversion.FormatConfigurationType;
-import com.netflix.imfutility.xsd.conversion.FormatType;
 
 import java.io.File;
 import java.io.FileNotFoundException;

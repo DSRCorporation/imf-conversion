@@ -9,7 +9,7 @@ import com.netflix.imfutility.util.ConversionUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.util.conversion.executor.TestConversionEngine;
 import com.netflix.imfutility.util.conversion.executor.TestExecutorLogger;
-import com.netflix.imfutility.xsd.conversion.SequenceType;
+import com.netflix.imfutility.conversion.SequenceType;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

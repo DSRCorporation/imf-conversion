@@ -1,8 +1,8 @@
 package com.netflix.imfutility.conversion.templateParameter.context;
 
+import com.netflix.imfutility.conversion.SequenceType;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 /**
  * Unique identifier of a resource within a segment of a sequence (virtual track). It's used in {@link ResourceTemplateParameterContext}.

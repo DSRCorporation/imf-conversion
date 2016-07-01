@@ -11,8 +11,7 @@ import com.netflix.imfutility.util.MediaInfoUtils;
 import com.netflix.imfutility.util.conversion.executor.TestExecuteStrategyFactory;
 import com.netflix.imfutility.util.conversion.executor.TestExecutorLogger;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.xsd.conversion.SequenceType;
-import com.netflix.imfutility.xsd.mediainfo.FfprobeType;
+import com.netflix.imfutility.conversion.SequenceType;
 import org.junit.Before;
 import org.junit.Test;
 

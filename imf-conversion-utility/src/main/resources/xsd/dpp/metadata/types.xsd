@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema
         xmlns:xs="http://www.w3.org/2001/XMLSchema"
-        elementFormDefault="qualified" attributeFormDefault="unqualified">
+        elementFormDefault="qualified" attributeFormDefault="unqualified"
+        targetNamespace="http://types.metadata.dpp.imfutility.netflix.com"
+        xmlns="http://types.metadata.dpp.imfutility.netflix.com">
 
     <!--
         Basic AS11 types

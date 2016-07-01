@@ -1,5 +1,6 @@
 <xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:t="http://metadata.dpp.imfutility.netflix.com">
     <xsl:output method="text" encoding="UTF-8" omit-xml-declaration="yes"/>
 
     <xsl:param name="framework" />
@@ -160,7 +161,7 @@
 
         <xsl:if test="$framework='AS11Segmentation'">
             <xsl:if test="local-name()='Parts'">
-                <xsl:for-each select="current()/Part">
+                <xsl:for-each select="current()/*:Part">
                     <xsl:value-of select="PartNumber"/><xsl:text>/</xsl:text><xsl:value-of select="PartTotal"/><xsl:text> </xsl:text><xsl:value-of select="PartSOM"/><xsl:text> </xsl:text><xsl:value-of select="PartDuration"/><xsl:text>&#xa;</xsl:text>
                 </xsl:for-each>
             </xsl:if>
@@ -171,13 +172,13 @@
         Entry point.
     -->
     <xsl:template match="/">
-        <xsl:for-each select="Dpp/Editorial/*">
+        <xsl:for-each select="*:Dpp/*:Editorial/*">
             <xsl:call-template name="iterateNodes"/>
         </xsl:for-each>
-        <xsl:for-each select="Dpp/Technical/*/*">
+        <xsl:for-each select="*:Dpp/*:Technical/*/*">
             <xsl:call-template name="iterateNodes"/>
         </xsl:for-each>
-        <xsl:for-each select="Dpp/Technical/*">
+        <xsl:for-each select="*:Dpp/*:Technical/*">
             <xsl:call-template name="iterateNodes"/>
         </xsl:for-each>
     </xsl:template>

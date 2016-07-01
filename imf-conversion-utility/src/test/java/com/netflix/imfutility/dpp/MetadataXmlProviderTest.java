@@ -82,7 +82,6 @@ public class MetadataXmlProviderTest {
 
         // generate parameter files
         metadataProvider.createBmxDppParameterFiles();
-
         File ukdppFile = metadataProvider.getBmxDppParameterFile(MetadataXmlProvider.DMFramework.UKDPP);
         File as11coreFile = metadataProvider.getBmxDppParameterFile(MetadataXmlProvider.DMFramework.AS11CORE);
         File as11segmFile = metadataProvider.getBmxDppParameterFile(MetadataXmlProvider.DMFramework.AS11Segmentation);

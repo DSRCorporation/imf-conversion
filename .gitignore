@@ -68,3 +68,8 @@ bin/
 # Scala build
 *.cache
 /.nb-gradle/private/
+
+# Generated
+schema/episodes/
+schema/episodes/
+src/generated/

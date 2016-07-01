@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           targetNamespace="http://config.imf.netflix.com"
-           xmlns="http://config.imf.netflix.com">
+           targetNamespace="http://config.imfutility.netflix.com"
+           xmlns="http://config.imfutility.netflix.com">
 
     <!--
       Root element.

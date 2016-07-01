@@ -2,7 +2,6 @@ package com.netflix.imfutility.config;
 
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.xsd.config.ConfigType;
 
 import java.io.File;
 import java.io.FileNotFoundException;

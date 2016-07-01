@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<AudioMap>
+<AudioMap xmlns="http://audiomap.dpp.imfutility.netflix.com">
     <EBUTrack>
         <Number>1</Number>
         <CPLVirtualTrackId>urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711</CPLVirtualTrackId>

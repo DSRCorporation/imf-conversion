@@ -1,0 +1,11 @@
+<jaxb:bindings
+  xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  version="2.1">
+
+    <jaxb:bindings schemaLocation="../xsd/media-info.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.netflix.imfutility.mediainfo" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+
+</jaxb:bindings>

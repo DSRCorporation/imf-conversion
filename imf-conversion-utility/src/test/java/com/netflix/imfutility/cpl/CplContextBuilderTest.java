@@ -14,7 +14,7 @@ import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.util.ImpUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.xsd.conversion.SequenceType;
+import com.netflix.imfutility.conversion.SequenceType;
 import org.junit.Test;
 
 import java.io.File;

@@ -1,11 +1,11 @@
 package com.netflix.imfutility.conversion.templateParameter.context;
 
+import com.netflix.imfutility.conversion.FormatType;
+import com.netflix.imfutility.conversion.TmpParamType;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
-import com.netflix.imfutility.xsd.conversion.FormatType;
-import com.netflix.imfutility.xsd.conversion.TmpParamType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Tmp Template Parameter Context.
  * <ul>
  * <li>It's used to replace tmp template parameters in conversion operations</li>
- * <li>Created from conversion.xml (see {@link com.netflix.imfutility.xsd.conversion.TmpContextType})</li>
+ * <li>Created from conversion.xml (see {@link com.netflix.imfutility.conversion.TmpContextType})</li>
  * </ul>
  */
 public class TmpTemplateParameterContext implements ITemplateParameterContext {

@@ -15,11 +15,9 @@ import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.xsd.conversion.FormatType;
-import com.netflix.imfutility.xsd.conversion.MediaInfoCommandType;
-import com.netflix.imfutility.xsd.conversion.SequenceType;
-import com.netflix.imfutility.xsd.mediainfo.FfprobeType;
-import com.netflix.imfutility.xsd.mediainfo.StreamType;
+import com.netflix.imfutility.conversion.FormatType;
+import com.netflix.imfutility.conversion.MediaInfoCommandType;
+import com.netflix.imfutility.conversion.SequenceType;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.io.File;

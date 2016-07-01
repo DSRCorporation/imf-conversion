@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Config xmlns="http://config.imf.netflix.com">
+<Config xmlns="http://config.imfutility.netflix.com">
 
     <imp>G:\Netflix\content\TEST\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV</imp>
     <cpl>CPL-test.xml</cpl>

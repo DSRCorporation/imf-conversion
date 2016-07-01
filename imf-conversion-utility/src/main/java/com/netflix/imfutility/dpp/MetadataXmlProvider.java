@@ -1,11 +1,14 @@
 package com.netflix.imfutility.dpp;
 
-import com.netflix.imfutility.Constants;
+import com.netflix.imfutility.dpp.metadata.*;
+import com.netflix.imfutility.dpp.metadata.iso6392codes.Iso6392CodeType;
+import com.netflix.imfutility.dpp.metadata.types.DurationType;
+import com.netflix.imfutility.dpp.metadata.types.TimecodeType;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.xsd.dpp.metadata.*;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.util.JAXBSource;
@@ -23,7 +26,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-import static com.netflix.imfutility.Constants.*;
+import static com.netflix.imfutility.dpp.DppConversionConstants.*;
 
 /**
  * Created by Alexandr on 4/28/2016.
@@ -59,7 +62,7 @@ public class MetadataXmlProvider {
         File file = new File(path);
         JAXBContext jaxbContext;
         try {
-            jaxbContext = JAXBContext.newInstance(Dpp.class);
+            jaxbContext = JAXBContext.newInstance(DppType.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
@@ -149,7 +152,7 @@ public class MetadataXmlProvider {
             contactInformation.setContactTelephoneNumber("+1 000 000 0000");
 
             // Metadata XML empty structure
-            Dpp dpp = new Dpp();
+            DppType dpp = new DppType();
             dpp.setEditorial(editorial);
             dpp.setTechnical(technical);
             technical.setVideo(video);
@@ -159,13 +162,14 @@ public class MetadataXmlProvider {
             technical.setAdditional(additional);
             technical.setContactInformation(contactInformation);
 
-            jaxbMarshaller.marshal(dpp, file);
+            JAXBElement<DppType> dppJaxb = new ObjectFactory().createDpp(dpp);
+            jaxbMarshaller.marshal(dppJaxb, file);
         } catch (JAXBException | DatatypeConfigurationException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private final Dpp dpp;
+    private final DppType dpp;
     private final File workingDir;
     private Map<DMFramework, File> bmxDppParameters = new HashMap<>();
 
@@ -175,7 +179,7 @@ public class MetadataXmlProvider {
      * The parameter files are created within the provided working directory.
      *
      * @param metadataFile a path to the metadata.xml file
-     * @param workingDir  current working directory where parameter files are created.
+     * @param workingDir   current working directory where parameter files are created.
      * @throws XmlParsingException   an exception in case of metadata.xml parsing error
      * @throws FileNotFoundException if the metadataXml doesn't define an existing file.
      */
@@ -189,7 +193,7 @@ public class MetadataXmlProvider {
      *
      * @return a loaded DPP instances created from a provided metadata.xml
      */
-    public Dpp getDpp() {
+    public DppType getDpp() {
         return dpp;
     }
 
@@ -227,12 +231,12 @@ public class MetadataXmlProvider {
         return bmxDppParameters.values();
     }
 
-    private Dpp loadDpp(File metadataFile) throws XmlParsingException, FileNotFoundException {
+    private DppType loadDpp(File metadataFile) throws XmlParsingException, FileNotFoundException {
         if (!metadataFile.isFile()) {
             throw new FileNotFoundException(String.format("Invalid metadata.xml file: '%s' not found", metadataFile.getAbsolutePath()));
         }
 
-        return XmlParser.parse(metadataFile, METADATA_XML_SCHEME, METADATA_PACKAGE, Dpp.class);
+        return XmlParser.parse(metadataFile, METADATA_XML_SCHEME, METADATA_PACKAGE, DppType.class);
     }
 
     /**
@@ -258,7 +262,7 @@ public class MetadataXmlProvider {
             Transformer transformer = tf.newTransformer(xslt);
 
             //Set framework
-            transformer.setParameter(Constants.BMX_FRAMEWORK_PARAM, framework.value());
+            transformer.setParameter(BMX_FRAMEWORK_PARAM, framework.value());
 
             //Prepare a parameter file
             File result = new File(workingDir, framework.value + ".txt");
@@ -285,9 +289,10 @@ public class MetadataXmlProvider {
         }
     }
 
-    private JAXBSource dppToJaxbSource(Dpp dpp) {
+    private JAXBSource dppToJaxbSource(DppType dpp) {
         try {
-            return new JAXBSource(JAXBContext.newInstance(METADATA_PACKAGE), dpp);
+            JAXBElement<DppType> dppJaxb = new ObjectFactory().createDpp(dpp);
+            return new JAXBSource(JAXBContext.newInstance(METADATA_PACKAGE), dppJaxb);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }

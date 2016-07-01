@@ -2,8 +2,7 @@ package com.netflix.imfutility.mediainfo;
 
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.util.ConversionHelper;
-import com.netflix.imfutility.xsd.conversion.SequenceType;
-import com.netflix.imfutility.xsd.mediainfo.StreamType;
+import com.netflix.imfutility.conversion.SequenceType;
 
 import java.util.HashMap;
 import java.util.Map;

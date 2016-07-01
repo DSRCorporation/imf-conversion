@@ -2,43 +2,48 @@
 <xs:schema
         xmlns:xs="http://www.w3.org/2001/XMLSchema"
         xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0"
-        elementFormDefault="qualified" attributeFormDefault="unqualified">
+        xmlns:types="http://types.metadata.dpp.imfutility.netflix.com"
+        xmlns:iso6392codes="http://iso6392codes.metadata.dpp.imfutility.netflix.com"
+        elementFormDefault="qualified" attributeFormDefault="unqualified"
+        targetNamespace="http://metadata.dpp.imfutility.netflix.com"
+        xmlns="http://metadata.dpp.imfutility.netflix.com">
 
-    <xs:include schemaLocation="types.xsd"/>
-    <xs:include schemaLocation="iso-639-2-codes.xsd"/>
+    <xs:import namespace="http://types.metadata.dpp.imfutility.netflix.com" schemaLocation="types.xsd"/>
+    <xs:import namespace="http://iso6392codes.metadata.dpp.imfutility.netflix.com"
+               schemaLocation="iso-639-2-codes.xsd"/>
 
     <!--
         Root element.
     -->
-    <xs:element name="Dpp">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="Editorial" type="EditorialType"/>
-                <xs:element name="Technical" type="TechnicalType"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
+    <xs:element name="Dpp" type="DppType"/>
+    <xs:complexType name="DppType">
+        <xs:sequence>
+            <xs:element name="Editorial" type="EditorialType"/>
+            <xs:element name="Technical" type="TechnicalType"/>
+        </xs:sequence>
+    </xs:complexType>
+
 
     <xs:complexType name="EditorialType">
         <xs:sequence>
-            <xs:element name="SeriesTitle" type="NotEmptyString127"/>
-            <xs:element name="ProgrammeTitle" type="NotEmptyString127"/>
-            <xs:element name="EpisodeTitleNumber" type="NotEmptyString127"/>
-            <xs:element name="ProductionNumber" type="NotEmptyString127"/>
-            <xs:element name="Synopsis" type="String250"/>
-            <xs:element name="Originator" type="NotEmptyString127"/>
-            <xs:element name="CopyrightYear" type="Uint16Type"/>
-            <xs:element name="OtherIdentifier" type="String127" minOccurs="0"/>
-            <xs:element name="OtherIdentifierType" type="String127" minOccurs="0"/>
-            <xs:element name="Genre" type="String127" minOccurs="0"/>
-            <xs:element name="Distributor" type="String127" minOccurs="0"/>
+            <xs:element name="SeriesTitle" type="types:NotEmptyString127"/>
+            <xs:element name="ProgrammeTitle" type="types:NotEmptyString127"/>
+            <xs:element name="EpisodeTitleNumber" type="types:NotEmptyString127"/>
+            <xs:element name="ProductionNumber" type="types:NotEmptyString127"/>
+            <xs:element name="Synopsis" type="types:String250"/>
+            <xs:element name="Originator" type="types:NotEmptyString127"/>
+            <xs:element name="CopyrightYear" type="types:Uint16Type"/>
+            <xs:element name="OtherIdentifier" type="types:String127" minOccurs="0"/>
+            <xs:element name="OtherIdentifierType" type="types:String127" minOccurs="0"/>
+            <xs:element name="Genre" type="types:String127" minOccurs="0"/>
+            <xs:element name="Distributor" type="types:String127" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="TechnicalType">
         <xs:sequence>
             <xs:element name="ShimName" type="ShimNameType"/>
-            <xs:element name="ShimVersion" type="VersionType" default="1.1">
+            <xs:element name="ShimVersion" type="types:VersionType" default="1.1">
                 <xs:annotation>
                     <xs:documentation>Shim version is restricted to 1.1 for UK_DPP</xs:documentation>
                 </xs:annotation>
@@ -63,30 +68,30 @@
                     <xs:documentation>PsePass is required for AS-11 version >= 1.1</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="PSEManufacturer" type="String127" minOccurs="0"/>
-            <xs:element name="PSEVersion" type="String127" minOccurs="0"/>
-            <xs:element name="VideoComments" type="String127" minOccurs="0"/>
+            <xs:element name="PSEManufacturer" type="types:String127" minOccurs="0"/>
+            <xs:element name="PSEVersion" type="types:String127" minOccurs="0"/>
+            <xs:element name="VideoComments" type="types:String127" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="AudioType">
         <xs:sequence>
             <xs:element name="AudioTrackLayout" type="AudioTrackLayoutDmAs11Type"/>
-            <xs:element name="PrimaryAudioLanguage" type="Iso6392CodeType"/>
-            <xs:element name="SecondaryAudioLanguage" type="Iso6392CodeType"/>
-            <xs:element name="TertiaryAudioLanguage" type="Iso6392CodeType"/>
+            <xs:element name="PrimaryAudioLanguage" type="iso6392codes:Iso6392CodeType"/>
+            <xs:element name="SecondaryAudioLanguage" type="iso6392codes:Iso6392CodeType"/>
+            <xs:element name="TertiaryAudioLanguage" type="iso6392codes:Iso6392CodeType"/>
             <xs:element name="AudioLoudnessStandard" type="AudioLoudnessStandardType"/>
-            <xs:element name="AudioComments" type="String127" minOccurs="0"/>
+            <xs:element name="AudioComments" type="types:String127" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="TimecodesType">
         <xs:sequence>
-            <xs:element name="LineUpStart" type="TimecodeType"/>
-            <xs:element name="IdentClockStart" type="TimecodeType"/>
+            <xs:element name="LineUpStart" type="types:TimecodeType"/>
+            <xs:element name="IdentClockStart" type="types:TimecodeType"/>
             <xs:element name="Parts" type="SegmentationType"/>
-            <xs:element name="TotalNumberOfParts" type="Uint16Type"/>
-            <xs:element name="TotalProgrammeDuration" type="DurationType"/>
+            <xs:element name="TotalNumberOfParts" type="types:Uint16Type"/>
+            <xs:element name="TotalProgrammeDuration" type="types:DurationType"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -98,10 +103,10 @@
 
     <xs:complexType name="SegmentType">
         <xs:sequence>
-            <xs:element name="PartNumber" type="Uint16Type"/>
-            <xs:element name="PartTotal" type="Uint16Type"/>
-            <xs:element name="PartSOM" type="TimecodeType"/>
-            <xs:element name="PartDuration" type="DurationType"/>
+            <xs:element name="PartNumber" type="types:Uint16Type"/>
+            <xs:element name="PartTotal" type="types:Uint16Type"/>
+            <xs:element name="PartSOM" type="types:TimecodeType"/>
+            <xs:element name="PartDuration" type="types:DurationType"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -111,10 +116,10 @@
             <xs:element name="AudioDescriptionType" type="AudioDescriptionTypeType" minOccurs="0"/>
             <xs:element name="ClosedCaptionsPresent" type="xs:boolean"/>
             <xs:element name="ClosedCaptionsType" type="CaptionsTypeType" minOccurs="0"/>
-            <xs:element name="ClosedCaptionsLanguage" type="Iso6392CodeType" minOccurs="0"/>
+            <xs:element name="ClosedCaptionsLanguage" type="iso6392codes:Iso6392CodeType" minOccurs="0"/>
             <xs:element name="OpenCaptionsPresent" type="xs:boolean"/>
             <xs:element name="OpenCaptionsType" type="CaptionsTypeType" minOccurs="0"/>
-            <xs:element name="OpenCaptionsLanguage" type="Iso6392CodeType" minOccurs="0"/>
+            <xs:element name="OpenCaptionsLanguage" type="iso6392codes:Iso6392CodeType" minOccurs="0"/>
             <xs:element name="SigningPresent" type="SigningPresentType"/>
             <xs:element name="SignLanguage" type="SignLanguageType" minOccurs="0"/>
         </xs:sequence>
@@ -125,14 +130,14 @@
             <xs:element name="CompletionDate" type="xs:date"/>
             <xs:element name="TextlessElementsExist" type="xs:boolean" minOccurs="0"/>
             <xs:element name="ProgrammeHasText" type="xs:boolean" minOccurs="0"/>
-            <xs:element name="ProgrammeTextLanguage" type="Iso6392CodeType" minOccurs="0"/>
+            <xs:element name="ProgrammeTextLanguage" type="iso6392codes:Iso6392CodeType" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="ContactInformationType">
         <xs:sequence>
-            <xs:element name="ContactEmail" type="String127"/>
-            <xs:element name="ContactTelephoneNumber" type="String127"/>
+            <xs:element name="ContactEmail" type="types:String127"/>
+            <xs:element name="ContactTelephoneNumber" type="types:String127"/>
         </xs:sequence>
     </xs:complexType>
 

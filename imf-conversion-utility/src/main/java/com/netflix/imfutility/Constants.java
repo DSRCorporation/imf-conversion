@@ -17,47 +17,32 @@ public final class Constants {
 /* 3. XSD */
 
     // 3.1: assetmap.xml
-    public static final String XSD_ASSETMAP_XSD = "xsd/imf/asset-map.xsd";
-    public static final String ASSETMAP_PACKAGE = "com.netflix.imfutility.xsd.imf.assetmap";
+    public static final String XSD_ASSETMAP_XSD = "xsd/imf/assetmap/asset-map.xsd";
+    public static final String ASSETMAP_PACKAGE = "com.netflix.imfutility.imf.assetmap";
 
     // 3.2: config.xml
     public static final String CONFIG_XSD = "xsd/config.xsd";
-    public static final String CONFIG_PACKAGE = "com.netflix.imfutility.xsd.config";
+    public static final String CONFIG_PACKAGE = "com.netflix.imfutility.config";
 
     // 3.3: conversion.xml
     public static final String CONVERSION_XSD = "xsd/conversion.xsd";
-    public static final String CONVERSION_PACKAGE = "com.netflix.imfutility.xsd.conversion";
+    public static final String CONVERSION_PACKAGE = "com.netflix.imfutility.conversion";
 
-    // 3.4: audiomap.xml
-    public static final String AUDIOMAP_XML_SCHEME = "xsd/dpp/audiomap.xsd";
-    public static final String AUDIOMAP_PACKAGE = "com.netflix.imfutility.xsd.dpp.audiomap";
-
-    // 3.5: metadata.xml
-    public static final String METADATA_XML_SCHEME = "xsd/dpp/metadata.xsd";
-    public static final String METADATA_PACKAGE = "com.netflix.imfutility.xsd.dpp.metadata";
-
-    // 3.6 media-info.xml
+    // 3.4 media-info.xml
     public static final String MEDIAINFO_XSD = "xsd/media-info.xsd";
-    public static final String MEDIAINFO_PACKAGE = "com.netflix.imfutility.xsd.mediainfo";
+    public static final String MEDIAINFO_PACKAGE = "com.netflix.imfutility.mediainfo";
 
-    // 3.7 IMF 2013 cpl.xml
-    public static final String XSD_CPL_2013_XSD = "xsd/imf/2013/imf-cpl-2013.xsd";
-    public static final String CPL_2013_PACKAGE = "com.netflix.imfutility.xsd.imf._2013.cpl";
+    // 3.5 IMF 2013 cpl.xml
+    public static final String XSD_CPL_2013_XSD = "xsd/imf/2013/imf-cpl.xsd";
+    public static final String CPL_2013_PACKAGE = "com.netflix.imfutility.imf._2013";
 
-/* 4. XSLT */
+/* 4. Command line args*/
 
-    public static final String BMX_PARAMETERS_TRANSFORMATION = "xsd/dpp/bmx-parameters.xsl";
-    public static final String XSLT2_TRANSFORMER_IMPLEMENTATION = "net.sf.saxon.TransformerFactoryImpl";
-    public static final String BMX_FRAMEWORK_PARAM = "framework";
-
-/* 5. Command line args*/
-
-    // 4.1 default values
     public static final boolean DEFAULT_DELETE_TMP_FILES_ON_EXIT = true;
     public static final boolean DEFAULT_DELETE_TMP_FILES_ON_FAIL = false;
     public static final boolean DEFAULT_CLEAN_WORKING_DIR = true;
 
-/* 6. Default values */
+/* 5. Default values */
 
     public static final String DEFAULT_OUTPUT_VALIDATION_FILE = "errors.xml";
     public static final String VALIDATION_OUTPUT_XML_ERROR_TAG = "error";

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<conversion xmlns="http://conversion.imf.netflix.com">
+<conversion xmlns="http://conversion.imfutility.netflix.com">
 
     <imfValidation>%{dynamic.validateTool} -i %{dynamic.imp} -c %{dynamic.cpl} -d %{dynamic.workingDir} -f %{dynamic.outputValidationFile}</imfValidation>
 

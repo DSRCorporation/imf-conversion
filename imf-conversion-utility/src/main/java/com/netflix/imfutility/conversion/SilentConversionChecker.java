@@ -1,13 +1,12 @@
 package com.netflix.imfutility.conversion;
 
+import com.netflix.imfutility.config.*;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.xsd.config.*;
-import com.netflix.imfutility.xsd.conversion.*;
 
 import java.util.Objects;
 

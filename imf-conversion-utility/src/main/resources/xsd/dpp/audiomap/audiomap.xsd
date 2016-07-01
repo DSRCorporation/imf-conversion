@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema
-        xmlns:xs="http://www.w3.org/2001/XMLSchema">
+        attributeFormDefault="unqualified" elementFormDefault="qualified"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://audiomap.dpp.imfutility.netflix.com"
+        xmlns="http://audiomap.dpp.imfutility.netflix.com">
 
     <!--
-    Root element.
-  -->
-    <xs:element name="AudioMap">
+        Root element.
+    -->
+    <xs:element name="AudioMap" type="AudioMapType">
+        <xs:unique name="ChannelUnique">
+            <xs:selector xpath="EBUTrack/Number"/>
+            <xs:field xpath="."/>
+        </xs:unique>
+    </xs:element>
+    <xs:complexType name="AudioMapType">
+        <xs:sequence>
+            <xs:element name="EBUTrack" type="EBUTrackType" maxOccurs="16"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!--<xs:element name="AudioMap">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="EBUTrack" type="EBUTrackType" maxOccurs="16"/>
@@ -16,7 +31,7 @@
             <xs:selector xpath="EBUTrack/Number"/>
             <xs:field xpath="."/>
         </xs:unique>
-    </xs:element>
+    </xs:element>-->
 
 
     <!-- EBUTrackType -->

@@ -1,5 +1,8 @@
 package com.netflix.imfutility.xsd.config;
 
+import com.netflix.imfutility.config.ExternalToolsType;
+import com.netflix.imfutility.config.ToolType;
+
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Map;
 

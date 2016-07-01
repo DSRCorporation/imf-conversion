@@ -1,11 +1,11 @@
 package com.netflix.imfutility.conversion.templateParameter.context;
 
+import com.netflix.imfutility.config.ConfigType;
+import com.netflix.imfutility.config.ToolType;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
-import com.netflix.imfutility.xsd.config.ConfigType;
-import com.netflix.imfutility.xsd.config.ToolType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
@@ -14,7 +14,7 @@ import java.util.Collection;
  * Tool Template Parameter Context.
  * <ul>
  * <li>It's used to replace tool template parameters in conversion operations</li>
- * <li>Created from config.xml (see {@link com.netflix.imfutility.xsd.config.ExternalToolsType})</li>
+ * <li>Created from config.xml (see {@link com.netflix.imfutility.config.ExternalToolsType})</li>
  * </ul>
  */
 public class ToolTemplateParameterContext implements ITemplateParameterContext {

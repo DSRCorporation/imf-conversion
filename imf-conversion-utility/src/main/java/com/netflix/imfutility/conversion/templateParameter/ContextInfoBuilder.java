@@ -1,9 +1,9 @@
 package com.netflix.imfutility.conversion.templateParameter;
 
+import com.netflix.imfutility.conversion.SequenceType;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.xsd.conversion.SequenceType;
 
 /**
  * A builder class for {@link ContextInfo}.

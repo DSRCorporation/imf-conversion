@@ -8,7 +8,6 @@ import com.netflix.imfutility.conversion.executor.ConversionExecutorSequence;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.xsd.conversion.*;
 
 import java.io.IOException;
 

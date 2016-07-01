@@ -1,0 +1,60 @@
+<jaxb:bindings
+  xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  version="2.1">
+
+    <jaxb:bindings schemaLocation="../xsd/imf/assetmap/asset-map.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.netflix.imfutility.imf.assetmap" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+
+
+    <jaxb:bindings schemaLocation="../xsd/imf/2013/imf-core-constraints.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.netflix.imfutility.imf._2013" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="../xsd/imf/2013/imf-cpl.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.netflix.imfutility.imf._2013" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+
+
+
+
+    <jaxb:bindings schemaLocation="../xsd/imf/2016/imf-core-constraints.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.netflix.imfutility.imf._2016" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="../xsd/imf/2016/imf-cpl.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.netflix.imfutility.imf._2016" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+
+
+
+    <jaxb:bindings schemaLocation="../xsd/imf/dcmlTypes.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.netflix.imfutility.imf" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+
+
+    <jaxb:bindings schemaLocation="../xsd/imf/packing-list.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.netflix.imfutility.imf" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="../xsd/imf/xmldsig-core-schema.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.netflix.imfutility.imf" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+
+</jaxb:bindings>

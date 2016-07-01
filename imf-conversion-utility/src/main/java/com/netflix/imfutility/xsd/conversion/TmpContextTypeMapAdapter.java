@@ -1,5 +1,8 @@
 package com.netflix.imfutility.xsd.conversion;
 
+import com.netflix.imfutility.conversion.TmpContextType;
+import com.netflix.imfutility.conversion.TmpParamType;
+
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Map;
 

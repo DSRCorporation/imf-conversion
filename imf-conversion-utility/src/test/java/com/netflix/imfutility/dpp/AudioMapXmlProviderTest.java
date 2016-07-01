@@ -7,9 +7,10 @@ import com.netflix.imfutility.conversion.templateParameter.context.parameters.Se
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.util.AudioMapUtils;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.xsd.conversion.SequenceType;
-import com.netflix.imfutility.xsd.dpp.audiomap.AudioMap;
-import com.netflix.imfutility.xsd.dpp.metadata.AudioTrackLayoutDmAs11Type;
+import com.netflix.imfutility.conversion.SequenceType;
+import com.netflix.imfutility.dpp.audiomap.AudioMapType;
+import com.netflix.imfutility.dpp.metadata.AudioTrackLayoutDmAs11Type;
+import com.netflix.imfutility.dpp.metadata.AudioTrackLayoutDmAs11Type;
 import org.junit.Test;
 
 import java.io.File;
@@ -44,7 +45,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 AudioMapUtils.getCorrectAudiomapXml(), AudioTrackLayoutDmAs11Type.EBU_R_48_2_A,
                 createDefaultContextProvider());
 
-        AudioMap audioMap = audioMapProvider.getAudioMap();
+        AudioMapType audioMap = audioMapProvider.getAudioMap();
 
         assertNotNull(audioMap.getEBUTrack());
         assertFalse(audioMap.getEBUTrack().isEmpty());
@@ -158,7 +159,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // create and read default audio map files
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(AudioTrackLayoutDmAs11Type.EBU_R_48_2_A, contextProvider);
         audioMapXmlProvider.getAudioMapFile().deleteOnExit();
-        AudioMap audioMap2A = audioMapXmlProvider.getAudioMap();
+        AudioMapType audioMap2A = audioMapXmlProvider.getAudioMap();
 
 
         // check that audio map is correct
@@ -190,7 +191,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // create and read default audio map files
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(AudioTrackLayoutDmAs11Type.EBU_R_48_2_A, contextProvider);
         audioMapXmlProvider.getAudioMapFile().deleteOnExit();
-        AudioMap audioMap2A = audioMapXmlProvider.getAudioMap();
+        AudioMapType audioMap2A = audioMapXmlProvider.getAudioMap();
 
 
         // check that audio map is correct
@@ -223,7 +224,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // create and read default audio map files
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(AudioTrackLayoutDmAs11Type.EBU_R_48_2_A, contextProvider);
         audioMapXmlProvider.getAudioMapFile().deleteOnExit();
-        AudioMap audioMap2A = audioMapXmlProvider.getAudioMap();
+        AudioMapType audioMap2A = audioMapXmlProvider.getAudioMap();
 
         // check that audio map is correct
         assertNotNull(audioMap2A);
@@ -254,7 +255,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // create and read default audio map files
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(AudioTrackLayoutDmAs11Type.EBU_R_48_2_A, contextProvider);
         audioMapXmlProvider.getAudioMapFile().deleteOnExit();
-        AudioMap audioMap2A = audioMapXmlProvider.getAudioMap();
+        AudioMapType audioMap2A = audioMapXmlProvider.getAudioMap();
 
         // check that audio map is correct
         assertNotNull(audioMap2A);
@@ -286,7 +287,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // create and read default audio map files
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(AudioTrackLayoutDmAs11Type.EBU_R_48_2_A, contextProvider);
         audioMapXmlProvider.getAudioMapFile().deleteOnExit();
-        AudioMap audioMap2A = audioMapXmlProvider.getAudioMap();
+        AudioMapType audioMap2A = audioMapXmlProvider.getAudioMap();
 
         // check that audio map is correct
         assertNotNull(audioMap2A);
@@ -321,7 +322,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // create and read default audio map files
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(AudioTrackLayoutDmAs11Type.EBU_R_123_16_C, contextProvider);
         audioMapXmlProvider.getAudioMapFile().deleteOnExit();
-        AudioMap audioMap16C = audioMapXmlProvider.getAudioMap();
+        AudioMapType audioMap16C = audioMapXmlProvider.getAudioMap();
 
         // check that audio map is correct
         assertNotNull(audioMap16C);
@@ -360,7 +361,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         );
     }
 
-    private void checkEBUTrack(AudioMap audioMap, int trackNum, String uuid, Integer channelsNum) {
+    private void checkEBUTrack(AudioMapType audioMap, int trackNum, String uuid, Integer channelsNum) {
         assertEquals(trackNum + 1, audioMap.getEBUTrack().get(trackNum).getNumber());
         assertEquals(uuid, audioMap.getEBUTrack().get(trackNum).getCPLVirtualTrackId());
         assertEquals(channelsNum, audioMap.getEBUTrack().get(trackNum).getCPLVirtualTrackChannel());

@@ -8,7 +8,7 @@ import com.netflix.imfutility.conversion.templateParameter.exception.TemplatePar
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterContextException;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
-import com.netflix.imfutility.xsd.conversion.SequenceType;
+import com.netflix.imfutility.conversion.SequenceType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
