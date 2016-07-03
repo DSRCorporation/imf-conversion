@@ -1,0 +1,106 @@
+buildscript {
+
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.github.jacobono:gradle-jaxb-plugin:1.3.6'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'com.github.jacobono.jaxb'
+
+group = 'com.netflix.imfutility'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+version = '1.0-SNAPSHOT'
+
+description = "IMF conversion core"
+
+System.setProperty('javax.xml.accessExternalSchema', 'file')
+
+dependencies {
+    compile project(':imf-conversion-common')
+}
+
+dependencies {
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.5'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.5'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.5'
+    compile group: 'commons-io', name: 'commons-io', version: '2.4'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    compile group: 'net.sf.saxon', name: 'Saxon-HE', version: '9.7.0-6'
+    compile group: 'com.lexicalscope.jewelcli', name: 'jewelcli', version: '0.8.9'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+dependencies {
+    jaxb 'com.sun.xml.bind:jaxb-xjc:2.2.7-b41'
+    jaxb 'com.sun.xml.bind:jaxb-impl:2.2.7-b41'
+    jaxb 'javax.xml.bind:jaxb-api:2.2.7'
+    jaxb "org.jvnet.jaxb2_commons:jaxb2-basics-ant:0.6.5"
+    jaxb "org.jvnet.jaxb2_commons:jaxb2-basics:0.6.4"
+    jaxb "org.jvnet.jaxb2_commons:jaxb2-basics-annotate:0.6.4"
+    jaxb "org.jvnet.jaxb2_commons:jaxb2-value-constructor:3.0"
+}
+
+jaxb {
+    xsdDir = "imf-conversion-core/src/main/resources/xsd"
+    bindingsDir = "imf-conversion-core/src/main/resources/xjb"
+    bindings = ["bindings-dpp.xjb", "bindings-config.xjb", "bindings-conversion.xjb", "bindings-mediainfo.xjb", "bindings-imf.xjb"]
+    xjc {
+        taskClassname = "org.jvnet.jaxb2_commons.xjc.XJC2Task"
+        // generatePackages are specified in xjb bindings
+        args = ["-Xinheritance", "-Xannotate"]
+        destinationDir = "src/generated/java"
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/generated/java'
+        }
+    }
+
+    test {
+        java {
+            srcDir 'src/generated/java'
+        }
+    }
+
+}
+
+clean {
+    delete 'src/generated'
+    delete 'schema'
+}
+
+compileJava.dependsOn(xjc)
+
+configurations {
+    testArtifacts.extendsFrom testCompile
+}
+
+task jarTest (type: Jar, dependsOn: testClasses) {
+    from sourceSets.test.output
+    from sourceSets.test.resources
+    classifier = 'test'
+}
+
+artifacts {
+    testArtifacts jarTest
+}

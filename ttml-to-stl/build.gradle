@@ -21,49 +21,11 @@ System.setProperty('javax.xml.accessExternalSchema', 'file')
 
 dependencies {
     compile group: 'commons-cli', name: 'commons-cli', version:'1.3'
-    compile group: 'junit', name: 'junit', version:'4.12'
+    testCompile group: 'junit', name: 'junit', version:'4.12'
 }
 
 dependencies {
-    jaxb 'com.sun.xml.bind:jaxb-xjc:2.2.7-b41'
-    jaxb 'com.sun.xml.bind:jaxb-impl:2.2.7-b41'
-    jaxb 'javax.xml.bind:jaxb-api:2.2.7'
-    jaxb "org.jvnet.jaxb2_commons:jaxb2-basics-ant:0.6.5"
-    jaxb "org.jvnet.jaxb2_commons:jaxb2-basics:0.6.4"
-    jaxb "org.jvnet.jaxb2_commons:jaxb2-basics-annotate:0.6.4"
-    jaxb "org.jvnet.jaxb2_commons:jaxb2-value-constructor:3.0"
+    compile project(':imf-conversion-common')
+    compile project(':dpp-conversion-input-xsd')
 }
-
-
-jaxb {
-  xsdDir = "src/main/resources/xsd"
-  xjc {
-     taskClassname      = "org.jvnet.jaxb2_commons.xjc.XJC2Task"
-     generatePackage    = "com.netflix.imfutility.xsd.dpp.metadata"
-     args               = ["-Xinheritance", "-Xannotate"]
-	destinationDir  = "src/generated/java"
-  }
-}
-
-sourceSets {
-    main {
-        java {
-            srcDir 'src/generated/java'
-        }
-    }
-
-    test {
-        java {
-            srcDir 'src/generated/java'
-        }
-    }
-
-}
-
-clean {
-    delete 'src/generated'
-    delete 'schema'
-}
-
-compileJava.dependsOn(xjc)
 

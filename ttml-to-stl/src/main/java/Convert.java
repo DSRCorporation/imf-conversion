@@ -1,3 +1,4 @@
+import com.netflix.imfutility.xml.XmlParsingException;
 import stl.DefaultTtiStrategy;
 import stl.StlBuilder;
 import stl.bbc.BbcGsiStrategy;
@@ -5,7 +6,6 @@ import ttml.FatalParsingException;
 import ttml.FormatTTML;
 import ttml.TimedTextFileFormat;
 import ttml.TimedTextObject;
-import xml.XmlParsingException;
 
 import java.io.*;
 

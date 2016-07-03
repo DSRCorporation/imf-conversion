@@ -1,14 +1,17 @@
 package stl.bbc;
 
-import com.netflix.imfutility.xsd.dpp.metadata.Dpp;
-import com.netflix.imfutility.xsd.dpp.metadata.TimecodeType;
+import com.netflix.imfutility.dpp.metadata.DppType;
+import com.netflix.imfutility.dpp.metadata.types.TimecodeType;
+import com.netflix.imfutility.xml.XmlParser;
+import com.netflix.imfutility.xml.XmlParsingException;
 import stl.DefaultGsiStrategy;
 import ttml.TimedTextObject;
-import xml.XmlParser;
-import xml.XmlParsingException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
+import static com.netflix.imfutility.dpp.DppConversionXsdConstants.ISO_639_2_CODES_XML_SCHEME;
+import static com.netflix.imfutility.dpp.DppConversionXsdConstants.TYPES_XML_SCHEME;
 import static stl.GsiAttribute.*;
 
 /**
@@ -17,13 +20,15 @@ import static stl.GsiAttribute.*;
 public class BbcGsiStrategy extends DefaultGsiStrategy {
 
     private static final String METADATA_XML_SCHEME = "metadata.xsd";
-    private static final String METADATA_PACKAGE = "com.netflix.imfutility.xsd.dpp.metadata";
+    private static final String METADATA_PACKAGE = "com.netflix.imfutility.xsd.metadata";
 
 
-    private final Dpp metadata;
+    private final DppType metadata;
 
-    public BbcGsiStrategy(String metadataXml) throws XmlParsingException {
-        this.metadata = XmlParser.parse(new File(metadataXml), METADATA_XML_SCHEME, METADATA_PACKAGE, Dpp.class);
+    public BbcGsiStrategy(String metadataXml) throws XmlParsingException, FileNotFoundException {
+        this.metadata = XmlParser.parse(new File(metadataXml),
+                new String[]{TYPES_XML_SCHEME, ISO_639_2_CODES_XML_SCHEME, METADATA_XML_SCHEME},
+                METADATA_PACKAGE, DppType.class);
     }
 
     @Override

@@ -1,2 +1,10 @@
 rootProject.name='imf-conversion'
-include 'imf-conversion-utility','imf-validation', 'ttml-to-stl'
+include 'imf-conversion-main'
+include 'imf-conversion-common'
+include 'imf-conversion-core'
+include 'dpp-conversion'
+include 'dpp-conversion-input-xsd'
+include 'imf-validation'
+include 'ttml-to-stl'
+
+
