@@ -3,6 +3,8 @@ package com.netflix.imfutility;
 import com.lexicalscope.jewel.cli.CliFactory;
 import com.lexicalscope.jewel.cli.HelpRequestedException;
 import com.netflix.imfutility.dpp.DppFormatProcessor;
+import com.netflix.imfutility.inputparameters.DppTools;
+import com.netflix.imfutility.inputparameters.ImfUtilityAllCmdLineArgs;
 
 /**
  * The main class.
@@ -19,7 +21,7 @@ public class ImfUtility {
 
             switch (imfUtilityInputParameters.getFormat()) {
                 case dpp:
-                    int exitCode = new DppFormatProcessor().process(args);
+                    int exitCode = new DppFormatProcessor(new DppTools()).process(args);
                     System.exit(exitCode);
                     break;
                 default:

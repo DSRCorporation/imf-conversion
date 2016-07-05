@@ -1,6 +1,6 @@
 package com.netflix.imfutility.conversion.templateParameter.context;
 
-import com.netflix.imfutility.Constants;
+import com.netflix.imfutility.CoreConstants;
 import com.netflix.imfutility.conversion.DynamicParameterConcatType;
 import com.netflix.imfutility.conversion.DynamicParameterType;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
@@ -9,7 +9,6 @@ import com.netflix.imfutility.conversion.templateParameter.TemplateParameterCont
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
-import com.netflix.imfutility.validate.ImfValidator;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,9 +42,7 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
 
     private void initDefaultParameters(TemplateParameterContextProvider contextProvider) {
         addParameter(DynamicContextParameters.WORKING_DIR, contextProvider.getWorkingDir().getAbsolutePath());
-        addParameter(DynamicContextParameters.OUTPUT_VALIDATION_FILE, Constants.DEFAULT_OUTPUT_VALIDATION_FILE, true);
-        //addParameter(DynamicContextParameters.VALIDATION_TOOL, ImfValidator.getValidationToolPath(contextProvider.getConfigProvider()));
-
+        addParameter(DynamicContextParameters.OUTPUT_VALIDATION_FILE, CoreConstants.DEFAULT_OUTPUT_VALIDATION_FILE, true);
     }
 
     /**

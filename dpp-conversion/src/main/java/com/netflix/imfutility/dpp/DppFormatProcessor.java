@@ -5,6 +5,7 @@ import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.dpp.inputparameters.DppCmdLineArgs;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParametersValidator;
+import com.netflix.imfutility.dpp.inputparameters.IDppDefaultTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,12 @@ public class DppFormatProcessor {
 
     private final Logger logger = LoggerFactory.getLogger(DppFormatProcessor.class);
 
+    private final IDppDefaultTools defaultTools;
+
+    public DppFormatProcessor(IDppDefaultTools defaultTools) {
+        this.defaultTools = defaultTools;
+    }
+
     public int process(String... args) {
         logger.info("DPP format\n");
 
@@ -25,7 +32,7 @@ public class DppFormatProcessor {
         logger.info("Parsed command line arguments: OK\n");
 
         // 2. wrap cmd line args to an input parameters object
-        DppInputParameters inputParameters = new DppInputParameters(cmdLineArgs);
+        DppInputParameters inputParameters = new DppInputParameters(cmdLineArgs, defaultTools);
 
         // 2. validate cmd line arguments
         logger.info("Validating command line arguments...");

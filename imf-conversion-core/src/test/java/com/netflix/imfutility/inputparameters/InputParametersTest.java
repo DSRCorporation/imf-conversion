@@ -46,9 +46,11 @@ public class InputParametersTest extends ImfUtilityTest {
         String[] argsNoConfig = new String[]{};
 
         ImfUtilityInputParameters inputParametersConfig = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsConfig));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsConfig),
+                new FakeDefaultTools());
         ImfUtilityInputParameters inputParametersNoConfig = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsNoConfig));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsNoConfig),
+                new FakeDefaultTools());
 
         assertEquals(new File(ConfigUtils.getCorrectConfigXmlPath()), inputParametersConfig.getConfigFile());
         assertNull(inputParametersNoConfig.getConfigFile());
@@ -63,9 +65,11 @@ public class InputParametersTest extends ImfUtilityTest {
         };
 
         ImfUtilityInputParameters inputParametersWorkingDir = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsWorkingDir));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsWorkingDir),
+                new FakeDefaultTools());
         ImfUtilityInputParameters inputParametersNoWorkingDir = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsNoWorkingDir));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsNoWorkingDir),
+                new FakeDefaultTools());
 
         assertEquals(TemplateParameterContextCreator.getWorkingDir(), inputParametersWorkingDir.getWorkingDirFile());
         assertNull(inputParametersNoWorkingDir.getWorkingDirFile());
@@ -75,7 +79,8 @@ public class InputParametersTest extends ImfUtilityTest {
     public void testDefaultWorkingDir() {
         String[] args = new String[]{};
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         inputParameters.setDefaultWorkingDir("C:/defaultWorkingDir");
 
@@ -88,7 +93,8 @@ public class InputParametersTest extends ImfUtilityTest {
                 "-w", TemplateParameterContextCreator.getWorkingDir().getAbsolutePath()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         inputParameters.setDefaultWorkingDir("C:/defaultWorkingDir");
 
@@ -103,9 +109,11 @@ public class InputParametersTest extends ImfUtilityTest {
         String[] argsNoImp = new String[]{};
 
         ImfUtilityInputParameters inputParametersImp = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsImp));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsImp),
+                new FakeDefaultTools());
         ImfUtilityInputParameters inputParametersNoImp = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsNoImp));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsNoImp),
+                new FakeDefaultTools());
 
         assertEquals(ImpUtils.getImpFolder(), inputParametersImp.getImpDirectoryFile());
         assertNull(inputParametersNoImp.getImpDirectoryFile());
@@ -115,7 +123,8 @@ public class InputParametersTest extends ImfUtilityTest {
     public void testDefaultImpFolder() {
         String[] args = new String[]{};
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         inputParameters.setDefaultImp("C:/defaultImp");
 
@@ -128,7 +137,8 @@ public class InputParametersTest extends ImfUtilityTest {
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         inputParameters.setDefaultImp("C:/defaultImp");
 
@@ -149,11 +159,14 @@ public class InputParametersTest extends ImfUtilityTest {
 
 
         ImfUtilityInputParameters inputParametersCplImp = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsCplImp));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsCplImp),
+                new FakeDefaultTools());
         ImfUtilityInputParameters inputParametersCplNoImp = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsCplNoImp));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsCplNoImp),
+                new FakeDefaultTools());
         ImfUtilityInputParameters inputParametersNoCplNoImp = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsNoCplNoImp));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, argsNoCplNoImp),
+                new FakeDefaultTools());
 
         assertEquals(ImpUtils.getCorrectCpl(), inputParametersCplImp.getCplFile());
         assertNull(inputParametersCplNoImp.getCplFile());
@@ -164,7 +177,8 @@ public class InputParametersTest extends ImfUtilityTest {
     public void testDefaultCpl() {
         String[] args = new String[]{};
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         inputParameters.setDefaultImp("C:/defaultImp");
         inputParameters.setDefaultCpl("defaultCpl");
@@ -179,7 +193,8 @@ public class InputParametersTest extends ImfUtilityTest {
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         inputParameters.setDefaultCpl("C:/defaultCpl");
 
@@ -192,7 +207,8 @@ public class InputParametersTest extends ImfUtilityTest {
                 "-c", getClass().getClassLoader().getResource(ConfigUtils.getCorrectConfigXmlPath()).getPath()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         ImfUtilityInputParametersValidator.validateCmdLineArguments(inputParameters);
     }
@@ -201,7 +217,8 @@ public class InputParametersTest extends ImfUtilityTest {
     public void testValidateConfigNotSpecified() {
         String[] args = new String[]{};
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         ImfUtilityInputParametersValidator.validateCmdLineArguments(inputParameters);
     }
@@ -212,7 +229,8 @@ public class InputParametersTest extends ImfUtilityTest {
                 "-c", "C:/someFile"
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         ImfUtilityInputParametersValidator.validateCmdLineArguments(inputParameters);
     }
@@ -225,7 +243,8 @@ public class InputParametersTest extends ImfUtilityTest {
                 "-w", TemplateParameterContextCreator.getWorkingDir().getAbsolutePath()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         ImfUtilityInputParametersValidator.validateInputParameters(inputParameters);
     }
@@ -237,7 +256,8 @@ public class InputParametersTest extends ImfUtilityTest {
                 "-w", TemplateParameterContextCreator.getWorkingDir().getAbsolutePath()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         ImfUtilityInputParametersValidator.validateInputParameters(inputParameters);
     }
@@ -250,7 +270,8 @@ public class InputParametersTest extends ImfUtilityTest {
                 "-w", TemplateParameterContextCreator.getWorkingDir().getAbsolutePath()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         ImfUtilityInputParametersValidator.validateInputParameters(inputParameters);
     }
@@ -262,7 +283,8 @@ public class InputParametersTest extends ImfUtilityTest {
                 "-w", TemplateParameterContextCreator.getWorkingDir().getAbsolutePath()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         ImfUtilityInputParametersValidator.validateInputParameters(inputParameters);
     }
@@ -275,7 +297,8 @@ public class InputParametersTest extends ImfUtilityTest {
                 "-w", TemplateParameterContextCreator.getWorkingDir().getAbsolutePath()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         ImfUtilityInputParametersValidator.validateInputParameters(inputParameters);
     }
@@ -287,7 +310,8 @@ public class InputParametersTest extends ImfUtilityTest {
                 "--cpl", ImpUtils.getCorrectCpl().getName()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         ImfUtilityInputParametersValidator.validateInputParameters(inputParameters);
     }
@@ -300,7 +324,8 @@ public class InputParametersTest extends ImfUtilityTest {
                 "-w", "C:/someFolder"
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args));
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
 
         ImfUtilityInputParametersValidator.validateInputParameters(inputParameters);
     }

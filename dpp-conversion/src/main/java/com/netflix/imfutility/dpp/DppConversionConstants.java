@@ -1,7 +1,7 @@
 package com.netflix.imfutility.dpp;
 
 /**
- * Constants related to DPP format.
+ * CoreConstants related to DPP format.
  */
 public final class DppConversionConstants {
 
@@ -15,6 +15,7 @@ public final class DppConversionConstants {
     public static final String DYNAMIC_PARAM_AS11_SEGM_FILE = "as11SegmentationFramework";
     public static final String DYNAMIC_AUDIO_MAP_XML = "audioMapXml";
     public static final String DYNAMIC_PARAM_OUTPUT_MXF = "output";
+    public static final String DYNAMIC_PARAM_TTML_TO_STL = "ttml-to-stl";
 
     // 1.2 dynamic parameters default values:
     public static final String DYNAMIC_PARAM_VALUE_OUTPUT_MXF = "output.mxf";
@@ -28,6 +29,11 @@ public final class DppConversionConstants {
     public static final String BMX_PARAMETERS_TRANSFORMATION = "xslt/bmx-parameters.xsl";
     public static final String XSLT2_TRANSFORMER_IMPLEMENTATION = "net.sf.saxon.TransformerFactoryImpl";
     public static final String BMX_FRAMEWORK_PARAM = "framework";
+
+
+/* 4. config.xml */
+
+    public static final String TTML_TO_STL_TOOL = "ttml-to-stl";
 
     private DppConversionConstants() {
 

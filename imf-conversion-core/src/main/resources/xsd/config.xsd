@@ -16,7 +16,6 @@
             <xs:element type="xs:string" name="workingDirectory" maxOccurs="1" minOccurs="0"/>
 
             <xs:element type="externalToolsType" name="externalTools" maxOccurs="1" minOccurs="1"/>
-            <xs:element type="preDefinedExternalToolsType" name="preDefinedExternalTools" maxOccurs="1" minOccurs="0"/>
             <xs:element type="conversionParametersType" name="conversionParameters" maxOccurs="1" minOccurs="0"/>
 
             <xs:element type="xs:string" name="conversionConfig" maxOccurs="1" minOccurs="0"/>
@@ -43,15 +42,6 @@
                 <xs:attribute type="xs:string" name="id" use="required"/>
             </xs:extension>
         </xs:simpleContent>
-    </xs:complexType>
-
-    <!--
-        Path to pre-defined external executables (usually should not be specified in config.xml, but default values will be used)
-    -->
-    <xs:complexType name="preDefinedExternalToolsType">
-        <xs:sequence>
-            <xs:element type="toolType" name="validation" maxOccurs="1" minOccurs="0"/>
-        </xs:sequence>
     </xs:complexType>
 
     <!--

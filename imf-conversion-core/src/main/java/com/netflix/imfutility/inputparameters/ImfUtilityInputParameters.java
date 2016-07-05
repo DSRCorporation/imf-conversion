@@ -10,12 +10,15 @@ import java.io.File;
 public class ImfUtilityInputParameters {
 
     private final ImfUtilityCmdLineArgs cmdLineArgs;
+    private final IDefaultTools defaultTools;
     private String defaultImp;
     private String defaultCpl;
     private String defaultWorkingDir;
+    private String customValidationTool;
 
-    public ImfUtilityInputParameters(ImfUtilityCmdLineArgs cmdLineArgs) {
+    public ImfUtilityInputParameters(ImfUtilityCmdLineArgs cmdLineArgs, IDefaultTools defaultTools) {
         this.cmdLineArgs = cmdLineArgs;
+        this.defaultTools = defaultTools;
     }
 
     public ImfUtilityCmdLineArgs getCmdLineArgs() {
@@ -81,6 +84,29 @@ public class ImfUtilityInputParameters {
             return null;
         }
         return new File(workingDir);
+    }
+
+    /**
+     * Gets an IMF validation tool executable. Usually a default value is used (distributed with the utility),
+     * but it can be overridden in config.xml.
+     *
+     * @return IMF validation executable
+     */
+    public String getImfValidationTool() {
+        // custom has first priority
+        if (customValidationTool != null) {
+            return customValidationTool;
+        }
+        return defaultTools.getImfValidationTool();
+    }
+
+    /**
+     * Sets a custom validation tool executable (usually a value from config.xml).
+     *
+     * @param customValidationTool a custom validation tool executable (usually a value from config.xml).
+     */
+    public void setCustomImfValidationTool(String customValidationTool) {
+        this.customValidationTool = customValidationTool;
     }
 
     /**

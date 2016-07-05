@@ -4,3 +4,28 @@ dependencies {
     compile project(':dpp-conversion')
 }
 
+apply plugin: 'application'
+
+mainClassName = "com.netflix.imfutility.ImfUtility"
+
+task copyDefaultTools(type: Copy) {
+    from '../imf-validation/build/libs'
+    from '../ttml-to-stl/build/libs'
+    into "${buildDir}/tools"
+}
+
+evaluationDependsOn(':imf-validation')
+evaluationDependsOn(':ttml-to-stl')
+
+copyDefaultTools.dependsOn(':imf-validation:assemble', ':ttml-to-stl:assemble')
+classes.dependsOn(copyDefaultTools)
+
+distributions {
+    main {
+        contents {
+            from(copyDefaultTools) {
+                into "tools"
+            }
+        }
+    }
+}

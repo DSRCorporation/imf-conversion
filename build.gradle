@@ -10,9 +10,7 @@ buildscript {
 
 }
 
-apply plugin: 'java'
-
-allprojects {
+subprojects {
     group = 'com.netflix.imfutility'
     version = '1.0'
 }

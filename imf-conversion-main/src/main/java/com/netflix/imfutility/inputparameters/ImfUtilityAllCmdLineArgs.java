@@ -1,6 +1,7 @@
-package com.netflix.imfutility;
+package com.netflix.imfutility.inputparameters;
 
 import com.lexicalscope.jewel.cli.Option;
+import com.netflix.imfutility.Format;
 import com.netflix.imfutility.dpp.inputparameters.DppCmdLineArgs;
 
 /**

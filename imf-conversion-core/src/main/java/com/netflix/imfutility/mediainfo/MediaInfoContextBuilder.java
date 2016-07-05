@@ -1,6 +1,6 @@
 package com.netflix.imfutility.mediainfo;
 
-import com.netflix.imfutility.Constants;
+import com.netflix.imfutility.CoreConstants;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
@@ -26,8 +26,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.netflix.imfutility.Constants.MEDIAINFO_PACKAGE;
-import static com.netflix.imfutility.Constants.MEDIAINFO_XSD;
+import static com.netflix.imfutility.CoreConstants.MEDIAINFO_PACKAGE;
+import static com.netflix.imfutility.CoreConstants.MEDIAINFO_XSD;
 
 /**
  * Builds template parameters context related to Media Info.
@@ -74,7 +74,7 @@ public class MediaInfoContextBuilder {
 
     static String getOutputFileName(SequenceType seqType, String essence) {
         return String.format("%s_%s_%s.xml",
-                Constants.MEDIA_INFO_SUFFIX,
+                CoreConstants.MEDIA_INFO_SUFFIX,
                 seqType.value(),
                 new File(essence).getName());
     }

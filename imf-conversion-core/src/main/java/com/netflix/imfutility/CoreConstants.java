@@ -3,7 +3,7 @@ package com.netflix.imfutility;
 /**
  * All constants to be used in the application.
  */
-public final class Constants {
+public final class CoreConstants {
 
 /* 1. logging */
 
@@ -56,7 +56,12 @@ public final class Constants {
     public static final String MEDIA_INFO_SUFFIX = "mediaInfo";
 
 
-    private Constants() {
+/* 6. config.xml */
+
+    public static final String IMF_VALIDATION_TOOL = "imf-validation";
+
+
+    private CoreConstants() {
 
     }
 }

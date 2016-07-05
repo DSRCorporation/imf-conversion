@@ -17,6 +17,7 @@ import com.netflix.imfutility.validate.ImfValidationException;
 import com.netflix.imfutility.validate.ImfValidator;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,30 +140,30 @@ public abstract class AbstractFormatBuilder {
 
     private boolean isCleanWorkingDir() {
         if (configProvider == null) {
-            return Constants.DEFAULT_CLEAN_WORKING_DIR;
+            return CoreConstants.DEFAULT_CLEAN_WORKING_DIR;
         }
         if (configProvider.getConfig().isCleanWorkingDir() == null) {
-            return Constants.DEFAULT_CLEAN_WORKING_DIR;
+            return CoreConstants.DEFAULT_CLEAN_WORKING_DIR;
         }
         return configProvider.getConfig().isCleanWorkingDir();
     }
 
     private boolean isDeleteTmpFilesOnExit() {
         if (configProvider == null) {
-            return Constants.DEFAULT_DELETE_TMP_FILES_ON_EXIT;
+            return CoreConstants.DEFAULT_DELETE_TMP_FILES_ON_EXIT;
         }
         if (configProvider.getConfig().isDeleteTmpFilesOnExit() == null) {
-            return Constants.DEFAULT_DELETE_TMP_FILES_ON_EXIT;
+            return CoreConstants.DEFAULT_DELETE_TMP_FILES_ON_EXIT;
         }
         return configProvider.getConfig().isDeleteTmpFilesOnExit();
     }
 
     private boolean isDeleteTmpFilesOnFail() {
         if (configProvider == null) {
-            return Constants.DEFAULT_DELETE_TMP_FILES_ON_FAIL;
+            return CoreConstants.DEFAULT_DELETE_TMP_FILES_ON_FAIL;
         }
         if (configProvider.getConfig().isDeleteTmpFilesOnFail() == null) {
-            return Constants.DEFAULT_DELETE_TMP_FILES_ON_FAIL;
+            return CoreConstants.DEFAULT_DELETE_TMP_FILES_ON_FAIL;
         }
         return configProvider.getConfig().isDeleteTmpFilesOnFail();
     }
@@ -193,11 +194,11 @@ public abstract class AbstractFormatBuilder {
             this.conversionProvider = new ConversionXmlProvider(conversionXml, format);
         } else {
             // 2. use default one from resources
-            InputStream defaultConversionXml = getClass().getResourceAsStream(Constants.DEFAULT_CONVERSION_XML);
+            InputStream defaultConversionXml = getClass().getResourceAsStream(CoreConstants.DEFAULT_CONVERSION_XML);
             if (defaultConversionXml == null) {
                 throw new ConversionException("Conversion.xml is not found in neither default location nor config.xml");
             }
-            this.conversionProvider = new ConversionXmlProvider(defaultConversionXml, Constants.DEFAULT_CONVERSION_XML, format);
+            this.conversionProvider = new ConversionXmlProvider(defaultConversionXml, CoreConstants.DEFAULT_CONVERSION_XML, format);
         }
 
         logger.info("Conversion.xml is processed: OK\n");
@@ -214,6 +215,14 @@ public abstract class AbstractFormatBuilder {
 
         // 3. setting CPL (if it's in config.xml)
         inputParameters.setDefaultCpl(configProvider.getConfig().getCpl());
+
+        // 4. custom IMF validation
+        if (configProvider.getConfig().getExternalTools().getMap().containsKey(CoreConstants.IMF_VALIDATION_TOOL)) {
+            String customImfValidation = configProvider.getConfig().getExternalTools().getMap().get(CoreConstants.IMF_VALIDATION_TOOL).getValue();
+            if (!StringUtils.isEmpty(customImfValidation)) {
+                inputParameters.setCustomImfValidationTool(customImfValidation);
+            }
+        }
 
         logger.info("Initialized input parameters: OK\n");
     }
@@ -233,7 +242,7 @@ public abstract class AbstractFormatBuilder {
     private void createLogsDir() {
         logger.info("Creating external tools logging directory...");
 
-        File logsDir = new File(inputParameters.getWorkingDirFile(), Constants.LOGS_DIR);
+        File logsDir = new File(inputParameters.getWorkingDirFile(), CoreConstants.LOGS_DIR);
         logger.info("External tools logging directory: {}", logsDir);
         if (!logsDir.mkdir()) {
             logger.warn("Couldn't create External tools logging directory!");
@@ -256,6 +265,7 @@ public abstract class AbstractFormatBuilder {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         dynamicContext.addParameter(DynamicContextParameters.IMP, inputParameters.getImpDirectoryFile().getAbsolutePath());
         dynamicContext.addParameter(DynamicContextParameters.CPL, inputParameters.getCplFile().getAbsolutePath());
+        dynamicContext.addParameter(DynamicContextParameters.VALIDATION_TOOL, inputParameters.getImfValidationTool());
 
         // build format-specific dynamic parameters
         doBuildDynamicContext();
@@ -274,7 +284,7 @@ public abstract class AbstractFormatBuilder {
     private void buildCplContext() throws XmlParsingException, FileNotFoundException {
         logger.info("Building CPL contexts...");
 
-        File assetMapFile = new File(inputParameters.getImpDirectoryFile(), Constants.ASSETMAP_FILE);
+        File assetMapFile = new File(inputParameters.getImpDirectoryFile(), CoreConstants.ASSETMAP_FILE);
         logger.info("Parsing ASSETMAP.xml ('{}')...", assetMapFile.getAbsolutePath());
         this.assetMap = new AssetMapParser().parse(inputParameters.getImpDirectoryFile(), assetMapFile);
         logger.info("Parsed ASSETMAP.xml: OK");

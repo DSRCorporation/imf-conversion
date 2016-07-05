@@ -1,15 +1,13 @@
 package com.netflix.imfutility.validate;
 
-import com.netflix.imfutility.Constants;
+import com.netflix.imfutility.CoreConstants;
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.config.ConfigXmlProvider;
+import com.netflix.imfutility.conversion.ImfValidationType;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
-import com.netflix.imfutility.config.PreDefinedExternalToolsType;
-import com.netflix.imfutility.conversion.ImfValidationType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -20,9 +18,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,33 +38,6 @@ public class ImfValidator {
 
     private final TemplateParameterContextProvider contextProvider;
     private final ExecuteStrategyFactory executeStrategyFactory;
-
-    /**
-     * Gets a validation tool path to be used as a dynamic parameter for a validation command from conversion.xml.
-     * It's either the default one or a custom one from config.xml.
-     *
-     * @param configXmlProvider config provider that may contain a path to a custom validation tool.
-     * @return validation tool path to be used as a dynamic parameter for a validation command from conversion.xml.
-     */
-    public static String getValidationToolPath(ConfigXmlProvider configXmlProvider) {
-        // do we have a custom one in config.xml?
-        PreDefinedExternalToolsType preDefinedExternalTools = configXmlProvider.getConfig().getPreDefinedExternalTools();
-        if (preDefinedExternalTools != null && preDefinedExternalTools.getValidation() != null) {
-            return preDefinedExternalTools.getValidation().getValue();
-        }
-
-        // return the default one
-        URL defaultJarResourceUrl = ClassLoader.getSystemClassLoader().getResource("test/imf-validation-1.0.jar");
-        if (defaultJarResourceUrl == null) {
-            throw new ConversionException("Default IMF validation .jar not found");
-        }
-        try {
-            URI defaultJarResourceUri = defaultJarResourceUrl.toURI();
-            return String.format("java -jar %s", new File(defaultJarResourceUri).getAbsolutePath());
-        } catch (URISyntaxException e) {
-            throw new ConversionException("Default IMF validation .jar not found");
-        }
-    }
 
     public ImfValidator(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory executeStrategyFactory) {
         this.contextProvider = contextProvider;
@@ -102,7 +70,7 @@ public class ImfValidator {
         try {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(errorFile);
-            NodeList errorNodes = doc.getElementsByTagName(Constants.VALIDATION_OUTPUT_XML_ERROR_TAG);
+            NodeList errorNodes = doc.getElementsByTagName(CoreConstants.VALIDATION_OUTPUT_XML_ERROR_TAG);
 
             if (errorNodes == null || errorNodes.getLength() == 0) {
                 // OK! no errors

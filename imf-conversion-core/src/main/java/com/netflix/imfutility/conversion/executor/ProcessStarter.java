@@ -1,6 +1,6 @@
 package com.netflix.imfutility.conversion.executor;
 
-import com.netflix.imfutility.Constants;
+import com.netflix.imfutility.CoreConstants;
 import com.netflix.imfutility.ConversionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,9 +69,9 @@ public class ProcessStarter {
 
 
     private File getLogFile(ExternalProcess.ExternalProcessInfo processInfo) {
-        File logsDir = new File(processInfo.getWorkingDir(), Constants.LOGS_DIR);
+        File logsDir = new File(processInfo.getWorkingDir(), CoreConstants.LOGS_DIR);
         String logFileName = String.format(
-                Constants.LOG_TEMPLATE,
+                CoreConstants.LOG_TEMPLATE,
                 processInfo.getProcessNum(), processInfo.getOperationName(), processInfo.getOperationType(), processInfo.getProgramName());
         return new File(logsDir, logFileName);
     }

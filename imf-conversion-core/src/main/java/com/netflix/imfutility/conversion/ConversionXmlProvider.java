@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.netflix.imfutility.Constants.CONVERSION_PACKAGE;
-import static com.netflix.imfutility.Constants.CONVERSION_XSD;
+import static com.netflix.imfutility.CoreConstants.CONVERSION_PACKAGE;
+import static com.netflix.imfutility.CoreConstants.CONVERSION_XSD;
 
 /**
  * Conversion.xml parser.

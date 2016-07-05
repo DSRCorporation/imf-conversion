@@ -10,9 +10,12 @@ import java.io.File;
 public class DppInputParameters extends ImfUtilityInputParameters {
 
     private final DppCmdLineArgs cmdLineArgs;
+    private final IDppDefaultTools defaultTools;
+    private String customTtmlToStlTool;
 
-    public DppInputParameters(DppCmdLineArgs cmdLineArgs) {
-        super(cmdLineArgs);
+    public DppInputParameters(DppCmdLineArgs cmdLineArgs, IDppDefaultTools defaultTools) {
+        super(cmdLineArgs, defaultTools);
+        this.defaultTools = defaultTools;
         this.cmdLineArgs = cmdLineArgs;
     }
 
@@ -39,5 +42,28 @@ public class DppInputParameters extends ImfUtilityInputParameters {
     @Override
     public DppCmdLineArgs getCmdLineArgs() {
         return cmdLineArgs;
+    }
+
+    /**
+     * Sets a custom ttml to stl subtitle conversion tool executable (usually a value from config.xml).
+     *
+     * @param customTtmlToStlTool a custom ttml to stl subtitle conversion tool executable (usually a value from config.xml).
+     */
+    public void setCustomTtmlToStlTool(String customTtmlToStlTool) {
+        this.customTtmlToStlTool = customTtmlToStlTool;
+    }
+
+    /**
+     * Gets an ttml to stl subtitle conversion tool executable. Usually a default value is used (distributed with the utility),
+     * but it can be overridden in config.xml.
+     *
+     * @return ttml to stl subtitle conversion tool executable
+     */
+    public String getTtmlToStlTool() {
+        // custom has first priority
+        if (customTtmlToStlTool != null) {
+            return customTtmlToStlTool;
+        }
+        return defaultTools.getTtmlToStlTool();
     }
 }

@@ -10,8 +10,8 @@ import com.netflix.imfutility.xml.XmlParsingException;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import static com.netflix.imfutility.Constants.ASSETMAP_PACKAGE;
-import static com.netflix.imfutility.Constants.XSD_ASSETMAP_XSD;
+import static com.netflix.imfutility.CoreConstants.ASSETMAP_PACKAGE;
+import static com.netflix.imfutility.CoreConstants.XSD_ASSETMAP_XSD;
 
 /**
  * Parses ASSETMAP.xml and creates a {@link AssetMap} with location of each asset. Asset map contains full absolute paths.

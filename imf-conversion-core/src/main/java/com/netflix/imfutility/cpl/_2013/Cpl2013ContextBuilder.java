@@ -26,7 +26,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.netflix.imfutility.Constants.*;
+import static com.netflix.imfutility.CoreConstants.*;
 
 /**
  * A CPL parser for 2013 namespace.

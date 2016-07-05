@@ -22,7 +22,7 @@ public class ImfUtilityTest {
             throw new RuntimeException("Could not create a working dir within tmp folder");
         }
 
-        File logs = new File(TemplateParameterContextCreator.getWorkingDir(), Constants.LOGS_DIR);
+        File logs = new File(TemplateParameterContextCreator.getWorkingDir(), CoreConstants.LOGS_DIR);
         if (!logs.mkdir()) {
             throw new RuntimeException("Could not create a log dir within working dir");
         }

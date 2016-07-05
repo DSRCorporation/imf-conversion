@@ -7,8 +7,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import static com.netflix.imfutility.Constants.CONFIG_PACKAGE;
-import static com.netflix.imfutility.Constants.CONFIG_XSD;
+import static com.netflix.imfutility.CoreConstants.CONFIG_PACKAGE;
+import static com.netflix.imfutility.CoreConstants.CONFIG_XSD;
 
 /**
  * Config.xml parser.
