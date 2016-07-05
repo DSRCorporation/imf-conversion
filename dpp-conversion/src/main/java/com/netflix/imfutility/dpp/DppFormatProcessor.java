@@ -1,6 +1,5 @@
 package com.netflix.imfutility.dpp;
 
-import com.lexicalscope.jewel.cli.CliFactory;
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.dpp.inputparameters.DppCmdLineArgs;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
@@ -23,15 +22,10 @@ public class DppFormatProcessor {
         this.defaultTools = defaultTools;
     }
 
-    public int process(String... args) {
+    public int process(DppCmdLineArgs cmdLineArgs) {
         logger.info("DPP format\n");
 
-        // 1. parse command line args
-        logger.info("Parsing command line arguments...");
-        DppCmdLineArgs cmdLineArgs = CliFactory.parseArguments(DppCmdLineArgs.class, args);
-        logger.info("Parsed command line arguments: OK\n");
-
-        // 2. wrap cmd line args to an input parameters object
+        // 1. wrap cmd line args to an input parameters object
         DppInputParameters inputParameters = new DppInputParameters(cmdLineArgs, defaultTools);
 
         // 2. validate cmd line arguments

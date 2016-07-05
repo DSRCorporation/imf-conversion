@@ -160,7 +160,7 @@
                         </execEachSegment>
 
                         <execOnce name="convert_ttml_to_stl">
-                            %{tool.java} subtitleConverter.java %{dynamic.concatTTML} --outputSTL %{seq.num}-captions.stl
+                            %{dynamic.ttml-to-stl} --outputSTL %{seq.num}-captions.stl
                         </execOnce>
                     </execEachSequence>
                 </formatConfiguration>

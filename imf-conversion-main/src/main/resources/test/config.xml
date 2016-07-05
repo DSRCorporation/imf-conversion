@@ -3,7 +3,7 @@
 
     <imp>G:\Netflix\content\TEST\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV</imp>
     <cpl>CPL-test.xml</cpl>
-    <workingDirectory>G:\Netflix\TMP</workingDirectory>
+    <workingDirectory>G:\Netflix\TMP4</workingDirectory>
 
     <!--
         Path to external executables.
@@ -15,10 +15,9 @@
         <tool id="bmx">G:\Netflix\tools\raw2bmx.exe</tool>
         <tool id="mxf2raw">G:\Netflix\tools\mxf2raw.exe</tool>
         <tool id="x264">G:\Netflix\tools\x264.exe</tool>
-        <tool id="ttmlToStl">ttmlToStl path</tool>
-        <tool id="photon">photon path</tool>
+        <!--<tool id="ttml-to-stl">ttmlToStl path</tool>-->
+        <!--<tool id="imf-validation">photon path</tool>-->
         <tool id="asdcp-test">D:\asdcplib\asdcp-test.exe</tool>
-        <tool id="java">C:\Program Files (x86)\Java\jre7\bin\java.exe</tool>
     </externalTools>
 
     <!--

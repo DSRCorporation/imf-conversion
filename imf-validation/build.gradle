@@ -5,3 +5,12 @@ dependencies {
     compile group: 'com.netflix.photon', name: 'Photon', version: '0.2.6'
     compile group: 'com.lexicalscope.jewelcli', name: 'jewelcli', version: '0.8.9'
 }
+
+jar {
+    baseName = project.name
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest {
+        attributes 'Implementation-Title': 'IMF validation', 'Implementation-Version': version
+        attributes 'Main-Class': 'com.netflix.imfutility.validation.ImfValidator'
+    }
+}

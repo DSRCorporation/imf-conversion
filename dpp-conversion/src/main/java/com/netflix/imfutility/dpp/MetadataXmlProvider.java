@@ -19,10 +19,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 
@@ -257,11 +254,11 @@ public class MetadataXmlProvider {
 
             // Create Transformer
             TransformerFactory tf = TransformerFactory.newInstance(XSLT2_TRANSFORMER_IMPLEMENTATION, null);
-            URL transformationFileUrl = classLoader.getResource(BMX_PARAMETERS_TRANSFORMATION);
-            if (transformationFileUrl == null) {
+            InputStream transformationStream = getClass().getResourceAsStream(BMX_PARAMETERS_TRANSFORMATION);
+            if (transformationStream == null) {
                 throw new FileNotFoundException(String.format("Metadata.xml to BMX transformation file is absent: %s", BMX_PARAMETERS_TRANSFORMATION));
             }
-            StreamSource xslt = new StreamSource(transformationFileUrl.getFile());
+            StreamSource xslt = new StreamSource(transformationStream);
             Transformer transformer = tf.newTransformer(xslt);
 
             //Set framework

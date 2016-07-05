@@ -1,5 +1,4 @@
 description = "TTML to EBU STL subtitles conversion (default subtitle conversion tool for DPP format)"
-version=""
 
 dependencies {
     compile project(':imf-conversion-common')
@@ -8,6 +7,16 @@ dependencies {
 
 dependencies {
     compile group: 'commons-cli', name: 'commons-cli', version: '1.3'
+}
+
+
+jar {
+    baseName = project.name
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest {
+        attributes 'Implementation-Title': 'TTML to STL converter', 'Implementation-Version': version
+        attributes 'Main-Class': 'Convert'
+    }
 }
 
 

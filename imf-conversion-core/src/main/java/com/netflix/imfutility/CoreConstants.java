@@ -52,7 +52,7 @@ public final class CoreConstants {
 
     public static final String DEFAULT_OUTPUT_VALIDATION_FILE = "errors.xml";
     public static final String VALIDATION_OUTPUT_XML_ERROR_TAG = "error";
-    public static final String DEFAULT_CONVERSION_XML = "xml/conversion.xml";
+    public static final String DEFAULT_CONVERSION_XML = "/xml/conversion.xml";
     public static final String MEDIA_INFO_SUFFIX = "mediaInfo";
 
 

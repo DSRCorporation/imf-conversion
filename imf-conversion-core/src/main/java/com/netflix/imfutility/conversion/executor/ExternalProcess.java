@@ -36,12 +36,13 @@ public final class ExternalProcess {
         try {
             result = process.waitFor();
             closed = true;
-            logFinishedSuccess();
         } catch (InterruptedException e) {
             finishedFailureWithException(e);
         }
         if (result != 0) {
             finishedFailureWithExitCode(result);
+        } else {
+            logFinishedSuccess();
         }
     }
 

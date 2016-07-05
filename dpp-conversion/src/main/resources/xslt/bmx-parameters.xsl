@@ -162,7 +162,7 @@
         <xsl:if test="$framework='AS11Segmentation'">
             <xsl:if test="local-name()='Parts'">
                 <xsl:for-each select="current()/*:Part">
-                    <xsl:value-of select="PartNumber"/><xsl:text>/</xsl:text><xsl:value-of select="PartTotal"/><xsl:text> </xsl:text><xsl:value-of select="PartSOM"/><xsl:text> </xsl:text><xsl:value-of select="PartDuration"/><xsl:text>&#xa;</xsl:text>
+                    <xsl:value-of select="*:PartNumber"/><xsl:text>/</xsl:text><xsl:value-of select="*:PartTotal"/><xsl:text> </xsl:text><xsl:value-of select="*:PartSOM"/><xsl:text> </xsl:text><xsl:value-of select="*:PartDuration"/><xsl:text>&#xa;</xsl:text>
                 </xsl:for-each>
             </xsl:if>
         </xsl:if>

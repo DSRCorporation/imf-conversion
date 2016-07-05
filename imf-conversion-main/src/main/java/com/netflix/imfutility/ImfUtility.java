@@ -5,6 +5,8 @@ import com.lexicalscope.jewel.cli.HelpRequestedException;
 import com.netflix.imfutility.dpp.DppFormatProcessor;
 import com.netflix.imfutility.inputparameters.DppTools;
 import com.netflix.imfutility.inputparameters.ImfUtilityAllCmdLineArgs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The main class.
@@ -15,17 +17,21 @@ import com.netflix.imfutility.inputparameters.ImfUtilityAllCmdLineArgs;
  */
 public class ImfUtility {
 
+    private static final Logger logger = LoggerFactory.getLogger(ImfUtility.class);
+
     public static void main(String... args) {
         try {
-            ImfUtilityAllCmdLineArgs imfUtilityInputParameters = CliFactory.parseArguments(ImfUtilityAllCmdLineArgs.class, args);
+            logger.info("Parsing command line arguments...");
+            ImfUtilityAllCmdLineArgs imfArgs = CliFactory.parseArguments(ImfUtilityAllCmdLineArgs.class, args);
+            logger.info("Parsed command line arguments: OK\n");
 
-            switch (imfUtilityInputParameters.getFormat()) {
+            switch (imfArgs.getFormat()) {
                 case dpp:
-                    int exitCode = new DppFormatProcessor(new DppTools()).process(args);
+                    int exitCode = new DppFormatProcessor(new DppTools()).process(imfArgs);
                     System.exit(exitCode);
                     break;
                 default:
-                    throw new ConversionException("Unsupported format " + imfUtilityInputParameters.getFormat());
+                    throw new ConversionException("Unsupported format " + imfArgs.getFormat());
             }
 
         } catch (HelpRequestedException e) {
