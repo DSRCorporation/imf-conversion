@@ -4,6 +4,7 @@ import com.netflix.imfutility.dpp.metadata.*;
 import com.netflix.imfutility.dpp.metadata.iso6392codes.Iso6392CodeType;
 import com.netflix.imfutility.dpp.metadata.types.DurationType;
 import com.netflix.imfutility.dpp.metadata.types.TimecodeType;
+import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 
@@ -254,7 +255,7 @@ public class MetadataXmlProvider {
 
             // Create Transformer
             TransformerFactory tf = TransformerFactory.newInstance(XSLT2_TRANSFORMER_IMPLEMENTATION, null);
-            InputStream transformationStream = getClass().getResourceAsStream(BMX_PARAMETERS_TRANSFORMATION);
+            InputStream transformationStream = ResourceHelper.getResourceInputStream(BMX_PARAMETERS_TRANSFORMATION);
             if (transformationStream == null) {
                 throw new FileNotFoundException(String.format("Metadata.xml to BMX transformation file is absent: %s", BMX_PARAMETERS_TRANSFORMATION));
             }

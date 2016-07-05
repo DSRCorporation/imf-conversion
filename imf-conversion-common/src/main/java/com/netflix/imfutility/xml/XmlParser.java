@@ -1,5 +1,6 @@
 package com.netflix.imfutility.xml;
 
+import com.netflix.imfutility.resources.ResourceHelper;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -137,7 +138,7 @@ public class XmlParser {
     private static Schema getSchema(String[] xsds) throws SAXException {
         List<StreamSource> xsdSchemas = new ArrayList<>();
         for (String xsd : xsds) {
-            InputStream xsdSchema = XmlParser.class.getClassLoader().getResourceAsStream(xsd);
+            InputStream xsdSchema = ResourceHelper.getResourceInputStream(xsd);
             if (xsdSchema == null) {
                 throw new RuntimeException(String.format("'%s' schema not found.", xsd));
             }

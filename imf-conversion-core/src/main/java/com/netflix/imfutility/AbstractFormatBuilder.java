@@ -13,6 +13,7 @@ import com.netflix.imfutility.inputparameters.ImfUtilityInputParameters;
 import com.netflix.imfutility.inputparameters.ImfUtilityInputParametersValidator;
 import com.netflix.imfutility.mediainfo.MediaInfoContextBuilder;
 import com.netflix.imfutility.mediainfo.MediaInfoException;
+import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.validate.ImfValidationException;
 import com.netflix.imfutility.validate.ImfValidator;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -194,7 +195,7 @@ public abstract class AbstractFormatBuilder {
             this.conversionProvider = new ConversionXmlProvider(conversionXml, format);
         } else {
             // 2. use default one from resources
-            InputStream defaultConversionXml = getClass().getResourceAsStream(CoreConstants.DEFAULT_CONVERSION_XML);
+            InputStream defaultConversionXml = ResourceHelper.getResourceInputStream(CoreConstants.DEFAULT_CONVERSION_XML);
             if (defaultConversionXml == null) {
                 throw new ConversionException("Conversion.xml is not found in neither default location nor config.xml");
             }

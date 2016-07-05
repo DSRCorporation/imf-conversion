@@ -1,5 +1,7 @@
 package com.netflix.imfutility.util;
 
+import com.netflix.imfutility.resources.ResourceHelper;
+
 import java.io.InputStream;
 
 /**
@@ -11,7 +13,7 @@ public final class ConfigUtils {
     }
 
     public static InputStream getCorrectConfigXml() {
-        return ConfigUtils.class.getClassLoader().getResourceAsStream(getCorrectConfigXmlPath());
+        return ResourceHelper.getResourceInputStream(getCorrectConfigXmlPath());
     }
 
     public static String getCorrectConfigXmlPath() {
@@ -19,7 +21,7 @@ public final class ConfigUtils {
     }
 
     public static InputStream getBrokenXmlConfigXml() {
-        return ConfigUtils.class.getClassLoader().getResourceAsStream(getBrokenXmlConfigXmlPath());
+        return ResourceHelper.getResourceInputStream(getBrokenXmlConfigXmlPath());
     }
 
     public static String getBrokenXmlConfigXmlPath() {
@@ -27,7 +29,7 @@ public final class ConfigUtils {
     }
 
     public static InputStream getInvalidXsdConfigXml() {
-        return ConfigUtils.class.getClassLoader().getResourceAsStream(getInvalidXsdConfigXmlPath());
+        return ResourceHelper.getResourceInputStream(getInvalidXsdConfigXmlPath());
     }
 
     public static String getInvalidXsdConfigXmlPath() {

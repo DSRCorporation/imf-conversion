@@ -26,7 +26,7 @@ public final class DppConversionConstants {
 
 /* 3. XSLT */
 
-    public static final String BMX_PARAMETERS_TRANSFORMATION = "/xslt/bmx-parameters.xsl";
+    public static final String BMX_PARAMETERS_TRANSFORMATION = "xslt/bmx-parameters.xsl";
     public static final String XSLT2_TRANSFORMER_IMPLEMENTATION = "net.sf.saxon.TransformerFactoryImpl";
     public static final String BMX_FRAMEWORK_PARAM = "framework";
 

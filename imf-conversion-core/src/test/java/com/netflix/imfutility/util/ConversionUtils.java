@@ -1,5 +1,7 @@
 package com.netflix.imfutility.util;
 
+import com.netflix.imfutility.resources.ResourceHelper;
+
 import java.io.InputStream;
 
 /**
@@ -11,7 +13,7 @@ public final class ConversionUtils {
     }
 
     public static InputStream getCorrectConversionXml() {
-        return ConversionUtils.class.getClassLoader().getResourceAsStream("xml/test-conversion.xml");
+        return ResourceHelper.getResourceInputStream(getCorrectConversionXmlPath());
     }
 
     public static String getCorrectConversionXmlPath() {
@@ -19,7 +21,7 @@ public final class ConversionUtils {
     }
 
     public static InputStream getBrokenXmlConversionXml() {
-        return ConversionUtils.class.getClassLoader().getResourceAsStream(getBrokenXmlConversionXmlPath());
+        return ResourceHelper.getResourceInputStream(getBrokenXmlConversionXmlPath());
     }
 
     public static String getBrokenXmlConversionXmlPath() {
@@ -27,7 +29,7 @@ public final class ConversionUtils {
     }
 
     public static InputStream getInvalidXsdConversionXml() {
-        return ConversionUtils.class.getClassLoader().getResourceAsStream(getInvalidXsdConversionXmlPath());
+        return ResourceHelper.getResourceInputStream(getInvalidXsdConversionXmlPath());
     }
 
     public static String getInvalidXsdConversionXmlPath() {
