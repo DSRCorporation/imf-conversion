@@ -1,13 +1,18 @@
+// 1. project description
 description = "IMF conversion main entry point"
 
+// 2. dependencies
 dependencies {
     compile project(':dpp-conversion')
 }
 
+// 3. create a distribution
 apply plugin: 'application'
 
 mainClassName = "com.netflix.imfutility.ImfUtility"
 
+// 4. copy default tools (validation, ttml-to-stl) to the tools folder
+// these paths are also specified in the Constants! Make sure that they correspond.
 task copyDefaultTools(type: Copy) {
     from '../imf-validation/build/libs'
     from '../ttml-to-stl/build/libs'
@@ -16,15 +21,21 @@ task copyDefaultTools(type: Copy) {
 
 evaluationDependsOn(':imf-validation')
 evaluationDependsOn(':ttml-to-stl')
-
 copyDefaultTools.dependsOn(':imf-validation:assemble', ':ttml-to-stl:assemble')
 classes.dependsOn(copyDefaultTools)
 
+// 5. customize distribution:
+// - copy default tools into tools folder
+// - copy sample config.xml and licence
 distributions {
     main {
         contents {
             from(copyDefaultTools) {
                 into "tools"
+            }
+            from('../sample/config.xml') {
+            }
+            from('../COPYING') {
             }
         }
     }

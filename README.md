@@ -16,11 +16,8 @@ The project can be built using JDK-8 only.
 
 ## Distribution
 
-After the project is built, the distribution is created in the following folder:
-
-```
-/imf-conversion/build/distributions
-```
+After the project is built, the distribution is created in the 'build' folder of the root project
+(as well as in '/imf-conversion/build/distributions' folder)
 
 ## Usage
 
@@ -30,13 +27,16 @@ The user just specifies the executables in config.xml
 
 ### Conversion to DPP format
 
-1. Install FFMPEG (https://ffmpeg.org/)
+1. Get FFMPEG (https://ffmpeg.org/)
 
-2. Install x264 Encoder (http://www.videolan.org/developers/x264.html)
+2. Get x264 Encoder (http://www.videolan.org/developers/x264.html)
 
-3. Install BMX: bmx2raw and raw2bmx applications (https://sourceforge.net/projects/bmxlib/)
+3. Get BMX: bmx2raw and raw2bmx applications (https://sourceforge.net/projects/bmxlib/)
 
-4. Modify the config.xml (a sample one can be found in /samples folder)
+4. Get ASDCP tool. Use the one from (...) repository which is enhanced to work properly with TTML wrapped in MXF.
+There is a Windows distribution there which can be used out of the box on Windows.
+
+4. Modify the config.xml (a sample one can be found in '/samples' folder or in the distribution archive)
 ...
     <externalTools>
         <tool id="ffmpeg">ffmpeg</tool>
@@ -44,6 +44,7 @@ The user just specifies the executables in config.xml
         <tool id="bmx">raw2bmxe</tool>
         <tool id="mxf2raw">mxf2raw</tool>
         <tool id="x264">x264</tool>
+        <tool id="asdcp-unwrap">as-02-unwrap</tool>
     </externalTools>
 ...
 

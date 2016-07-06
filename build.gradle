@@ -1,3 +1,4 @@
+// 1. a build script for jaxb plugin (currently 1.3.6 version can not be applied as a plugin)
 buildscript {
 
     repositories {
@@ -10,20 +11,26 @@ buildscript {
 
 }
 
+// 2. group and version for all projects
 subprojects {
     group = 'com.netflix.imfutility'
     version = '1.0'
 }
 
+// 3. define groups of projects with common configuration
 project.ext {
+    // all Java projects
     javaSubprojectList = subprojects
 
+    // Java subprojects that generates Java clases from xsd (with jaxb plugin)
     xsdJavaSubprojectList = subprojects.findAll {
         it.name == 'dpp-conversion-input-xsd' ||
                 it.name == 'imf-conversion-core' ||
                 it.name == 'imf-validation'
     }
 
+    // Java projects that produce a test artifacts (.jar with tests)
+    // to create dependencies between tests in subprojects
     testArtifactsJavaSubprojectList = subprojects.findAll {
         it.name == 'dpp-conversion' ||
                 it.name == 'imf-conversion-core'
@@ -31,7 +38,11 @@ project.ext {
 
 }
 
+// 4. configure all Java projects
 configure(project.javaSubprojectList) {
+
+    // 4.1 Java plugin
+
     apply plugin: 'java'
 
     sourceCompatibility = 1.8
@@ -53,6 +64,8 @@ configure(project.javaSubprojectList) {
         testCompile group: 'junit', name: 'junit', version: '4.12'
     }
 
+    // 4.2 Findbugs plugin
+
     apply plugin: 'findbugs'
 
     findbugs {
@@ -60,9 +73,12 @@ configure(project.javaSubprojectList) {
     }
 
     tasks.withType(FindBugs) {
+        // exclude generated classes
+        // all generated classes must be in 'generated' package!
         classes = classes.filter {
             !it.path.contains('generated')
         }
+        // create the reports in HTML
         reports {
             xml.enabled = false
             html.enabled = true
@@ -71,7 +87,10 @@ configure(project.javaSubprojectList) {
 
 }
 
+// 5. configure Java projects that generate Java classes from XSD (jaxb plugin)
 configure(project.xsdJavaSubprojectList) {
+    // 5.1 apply jaxb plugin
+
     apply plugin: 'com.github.jacobono.jaxb'
 
     System.setProperty('javax.xml.accessExternalSchema', 'file')
@@ -87,17 +106,20 @@ configure(project.xsdJavaSubprojectList) {
     }
 
     jaxb {
+        // all XSDs must be under the xsd folder!
         xsdDir = "${project.name}/src/main/resources/xsd"
+        // all XJBs must be under the xjb folder!
         bindingsDir = "${project.name}/src/main/resources/xjb"
         bindings = ["**/*.xjb"]
         xjc {
             taskClassname = "org.jvnet.jaxb2_commons.xjc.XJC2Task"
-            // generatePackages are specified in xjb bindings
+            // generatePackages must be specified in xjb bindings
             args = ["-Xinheritance", "-Xannotate"]
             destinationDir = "src/generated/java"
         }
     }
 
+    // 5.2 include generated code in main and test source sets
     sourceSets {
         main {
             java {
@@ -113,15 +135,19 @@ configure(project.xsdJavaSubprojectList) {
 
     }
 
+    // 5.3 delete generated code on clean
     clean {
         delete 'src/generated'
         delete 'schema'
     }
 
+    // 5.4 execute xjc task (generate all classes) before compilation
     compileJava.dependsOn(xjc)
 }
 
+// 6. configure Java classes with tests
 configure(project.testArtifactsJavaSubprojectList) {
+    // 6.1 create a .jar with tests to be used as a dependency for other subprojects with dependent tests
     configurations {
         testArtifacts.extendsFrom testCompile
     }
@@ -138,4 +164,12 @@ configure(project.testArtifactsJavaSubprojectList) {
 
 }
 
+// 7. copy the final distribution (of imf-conversion-main) to the build folder of the root project
+apply plugin: 'base'
 
+task copyDistr(type: Copy) {
+    from 'imf-conversion-main/build/distributions'
+    into "$buildDir"
+}
+copyDistr.dependsOn(subprojects.build)
+build.finalizedBy(copyDistr)

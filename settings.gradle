@@ -1,4 +1,4 @@
-rootProject.name='imf-conversion'
+rootProject.name = 'imf-conversion'
 include 'imf-conversion-main'
 include 'imf-conversion-common'
 include 'imf-conversion-core'
@@ -6,5 +6,7 @@ include 'dpp-conversion'
 include 'dpp-conversion-input-xsd'
 include 'imf-validation'
 include 'ttml-to-stl'
+
+project(":imf-conversion-main").name = "imf-conversion"
 
 
