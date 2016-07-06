@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config xmlns="http://config.imfutility.netflix.com">
+
+    <!--<imp>absolute path to imp</imp>-->
+    <!--<cpl>relative path of CPL.xml</cpl>-->
+    <!--<workingDirectory>output directory</workingDirectory>-->
+
+    <!--
+        Path to external executables.
+     -->
+    <externalTools>
+        <tool id="ffmpeg">ffmpeg</tool>
+        <tool id="ffprobe">ffprobe</tool>
+        <tool id="bmx">raw2bmxe</tool>
+        <tool id="mxf2raw">mxf2raw</tool>
+        <tool id="x264">x264</tool>
+        <!--<tool id="ttml-to-stl">ttmlToStl path</tool>-->
+        <!--<tool id="imf-validation">validation path</tool>-->
+        <tool id="asdcp-test">asdcp-test</tool>
+    </externalTools>
+
+    <!--
+        Allows/disallows silent conversion to format destination parameters if the input doesn't match.
+        Conversion is allowed by default (if not specified here explicitly)
+     -->
+    <conversionParameters>
+        <video>
+            <size>yes</size>
+            <frameRate>yes</frameRate>
+            <pixelFormat>yes</pixelFormat>
+            <bitDepth>yes</bitDepth>
+        </video>
+        <audio>
+            <sampleRate>yes</sampleRate>
+            <bitsSample>yes</bitsSample>
+        </audio>
+    </conversionParameters>
+
+    <cleanWorkingDir>true</cleanWorkingDir>
+    <deleteTmpFilesOnExit>true</deleteTmpFilesOnExit>
+    <deleteTmpFilesOnFail>false</deleteTmpFilesOnFail>
+
+</Config>
