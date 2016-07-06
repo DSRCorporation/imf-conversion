@@ -7,6 +7,6 @@ include 'dpp-conversion-input-xsd'
 include 'imf-validation'
 include 'ttml-to-stl'
 
-project(":imf-conversion-main").name = "imf-conversion"
+project(":imf-conversion-main").name = "imf-conversion-utility"
 
 
