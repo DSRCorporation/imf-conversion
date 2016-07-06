@@ -10,11 +10,11 @@
         May be used in both code and conversion.xml template operations.
      -->
     <externalTools>
-        <tool id="ffmpeg">G:\Netflix\tools\ffmpeg.exe</tool>
-        <tool id="ffprobe">G:\Netflix\tools\ffprobe.exe</tool>
-        <tool id="bmx">G:\Netflix\tools\raw2bmx.exe</tool>
-        <tool id="mxf2raw">G:\Netflix\tools\mxf2raw.exe</tool>
-        <tool id="x264">G:\Netflix\tools\x264.exe</tool>
+        <tool id="ffmpeg">ffmpeg</tool>
+        <tool id="ffprobe">ffprobe</tool>
+        <tool id="bmx">raw2bmx</tool>
+        <tool id="mxf2raw">mxf2raw</tool>
+        <tool id="x264">x264</tool>
         <!--<tool id="ttml-to-stl">ttmlToStl path</tool>-->
         <!--<tool id="imf-validation">photon path</tool>-->
         <tool id="asdcp-test">D:\asdcplib\asdcp-test.exe</tool>

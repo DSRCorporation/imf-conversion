@@ -11,7 +11,7 @@
     <externalTools>
         <tool id="ffmpeg">ffmpeg</tool>
         <tool id="ffprobe">ffprobe</tool>
-        <tool id="bmx">raw2bmxe</tool>
+        <tool id="bmx">raw2bmx</tool>
         <tool id="mxf2raw">mxf2raw</tool>
         <tool id="x264">x264</tool>
         <!--<tool id="ttml-to-stl">ttmlToStl path</tool>-->

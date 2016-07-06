@@ -64,14 +64,15 @@ public class ParseConversionOperationTest {
                         "'arg5 in single quotes'  'arg6 \"in single quotes\"' arg7=\"value\" arg8='value'";
 
         List<String> actual = parser.parseOperation(conversionOperation, ContextInfo.EMPTY);
+        // all leading and tailing quotes must be removed
         List<String> expected = Arrays.asList(
                 "exec",
                 "arg1",
                 "--arg2",
-                "\"arg3 in double quotes\"",
-                "\"arg4 'in double quotes'\"",
-                "'arg5 in single quotes'",
-                "'arg6 \"in single quotes\"'",
+                "arg3 in double quotes",
+                "arg4 'in double quotes'",
+                "arg5 in single quotes",
+                "arg6 \"in single quotes\"",
                 "arg7=\"value\"",
                 "arg8='value'"
         );
@@ -146,13 +147,14 @@ public class ParseConversionOperationTest {
                 "exec \"arg1\narg2\narg3\"\narg4\n\"arg5\"\n'arg6'\n\'arg7\narg8'";
 
         List<String> actual = parser.parseOperation(conversionOperation, ContextInfo.EMPTY);
+        // all leading and tailing quotes must be removed
         List<String> expected = Arrays.asList(
                 "exec",
-                "\"arg1\narg2\narg3\"",
+                "arg1\narg2\narg3",
                 "arg4",
-                "\"arg5\"",
-                "'arg6'",
-                "'arg7\narg8'");
+                "arg5",
+                "arg6",
+                "arg7\narg8");
 
         assertThat(actual, is(expected));
     }
@@ -163,13 +165,14 @@ public class ParseConversionOperationTest {
                 "exec \"arg1\rarg2\rarg3\"\rarg4\r\"arg5\"\r'arg6'\r\'arg7\rarg8'";
 
         List<String> actual = parser.parseOperation(conversionOperation, ContextInfo.EMPTY);
+        // all leading and tailing quotes must be removed
         List<String> expected = Arrays.asList(
                 "exec",
-                "\"arg1\rarg2\rarg3\"",
+                "arg1\rarg2\rarg3",
                 "arg4",
-                "\"arg5\"",
-                "'arg6'",
-                "'arg7\rarg8'");
+                "arg5",
+                "arg6",
+                "arg7\rarg8");
 
         assertThat(actual, is(expected));
     }
@@ -180,13 +183,14 @@ public class ParseConversionOperationTest {
                 "exec \"arg1\r\narg2\r\narg3\"\r\narg4\r\n\"arg5\"\r\n'arg6'\r\n\'arg7\r\narg8'";
 
         List<String> actual = parser.parseOperation(conversionOperation, ContextInfo.EMPTY);
+        // all leading and tailing quotes must be removed
         List<String> expected = Arrays.asList(
                 "exec",
-                "\"arg1\r\narg2\r\narg3\"",
+                "arg1\r\narg2\r\narg3",
                 "arg4",
-                "\"arg5\"",
-                "'arg6'",
-                "'arg7\r\narg8'");
+                "arg5",
+                "arg6",
+                "arg7\r\narg8");
 
         assertThat(actual, is(expected));
     }

@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
  */
 public class ConversionOperationParser {
 
+    private static final String QUOTES_TEMPLATE = "(\".*\")|('.*')";
+
     private final TemplateParameterResolver parameterResolver;
 
     public ConversionOperationParser(TemplateParameterResolver parameterResolver) {
@@ -25,6 +27,7 @@ public class ConversionOperationParser {
      * Resolves all parameters in the given conversion operation string, and splits arguments.
      * It doesn't add any quotes, so it's assumed that all quotes are added at the conversion.xml level.
      * If quotes should be be auto-added, then use {@link #parseWithQuotes(String, ContextInfo)}.
+     * Moreover, the method removes leading and tailing quotes.
      *
      * @param conversionOperation a conversion operation string as defined in conversion.xml.
      * @param contextInfo         a context info to resolve template parameters.
@@ -34,9 +37,11 @@ public class ConversionOperationParser {
         // 1. resolve parameters BEFORE splitting since resolved values may contain multiple sub-parameters!
         conversionOperation = parameterResolver.resolveTemplateParameter(conversionOperation, contextInfo);
 
-        // 2. split params
+        // 2. split params and remove leading and tailing quotes
         // do not add quotes! it's up to conversion.xml to insert correct quotes.
-        return splitParameters(conversionOperation);
+        return splitParameters(conversionOperation).stream()
+                .map(this::removeQuotes)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -118,6 +123,14 @@ public class ConversionOperationParser {
         return result;
     }
 
+    private String removeQuotes(String param) {
+        Pattern p = Pattern.compile(QUOTES_TEMPLATE, Pattern.DOTALL);
+        if (p.matcher(param).matches()) {
+            return param.substring(1, param.length() - 1);
+        }
+        return param;
+    }
+
     private String addQuotes(String param) {
         if (!param.contains(" ") && !param.contains("\n") && !param.contains("\r")) {
             return param;
@@ -132,7 +145,7 @@ public class ConversionOperationParser {
 
     private String addQuotesIfNeeded(String param) {
         String trimmedParam = param.trim();
-        Pattern p = Pattern.compile("(\".*\")|('.*')", Pattern.DOTALL);
+        Pattern p = Pattern.compile(QUOTES_TEMPLATE, Pattern.DOTALL);
         if (!p.matcher(trimmedParam).matches()) {
             if (trimmedParam.contains("\"")) {
                 trimmedParam = String.format("'%s'", trimmedParam);
