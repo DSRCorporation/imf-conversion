@@ -3,7 +3,6 @@ package com.netflix.imfutility.util;
 import com.netflix.imfutility.FakeFormat;
 import com.netflix.imfutility.config.ConfigXmlProvider;
 import com.netflix.imfutility.conversion.ConversionXmlProvider;
-import com.netflix.imfutility.conversion.SequenceType;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.*;
@@ -13,6 +12,7 @@ import com.netflix.imfutility.conversion.templateParameter.context.parameters.Se
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
+import com.netflix.imfutility.generated.conversion.SequenceType;
 
 import java.io.File;
 import java.util.EnumSet;

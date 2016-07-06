@@ -13,7 +13,7 @@ import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.cpl.uuid.UUID;
-import com.netflix.imfutility.imf._2013.*;
+import com.netflix.imfutility.generated.imf._2013.*;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -47,7 +47,7 @@ public class Cpl2013ContextBuilder {
     private SegmentUUID currentSegmentUuid;
     private SequenceType currentSequence;
     private SequenceUUID currentSequenceUuid;
-    private com.netflix.imfutility.conversion.SequenceType currentSequenceType;
+    private com.netflix.imfutility.generated.conversion.SequenceType currentSequenceType;
 
     private final Map<String, BigFraction> videoEssences = new HashMap<>();
 
@@ -207,7 +207,7 @@ public class Cpl2013ContextBuilder {
 
         // 10. save all video essences to later re-check DURATION_FRAME_EDIT_UNIT and START_TIME_FRAME_EDIT_UNIT for
         // audio sequences which has essences containing both audio and video (the values must be calculated in video frames in this case)
-        if (currentSequenceType == com.netflix.imfutility.conversion.SequenceType.VIDEO) {
+        if (currentSequenceType == com.netflix.imfutility.generated.conversion.SequenceType.VIDEO) {
             videoEssences.put(assetPath, editRate);
         }
     }
@@ -216,7 +216,7 @@ public class Cpl2013ContextBuilder {
         ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
 
         // process only audio
-        com.netflix.imfutility.conversion.SequenceType seqType = com.netflix.imfutility.conversion.SequenceType.AUDIO;
+        com.netflix.imfutility.generated.conversion.SequenceType seqType = com.netflix.imfutility.generated.conversion.SequenceType.AUDIO;
         for (SequenceUUID seqUuid : contextProvider.getSequenceContext().getUuids(seqType)) {
             for (SegmentUUID segmUuid : contextProvider.getSegmentContext().getUuids()) {
                 ResourceKey resourceKey = ResourceKey.create(segmUuid, seqUuid, seqType);

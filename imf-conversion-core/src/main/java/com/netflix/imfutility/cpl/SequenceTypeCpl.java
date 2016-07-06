@@ -39,14 +39,14 @@ public enum SequenceTypeCpl {
                 .collect(Collectors.joining(" ", "[", "]"));
     }
 
-    public com.netflix.imfutility.conversion.SequenceType toSequenceType() {
+    public com.netflix.imfutility.generated.conversion.SequenceType toSequenceType() {
         switch (this) {
             case AUDIO:
-                return com.netflix.imfutility.conversion.SequenceType.AUDIO;
+                return com.netflix.imfutility.generated.conversion.SequenceType.AUDIO;
             case IMAGE:
-                return com.netflix.imfutility.conversion.SequenceType.VIDEO;
+                return com.netflix.imfutility.generated.conversion.SequenceType.VIDEO;
             case SUBTITLE:
-                return com.netflix.imfutility.conversion.SequenceType.SUBTITLE;
+                return com.netflix.imfutility.generated.conversion.SequenceType.SUBTITLE;
         }
         return null;
     }

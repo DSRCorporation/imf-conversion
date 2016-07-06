@@ -7,11 +7,12 @@ import com.netflix.imfutility.conversion.templateParameter.context.*;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
+import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.generated.mediainfo.FfprobeType;
 import com.netflix.imfutility.util.MediaInfoUtils;
 import com.netflix.imfutility.util.conversion.executor.TestExecuteStrategyFactory;
 import com.netflix.imfutility.util.conversion.executor.TestExecutorLogger;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.conversion.SequenceType;
 import org.junit.Before;
 import org.junit.Test;
 

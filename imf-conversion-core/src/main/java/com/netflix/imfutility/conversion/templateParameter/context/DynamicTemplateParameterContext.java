@@ -1,14 +1,14 @@
 package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.CoreConstants;
-import com.netflix.imfutility.conversion.DynamicParameterConcatType;
-import com.netflix.imfutility.conversion.DynamicParameterType;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
+import com.netflix.imfutility.generated.conversion.DynamicParameterConcatType;
+import com.netflix.imfutility.generated.conversion.DynamicParameterType;
 
 import java.util.Collection;
 import java.util.HashMap;

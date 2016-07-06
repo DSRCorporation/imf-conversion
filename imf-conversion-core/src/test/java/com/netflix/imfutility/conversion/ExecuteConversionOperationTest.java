@@ -4,6 +4,7 @@ import com.netflix.imfutility.FakeFormat;
 import com.netflix.imfutility.config.ConfigXmlProvider;
 import com.netflix.imfutility.conversion.executor.strategy.AbstractExecuteStrategy;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.util.ConversionUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;

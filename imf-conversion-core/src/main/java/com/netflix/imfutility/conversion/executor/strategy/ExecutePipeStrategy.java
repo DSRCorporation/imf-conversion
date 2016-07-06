@@ -101,13 +101,6 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
         pipe(pipeline);
     }
 
-    private void pipe(ExternalProcess firstProc, List<ExternalProcess> tail) {
-        List<ExternalProcess> pipeline = new ArrayList<>();
-        pipeline.add(firstProc);
-        pipeline.addAll(tail);
-        pipe(pipeline);
-    }
-
     private void pipe(List<ExternalProcess> pipeline) {
         // 1. start a new thread to copy input - output in a pipeline
         ExternalProcess p1;

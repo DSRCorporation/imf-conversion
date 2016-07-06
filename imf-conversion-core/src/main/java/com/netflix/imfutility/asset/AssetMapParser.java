@@ -2,8 +2,8 @@ package com.netflix.imfutility.asset;
 
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.cpl.uuid.UUID;
-import com.netflix.imfutility.imf.assetmap.AssetMapType;
-import com.netflix.imfutility.imf.assetmap.AssetType;
+import com.netflix.imfutility.generated.imf.assetmap.AssetMapType;
+import com.netflix.imfutility.generated.imf.assetmap.AssetType;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 
@@ -22,7 +22,7 @@ public class AssetMapParser {
      * Parses the given assetmap.xml and fills {@link AssetMap}. The result Asset map contains full absolute paths for each UUID.
      *
      * @param impDirectory the IMP directory
-     * @param assetMapFile  a full path to ASSETMAP.xml
+     * @param assetMapFile a full path to ASSETMAP.xml
      * @return am  Asset map instance containing full absolute paths for each UUID.
      * @throws XmlParsingException   if input is not a valid XML or it doesn't pass XSD validation
      * @throws FileNotFoundException if the input path doesn't define a file.
@@ -34,7 +34,7 @@ public class AssetMapParser {
 
         AssetMap result = new AssetMap();
 
-        AssetMapType assetmap = XmlParser.parse(assetMapFile, new String[] {XSD_ASSETMAP_XSD}, ASSETMAP_PACKAGE, AssetMapType.class);
+        AssetMapType assetmap = XmlParser.parse(assetMapFile, new String[]{XSD_ASSETMAP_XSD}, ASSETMAP_PACKAGE, AssetMapType.class);
         for (AssetType asset : assetmap.getAssetList().getAsset()) {
             UUID uuid = UUID.create(asset.getId());
             //per st0429-9:2014 Section 6.4, <ChunkList> shall contain one <Chunk> element only

@@ -11,10 +11,10 @@ import com.netflix.imfutility.conversion.templateParameter.context.parameters.Se
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
+import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.util.ImpUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.conversion.SequenceType;
 import org.junit.Test;
 
 import java.io.File;
@@ -49,7 +49,7 @@ public class CplContextBuilderTest {
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
-        createCplContextBuilder().build(new File("C:/invalid-path"));
+        createCplContextBuilder().build(new File("invalid-path"));
     }
 
     @Test

@@ -20,4 +20,6 @@ jar {
 }
 
 
-
+findbugs {
+    sourceSets = []
+}

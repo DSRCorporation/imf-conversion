@@ -1,7 +1,6 @@
 package com.netflix.imfutility.conversion.executor;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.conversion.*;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.executor.strategy.PipeOperationInfo;
@@ -12,6 +11,7 @@ import com.netflix.imfutility.conversion.templateParameter.context.TemplateParam
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
+import com.netflix.imfutility.generated.conversion.*;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -23,6 +23,12 @@
             </jaxb:property>
         </jaxb:bindings>
 
+         <jaxb:bindings schemaLocation="../xsd/conversion.xsd">
+             <jaxb:schemaBindings>
+                 <jaxb:package name="com.netflix.imfutility.generated.conversion" />
+             </jaxb:schemaBindings>
+         </jaxb:bindings>
+
     </jaxb:bindings>
 
 </jaxb:bindings>

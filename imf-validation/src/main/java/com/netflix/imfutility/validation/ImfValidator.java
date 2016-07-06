@@ -85,6 +85,9 @@ public class ImfValidator {
                         break;
                     case PackingList:
                         pkls.add(file);
+                        break;
+                    default:
+                        // nothing
                 }
             } else if (file.getName().endsWith(".mxf")) {
                 mxfs.add(file);

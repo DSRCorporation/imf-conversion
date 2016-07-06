@@ -6,9 +6,9 @@ import com.netflix.imfutility.conversion.templateParameter.context.parameters.Se
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.conversion.DynamicParameterConcatType;
-import com.netflix.imfutility.conversion.DynamicParameterType;
-import com.netflix.imfutility.conversion.SequenceType;
+import com.netflix.imfutility.generated.conversion.DynamicParameterConcatType;
+import com.netflix.imfutility.generated.conversion.DynamicParameterType;
+import com.netflix.imfutility.generated.conversion.SequenceType;
 import org.junit.Test;
 
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.*;

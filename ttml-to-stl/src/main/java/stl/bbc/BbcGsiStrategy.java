@@ -1,7 +1,7 @@
 package stl.bbc;
 
-import com.netflix.imfutility.dpp.metadata.DppType;
-import com.netflix.imfutility.dpp.metadata.types.TimecodeType;
+import com.netflix.imfutility.generated.dpp.metadata.DppType;
+import com.netflix.imfutility.generated.dpp.metadata.TimecodeType;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import stl.DefaultGsiStrategy;

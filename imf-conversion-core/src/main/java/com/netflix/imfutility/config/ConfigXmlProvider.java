@@ -1,5 +1,6 @@
 package com.netflix.imfutility.config;
 
+import com.netflix.imfutility.generated.config.ConfigType;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 

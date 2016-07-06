@@ -2,11 +2,10 @@ package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.dpp.MetadataXmlProvider.DMFramework;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParametersValidator;
-import com.netflix.imfutility.dpp.metadata.AudioTrackLayoutDmAs11Type;
+import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

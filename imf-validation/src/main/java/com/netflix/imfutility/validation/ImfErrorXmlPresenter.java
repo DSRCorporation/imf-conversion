@@ -1,7 +1,7 @@
 package com.netflix.imfutility.validation;
 
-import com.netflix.imf.validation.Errors;
 import com.netflix.imflibrary.utils.ErrorLogger;
+import com.netflix.imfutility.generated.validation.Errors;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

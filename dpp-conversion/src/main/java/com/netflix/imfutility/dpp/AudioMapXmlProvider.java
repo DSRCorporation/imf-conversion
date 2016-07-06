@@ -1,16 +1,16 @@
 package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.conversion.SequenceType;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.dpp.audiomap.AudioMapType;
-import com.netflix.imfutility.dpp.audiomap.EBUTrackType;
-import com.netflix.imfutility.dpp.audiomap.ObjectFactory;
-import com.netflix.imfutility.dpp.metadata.AudioTrackLayoutDmAs11Type;
+import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.generated.dpp.audiomap.AudioMapType;
+import com.netflix.imfutility.generated.dpp.audiomap.EBUTrackType;
+import com.netflix.imfutility.generated.dpp.audiomap.ObjectFactory;
+import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 
@@ -22,7 +22,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-import static com.netflix.imfutility.dpp.DppConversionXsdConstants.*;
+import static com.netflix.imfutility.dpp.DppConversionXsdConstants.AUDIOMAP_PACKAGE;
+import static com.netflix.imfutility.dpp.DppConversionXsdConstants.AUDIOMAP_XML_SCHEME;
 
 /**
  * Created by Alexandr on 5/12/2016.
@@ -153,7 +154,7 @@ public class AudioMapXmlProvider {
         if (!audioMapFile.isFile()) {
             throw new FileNotFoundException(String.format("Invalid audiomap.xml file: '%s' not found", audioMapFile.getAbsolutePath()));
         }
-        return XmlParser.parse(audioMapFile, new String[] {AUDIOMAP_XML_SCHEME}, AUDIOMAP_PACKAGE, AudioMapType.class);
+        return XmlParser.parse(audioMapFile, new String[]{AUDIOMAP_XML_SCHEME}, AUDIOMAP_PACKAGE, AudioMapType.class);
     }
 
     private LinkedHashMap<String, Integer> getChannelsForTracks() {

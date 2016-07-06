@@ -2,7 +2,7 @@ package com.netflix.imfutility.validate;
 
 import com.netflix.imfutility.CoreConstants;
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.conversion.ImfValidationType;
+import com.netflix.imfutility.generated.conversion.ImfValidationType;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;

@@ -10,6 +10,12 @@
             </jaxb:property>
         </jaxb:bindings>
 
+         <jaxb:bindings schemaLocation="../xsd/config.xsd">
+             <jaxb:schemaBindings>
+                 <jaxb:package name="com.netflix.imfutility.generated.config" />
+             </jaxb:schemaBindings>
+         </jaxb:bindings>
+
     </jaxb:bindings>
 
 </jaxb:bindings>

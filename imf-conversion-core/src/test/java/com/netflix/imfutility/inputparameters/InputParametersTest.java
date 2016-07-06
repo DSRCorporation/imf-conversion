@@ -30,7 +30,7 @@ public class InputParametersTest extends ImfUtilityTest {
         if (!workingDir.mkdir()) {
             throw new RuntimeException("Could not create a working dir within tmp folder");
         }
-        File configXml = new File(workingDir, "config.xml");
+        new File(workingDir, "config.xml");
     }
 
     @AfterClass
@@ -82,9 +82,9 @@ public class InputParametersTest extends ImfUtilityTest {
                 CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
                 new FakeDefaultTools());
 
-        inputParameters.setDefaultWorkingDir("C:/defaultWorkingDir");
+        inputParameters.setDefaultWorkingDir("defaultWorkingDir");
 
-        assertEquals(new File("C:/defaultWorkingDir"), inputParameters.getWorkingDirFile());
+        assertEquals(new File("defaultWorkingDir"), inputParameters.getWorkingDirFile());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class InputParametersTest extends ImfUtilityTest {
                 CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
                 new FakeDefaultTools());
 
-        inputParameters.setDefaultWorkingDir("C:/defaultWorkingDir");
+        inputParameters.setDefaultWorkingDir("defaultWorkingDir");
 
         assertEquals(TemplateParameterContextCreator.getWorkingDir(), inputParameters.getWorkingDirFile());
     }
@@ -126,9 +126,9 @@ public class InputParametersTest extends ImfUtilityTest {
                 CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
                 new FakeDefaultTools());
 
-        inputParameters.setDefaultImp("C:/defaultImp");
+        inputParameters.setDefaultImp("defaultImp");
 
-        assertEquals(new File("C:/defaultImp"), inputParameters.getImpDirectoryFile());
+        assertEquals(new File("defaultImp"), inputParameters.getImpDirectoryFile());
     }
 
     @Test
@@ -140,7 +140,7 @@ public class InputParametersTest extends ImfUtilityTest {
                 CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
                 new FakeDefaultTools());
 
-        inputParameters.setDefaultImp("C:/defaultImp");
+        inputParameters.setDefaultImp("defaultImp");
 
         assertEquals(ImpUtils.getImpFolder(), inputParameters.getImpDirectoryFile());
     }
@@ -180,10 +180,10 @@ public class InputParametersTest extends ImfUtilityTest {
                 CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
                 new FakeDefaultTools());
 
-        inputParameters.setDefaultImp("C:/defaultImp");
+        inputParameters.setDefaultImp("defaultImp");
         inputParameters.setDefaultCpl("defaultCpl");
 
-        assertEquals(new File("C:/defaultImp", "defaultCpl"), inputParameters.getCplFile());
+        assertEquals(new File("defaultImp", "defaultCpl"), inputParameters.getCplFile());
     }
 
     @Test
@@ -196,7 +196,7 @@ public class InputParametersTest extends ImfUtilityTest {
                 CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
                 new FakeDefaultTools());
 
-        inputParameters.setDefaultCpl("C:/defaultCpl");
+        inputParameters.setDefaultCpl("defaultCpl");
 
         assertEquals(ImpUtils.getCorrectCpl(), inputParameters.getCplFile());
     }
@@ -226,7 +226,7 @@ public class InputParametersTest extends ImfUtilityTest {
     @Test(expected = ArgumentValidationException.class)
     public void testValidateConfigNotExistentFile() {
         String[] args = new String[]{
-                "-c", "C:/someFile"
+                "-c", "someFile"
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
                 CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
@@ -265,7 +265,7 @@ public class InputParametersTest extends ImfUtilityTest {
     @Test(expected = ArgumentValidationException.class)
     public void testValidateImpNotExistentFolder() {
         String[] args = new String[]{
-                "--imp", "C:/someFolder",
+                "--imp", "someFolder",
                 "--cpl", ImpUtils.getCorrectCpl().getName(),
                 "-w", TemplateParameterContextCreator.getWorkingDir().getAbsolutePath()
         };
@@ -293,7 +293,7 @@ public class InputParametersTest extends ImfUtilityTest {
     public void testValidateCplNotExistentFile() {
         String[] args = new String[]{
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath(),
-                "--cpl", "C:/someFile",
+                "--cpl", "someFile",
                 "-w", TemplateParameterContextCreator.getWorkingDir().getAbsolutePath()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
@@ -321,7 +321,7 @@ public class InputParametersTest extends ImfUtilityTest {
         String[] args = new String[]{
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath(),
                 "--cpl", ImpUtils.getCorrectCpl().getName(),
-                "-w", "C:/someFolder"
+                "-w", "someFolder"
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
                 CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),

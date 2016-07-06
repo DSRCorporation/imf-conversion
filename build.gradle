@@ -52,6 +52,23 @@ configure(project.javaSubprojectList) {
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.12'
     }
+
+    apply plugin: 'findbugs'
+
+    findbugs {
+        sourceSets = [sourceSets.main]
+    }
+
+    tasks.withType(FindBugs) {
+        classes = classes.filter {
+            !it.path.contains('generated')
+        }
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+    }
+
 }
 
 configure(project.xsdJavaSubprojectList) {
@@ -118,6 +135,7 @@ configure(project.testArtifactsJavaSubprojectList) {
     artifacts {
         testArtifacts jarTest
     }
+
 }
 
 

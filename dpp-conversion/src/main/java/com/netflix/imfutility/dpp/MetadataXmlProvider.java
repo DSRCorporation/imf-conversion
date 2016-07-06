@@ -1,9 +1,6 @@
 package com.netflix.imfutility.dpp;
 
-import com.netflix.imfutility.dpp.metadata.*;
-import com.netflix.imfutility.dpp.metadata.iso6392codes.Iso6392CodeType;
-import com.netflix.imfutility.dpp.metadata.types.DurationType;
-import com.netflix.imfutility.dpp.metadata.types.TimecodeType;
+import com.netflix.imfutility.generated.dpp.metadata.*;
 import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -21,7 +18,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
-import java.net.URL;
 import java.util.*;
 
 import static com.netflix.imfutility.dpp.DppConversionConstants.*;
@@ -248,11 +244,9 @@ public class MetadataXmlProvider {
      * @return a temporary file to be used as BMXLib input parameter for particular framework.
      */
     private File createBmxFrameworkParameterFile(JAXBSource source, DMFramework framework, File workingDir) {
-        FileWriter writer = null;
+        // Create Transformer
+        Transformer transformer = null;
         try {
-            //Get file from resources folder
-            ClassLoader classLoader = MetadataXmlProvider.class.getClassLoader();
-
             // Create Transformer
             TransformerFactory tf = TransformerFactory.newInstance(XSLT2_TRANSFORMER_IMPLEMENTATION, null);
             InputStream transformationStream = ResourceHelper.getResourceInputStream(BMX_PARAMETERS_TRANSFORMATION);
@@ -260,33 +254,26 @@ public class MetadataXmlProvider {
                 throw new FileNotFoundException(String.format("Metadata.xml to BMX transformation file is absent: %s", BMX_PARAMETERS_TRANSFORMATION));
             }
             StreamSource xslt = new StreamSource(transformationStream);
-            Transformer transformer = tf.newTransformer(xslt);
+            transformer = tf.newTransformer(xslt);
 
             //Set framework
             transformer.setParameter(BMX_FRAMEWORK_PARAM, framework.value());
 
-            //Prepare a parameter file
-            File result = new File(workingDir, framework.value + ".txt");
+        } catch (TransformerException | IOException e) {
+            throw new RuntimeException(e);
+        }
 
-            // Result
-            writer = new FileWriter(result);
+        //Prepare a parameter file
+        File result = new File(workingDir, framework.value + ".txt");
+
+        // Transform
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(result), "UTF-8"))) {
             StreamResult streamResult = new StreamResult(writer);
-
-            // Transform
             transformer.transform(source, streamResult);
             writer.flush();
-
             return result;
         } catch (TransformerException | IOException e) {
             throw new RuntimeException(e);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
         }
     }
 

@@ -46,7 +46,7 @@ public class ConfigProviderTest {
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
-        new ConfigXmlProvider(new File("C:/invalid-path"));
+        new ConfigXmlProvider(new File("invalid-path"));
     }
 
 }

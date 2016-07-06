@@ -5,4 +5,29 @@
     <bindings schemaLocation="../xsd/metadata/iso-639-2-codes.xsd">
         <globalBindings typesafeEnumMaxMembers="1024" />
     </bindings>
+
+     <bindings schemaLocation="../xsd/metadata/iso-639-2-codes.xsd">
+         <schemaBindings>
+             <package name="com.netflix.imfutility.generated.dpp.metadata" />
+         </schemaBindings>
+     </bindings>
+
+     <bindings schemaLocation="../xsd/metadata/types.xsd">
+         <schemaBindings>
+             <package name="com.netflix.imfutility.generated.dpp.metadata" />
+         </schemaBindings>
+     </bindings>
+
+     <bindings schemaLocation="../xsd/metadata/metadata.xsd">
+         <schemaBindings>
+             <package name="com.netflix.imfutility.generated.dpp.metadata" />
+         </schemaBindings>
+     </bindings>
+
+     <bindings schemaLocation="../xsd/audiomap/audiomap.xsd">
+         <schemaBindings>
+             <package name="com.netflix.imfutility.generated.dpp.audiomap" />
+         </schemaBindings>
+     </bindings>
+
 </bindings>

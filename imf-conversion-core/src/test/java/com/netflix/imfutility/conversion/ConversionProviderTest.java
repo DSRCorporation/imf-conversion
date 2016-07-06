@@ -40,7 +40,7 @@ public class ConversionProviderTest {
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
-        new ConversionXmlProvider("C:/invalid-path", new FakeFormat());
+        new ConversionXmlProvider("invalid-path", new FakeFormat());
     }
 
 }

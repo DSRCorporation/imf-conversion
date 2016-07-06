@@ -1,7 +1,7 @@
 package com.netflix.imfutility.xsd.conversion;
 
-import com.netflix.imfutility.conversion.FormatConfigurationType;
-import com.netflix.imfutility.conversion.FormatConfigurationTypes;
+import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
+import com.netflix.imfutility.generated.conversion.FormatConfigurationTypes;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Map;

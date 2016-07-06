@@ -139,9 +139,6 @@ public class XmlParser {
         List<StreamSource> xsdSchemas = new ArrayList<>();
         for (String xsd : xsds) {
             InputStream xsdSchema = ResourceHelper.getResourceInputStream(xsd);
-            if (xsdSchema == null) {
-                throw new RuntimeException(String.format("'%s' schema not found.", xsd));
-            }
             xsdSchemas.add(new StreamSource(xsdSchema));
         }
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);

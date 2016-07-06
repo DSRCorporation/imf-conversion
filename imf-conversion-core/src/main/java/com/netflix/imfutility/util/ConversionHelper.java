@@ -100,9 +100,9 @@ public final class ConversionHelper {
         String[] parts = editRate.split(" ");
         try {
             if (parts.length == 2) {
-                return new BigFraction(Long.valueOf(parts[0]), Long.valueOf(parts[1]));
+                return new BigFraction(Long.parseLong(parts[0]), Long.parseLong(parts[1]));
             } else if (parts.length == 1) {
-                return new BigFraction(Long.valueOf(parts[0]));
+                return new BigFraction(Long.parseLong(parts[0]));
             }
         } catch (NumberFormatException e) {
             throw new ConversionException("Incorrect edit rate! Edit rate must consist of two numbers.", e);

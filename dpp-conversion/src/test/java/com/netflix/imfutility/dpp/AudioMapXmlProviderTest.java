@@ -5,12 +5,12 @@ import com.netflix.imfutility.conversion.templateParameter.context.SequenceTempl
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
+import com.netflix.imfutility.generated.dpp.audiomap.AudioMapType;
+import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
+import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.util.AudioMapUtils;
+import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.conversion.SequenceType;
-import com.netflix.imfutility.dpp.audiomap.AudioMapType;
-import com.netflix.imfutility.dpp.metadata.AudioTrackLayoutDmAs11Type;
-import com.netflix.imfutility.dpp.metadata.AudioTrackLayoutDmAs11Type;
 import org.junit.Test;
 
 import java.io.File;
@@ -18,7 +18,6 @@ import java.io.FileNotFoundException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -65,7 +64,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
-        new AudioMapXmlProvider(new File("C:/invalid-path"), AudioTrackLayoutDmAs11Type.EBU_R_48_2_A,
+        new AudioMapXmlProvider(new File("invalid-path"), AudioTrackLayoutDmAs11Type.EBU_R_48_2_A,
                 TemplateParameterContextCreator.createDefaultContextProvider());
     }
 

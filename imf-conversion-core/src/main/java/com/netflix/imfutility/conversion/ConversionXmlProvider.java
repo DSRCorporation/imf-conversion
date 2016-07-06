@@ -2,6 +2,9 @@ package com.netflix.imfutility.conversion;
 
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.IFormat;
+import com.netflix.imfutility.generated.conversion.ConversionType;
+import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
+import com.netflix.imfutility.generated.conversion.FormatType;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 

@@ -3,9 +3,9 @@ package com.netflix.imfutility.conversion;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
+import com.netflix.imfutility.generated.config.*;
+import com.netflix.imfutility.generated.conversion.*;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
-import com.netflix.imfutility.config.*;
-import com.netflix.imfutility.conversion.*;
 import org.junit.Test;
 
 /**
@@ -590,6 +590,7 @@ public class SilentConversionTest {
             if (nonNullVideo) {
                 DestinationVideoConversionParametersType videoConversionParameters = new DestinationVideoConversionParametersType();
                 videoConversionParameters.setWidth(width);
+                videoConversionParameters.setHeight(height);
                 videoConversionParameters.setBitDepth(bitDepth);
                 videoConversionParameters.setFrameRate(frameRate);
                 videoConversionParameters.setPixelFormat(pixelFmt);

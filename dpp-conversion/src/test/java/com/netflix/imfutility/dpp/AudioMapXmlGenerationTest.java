@@ -27,7 +27,7 @@ public class AudioMapXmlGenerationTest {
     @After
     public void tearDown() throws Exception {
         //remove temp file;
-        audiomapXml.delete();
+        assertTrue("Temporary file cannot be deleted.", audiomapXml.delete());
     }
 
     /**

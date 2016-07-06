@@ -1,13 +1,13 @@
 package com.netflix.imfutility.conversion.executor;
 
-import com.netflix.imfutility.conversion.ExecOnceType;
-import com.netflix.imfutility.conversion.PipeType;
-import com.netflix.imfutility.conversion.SubPipeType;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.executor.strategy.PipeOperationInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.generated.conversion.ExecOnceType;
+import com.netflix.imfutility.generated.conversion.PipeType;
+import com.netflix.imfutility.generated.conversion.SubPipeType;
 
 import java.io.IOException;
 import java.util.List;

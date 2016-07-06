@@ -18,24 +18,24 @@ public final class CoreConstants {
 
     // 3.1: assetmap.xml
     public static final String XSD_ASSETMAP_XSD = "xsd/imf/assetmap/asset-map.xsd";
-    public static final String ASSETMAP_PACKAGE = "com.netflix.imfutility.imf.assetmap";
+    public static final String ASSETMAP_PACKAGE = "com.netflix.imfutility.generated.imf.assetmap";
 
     // 3.2: config.xml
     public static final String CONFIG_XSD = "xsd/config.xsd";
-    public static final String CONFIG_PACKAGE = "com.netflix.imfutility.config";
+    public static final String CONFIG_PACKAGE = "com.netflix.imfutility.generated.config";
 
     // 3.3: conversion.xml
     public static final String CONVERSION_XSD = "xsd/conversion.xsd";
-    public static final String CONVERSION_PACKAGE = "com.netflix.imfutility.conversion";
+    public static final String CONVERSION_PACKAGE = "com.netflix.imfutility.generated.conversion";
 
     // 3.4 media-info.xml
     public static final String MEDIAINFO_XSD = "xsd/media-info.xsd";
-    public static final String MEDIAINFO_PACKAGE = "com.netflix.imfutility.mediainfo";
+    public static final String MEDIAINFO_PACKAGE = "com.netflix.imfutility.generated.mediainfo";
 
     // 3.5 IMF 2013 cpl.xml
     public static final String CPL_2013_XSD = "xsd/imf/2013/imf-cpl.xsd";
     public static final String CORE_CONSTRAINTS_2013_XSD = "xsd/imf/2013/imf-core-constraints.xsd";
-    public static final String CPL_2013_PACKAGE = "com.netflix.imfutility.imf._2013";
+    public static final String CPL_2013_PACKAGE = "com.netflix.imfutility.generated.imf._2013";
 
     // 3.6 IMF common
     public static final String DCML_TYPES_XSD = "xsd/imf/dcmlTypes.xsd";

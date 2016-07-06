@@ -119,7 +119,7 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
                 .setResourceUuid(resourceUuid)
                 .build();
         String repeatCountStr = getParameterValue(ResourceContextParameters.REPEAT_COUNT, contextInfo);
-        return Long.valueOf(repeatCountStr);
+        return Long.parseLong(repeatCountStr);
     }
 
     /**

@@ -51,7 +51,7 @@ public class AssetMapParserTest {
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
-        new AssetMapParser().parse(ImpUtils.getImpFolder(), new File("C:/invalid-path"));
+        new AssetMapParser().parse(ImpUtils.getImpFolder(), new File("invalid-path"));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.netflix.imfutility.mediainfo;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.CoreConstants;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
@@ -13,11 +14,13 @@ import com.netflix.imfutility.conversion.templateParameter.context.parameters.Re
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
+import com.netflix.imfutility.generated.conversion.FormatType;
+import com.netflix.imfutility.generated.conversion.MediaInfoCommandType;
+import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.generated.mediainfo.FfprobeType;
+import com.netflix.imfutility.generated.mediainfo.StreamType;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.conversion.FormatType;
-import com.netflix.imfutility.conversion.MediaInfoCommandType;
-import com.netflix.imfutility.conversion.SequenceType;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.io.File;
@@ -164,6 +167,8 @@ public class MediaInfoContextBuilder {
             case SUBTITLE:
                 mediaInfoCommand = format.getMediaInfoCommandSubtitle();
                 break;
+            default:
+                throw new ConversionException(String.format("Can not get media info. Unknown sequence type '%s'", seqType.toString()));
         }
 
         String operationName = String.format("%s_%s", mediaInfoCommand.getClass().getSimpleName(), new File(essence).getName());
@@ -200,7 +205,7 @@ public class MediaInfoContextBuilder {
             throw new FileNotFoundException(String.format("Invalid media info output file: '%s' not found", outputFile.getAbsolutePath()));
         }
 
-        return XmlParser.parse(outputFile, new String[] {MEDIAINFO_XSD}, MEDIAINFO_PACKAGE, FfprobeType.class);
+        return XmlParser.parse(outputFile, new String[]{MEDIAINFO_XSD}, MEDIAINFO_PACKAGE, FfprobeType.class);
     }
 
     private void buildSequenceContext(VirtualTrackInfo virtualTrackInfo, ContextInfo contextInfo) {

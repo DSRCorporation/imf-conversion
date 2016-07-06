@@ -27,7 +27,7 @@ public class MetadataXmlGenerationTest {
     @After
     public void tearDown() throws Exception {
         //remove temp file;
-        metadataXml.delete();
+        assertTrue("Temporary file cannot be deleted.", metadataXml.delete());
     }
 
     /**

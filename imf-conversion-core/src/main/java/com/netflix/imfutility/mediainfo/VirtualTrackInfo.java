@@ -1,8 +1,9 @@
 package com.netflix.imfutility.mediainfo;
 
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
+import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.generated.mediainfo.StreamType;
 import com.netflix.imfutility.util.ConversionHelper;
-import com.netflix.imfutility.conversion.SequenceType;
 
 import java.util.HashMap;
 import java.util.Map;

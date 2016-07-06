@@ -4,7 +4,7 @@
 
     <jaxb:bindings schemaLocation="../xsd/media-info.xsd">
         <jaxb:schemaBindings>
-            <jaxb:package name="com.netflix.imfutility.mediainfo" />
+            <jaxb:package name="com.netflix.imfutility.generated.mediainfo" />
         </jaxb:schemaBindings>
     </jaxb:bindings>
 
