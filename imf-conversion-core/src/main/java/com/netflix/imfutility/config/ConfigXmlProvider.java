@@ -36,7 +36,7 @@ import static com.netflix.imfutility.CoreConstants.CONFIG_XSD;
  * <li>Performs XSD validation and throws {@link XmlParsingException} if config.xml is not a valid XML according to config.xsd</li>
  * </ul>
  */
-public class ConfigXmlProvider {
+public final class ConfigXmlProvider {
 
     private ConfigType config;
 
@@ -61,16 +61,16 @@ public class ConfigXmlProvider {
      * @param configFile an input config.xml content
      * @param xmlPath    a path to the input config.xml
      * @throws XmlParsingException   if the input is not a valid XML or it doesn't pass XSD validation
-     * @throws FileNotFoundException if the input path doesn't define a file.
      */
     public ConfigXmlProvider(InputStream configFile, String xmlPath) throws XmlParsingException {
         this.config = XmlParser.parse(configFile, xmlPath, new String[]{CONFIG_XSD}, CONFIG_PACKAGE, ConfigType.class);
     }
 
     /**
+     * Gets a Config instance corresponding to the input from config.xml.
+     *
      * @return a Config instance corresponding to the input from config.xml
      */
-
     public ConfigType getConfig() {
         return config;
     }

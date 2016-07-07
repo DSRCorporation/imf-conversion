@@ -109,6 +109,9 @@ public final class ExternalProcess {
         return processInfo.toString();
     }
 
+    /**
+     * Description of an external process needed to create an instance of {@link ExternalProcess}.
+     */
     public static class ExternalProcessInfo {
 
         private final int processNum;
@@ -120,6 +123,7 @@ public final class ExternalProcess {
         private final OutputRedirect outputRedirect;
         private final File outputRedirectFile;
 
+        // CHECKSTYLE:OFF
         public ExternalProcessInfo(int processNum, String operationName, String operationType, String programName,
                                    List<String> resolvedParams, File workingDir, OutputRedirect outputRedirect, File outputRedirectFile) {
             this.processNum = processNum;
@@ -131,6 +135,7 @@ public final class ExternalProcess {
             this.outputRedirect = outputRedirect;
             this.outputRedirectFile = outputRedirectFile;
         }
+        // CHECKSTYLE:ON
 
         public int getProcessNum() {
             return processNum;

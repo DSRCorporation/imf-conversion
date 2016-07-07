@@ -38,6 +38,8 @@ public class TemplateParameterContextProvider {
     private final Map<TemplateParameterContext, ITemplateParameterContext> contexts = new HashMap<>();
 
     /**
+     * Creates a new instance.
+     *
      * @param configProvider     a config provider corresponding to config.xml
      * @param conversionProvider a conversion provider corresponding to conversion.xml.
      * @param workingDir         a working directory where the output file as well as all tmp files are created.
@@ -78,6 +80,8 @@ public class TemplateParameterContextProvider {
     }
 
     /**
+     * Gets the working directory where the output file as well as all tmp files are created.
+     *
      * @return the working directory where the output file as well as all tmp files are created.
      */
     public File getWorkingDir() {
@@ -86,6 +90,8 @@ public class TemplateParameterContextProvider {
 
 
     /**
+     * Gets a config provider corresponding to config.xml.
+     *
      * @return a config provider corresponding to config.xml
      */
     public ConfigXmlProvider getConfigProvider() {
@@ -93,6 +99,8 @@ public class TemplateParameterContextProvider {
     }
 
     /**
+     * Gets a conversion provider corresponding to conversion.xml.
+     *
      * @return a conversion provider corresponding to conversion.xml.
      */
     public ConversionXmlProvider getConversionProvider() {
@@ -122,6 +130,7 @@ public class TemplateParameterContextProvider {
                 return new SequenceTemplateParameterContext();
             case RESOURCE:
                 return new ResourceTemplateParameterContext();
+            default: /// nothing
         }
         return null;
     }

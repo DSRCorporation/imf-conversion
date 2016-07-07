@@ -23,9 +23,9 @@ import com.netflix.imfutility.conversion.templateParameter.context.SequenceTempl
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
+import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.dpp.audiomap.AudioMapType;
 import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
-import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.util.AudioMapUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -96,10 +96,12 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // fil CPL context with the number of channels for each virtual track
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
-                new LinkedHashMap<String, Integer>() {{
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 2);
-                }}
+                new LinkedHashMap<String, Integer>() {
+                    {
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 2);
+                    }
+                }
         );
 
         String panParameter2A = new AudioMapXmlProvider(
@@ -119,10 +121,12 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // fil CPL context with the number of channels for each virtual track
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
-                new LinkedHashMap<String, Integer>() {{
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 2);
-                }}
+                new LinkedHashMap<String, Integer>() {
+                    {
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 2);
+                    }
+                }
         );
 
         String panParameter4B = new AudioMapXmlProvider(
@@ -142,17 +146,21 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // fil CPL context with the number of channels for each virtual track
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
-                new LinkedHashMap<String, Integer>() {{
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 2);
-                }}
+                new LinkedHashMap<String, Integer>() {
+                    {
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 2);
+                    }
+                }
         );
 
         String panParameter16C = new AudioMapXmlProvider(
                 AudioMapUtils.getCorrectAudiomapXml(), AudioTrackLayoutDmAs11Type.EBU_R_123_16_C, contextProvider)
                 .getPanParameter();
 
-        assertEquals("16c|c0=c1|c1=c0|c2=c3|c3=0*c0|c4=0*c0|c5=0*c0|c6=0*c0|c7=0*c0|c8=0*c0|c9=0*c0|c10=0*c0|c11=0*c0|c12=0*c0|c13=0*c0|c14=0*c0|c15=0*c0",
+        assertEquals(
+                "16c|c0=c1|c1=c0|c2=c3|c3=0*c0|c4=0*c0|c5=0*c0|c6=0*c0|c7=0*c0|c8=0*c0|c9=0*c0|"
+                        + "c10=0*c0|c11=0*c0|c12=0*c0|c13=0*c0|c14=0*c0|c15=0*c0",
                 panParameter16C);
     }
 
@@ -167,10 +175,12 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // fil CPL context with the number of channels for each virtual track
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
-                new LinkedHashMap<String, Integer>() {{
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 2);
-                }}
+                new LinkedHashMap<String, Integer>() {
+                    {
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 2);
+                    }
+                }
         );
 
         // create and read default audio map files
@@ -200,9 +210,11 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // fil CPL context with the number of channels for each virtual track
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
-                new LinkedHashMap<String, Integer>() {{
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
-                }}
+                new LinkedHashMap<String, Integer>() {
+                    {
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
+                    }
+                }
         );
 
         // create and read default audio map files
@@ -232,10 +244,12 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // fil CPL context with the number of channels for each virtual track
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
-                new LinkedHashMap<String, Integer>() {{
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 1);
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 1);
-                }}
+                new LinkedHashMap<String, Integer>() {
+                    {
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 1);
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 1);
+                    }
+                }
         );
 
         // create and read default audio map files
@@ -264,9 +278,11 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // fil CPL context with the number of channels for each virtual track
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
-                new LinkedHashMap<String, Integer>() {{
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 10);
-                }}
+                new LinkedHashMap<String, Integer>() {
+                    {
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 10);
+                    }
+                }
         );
 
         // create and read default audio map files
@@ -295,10 +311,12 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // fil CPL context with the number of channels for each virtual track
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
-                new LinkedHashMap<String, Integer>() {{
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 3);
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 3);
-                }}
+                new LinkedHashMap<String, Integer>() {
+                    {
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 3);
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 3);
+                    }
+                }
         );
 
         // create and read default audio map files
@@ -326,18 +344,21 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // fil CPL context with the number of channels for each virtual track
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(contextProvider,
-                new LinkedHashMap<String, Integer>() {{
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 4);
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd713", 1);
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd714", 3);
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd715", 5);
-                    put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd716", 4);
-                }}
+                new LinkedHashMap<String, Integer>() {
+                    {
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711", 2);
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712", 4);
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd713", 1);
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd714", 3);
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd715", 5);
+                        put("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd716", 4);
+                    }
+                }
         );
 
         // create and read default audio map files
-        AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(AudioTrackLayoutDmAs11Type.EBU_R_123_16_C, contextProvider);
+        AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(
+                AudioTrackLayoutDmAs11Type.EBU_R_123_16_C, contextProvider);
         audioMapXmlProvider.getAudioMapFile().deleteOnExit();
         AudioMapType audioMap16C = audioMapXmlProvider.getAudioMap();
 
@@ -363,7 +384,8 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         checkEBUTrack(audioMap16C, 15, "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd716", 1);
     }
 
-    private void prepareCplVirtualTracksWithChannels(TemplateParameterContextProvider contextProvider, Map<String, Integer> channelsForTrack) {
+    private void prepareCplVirtualTracksWithChannels(TemplateParameterContextProvider contextProvider,
+                                                     Map<String, Integer> channelsForTrack) {
         SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
         channelsForTrack.forEach(
                 (uuid, channels) -> {

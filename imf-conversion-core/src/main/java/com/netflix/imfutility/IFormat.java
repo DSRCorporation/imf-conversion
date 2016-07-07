@@ -19,7 +19,7 @@
 package com.netflix.imfutility;
 
 /**
- * Created by Alexander on 7/2/2016.
+ * Format interface.
  */
 public interface IFormat {
 

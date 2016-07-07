@@ -29,14 +29,17 @@ public final class AudioMapUtils {
     }
 
     public static File getCorrectAudiomapXml() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-audiomap.xml").getPath());
     }
 
     public static File getBrokenXmlAudiomapXml() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-audiomap.xml").getPath());
     }
 
     public static File getInvalidXsdAudiomapXml() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-audiomap.xml").getPath());
     }
 

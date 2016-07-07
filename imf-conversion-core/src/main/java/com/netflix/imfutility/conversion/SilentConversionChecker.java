@@ -24,8 +24,16 @@ import com.netflix.imfutility.conversion.templateParameter.context.SequenceTempl
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.generated.config.*;
-import com.netflix.imfutility.generated.conversion.*;
+import com.netflix.imfutility.generated.config.AllowDisallow;
+import com.netflix.imfutility.generated.config.AudioConversionParametersType;
+import com.netflix.imfutility.generated.config.ConfigType;
+import com.netflix.imfutility.generated.config.ConversionParametersType;
+import com.netflix.imfutility.generated.config.VideoConversionParametersType;
+import com.netflix.imfutility.generated.conversion.DestinationAudioConversionParametersType;
+import com.netflix.imfutility.generated.conversion.DestinationConversionParametersType;
+import com.netflix.imfutility.generated.conversion.DestinationVideoConversionParametersType;
+import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
+import com.netflix.imfutility.generated.conversion.SequenceType;
 
 import java.util.Objects;
 
@@ -33,7 +41,8 @@ import java.util.Objects;
  * Checks whether it's allowed (in config.xml) to silently convert source parameters to destination ones if they don't match.
  * Example: input video essence has 50 fps; destination fps (as defined in conversion.xml) is 25 fps.
  * If config.xml says that silent conversion is not allowed => {@link ConversionNotAllowedException} is thrown.
- * If config.xml says that silent conversion is allowed, then no exception is thrown, and the fps will be silently converted (for example, by FFMPEG)
+ * If config.xml says that silent conversion is allowed, then no exception is thrown, and the fps will be silently
+ * converted (for example, by FFMPEG)
  * as defined in conversion.xml.
  */
 public class SilentConversionChecker {
@@ -42,7 +51,8 @@ public class SilentConversionChecker {
     private final DestinationConversionParametersType destConversionParams;
     private final ConversionParametersType configConversionParams;
 
-    public SilentConversionChecker(TemplateParameterContextProvider contextProvider, FormatConfigurationType formatConfiguration, ConfigType config) {
+    public SilentConversionChecker(TemplateParameterContextProvider contextProvider,
+                                   FormatConfigurationType formatConfiguration, ConfigType config) {
         this.sequenceContext = contextProvider.getSequenceContext();
         this.destConversionParams = formatConfiguration.getConversionParameters();
         this.configConversionParams = config.getConversionParameters();
@@ -81,7 +91,8 @@ public class SilentConversionChecker {
 
     }
 
-    private void checkForSilentAudioConversion(DestinationAudioConversionParametersType audioConversionParams, SequenceUUID seqUuid) throws ConversionNotAllowedException {
+    private void checkForSilentAudioConversion(DestinationAudioConversionParametersType audioConversionParams,
+                                               SequenceUUID seqUuid) throws ConversionNotAllowedException {
         if (audioConversionParams == null) {
             return;
         }
@@ -102,7 +113,8 @@ public class SilentConversionChecker {
         }
     }
 
-    private void checkForSilentVideoConversion(DestinationVideoConversionParametersType videoConversionParams, SequenceUUID seqUuid) throws ConversionNotAllowedException {
+    private void checkForSilentVideoConversion(DestinationVideoConversionParametersType videoConversionParams,
+                                               SequenceUUID seqUuid) throws ConversionNotAllowedException {
         if (videoConversionParams == null) {
             return;
         }
@@ -133,7 +145,8 @@ public class SilentConversionChecker {
 
     }
 
-    private void checkParameter(SequenceContextParameters param, String destinationParamValue, ContextInfo contextInfo) throws ConversionNotAllowedException {
+    private void checkParameter(SequenceContextParameters param, String destinationParamValue, ContextInfo contextInfo)
+            throws ConversionNotAllowedException {
         if (destinationParamValue == null || destinationParamValue.isEmpty()) {
             return;
         }

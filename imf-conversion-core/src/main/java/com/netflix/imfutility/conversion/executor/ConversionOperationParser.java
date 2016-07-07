@@ -49,7 +49,8 @@ public class ConversionOperationParser {
      *
      * @param conversionOperation a conversion operation string as defined in conversion.xml.
      * @param contextInfo         a context info to resolve template parameters.
-     * @return process and arguments for the input conversion operation. The first element is the process, the other elements are the arguments for the process.
+     * @return process and arguments for the input conversion operation. The first element is the process, the other
+     * elements are the arguments for the process.
      */
     public List<String> parseOperation(String conversionOperation, ContextInfo contextInfo) {
         // 1. resolve parameters BEFORE splitting since resolved values may contain multiple sub-parameters!
@@ -70,7 +71,8 @@ public class ConversionOperationParser {
      *
      * @param conversionOperation a conversion operation string as defined in conversion.xml.
      * @param contextInfo         a context info to resolve template parameters.
-     * @return process and arguments for the input conversion operation. The first element is the process, the other elements are the arguments for the process.
+     * @return process and arguments for the input conversion operation. The first element is the process,
+     * the other elements are the arguments for the process.
      */
     public List<String> parseWithQuotes(String conversionOperation, ContextInfo contextInfo) {
         // 1. resolve parameters BEFORE splitting since resolved values may contain multiple sub-parameters!
@@ -135,7 +137,9 @@ public class ConversionOperationParser {
         }
 
         if (state == ParseState.IN_QUOTE || state == ParseState.IN_DOUBLE_QUOTE) {
-            throw new IllegalArgumentException(String.format("Can not parse Conversion Operation '%s'. Unbalanced quotes.", conversionOperation));
+            throw new IllegalArgumentException(
+                    String.format("Can not parse Conversion Operation '%s'. Unbalanced quotes.",
+                            conversionOperation));
         }
 
         return result;

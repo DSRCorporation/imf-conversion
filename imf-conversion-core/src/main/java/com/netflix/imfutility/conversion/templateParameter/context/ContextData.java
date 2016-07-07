@@ -26,8 +26,11 @@ import java.util.Map;
 
 /**
  * A helper generic class to store template parameters for each UUID.
+ *
+ * @param <U> UUID type
+ * @param <T> parameter key type
  */
-public class ContextData<U extends UUID, T> {
+class ContextData<U extends UUID, T> {
 
     private final Map<U, ContextParameterData<T>> params = new LinkedHashMap<>();
 
@@ -35,19 +38,19 @@ public class ContextData<U extends UUID, T> {
         return params.keySet();
     }
 
-    public ContextParameterData<T> getParameterData(U uuid) {
+    ContextParameterData<T> getParameterData(U uuid) {
         return params.get(uuid);
     }
 
-    public int getCount() {
+    int getCount() {
         return params.size();
     }
 
-    public boolean contains(U uuid) {
+    boolean contains(U uuid) {
         return params.containsKey(uuid);
     }
 
-    public void addParameter(U uuid, T paramName, String paramValue) {
+    void addParameter(U uuid, T paramName, String paramValue) {
         ContextParameterData<T> paramData = params.get(uuid);
         if (paramData == null) {
             paramData = new ContextParameterData<>();

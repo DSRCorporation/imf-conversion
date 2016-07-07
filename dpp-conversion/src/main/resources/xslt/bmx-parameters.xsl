@@ -92,7 +92,7 @@
     <xsl:template name="putValue">
         <xsl:variable name="nodename" select="local-name()" />
         <xsl:variable name="stringName" select="current()" />
-        <xsl:variable name="enumValue" select="$toIntEnumerations/enum[@name=$nodename]/item[.=$stringName]/@value" />
+        <xsl:variable name="enumValue" select="$toIntEnumerations/enum[@*:name=$nodename]/item[.=$stringName]/@*:value" />
 
         <xsl:choose>
             <xsl:when test="$enumValue">
@@ -168,13 +168,13 @@
     -->
     <xsl:template name="iterateNodes">
         <xsl:if test="$framework='UKDPP'">
-            <xsl:if test="index-of($dppNodes/item, local-name())">
+            <xsl:if test="index-of($dppNodes/*:item, local-name())">
                 <xsl:value-of select="local-name()"/><xsl:text>: </xsl:text><xsl:call-template name="putValue"/><xsl:text>&#xa;</xsl:text>
             </xsl:if>
         </xsl:if>
 
         <xsl:if test="$framework='AS11Core'">
-            <xsl:if test="index-of($as11Nodes/item, local-name())">
+            <xsl:if test="index-of($as11Nodes/*:item, local-name())">
                 <xsl:value-of select="local-name()"/><xsl:text>: </xsl:text><xsl:call-template name="putValue"/><xsl:text>&#xa;</xsl:text>
             </xsl:if>
         </xsl:if>

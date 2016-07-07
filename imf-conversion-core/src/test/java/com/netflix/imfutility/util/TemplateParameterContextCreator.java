@@ -23,7 +23,11 @@ import com.netflix.imfutility.config.ConfigXmlProvider;
 import com.netflix.imfutility.conversion.ConversionXmlProvider;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
-import com.netflix.imfutility.conversion.templateParameter.context.*;
+import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
+import com.netflix.imfutility.conversion.templateParameter.context.ResourceTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SegmentTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SegmentContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
@@ -80,7 +84,8 @@ public final class TemplateParameterContextCreator {
     }
 
     public static TemplateParameterContextProvider createDefaultContextProviderWithCPLContext(
-            int segmentCount, int seqCount, int resourceCount, int repeatCountForResource, EnumSet<SequenceType> sequenceTypes) throws Exception {
+            int segmentCount, int seqCount, int resourceCount, int repeatCountForResource,
+            EnumSet<SequenceType> sequenceTypes) throws Exception {
         TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         fillCPLContext(contextProvider, segmentCount, seqCount, resourceCount, repeatCountForResource, sequenceTypes);
         return contextProvider;
@@ -99,12 +104,13 @@ public final class TemplateParameterContextCreator {
         fillCPLContext(contextProvider, segmentCount, seqCount, resourceCount, 1, EnumSet.allOf(SequenceType.class));
     }
 
-
-    public static void fillCPLContext(TemplateParameterContextProvider contextProvider, int segmentCount, int seqCount, int resourceCount, int repeatCountForResource) {
+    public static void fillCPLContext(TemplateParameterContextProvider contextProvider,
+                                      int segmentCount, int seqCount, int resourceCount, int repeatCountForResource) {
         fillCPLContext(contextProvider, segmentCount, seqCount, resourceCount, repeatCountForResource, EnumSet.allOf(SequenceType.class));
     }
 
-    public static void fillCPLContext(TemplateParameterContextProvider contextProvider, int segmentCount, int seqCount, int resourceCount, int repeatCountForResource,
+    public static void fillCPLContext(TemplateParameterContextProvider contextProvider, int segmentCount,
+                                      int seqCount, int resourceCount, int repeatCountForResource,
                                       EnumSet<SequenceType> sequenceTypes) {
         // init segment ctxt
         SegmentTemplateParameterContext segmentContext = contextProvider.getSegmentContext();
@@ -133,14 +139,22 @@ public final class TemplateParameterContextCreator {
                         resourceContext.initResource(resourceKey, resourceUuid);
 
                         // init essence, startTime and duration
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.ESSENCE);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.DURATION_TIMECODE);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.DURATION_EDIT_UNIT);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.DURATION_FRAME_EDIT_UNIT);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.START_TIME_TIMECODE);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.START_TIME_EDIT_UNIT);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid, ResourceContextParameters.REPEAT_COUNT, String.valueOf(repeatCountForResource));
+                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                ResourceContextParameters.ESSENCE);
+                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                ResourceContextParameters.DURATION_TIMECODE);
+                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                ResourceContextParameters.DURATION_EDIT_UNIT);
+                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                ResourceContextParameters.DURATION_FRAME_EDIT_UNIT);
+                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                ResourceContextParameters.START_TIME_TIMECODE);
+                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                ResourceContextParameters.START_TIME_EDIT_UNIT);
+                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT);
+                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                ResourceContextParameters.REPEAT_COUNT, String.valueOf(repeatCountForResource));
                     }
                 }
             }
@@ -162,7 +176,8 @@ public final class TemplateParameterContextCreator {
                 String.format(RESOURCE_UUID_FORMAT, segm, seq, seqType.value(), res));
     }
 
-    public static void addResourceContextParameter(TemplateParameterContextProvider contextProvider, int segm, int seq, SequenceType seqType, int res,
+    public static void addResourceContextParameter(TemplateParameterContextProvider contextProvider, int segm, int seq,
+                                                   SequenceType seqType, int res,
                                                    ResourceContextParameters param, String paramValue) {
         contextProvider.getResourceContext().addResourceParameter(
                 ResourceKey.create(getSegmentUuid(segm), getSequenceUuid(seq, seqType), seqType),

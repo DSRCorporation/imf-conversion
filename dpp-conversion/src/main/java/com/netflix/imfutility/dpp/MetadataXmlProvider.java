@@ -18,7 +18,30 @@
  */
 package com.netflix.imfutility.dpp;
 
-import com.netflix.imfutility.generated.dpp.metadata.*;
+import com.netflix.imfutility.generated.dpp.metadata.AccessServicesType;
+import com.netflix.imfutility.generated.dpp.metadata.AdditionalType;
+import com.netflix.imfutility.generated.dpp.metadata.AudioDescriptionTypeType;
+import com.netflix.imfutility.generated.dpp.metadata.AudioLoudnessStandardType;
+import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
+import com.netflix.imfutility.generated.dpp.metadata.AudioType;
+import com.netflix.imfutility.generated.dpp.metadata.CaptionsTypeType;
+import com.netflix.imfutility.generated.dpp.metadata.ContactInformationType;
+import com.netflix.imfutility.generated.dpp.metadata.DppType;
+import com.netflix.imfutility.generated.dpp.metadata.DurationType;
+import com.netflix.imfutility.generated.dpp.metadata.EditorialType;
+import com.netflix.imfutility.generated.dpp.metadata.Iso6392CodeType;
+import com.netflix.imfutility.generated.dpp.metadata.ObjectFactory;
+import com.netflix.imfutility.generated.dpp.metadata.PSEPassType;
+import com.netflix.imfutility.generated.dpp.metadata.SegmentType;
+import com.netflix.imfutility.generated.dpp.metadata.SegmentationType;
+import com.netflix.imfutility.generated.dpp.metadata.ShimNameType;
+import com.netflix.imfutility.generated.dpp.metadata.SignLanguageType;
+import com.netflix.imfutility.generated.dpp.metadata.SigningPresentType;
+import com.netflix.imfutility.generated.dpp.metadata.TechnicalType;
+import com.netflix.imfutility.generated.dpp.metadata.ThreeDTypeType;
+import com.netflix.imfutility.generated.dpp.metadata.TimecodeType;
+import com.netflix.imfutility.generated.dpp.metadata.TimecodesType;
+import com.netflix.imfutility.generated.dpp.metadata.VideoType;
 import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -35,11 +58,27 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
-import static com.netflix.imfutility.dpp.DppConversionConstants.*;
-import static com.netflix.imfutility.dpp.DppConversionXsdConstants.*;
+import static com.netflix.imfutility.dpp.DppConversionConstants.BMX_FRAMEWORK_PARAM;
+import static com.netflix.imfutility.dpp.DppConversionConstants.BMX_PARAMETERS_TRANSFORMATION;
+import static com.netflix.imfutility.dpp.DppConversionConstants.XSLT2_TRANSFORMER_IMPLEMENTATION;
+import static com.netflix.imfutility.dpp.DppConversionXsdConstants.ISO_639_2_CODES_XML_SCHEME;
+import static com.netflix.imfutility.dpp.DppConversionXsdConstants.METADATA_PACKAGE;
+import static com.netflix.imfutility.dpp.DppConversionXsdConstants.METADATA_XML_SCHEME;
+import static com.netflix.imfutility.dpp.DppConversionXsdConstants.TYPES_XML_SCHEME;
 
 /**
  * Created by Alexandr on 4/28/2016.
@@ -48,7 +87,7 @@ import static com.netflix.imfutility.dpp.DppConversionXsdConstants.*;
 public class MetadataXmlProvider {
 
     /**
-     * MXF frameworks enumeration
+     * MXF frameworks enumeration.
      */
     public enum DMFramework {
         UKDPP("UKDPP"),
@@ -220,7 +259,8 @@ public class MetadataXmlProvider {
         bmxDppParameters = new HashMap<>();
         bmxDppParameters.put(DMFramework.UKDPP, createBmxFrameworkParameterFile(source, DMFramework.UKDPP, workingDir));
         bmxDppParameters.put(DMFramework.AS11CORE, createBmxFrameworkParameterFile(source, DMFramework.AS11CORE, workingDir));
-        bmxDppParameters.put(DMFramework.AS11Segmentation, createBmxFrameworkParameterFile(source, DMFramework.AS11Segmentation, workingDir));
+        bmxDppParameters.put(DMFramework.AS11Segmentation, createBmxFrameworkParameterFile(
+                source, DMFramework.AS11Segmentation, workingDir));
     }
 
     /**
@@ -263,13 +303,14 @@ public class MetadataXmlProvider {
      */
     private File createBmxFrameworkParameterFile(JAXBSource source, DMFramework framework, File workingDir) {
         // Create Transformer
-        Transformer transformer = null;
+        Transformer transformer;
         try {
             // Create Transformer
             TransformerFactory tf = TransformerFactory.newInstance(XSLT2_TRANSFORMER_IMPLEMENTATION, null);
             InputStream transformationStream = ResourceHelper.getResourceInputStream(BMX_PARAMETERS_TRANSFORMATION);
             if (transformationStream == null) {
-                throw new FileNotFoundException(String.format("Metadata.xml to BMX transformation file is absent: %s", BMX_PARAMETERS_TRANSFORMATION));
+                throw new FileNotFoundException(String.format(
+                        "Metadata.xml to BMX transformation file is absent: %s", BMX_PARAMETERS_TRANSFORMATION));
             }
             StreamSource xslt = new StreamSource(transformationStream);
             transformer = tf.newTransformer(xslt);

@@ -18,7 +18,11 @@
  */
 package com.netflix.imfutility.conversion.executor.strategy;
 
-import com.netflix.imfutility.conversion.executor.*;
+import com.netflix.imfutility.conversion.executor.ConversionOperationParser;
+import com.netflix.imfutility.conversion.executor.ExecutionException;
+import com.netflix.imfutility.conversion.executor.ExternalProcess;
+import com.netflix.imfutility.conversion.executor.OutputRedirect;
+import com.netflix.imfutility.conversion.executor.ProcessStarter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import org.slf4j.Logger;
@@ -54,7 +58,7 @@ public class AbstractExecuteStrategy {
         this.processStarter = processStarter;
     }
 
-    ExternalProcess startProcess(OperationInfo operationInfo, OutputRedirect defaultOutputRedirect) throws IOException {
+    final ExternalProcess startProcess(OperationInfo operationInfo, OutputRedirect defaultOutputRedirect) throws IOException {
         List<String> execAndParams = conversionOperationParser.parseOperation(operationInfo.getOperation(), operationInfo.getContextInfo());
         if (execAndParams.isEmpty()) {
             throw new ExecutionException(String.format("No parameters for process '%s'", operationInfo.getOperationName()));

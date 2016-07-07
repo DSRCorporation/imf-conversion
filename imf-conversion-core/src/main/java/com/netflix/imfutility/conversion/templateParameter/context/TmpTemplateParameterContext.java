@@ -50,6 +50,8 @@ public class TmpTemplateParameterContext implements ITemplateParameterContext {
     }
 
     /**
+     * Gets a parameter value as a string.
+     *
      * @param templateParameterName parameter name
      * @return a parameter value as a string
      */
@@ -58,6 +60,8 @@ public class TmpTemplateParameterContext implements ITemplateParameterContext {
     }
 
     /**
+     * Gets a parameter value as a string.
+     *
      * @param templateParameter a enum defining the parameter name
      * @return a parameter value as a string
      */
@@ -99,6 +103,8 @@ public class TmpTemplateParameterContext implements ITemplateParameterContext {
     }
 
     /**
+     * Gets all template parameter values as a string.
+     *
      * @return Gets all template parameter values as a string
      */
     public Collection<String> getAllParametersAsString() {
@@ -109,6 +115,8 @@ public class TmpTemplateParameterContext implements ITemplateParameterContext {
     }
 
     /**
+     * Gets all parameter value instances with additional information besides parameter value string.
+     *
      * @return gets all parameter value instances with additional information besides parameter value string.
      */
     public Collection<CustomParameterValue> getAllParameters() {

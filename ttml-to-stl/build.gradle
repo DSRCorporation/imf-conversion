@@ -1,4 +1,5 @@
 description = "TTML to EBU STL subtitles conversion (default subtitle conversion tool for DPP format)"
+version=""
 
 dependencies {
     compile project(':imf-conversion-common')
@@ -21,5 +22,9 @@ jar {
 
 
 findbugs {
+    sourceSets = []
+}
+
+checkstyle {
     sourceSets = []
 }

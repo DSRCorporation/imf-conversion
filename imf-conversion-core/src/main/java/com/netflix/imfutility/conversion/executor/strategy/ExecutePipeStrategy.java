@@ -143,7 +143,7 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
         private final ExternalProcess inputProcess;
         private final ExternalProcess outputProcess;
 
-        public Piper(ExternalProcess inputProcess, ExternalProcess outputProcess) {
+        Piper(ExternalProcess inputProcess, ExternalProcess outputProcess) {
             this.inputProcess = inputProcess;
             this.outputProcess = outputProcess;
         }
@@ -163,7 +163,8 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
                 }
             } catch (IOException e) {
                 throw new ExecutionException(
-                        String.format("Broken pipe. Input process: %s. Output Process: %s", inputProcess.toString(), outputProcess.toString()),
+                        String.format("Broken pipe. Input process: %s. Output Process: %s",
+                                inputProcess.toString(), outputProcess.toString()),
                         e);
             }
         }

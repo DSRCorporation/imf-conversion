@@ -21,8 +21,16 @@ package com.netflix.imfutility.conversion;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.generated.config.*;
-import com.netflix.imfutility.generated.conversion.*;
+import com.netflix.imfutility.generated.config.AllowDisallow;
+import com.netflix.imfutility.generated.config.AudioConversionParametersType;
+import com.netflix.imfutility.generated.config.ConfigType;
+import com.netflix.imfutility.generated.config.ConversionParametersType;
+import com.netflix.imfutility.generated.config.VideoConversionParametersType;
+import com.netflix.imfutility.generated.conversion.DestinationAudioConversionParametersType;
+import com.netflix.imfutility.generated.conversion.DestinationConversionParametersType;
+import com.netflix.imfutility.generated.conversion.DestinationVideoConversionParametersType;
+import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
+import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.junit.Test;
 

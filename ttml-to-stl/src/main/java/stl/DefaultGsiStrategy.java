@@ -23,10 +23,13 @@ import ttml.TimedTextObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static stl.GsiAttribute.*;
+import static stl.GsiAttribute.CD;
+import static stl.GsiAttribute.RD;
+import static stl.GsiAttribute.TNB;
+import static stl.GsiAttribute.TNS;
 
 /**
- * Created by Alexander on 6/24/2016.
+ * Default implementation of EBU STL GSI block building.
  */
 public class DefaultGsiStrategy implements IGsiStrategy {
 

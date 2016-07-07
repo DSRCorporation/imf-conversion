@@ -43,11 +43,11 @@ public class XmlParsingNamespaceHandler extends XmlParsingHandler {
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attrs) throws SAXException {
         if (this.namespace == null) {
             this.namespace = uri;
         }
-        super.startElement(uri, localName, qName, atts);
+        super.startElement(uri, localName, qName, attrs);
     }
 
 }

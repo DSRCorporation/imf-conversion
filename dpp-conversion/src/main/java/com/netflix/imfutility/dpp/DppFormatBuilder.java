@@ -30,7 +30,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static com.netflix.imfutility.dpp.DppConversionConstants.*;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_AS11_CORE_FILE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_AS11_SEGM_FILE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_EBU_AUDIO_TRACKS;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_OUTPUT_MXF;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PAN;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_TTML_TO_STL;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_UK_DPP_FILE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_VALUE_OUTPUT_MXF;
 
 /**
  * DPP format builder (see {@link AbstractFormatBuilder}). It's used for conversion to DPP format ('convert' DPP mode).
@@ -69,14 +76,16 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
 
         // 1. load metadata.xml
-        MetadataXmlProvider metadataXmlProvider = new MetadataXmlProvider(dppInputParameters.getMetadataFile(), contextProvider.getWorkingDir());
+        MetadataXmlProvider metadataXmlProvider = new MetadataXmlProvider(dppInputParameters.getMetadataFile(),
+                contextProvider.getWorkingDir());
 
         // 2. load audiomap.xml
         if (dppInputParameters.getAudiomapFile() == null) {
             logger.warn("No audiomap.xml specified as a command line argument. A default audiomap.xml will be generated.");
         }
         AudioTrackLayoutDmAs11Type audioTrackLayout = metadataXmlProvider.getDpp().getTechnical().getAudio().getAudioTrackLayout();
-        AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(dppInputParameters.getAudiomapFile(), audioTrackLayout, contextProvider);
+        AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(dppInputParameters.getAudiomapFile(),
+                audioTrackLayout, contextProvider);
 
         // 3. fill audio map parameters
         dynamicContext.addParameter(DYNAMIC_PARAM_PAN, audioMapXmlProvider.getPanParameter());

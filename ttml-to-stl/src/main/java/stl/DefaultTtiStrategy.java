@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Alexander on 6/24/2016.
+ * Default implementation of EBU STL TTI block building.
  */
 public class DefaultTtiStrategy implements ITtiStrategy {
 
@@ -262,7 +262,7 @@ public class DefaultTtiStrategy implements ITtiStrategy {
         int mnr = GsiAttribute.MNR.getIntValue();
         int vp = mnr / 2;
         if (stlSubtitle.getLinesCount() > (mnr - vp)) {
-            vp -= stlSubtitle.getLinesCount() - (mnr - vp );
+            vp -= stlSubtitle.getLinesCount() - (mnr - vp);
             vp = Math.max(0, vp);
         }
         return (byte) vp;

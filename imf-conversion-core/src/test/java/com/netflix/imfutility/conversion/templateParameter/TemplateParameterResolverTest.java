@@ -32,7 +32,12 @@ import org.junit.Test;
 
 import java.util.EnumSet;
 
-import static com.netflix.imfutility.util.TemplateParameterContextCreator.*;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.assertResourceParameter;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.createDefaultContextProvider;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.fillCPLContext;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.getResourceUuid;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.getSegmentUuid;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.getSequenceUuid;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -48,7 +53,8 @@ public class TemplateParameterResolverTest {
     private static final int SEQ_COUNT = 2;
     private static final int RESOURCE_COUNT = 2;
     private static final int REPEAT_COUNT = 2;
-    private static final EnumSet<SequenceType> SEQUENCE_TYPES = EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO); // do not fill subtitle type!
+    private static final EnumSet<SequenceType> SEQUENCE_TYPES =
+            EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO); // do not fill subtitle type!
 
     private static TemplateParameterResolver resolver;
     private static TemplateParameterContextProvider contextProvider;
@@ -131,7 +137,8 @@ public class TemplateParameterResolverTest {
                         .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0))
                         .setSequenceType(SequenceType.AUDIO).build());
 
-        String resolved1 = resolver.resolveTemplateParameter("%{dynamic.name-%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}}",
+        String resolved1 = resolver.resolveTemplateParameter(
+                "%{dynamic.name-%{segm.num}-%{seq.num}-%{seq.type}-%{resource.num}-%{tmp.tmpParamSimple}}",
                 new ContextInfoBuilder()
                         .setSegmentUuid(getSegmentUuid(0))
                         .setSequenceUuid(getSequenceUuid(0, SequenceType.AUDIO))

@@ -71,12 +71,18 @@ public class VirtualTrackInfo {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         VirtualTrackInfo that = (VirtualTrackInfo) o;
 
-        if (seqType != that.seqType) return false;
+        if (seqType != that.seqType) {
+            return false;
+        }
         return parameters != null ? parameters.equals(that.parameters) : that.parameters == null;
 
     }

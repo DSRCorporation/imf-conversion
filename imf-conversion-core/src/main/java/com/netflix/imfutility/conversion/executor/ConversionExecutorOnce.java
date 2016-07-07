@@ -35,7 +35,8 @@ public class ConversionExecutorOnce extends AbstractConversionExecutor {
 
     private final ExecOnceType operation;
 
-    public ConversionExecutorOnce(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory strategyProvider, ExecOnceType operation) {
+    public ConversionExecutorOnce(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory strategyProvider,
+                                  ExecOnceType operation) {
         super(contextProvider, strategyProvider);
         this.operation = operation;
     }

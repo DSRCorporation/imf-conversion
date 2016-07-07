@@ -38,7 +38,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.netflix.imfutility.dpp.DppConversionXsdConstants.AUDIOMAP_PACKAGE;
 import static com.netflix.imfutility.dpp.DppConversionXsdConstants.AUDIOMAP_XML_SCHEME;
@@ -49,7 +53,7 @@ import static com.netflix.imfutility.dpp.DppConversionXsdConstants.AUDIOMAP_XML_
  * Basic functionality for audiomap.xml handling.
  * </p>
  */
-public class AudioMapXmlProvider {
+public final class AudioMapXmlProvider {
 
     /**
      * Generates a sample audiomap.xml file.
@@ -115,7 +119,8 @@ public class AudioMapXmlProvider {
      * @throws XmlParsingException   an exception in case of audiomap.xml parsing error
      * @throws FileNotFoundException if the audioMapXml doesn't define an existing file.
      */
-    public AudioMapXmlProvider(AudioTrackLayoutDmAs11Type audioLayout, TemplateParameterContextProvider contextProvider) throws FileNotFoundException, XmlParsingException {
+    public AudioMapXmlProvider(AudioTrackLayoutDmAs11Type audioLayout,
+                               TemplateParameterContextProvider contextProvider) throws FileNotFoundException, XmlParsingException {
         this(null, audioLayout, contextProvider);
     }
 
@@ -127,7 +132,8 @@ public class AudioMapXmlProvider {
      * @throws XmlParsingException   an exception in case of audiomap.xml parsing error
      * @throws FileNotFoundException if the audioMapXml doesn't define an existing file.
      */
-    public AudioMapXmlProvider(File audioMapFile, AudioTrackLayoutDmAs11Type audioLayout, TemplateParameterContextProvider contextProvider) throws FileNotFoundException, XmlParsingException {
+    public AudioMapXmlProvider(File audioMapFile, AudioTrackLayoutDmAs11Type audioLayout,
+                               TemplateParameterContextProvider contextProvider) throws FileNotFoundException, XmlParsingException {
         this.audioLayout = audioLayout;
         this.contextProvider = contextProvider;
 
@@ -137,14 +143,15 @@ public class AudioMapXmlProvider {
             // if no audiomap.xml is provided - create a default one for the given input and audio layout specified in metadata.xml
             audioMapFile = generateDefaultXml();
             // add as dynamic parameter to delete at the end.
-            contextProvider.getDynamicContext().addParameter(DppConversionConstants.DYNAMIC_AUDIO_MAP_XML, audioMapFile.getAbsolutePath(), true);
+            contextProvider.getDynamicContext().addParameter(DppConversionConstants.DYNAMIC_AUDIO_MAP_XML,
+                    audioMapFile.getAbsolutePath(), true);
         }
         this.audioMapFile = audioMapFile;
         this.audioMap = loadAudioMapXml();
     }
 
     /**
-     * Gets the corresponding audiomap.xml (either generated or provided)
+     * Gets the corresponding audiomap.xml (either generated or provided).
      *
      * @return a path to audiomap xml.
      */
@@ -217,7 +224,7 @@ public class AudioMapXmlProvider {
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            AudioMapType audioMap = new AudioMapType();
+            AudioMapType newAudioMap = new AudioMapType();
 
             final int[] currentAudioTrack = {1};
             channelsForTracks.forEach((String trackId, Integer trackChannelCount) -> {
@@ -227,7 +234,7 @@ public class AudioMapXmlProvider {
                         ebuTrack.setNumber(currentAudioTrack[0]);
                         ebuTrack.setCPLVirtualTrackId(trackId);
                         ebuTrack.setCPLVirtualTrackChannel(i + 1);
-                        audioMap.getEBUTrack().add(ebuTrack);
+                        newAudioMap.getEBUTrack().add(ebuTrack);
                         currentAudioTrack[0]++;
                     }
                 }
@@ -236,11 +243,11 @@ public class AudioMapXmlProvider {
             while (currentAudioTrack[0] <= ebuAudioTracks) {
                 EBUTrackType ebuTrack = new EBUTrackType();
                 ebuTrack.setNumber(currentAudioTrack[0]);
-                audioMap.getEBUTrack().add(ebuTrack);
+                newAudioMap.getEBUTrack().add(ebuTrack);
                 currentAudioTrack[0]++;
             }
 
-            JAXBElement<AudioMapType> audioMapJaxb = new ObjectFactory().createAudioMap(audioMap);
+            JAXBElement<AudioMapType> audioMapJaxb = new ObjectFactory().createAudioMap(newAudioMap);
             jaxbMarshaller.marshal(audioMapJaxb, audiomapFile);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
@@ -266,7 +273,8 @@ public class AudioMapXmlProvider {
         }
 
         //We need build the following ffmpeg parameters
-        // ffmpeg -i test_output.wav -i test_output2.wav -filter_complex "[0:a][1:a]amerge,pan=4c|c0=c0|c1=c1|c2=0*c0|c3=0*c0[aout]" -map "[aout]" -acodec pcm_s24le -ar 48000 output_map.wav
+        // ffmpeg -i test_output.wav -i test_output2.wav -filter_complex "[0:a][1:a]amerge,pan=4c|c0=c0|c1=c1|c2=0*c0|
+        // c3=0*c0[aout]" -map "[aout]" -acodec pcm_s24le -ar 48000 output_map.wav
         //"[0:a][1:a]" should be built with:
         //      <dynamicParameter name="amergeMap" concat="true">[%{seq.num}:a]</dynamicParameter>
         //"pan" part ("4c|c0=c0|c1=c1|c2=0*c0|c3=0*c0") should be build with this logic

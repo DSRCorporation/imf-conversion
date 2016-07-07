@@ -27,35 +27,43 @@ public final class MediaInfoUtils {
     }
 
     public static String getCorrectMediaInfoAudio() {
+        //noinspection ConstantConditions
         return ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoAudio.xml").getPath();
     }
 
     public static String getCorrectMediaInfoAudio2() {
+        //noinspection ConstantConditions
         return ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoAudio2.xml").getPath();
     }
 
 
     public static String getCorrectMediaInfoVideo() {
+        //noinspection ConstantConditions
         return ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoVideo.xml").getPath();
     }
 
     public static String getCorrectMediaInfoVideo2() {
+        //noinspection ConstantConditions
         return ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoVideo2.xml").getPath();
     }
 
     public static String getBrokenXmlMediaInfoAudio() {
+        //noinspection ConstantConditions
         return ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-mediaInfoAudio.xml").getPath();
     }
 
     public static String getBrokenXmlMediaInfoVideo() {
+        //noinspection ConstantConditions
         return ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-mediaInfoVideo.xml").getPath();
     }
 
     public static String getInvalidXsdMediaInfoAudio() {
+        //noinspection ConstantConditions
         return ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-mediaInfoAudio.xml").getPath();
     }
 
     public static String getInvalidXsdMediaInfoVideo() {
+        //noinspection ConstantConditions
         return ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-mediaInfoVideo.xml").getPath();
     }
 

@@ -43,7 +43,7 @@ public class AudioMapXmlGenerationTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         //remove temp file;
         assertTrue("Temporary file cannot be deleted.", audiomapXml.delete());
     }
@@ -51,10 +51,9 @@ public class AudioMapXmlGenerationTest {
     /**
      * Tests sample audiomap.xml generation.
      *
-     * @throws Exception
      */
     @Test
-    public void generateSampleXml() throws Exception {
+    public void generateSampleXml() {
         //try to generate sample audiomap.xml
         AudioMapXmlProvider.generateSampleXml(audiomapXml.getAbsolutePath());
 

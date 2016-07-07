@@ -23,7 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Custom map for generated {@link FormatTypes}.
+ * Custom map for generated {@link com.netflix.imfutility.generated.conversion.FormatTypes}.
+ *
+ * @param <String>     formatType key type
+ * @param <FormatType> formatType value type
  */
 @XmlJavaTypeAdapter(FormatTypesMapAdapter.class)
 public class FormatTypesMap<String, FormatType> {

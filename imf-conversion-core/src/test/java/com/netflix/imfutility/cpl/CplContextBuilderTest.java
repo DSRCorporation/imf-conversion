@@ -22,7 +22,11 @@ import com.netflix.imfutility.asset.AssetMap;
 import com.netflix.imfutility.asset.AssetMapParser;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
-import com.netflix.imfutility.conversion.templateParameter.context.*;
+import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
+import com.netflix.imfutility.conversion.templateParameter.context.ResourceTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SegmentTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SegmentContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
@@ -235,6 +239,7 @@ public class CplContextBuilderTest {
     }
 
     @Test
+    //CHECKSTYLE:OFF
     public void testResourceContextAudioParametersCreatedCorrectly() throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
@@ -426,6 +431,7 @@ public class CplContextBuilderTest {
         assertEquals("1",
                 resourceContext.getParameterValue(ResourceContextParameters.REPEAT_COUNT, contextInfo));
     }
+    //CHECKSTYLE:ON
 
     @Test
     public void testResourceContextVideoParametersCreatedCorrectly() throws Exception {

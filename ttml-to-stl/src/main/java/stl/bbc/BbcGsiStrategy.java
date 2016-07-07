@@ -30,12 +30,18 @@ import java.io.FileNotFoundException;
 
 import static com.netflix.imfutility.dpp.DppConversionXsdConstants.ISO_639_2_CODES_XML_SCHEME;
 import static com.netflix.imfutility.dpp.DppConversionXsdConstants.TYPES_XML_SCHEME;
-import static stl.GsiAttribute.*;
+import static stl.GsiAttribute.ECD;
+import static stl.GsiAttribute.EN;
+import static stl.GsiAttribute.OET;
+import static stl.GsiAttribute.OPT;
+import static stl.GsiAttribute.PUB;
+import static stl.GsiAttribute.TCF;
+import static stl.GsiAttribute.TCP;
 
 /**
- * Created by Alexander on 6/23/2016.
+ * BBC-specific implementation of EBU STL GSI block building. Some fields are build based on the input metadata.xml.
  */
-public class BbcGsiStrategy extends DefaultGsiStrategy {
+public final class BbcGsiStrategy extends DefaultGsiStrategy {
 
     private static final String METADATA_XML_SCHEME = "metadata.xsd";
     private static final String METADATA_PACKAGE = "com.netflix.imfutility.xsd.metadata";
@@ -116,14 +122,14 @@ public class BbcGsiStrategy extends DefaultGsiStrategy {
 
         String[] parts = tc.getValue().split("[:;]");
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < parts.length; i++) {
-            if (parts[i].length() == 1) {
+        for (String part : parts) {
+            if (part.length() == 1) {
                 sb.append("0");
-                sb.append(parts[i]);
-            } else if (parts[i].length() > 2) {
-                sb.append(parts[i].substring(parts[i].length() - 2, parts[i].length()));
+                sb.append(part);
+            } else if (part.length() > 2) {
+                sb.append(part.substring(part.length() - 2, part.length()));
             } else {
-                sb.append(parts[i]);
+                sb.append(part);
             }
         }
 

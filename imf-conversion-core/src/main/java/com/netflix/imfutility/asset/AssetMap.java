@@ -31,11 +31,23 @@ public class AssetMap {
 
     private final Map<UUID, String> assetMap = new HashMap<>();
 
-    public void addAsset(UUID uuid, String assetPath) {
+    /**
+     * Adds asset.
+     *
+     * @param uuid      asset UUID
+     * @param assetPath asset absolute path
+     */
+    public final void addAsset(UUID uuid, String assetPath) {
         assetMap.put(uuid, assetPath);
     }
 
-    public String getAsset(UUID uuid) {
+    /**
+     * Gets asset absolute path by UUID.
+     *
+     * @param uuid asset UUID
+     * @return asset absolute path
+     */
+    public final String getAsset(UUID uuid) {
         return assetMap.get(uuid);
     }
 

@@ -23,9 +23,10 @@ import com.lexicalscope.jewel.cli.ArgumentValidationException;
 import java.io.File;
 
 /**
- * Validator of input parameters specific for all formats for conversion. It checks whether all required parameters needed for conversion are specified.
+ * Validator of input parameters specific for all formats for conversion. It checks whether all required parameters
+ * needed for conversion are specified.
  */
-public class ImfUtilityInputParametersValidator {
+public final class ImfUtilityInputParametersValidator {
 
     /**
      * Checks whether all required command lines arguments needed for conversion are specified (such as path to config.xml).
@@ -50,7 +51,8 @@ public class ImfUtilityInputParametersValidator {
 
     /**
      * Checks whether all input parameters needed for conversion are specified (such as CPL, IMP) are specified.
-     * These parameters can be set either via command line arguments or in config.xml. So, the method must be called after config.xml is processed.
+     * These parameters can be set either via command line arguments or in config.xml. So, the method must be called
+     * after config.xml is processed.
      *
      * @param inputParameters the input to be validated
      * @throws ArgumentValidationException if some of the required command lines arguments are missing.
@@ -84,5 +86,6 @@ public class ImfUtilityInputParametersValidator {
         }
     }
 
-
+    private ImfUtilityInputParametersValidator() {
+    }
 }

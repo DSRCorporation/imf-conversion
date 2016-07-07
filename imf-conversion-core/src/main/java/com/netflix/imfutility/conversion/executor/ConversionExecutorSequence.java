@@ -29,7 +29,13 @@ import com.netflix.imfutility.conversion.templateParameter.context.TemplateParam
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.generated.conversion.*;
+import com.netflix.imfutility.generated.conversion.DynamicParameterConcatType;
+import com.netflix.imfutility.generated.conversion.ExecEachSegmentType;
+import com.netflix.imfutility.generated.conversion.ExecEachSequenceSegmentType;
+import com.netflix.imfutility.generated.conversion.ExecOnceType;
+import com.netflix.imfutility.generated.conversion.PipeSequenceType;
+import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.generated.conversion.SubPipeType;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -179,7 +185,8 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
 
                     // executable: operation info
                     if (execSegment.getExecOnce() != null) {
-                        OperationInfo operationInfo = new OperationInfo(execSegment.getExecOnce().getValue(), execSegment.getName(), contextInfo);
+                        OperationInfo operationInfo = new OperationInfo(execSegment.getExecOnce().getValue(),
+                                execSegment.getName(), contextInfo);
                         result.add(operationInfo);
                     }
 

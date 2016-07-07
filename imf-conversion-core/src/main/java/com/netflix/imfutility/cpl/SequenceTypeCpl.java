@@ -65,6 +65,7 @@ public enum SequenceTypeCpl {
                 return com.netflix.imfutility.generated.conversion.SequenceType.VIDEO;
             case SUBTITLE:
                 return com.netflix.imfutility.generated.conversion.SequenceType.SUBTITLE;
+            default: // nothing
         }
         return null;
     }

@@ -26,7 +26,12 @@ import com.netflix.imfutility.conversion.executor.ConversionExecutorSequence;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.generated.conversion.*;
+import com.netflix.imfutility.generated.conversion.DynamicParameterType;
+import com.netflix.imfutility.generated.conversion.ExecEachSegmentSequenceType;
+import com.netflix.imfutility.generated.conversion.ExecEachSequenceSegmentType;
+import com.netflix.imfutility.generated.conversion.ExecOnceType;
+import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
+import com.netflix.imfutility.generated.conversion.PipeType;
 
 import java.io.IOException;
 
@@ -39,14 +44,17 @@ import java.io.IOException;
  */
 public class ConversionEngine {
 
-    public void convert(FormatConfigurationType formatConfigurationType, TemplateParameterContextProvider contextProvider) throws IOException {
+    public void convert(FormatConfigurationType formatConfigurationType, TemplateParameterContextProvider contextProvider)
+            throws IOException {
         for (Object operation : formatConfigurationType.getExecOnceOrExecEachSegmentOrExecEachSequence()) {
             if (operation instanceof ExecOnceType) {
                 new ConversionExecutorOnce(contextProvider, getExecuteStrategyFactory(), (ExecOnceType) operation).execute();
             } else if (operation instanceof ExecEachSegmentSequenceType) {
-                new ConversionExecutorSegment(contextProvider, getExecuteStrategyFactory(), (ExecEachSegmentSequenceType) operation).execute();
+                new ConversionExecutorSegment(contextProvider, getExecuteStrategyFactory(),
+                        (ExecEachSegmentSequenceType) operation).execute();
             } else if (operation instanceof ExecEachSequenceSegmentType) {
-                new ConversionExecutorSequence(contextProvider, getExecuteStrategyFactory(), (ExecEachSequenceSegmentType) operation).execute();
+                new ConversionExecutorSequence(contextProvider, getExecuteStrategyFactory(),
+                        (ExecEachSequenceSegmentType) operation).execute();
             } else if (operation instanceof PipeType) {
                 new ConversionExecutorPipe(contextProvider, getExecuteStrategyFactory(), (PipeType) operation).execute();
             } else if (operation instanceof DynamicParameterType) {
@@ -58,6 +66,8 @@ public class ConversionEngine {
     }
 
     /**
+     * Returns a factory to create execute strategies to execute external conversion operations.
+     *
      * @return a factory to create execute strategies to execute external conversion operations.
      */
     public ExecuteStrategyFactory getExecuteStrategyFactory() {

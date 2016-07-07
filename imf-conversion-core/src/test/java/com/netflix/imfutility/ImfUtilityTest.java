@@ -20,7 +20,9 @@ package com.netflix.imfutility;
 
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 
 import java.io.File;
@@ -49,6 +51,16 @@ public class ImfUtilityTest {
     @AfterClass
     public static void teardownAll() throws IOException {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
+    }
+
+    @Before
+    public void setUp() {
+
+    }
+
+    @After
+    public void tearDown() {
+
     }
 
 }

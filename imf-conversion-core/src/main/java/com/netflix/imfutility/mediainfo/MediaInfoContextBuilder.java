@@ -112,13 +112,16 @@ public class MediaInfoContextBuilder {
      * <ul>
      * <li>XSD validation is performed for the created media info xml file.</li>
      * <li>The created media info xml file is added to the dynamic context to be deleted on exit.</li>
-     * <li>The media info XML file is parsed and Sequence context is filled with the values from media info XML (such as fps, sample rate, size, etc..)</li>
-     * <li>Each virtual track must have the same parameters (such as fps, sample rate, etc.) Otherwise a {@link MediaInfoException} is thrown.</li>
+     * <li>The media info XML file is parsed and Sequence context is filled with the values from media info XML
+     * (such as fps, sample rate, size, etc..)</li>
+     * <li>Each virtual track must have the same parameters (such as fps, sample rate, etc.)
+     * Otherwise a {@link MediaInfoException} is thrown.</li>
      * </ul>
      *
      * @throws IOException         if creation of media info XML files or calling of external media info tools fail.
      * @throws XmlParsingException if created media info XML file is not a valid XML or it doesn't pass XSD validation
-     * @throws MediaInfoException  if a virtual track contains mismatched parameters (such as fps, sample rate, etc.,) for different segments.
+     * @throws MediaInfoException  if a virtual track contains mismatched parameters (such as fps, sample rate, etc.,)
+     *                             for different segments.
      */
     public void build() throws IOException, XmlParsingException, MediaInfoException {
         SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
@@ -174,7 +177,7 @@ public class MediaInfoContextBuilder {
     }
 
     private void executeMediaInfoCommand(SequenceType seqType, String essence, File outputFile) throws IOException {
-        MediaInfoCommandType mediaInfoCommand = null;
+        MediaInfoCommandType mediaInfoCommand;
         switch (seqType) {
             case VIDEO:
                 mediaInfoCommand = format.getMediaInfoCommandVideo();
@@ -195,7 +198,8 @@ public class MediaInfoContextBuilder {
         executeStrategyFactory.createExecuteOnceStrategy(contextProvider).execute(operationInfo);
     }
 
-    private VirtualTrackInfo getTrackInfo(File outputFile, ContextInfo contextInfo, String essence) throws XmlParsingException, MediaInfoException, FileNotFoundException {
+    private VirtualTrackInfo getTrackInfo(File outputFile, ContextInfo contextInfo, String essence)
+            throws XmlParsingException, MediaInfoException, FileNotFoundException {
         // 1. parse output xml
         FfprobeType mediaInfo = parseOutputFile(outputFile, contextInfo);
 

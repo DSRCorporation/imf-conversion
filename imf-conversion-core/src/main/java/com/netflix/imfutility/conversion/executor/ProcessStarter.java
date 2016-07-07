@@ -18,8 +18,8 @@
  */
 package com.netflix.imfutility.conversion.executor;
 
-import com.netflix.imfutility.CoreConstants;
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.CoreConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +69,9 @@ public class ProcessStarter {
                 break;
             case FILE:
                 if (processInfo.getOutputRedirectFile() == null) {
-                    throw new ConversionException(String.format("stdout must be redirected to a file, but the file is not specified (process: %s)", processInfo.toString()));
+                    throw new ConversionException(String.format(
+                            "stdout must be redirected to a file, but the file is not specified (process: %s)",
+                            processInfo.toString()));
                 }
                 logger.info("\tRedirecting stdout to {}", processInfo.getOutputRedirectFile().getAbsolutePath());
                 pb.redirectOutput(ProcessBuilder.Redirect.to(processInfo.getOutputRedirectFile()));

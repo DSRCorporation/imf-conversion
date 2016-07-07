@@ -20,7 +20,12 @@ package com.netflix.imfutility.xml;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +44,7 @@ public class XmlParsingHandler implements ContentHandler, ErrorHandler {
      */
     private final String xml;
     /**
-     * A node name that is being processed
+     * A node name that is being processed.
      */
     private String qname;
 
@@ -92,7 +97,7 @@ public class XmlParsingHandler implements ContentHandler, ErrorHandler {
     public void startDocument() throws SAXException {
     }
 
-    public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attrs) throws SAXException {
         qnames.push(qName);
         qname = qName;
     }

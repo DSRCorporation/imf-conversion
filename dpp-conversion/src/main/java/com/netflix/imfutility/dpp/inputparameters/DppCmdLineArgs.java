@@ -27,7 +27,9 @@ import com.netflix.imfutility.inputparameters.ImfUtilityCmdLineArgs;
  */
 public interface DppCmdLineArgs extends ImfUtilityCmdLineArgs {
 
-    @Option(description = "DPP format: DPP mode. Possible values: [convert, metadata, audiomap]. 'convert' mode performs conversion to DPP format. 'metadata' mode generates an empty metadata.xml. 'audiomap' mode generates a default audiomap.xml.",
+    @Option(description = "DPP format: DPP mode. Possible values: [convert, metadata, audiomap]. "
+            + "'convert' mode performs conversion to DPP format. 'metadata' mode generates an empty metadata.xml. "
+            + "'audiomap' mode generates a default audiomap.xml.",
             shortName = {"m"}, longName = {"mode"}, defaultValue = "convert")
     DppMode getMode();
 
@@ -37,7 +39,8 @@ public interface DppCmdLineArgs extends ImfUtilityCmdLineArgs {
     @Option(description = "DPP format: 'convert' mode only. A full path to audiomap.xml", longName = {"audiomap"}, defaultToNull = true)
     String getAudioMap();
 
-    @Option(description = "DPP format: 'metadata' and 'audiomap' modes only. A full path to the generated file (either metadata.xml or audiomap.xml)",
+    @Option(description = "DPP format: 'metadata' and 'audiomap' modes only. "
+            + "A full path to the generated file (either metadata.xml or audiomap.xml)",
             shortName = "o", longName = {"output"}, defaultToNull = true)
     String getOutput();
 

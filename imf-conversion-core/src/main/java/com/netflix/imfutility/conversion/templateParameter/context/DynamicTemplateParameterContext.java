@@ -42,7 +42,8 @@ import java.util.stream.Collectors;
  * <li>May be created dynamically in conversion.xml</li>
  * <li>Supports deleteOnExit flag to delete a tmp file on exit (if the parameter defines a valid path).</li>
  * <li>It's possible to either add a parameter value for the given parameter name, or append the parameter value.
- * In the first case the previous value for the parameter name will be replaced. In the second case the new value will be appended to the previous value.</li>
+ * In the first case the previous value for the parameter name will be replaced. In the second case the new value will
+ * be appended to the previous value.</li>
  * <li>A dynamic parameter value may contain template parameters. All template parameters are resolved before adding a parameter.</li>
  * <li>A dynamic parameter name may contain template parameters. All template parameters are resolved before adding a parameter.</li>
  * </ul>
@@ -118,7 +119,8 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
      * @param contextInfo  a context info to resolved template parameters within the given parameter value.
      * @return this dynamic parameter context.
      */
-    public DynamicTemplateParameterContext addParameter(DynamicContextParameters param, String paramValue, boolean deleteOnExit, ContextInfo contextInfo) {
+    public DynamicTemplateParameterContext addParameter(DynamicContextParameters param, String paramValue,
+                                                        boolean deleteOnExit, ContextInfo contextInfo) {
         return addParameter(param.getName(), paramValue, deleteOnExit, contextInfo);
     }
 
@@ -184,7 +186,8 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
      * @param contextInfo  a context info to resolved template parameters within the given parameter value.
      * @return this dynamic parameter context.
      */
-    public DynamicTemplateParameterContext addParameter(String paramName, String paramValue, boolean deleteOnExit, ContextInfo contextInfo) {
+    public DynamicTemplateParameterContext addParameter(String paramName, String paramValue, boolean deleteOnExit,
+                                                        ContextInfo contextInfo) {
         paramName = parameterResolver.resolveTemplateParameter(paramName, contextInfo);
         paramValue = parameterResolver.resolveTemplateParameter(paramValue, contextInfo);
         params.put(paramName, new CustomParameterValue(paramValue, deleteOnExit));
@@ -253,7 +256,8 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
      * @param contextInfo  a context info to resolved template parameters within the given parameter value.
      * @return this dynamic parameter context.
      */
-    public DynamicTemplateParameterContext appendParameter(DynamicContextParameters param, String paramValue, boolean deleteOnExit, ContextInfo contextInfo) {
+    public DynamicTemplateParameterContext appendParameter(DynamicContextParameters param, String paramValue,
+                                                           boolean deleteOnExit, ContextInfo contextInfo) {
         return appendParameter(param.getName(), paramValue, deleteOnExit, contextInfo);
     }
 
@@ -319,7 +323,8 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
      * @param contextInfo  a context info to resolved template parameters within the given parameter value.
      * @return this dynamic parameter context.
      */
-    public DynamicTemplateParameterContext appendParameter(String paramName, String paramValue, boolean deleteOnExit, ContextInfo contextInfo) {
+    public DynamicTemplateParameterContext appendParameter(String paramName, String paramValue,
+                                                           boolean deleteOnExit, ContextInfo contextInfo) {
         paramName = parameterResolver.resolveTemplateParameter(paramName, contextInfo);
         paramValue = parameterResolver.resolveTemplateParameter(paramValue, contextInfo);
         if (!params.containsKey(paramName)) {
@@ -455,6 +460,8 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
     }
 
     /**
+     * Gets all template parameter values as a string.
+     *
      * @return Gets all template parameter values as a string
      */
     public Collection<String> getAllParametersAsString() {
@@ -464,6 +471,8 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
     }
 
     /**
+     * Gets all parameter value instances with additional information besides parameter value string.
+     *
      * @return gets all parameter value instances with additional information besides parameter value string.
      */
     public Collection<CustomParameterValue> getAllParameters() {

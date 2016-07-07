@@ -31,7 +31,11 @@ import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.cpl.uuid.UUID;
-import com.netflix.imfutility.generated.imf._2013.*;
+import com.netflix.imfutility.generated.imf._2013.BaseResourceType;
+import com.netflix.imfutility.generated.imf._2013.CompositionPlaylistType;
+import com.netflix.imfutility.generated.imf._2013.SegmentType;
+import com.netflix.imfutility.generated.imf._2013.SequenceType;
+import com.netflix.imfutility.generated.imf._2013.TrackFileResourceType;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -44,7 +48,11 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.netflix.imfutility.CoreConstants.*;
+import static com.netflix.imfutility.CoreConstants.CORE_CONSTRAINTS_2013_XSD;
+import static com.netflix.imfutility.CoreConstants.CPL_2013_PACKAGE;
+import static com.netflix.imfutility.CoreConstants.CPL_2013_XSD;
+import static com.netflix.imfutility.CoreConstants.DCML_TYPES_XSD;
+import static com.netflix.imfutility.CoreConstants.XMLDSIG_CORE_SCHEMA_XSD;
 
 /**
  * A CPL parser for 2013 namespace.
@@ -117,7 +125,8 @@ public class Cpl2013ContextBuilder {
         }
 
         // 4. check for audio sequences which has essences containing both audio and video
-        // (the values of DURATION_FRAME_EDIT_UNIT and START_TIME_FRAME_EDIT_UNIT  parameters must be calculated in video frames in this case)
+        // (the values of DURATION_FRAME_EDIT_UNIT and START_TIME_FRAME_EDIT_UNIT  parameters must be
+        // calculated in video frames in this case)
         buildTimeAndDurationInFrames();
     }
 
@@ -263,8 +272,10 @@ public class Cpl2013ContextBuilder {
                         String durationInFrames = String.valueOf(ConversionHelper.toNewEditRate(durationEU, editRate, videoEditRate));
 
                         // save in context
-                        resourceContext.addResourceParameter(resourceKey, resUuid, ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, startTimeInFrames);
-                        resourceContext.addResourceParameter(resourceKey, resUuid, ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, durationInFrames);
+                        resourceContext.addResourceParameter(resourceKey, resUuid, ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT,
+                                startTimeInFrames);
+                        resourceContext.addResourceParameter(resourceKey, resUuid, ResourceContextParameters.DURATION_FRAME_EDIT_UNIT,
+                                durationInFrames);
                     }
                 }
             }

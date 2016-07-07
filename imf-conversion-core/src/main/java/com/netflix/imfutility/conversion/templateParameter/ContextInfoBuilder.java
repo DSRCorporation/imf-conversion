@@ -26,7 +26,7 @@ import com.netflix.imfutility.generated.conversion.SequenceType;
 /**
  * A builder class for {@link ContextInfo}.
  */
-public class ContextInfoBuilder {
+public final class ContextInfoBuilder {
 
     private SegmentUUID segmentUuid = ContextInfo.DEFAULT_SEGMENT_UUID;
     private SequenceUUID sequenceUuid = ContextInfo.DEFAULT_SEQUENCE_UUID;

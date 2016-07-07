@@ -48,12 +48,14 @@ public class ConversionProviderTest {
 
     @Test(expected = XmlParsingException.class)
     public void testParseBrokenXml() throws Exception {
-        new ConversionXmlProvider(ConversionUtils.getBrokenXmlConversionXml(), ConversionUtils.getBrokenXmlConversionXmlPath(), new FakeFormat());
+        new ConversionXmlProvider(ConversionUtils.getBrokenXmlConversionXml(),
+                ConversionUtils.getBrokenXmlConversionXmlPath(), new FakeFormat());
     }
 
     @Test(expected = XmlParsingException.class)
     public void testParseInvalidXsd() throws Exception {
-        new ConversionXmlProvider(ConversionUtils.getInvalidXsdConversionXml(), ConversionUtils.getInvalidXsdConversionXmlPath(), new FakeFormat());
+        new ConversionXmlProvider(ConversionUtils.getInvalidXsdConversionXml(),
+                ConversionUtils.getInvalidXsdConversionXmlPath(), new FakeFormat());
     }
 
     @Test(expected = FileNotFoundException.class)

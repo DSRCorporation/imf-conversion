@@ -82,7 +82,8 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
      * @param paramValue  parameter value
      * @return this resource template parameters context.
      */
-    public ResourceTemplateParameterContext addResourceParameter(ResourceKey resourceKey, ResourceUUID uuid, ResourceContextParameters paramName, String paramValue) {
+    public ResourceTemplateParameterContext addResourceParameter(ResourceKey resourceKey, ResourceUUID uuid,
+                                                                 ResourceContextParameters paramName, String paramValue) {
         initResource(resourceKey, uuid);
         doAddParameter(resourceKey, uuid, paramName, paramValue);
         return this;
@@ -98,6 +99,8 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
     }
 
     /**
+     * Gets a total count of resources for the segment and sequence (virtual track) defined by the given key.
+     *
      * @param resourceKey a resource key defining the parameter.
      * @return total count of resources for the segment and sequence (virtual track) defined by the given key.
      */
@@ -110,6 +113,9 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
     }
 
     /**
+     * Gets  all Resource UUIDs for the segment and sequence (virtual track) defined by the given key.
+     * The order of the UUIDS is the order as they were added.
+     *
      * @param resourceKey a resource key defining the parameter.
      * @return all Resource UUIDs for the segment and sequence (virtual track) defined by the given key.
      * The order of the UUIDS is the order as they were added.
@@ -141,6 +147,8 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
     }
 
     /**
+     * Gets resolved parameter value as a string. Never null.
+     *
      * @param resourceParameter a enum defining the parameter name.
      * @param contextInfo       a context info. Must  contain information about segment, sequence and resource.
      * @return resolved parameter value as a string. Never null.
@@ -174,25 +182,31 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
         return getParameterValue(templateParameter, resourceParameter, contextInfo);
     }
 
-    private String getParameterValue(TemplateParameter templateParameter, ResourceContextParameters resourceParameter, ContextInfo contextInfo) {
+    private String getParameterValue(TemplateParameter templateParameter, ResourceContextParameters resourceParameter,
+                                     ContextInfo contextInfo) {
         if (contextInfo.getSegmentUuid() == null) {
             throw new TemplateParameterNotFoundException(
-                    templateParameter.toString(), "Segment UUID is not specified. Segment UUID is required for a resource template parameter.");
+                    templateParameter.toString(),
+                    "Segment UUID is not specified. Segment UUID is required for a resource template parameter.");
         }
         if (contextInfo.getSequenceUuid() == null) {
             throw new TemplateParameterNotFoundException(
-                    templateParameter.toString(), "Sequence UUID is not specified. Sequence UUID is required for a resource template parameter.");
+                    templateParameter.toString(),
+                    "Sequence UUID is not specified. Sequence UUID is required for a resource template parameter.");
         }
         if (contextInfo.getResourceUuid() == null) {
             throw new TemplateParameterNotFoundException(
-                    templateParameter.toString(), "Resource UUID is not specified. Resource UUID must be specified for a resource template parameter.");
+                    templateParameter.toString(),
+                    "Resource UUID is not specified. Resource UUID must be specified for a resource template parameter.");
         }
         if (contextInfo.getSequenceType() == null) {
             throw new TemplateParameterNotFoundException(
-                    templateParameter.toString(), "Sequence type must be specified for a resource template parameter.");
+                    templateParameter.toString(),
+                    "Sequence type must be specified for a resource template parameter.");
         }
 
-        ResourceKey resourceKey = ResourceKey.create(contextInfo.getSegmentUuid(), contextInfo.getSequenceUuid(), contextInfo.getSequenceType());
+        ResourceKey resourceKey = ResourceKey.create(contextInfo.getSegmentUuid(), contextInfo.getSequenceUuid(),
+                contextInfo.getSequenceType());
         ResourceData resourceData = resources.get(resourceKey);
         if (resourceData == null) {
             throw new TemplateParameterNotFoundException(

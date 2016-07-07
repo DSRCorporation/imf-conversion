@@ -45,7 +45,7 @@ public class AssetMapParser {
      * @throws XmlParsingException   if input is not a valid XML or it doesn't pass XSD validation
      * @throws FileNotFoundException if the input path doesn't define a file.
      */
-    public AssetMap parse(File impDirectory, File assetMapFile) throws XmlParsingException, FileNotFoundException {
+    public final AssetMap parse(File impDirectory, File assetMapFile) throws XmlParsingException, FileNotFoundException {
         if (!assetMapFile.isFile()) {
             throw new FileNotFoundException(String.format("Invalid ASSETMAP file: '%s' not found", assetMapFile.getAbsolutePath()));
         }
@@ -65,7 +65,7 @@ public class AssetMapParser {
             String assetPath = asset.getChunkList().getChunk().get(0).getPath();
 
             // we should add a full absolute path
-            String assetFullPath = null;
+            String assetFullPath;
             File assetAbsoluteFile = new File(assetPath);
             File assetRelativeFile = new File(impDirectory, assetPath);
             if (assetAbsoluteFile.isFile()) {

@@ -61,7 +61,8 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
     private final Map<SequenceType, SequenceData> sequences = new LinkedHashMap<>();
 
     /**
-     * Inits a sequence (virtual track) parameter defined by the given UUID. Defines default parameters (such as Sequence UUID, type and number).
+     * Inits a sequence (virtual track) parameter defined by the given UUID. Defines default parameters
+     * (such as Sequence UUID, type and number).
      * The method must be called for each sequence before adding another parameters.
      *
      * @param seqType sequence type
@@ -87,7 +88,8 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
      * @param paramValue parameter value
      * @return this sequence template parameters context.
      */
-    public SequenceTemplateParameterContext addSequenceParameter(SequenceType seqType, SequenceUUID uuid, SequenceContextParameters paramName, String paramValue) {
+    public SequenceTemplateParameterContext addSequenceParameter(SequenceType seqType, SequenceUUID uuid,
+                                                                 SequenceContextParameters paramName, String paramValue) {
         initSequence(seqType, uuid);
         doAddParameter(seqType, uuid, paramName, paramValue);
         return this;
@@ -103,6 +105,8 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
     }
 
     /**
+     * Gets total count of sequences (virtual tracks) of the given type.
+     *
      * @param sequenceType sequence type
      * @return total count of sequences (virtual tracks) of the given type.
      */
@@ -115,6 +119,8 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
     }
 
     /**
+     * Gets all Sequences UUIDs of the given type. The order of the UUIDS is the order as they were added.
+     *
      * @param sequenceType sequence type
      * @return all Sequences UUIDs of the given type. The order of the UUIDS is the order as they were added.
      */
@@ -127,6 +133,8 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
     }
 
     /**
+     * Gets all added sequence types.
+     *
      * @return all added sequence types.
      */
     public Collection<SequenceType> getSequenceTypes() {

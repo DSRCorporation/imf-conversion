@@ -28,15 +28,8 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Prints all errors in a simple XML form:
- * <pre>
- * {@code
- * <errors>
- * <error>error1</error>
- * <error>error2</error>
- * ....
- * </errors>}
- * </pre>
+ * Prints all errors in a simple XML form.
+ *
  */
 public class ImfErrorXmlPresenter implements IImfErrorPresenter {
 

@@ -24,7 +24,8 @@ package com.netflix.imfutility.conversion.executor;
 public class ProcessFailedException extends RuntimeException {
 
     public ProcessFailedException(ExternalProcess process, int errorCode) {
-        super(String.format("Execution of '%s' process failed: exit code '%d'. See log folder for details.", process.toString(), errorCode));
+        super(String.format("Execution of '%s' process failed: exit code '%d'. See log folder for details.",
+                process.toString(), errorCode));
     }
 
     public ProcessFailedException(String message, Throwable e) {

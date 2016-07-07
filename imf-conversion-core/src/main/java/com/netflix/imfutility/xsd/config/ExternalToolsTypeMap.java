@@ -23,7 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Custom map for generated {@link ExternalToolsType}.
+ * Custom map for generated {@link com.netflix.imfutility.generated.config.ExternalToolsType}.
+ *
+ * @param <String>   external tool key type
+ * @param <ToolType> external tool value type
  */
 @XmlJavaTypeAdapter(ExternalToolsTypeMapAdapter.class)
 public class ExternalToolsTypeMap<String, ToolType> {

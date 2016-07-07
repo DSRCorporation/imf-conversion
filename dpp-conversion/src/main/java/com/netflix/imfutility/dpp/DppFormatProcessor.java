@@ -59,6 +59,7 @@ public class DppFormatProcessor {
                 return processMetadataMode(inputParameters);
             case audiomap:
                 return processAudiomapMode(inputParameters);
+            default: // nothing
         }
 
         throw new ConversionException("Unsupported DPP mode" + inputParameters.getCmdLineArgs().getMode().toString());

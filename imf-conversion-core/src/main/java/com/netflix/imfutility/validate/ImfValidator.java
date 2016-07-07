@@ -18,14 +18,14 @@
  */
 package com.netflix.imfutility.validate;
 
-import com.netflix.imfutility.CoreConstants;
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.generated.conversion.ImfValidationType;
+import com.netflix.imfutility.CoreConstants;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
+import com.netflix.imfutility.generated.conversion.ImfValidationType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -43,7 +43,7 @@ import java.util.List;
  * Performs validation of the input IMF package (IMP) and CPL.
  * <ul>
  * <li>Validation is performed by a separate external tool.</li>
- * <li>The validation eternall tool command is specified in conversion.xml</li>
+ * <li>The validation external tool command is specified in conversion.xml</li>
  * <li>By default, validation is done by a wrapper on Netflix Photon library.</li>
  * <li>It's possible to set a custom validation tool using config.xml.</li>
  * <li>The validation tool expect IMP, CPL, working dir and output XML file name parameters.</li>
@@ -81,7 +81,8 @@ public class ImfValidator {
     }
 
     private void analyzeResult() throws ImfValidationException, IOException {
-        String errorFileName = contextProvider.getDynamicContext().getParameterValueAsString(DynamicContextParameters.OUTPUT_VALIDATION_FILE);
+        String errorFileName = contextProvider.getDynamicContext().getParameterValueAsString(
+                DynamicContextParameters.OUTPUT_VALIDATION_FILE);
         File errorFile = new File(contextProvider.getWorkingDir(), errorFileName);
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();

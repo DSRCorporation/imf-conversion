@@ -19,7 +19,7 @@
 package com.netflix.imfutility.inputparameters;
 
 /**
- * Created by Alexander on 7/5/2016.
+ * Default tools mock for tests.
  */
 public class FakeDefaultTools implements IDefaultTools {
 

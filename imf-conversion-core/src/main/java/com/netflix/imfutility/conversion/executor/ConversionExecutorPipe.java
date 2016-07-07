@@ -39,7 +39,8 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
 
     private final PipeType pipe;
 
-    public ConversionExecutorPipe(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory strategyProvider, PipeType pipe) {
+    public ConversionExecutorPipe(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory strategyProvider,
+                                  PipeType pipe) {
         super(contextProvider, strategyProvider);
         this.pipe = pipe;
     }

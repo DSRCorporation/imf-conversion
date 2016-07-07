@@ -25,7 +25,7 @@ import com.netflix.imfutility.generated.conversion.SequenceType;
 /**
  * Unique identifier of a resource within a segment of a sequence (virtual track). It's used in {@link ResourceTemplateParameterContext}.
  */
-public class ResourceKey {
+public final class ResourceKey {
 
     private final SegmentUUID segmentUuid;
     private final SequenceUUID sequenceUuid;
@@ -43,13 +43,21 @@ public class ResourceKey {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         ResourceKey that = (ResourceKey) o;
 
-        if (segmentUuid != null ? !segmentUuid.equals(that.segmentUuid) : that.segmentUuid != null) return false;
-        if (sequenceUuid != null ? !sequenceUuid.equals(that.sequenceUuid) : that.sequenceUuid != null) return false;
+        if (segmentUuid != null ? !segmentUuid.equals(that.segmentUuid) : that.segmentUuid != null) {
+            return false;
+        }
+        if (sequenceUuid != null ? !sequenceUuid.equals(that.sequenceUuid) : that.sequenceUuid != null) {
+            return false;
+        }
         return sequenceType == that.sequenceType;
 
     }

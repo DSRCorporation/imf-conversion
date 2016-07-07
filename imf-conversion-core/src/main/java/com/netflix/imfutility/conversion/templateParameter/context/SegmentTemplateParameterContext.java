@@ -94,6 +94,8 @@ public class SegmentTemplateParameterContext implements ITemplateParameterContex
     }
 
     /**
+     * Gets total count of segments.
+     *
      * @return total count of segments.
      */
     public int getSegmentsNum() {
@@ -101,6 +103,8 @@ public class SegmentTemplateParameterContext implements ITemplateParameterContex
     }
 
     /**
+     * Gets all Segment UUIDs. The order of the UUIDS is the order as they were added.
+     *
      * @return all Segment UUIDs. The order of the UUIDS is the order as they were added.
      */
     public Collection<SegmentUUID> getUuids() {
@@ -108,6 +112,8 @@ public class SegmentTemplateParameterContext implements ITemplateParameterContex
     }
 
     /**
+     * Gets resolved parameter value as a string. Never null.
+     *
      * @param segmParameter a enum defining the parameter name.
      * @param contextInfo   a context info. Must  contain information about the segment.
      * @return resolved parameter value as a string. Never null.
@@ -144,7 +150,8 @@ public class SegmentTemplateParameterContext implements ITemplateParameterContex
     private String getParameterValue(TemplateParameter templateParameter, SegmentContextParameters segmParameter, ContextInfo contextInfo) {
         if (contextInfo.getSegmentUuid() == null) {
             throw new TemplateParameterNotFoundException(
-                    templateParameter.toString(), "Segment UUID is not specified. Segment UUID is required for a segment template parameter.");
+                    templateParameter.toString(),
+                    "Segment UUID is not specified. Segment UUID is required for a segment template parameter.");
         }
 
         SegmentParameterData segmentData = segments.get(contextInfo.getSegmentUuid());

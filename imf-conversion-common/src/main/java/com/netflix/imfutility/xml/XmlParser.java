@@ -24,14 +24,23 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.JAXBIntrospector;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.UnmarshallerHandler;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +51,7 @@ import java.util.List;
  * <li>Performs XSD validation and throws {@link XmlParsingException} if the xml is not a valid XML according to XSD.</li>
  * </ul>
  */
-public class XmlParser {
+public final class XmlParser {
 
     /**
      * Gets the namespace of the root element.
@@ -173,4 +182,6 @@ public class XmlParser {
         return sp.getXMLReader();
     }
 
+    private XmlParser() {
+    }
 }

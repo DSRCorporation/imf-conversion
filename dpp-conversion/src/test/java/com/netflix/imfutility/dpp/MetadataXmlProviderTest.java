@@ -43,13 +43,13 @@ public class MetadataXmlProviderTest {
     private MetadataXmlProvider metadataProvider;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         // reset the current metadata provider
         this.metadataProvider = null;
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         // remove all tmp files created during tests
         if (metadataProvider != null) {
             metadataProvider.getBmxDppParameterFiles().forEach(File::delete);
@@ -64,7 +64,8 @@ public class MetadataXmlProviderTest {
     @Test
     public void parseCorrectMetadataXml() throws Exception {
         // load generated test-metadata.xml
-        this.metadataProvider = new MetadataXmlProvider(MetadataUtils.getCorrectMetadataXml(), TemplateParameterContextCreator.getCurrentTmpDir());
+        this.metadataProvider = new MetadataXmlProvider(MetadataUtils.getCorrectMetadataXml(),
+                TemplateParameterContextCreator.getCurrentTmpDir());
 
         assertNotNull(metadataProvider.getDpp());
         assertNotNull(metadataProvider.getDpp().getEditorial());
@@ -75,17 +76,20 @@ public class MetadataXmlProviderTest {
 
     @Test(expected = XmlParsingException.class)
     public void testParseBrokenXml() throws Exception {
-        this.metadataProvider = new MetadataXmlProvider(MetadataUtils.getBrokenXmlMetadataXml(), TemplateParameterContextCreator.getCurrentTmpDir());
+        this.metadataProvider = new MetadataXmlProvider(MetadataUtils.getBrokenXmlMetadataXml(),
+                TemplateParameterContextCreator.getCurrentTmpDir());
     }
 
     @Test(expected = XmlParsingException.class)
     public void testParseInvalidXsd() throws Exception {
-        this.metadataProvider = new MetadataXmlProvider(MetadataUtils.getInvalidXsdMetadataXml(), TemplateParameterContextCreator.getCurrentTmpDir());
+        this.metadataProvider = new MetadataXmlProvider(MetadataUtils.getInvalidXsdMetadataXml(),
+                TemplateParameterContextCreator.getCurrentTmpDir());
     }
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
-        this.metadataProvider = new MetadataXmlProvider(new File("invalid-path"), TemplateParameterContextCreator.getCurrentTmpDir());
+        this.metadataProvider = new MetadataXmlProvider(new File("invalid-path"),
+                TemplateParameterContextCreator.getCurrentTmpDir());
     }
 
     /**
@@ -96,7 +100,8 @@ public class MetadataXmlProviderTest {
     @Test
     public void transformXmlToBmxParameters() throws Exception {
         // load generated test-metadata.xml
-        this.metadataProvider = new MetadataXmlProvider(MetadataUtils.getCorrectMetadataXml(), TemplateParameterContextCreator.getCurrentTmpDir());
+        this.metadataProvider = new MetadataXmlProvider(MetadataUtils.getCorrectMetadataXml(),
+                TemplateParameterContextCreator.getCurrentTmpDir());
 
         // generate parameter files
         metadataProvider.createBmxDppParameterFiles();

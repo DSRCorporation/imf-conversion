@@ -26,7 +26,7 @@ import java.io.File;
  * Validator of input parameters specific for DPP format. It checks whether all required parameters depending on the
  * mode are specified via command lines arguments. Only DPP-specific parameters are validated.
  */
-public class DppInputParametersValidator {
+public final class DppInputParametersValidator {
 
     /**
      * Checks whether all required parameters depending on the  mode are specified via command lines arguments.
@@ -46,13 +46,15 @@ public class DppInputParametersValidator {
             case audiomap:
                 validateAudiomapMode(inputParameters);
                 break;
+            default: // nothing
         }
     }
 
     private static void validateConvertMode(DppInputParameters inputParameters) throws ArgumentValidationException {
         File metadataFile = inputParameters.getMetadataFile();
         if (metadataFile == null) {
-            throw new ArgumentValidationException("Metadata.xml (--metadata) must be specified in 'convert' mode. Use 'metadata' mode (-m metadata) to generate a sample metadata.xml");
+            throw new ArgumentValidationException("Metadata.xml (--metadata) must be specified in 'convert' mode."
+                    + " Use 'metadata' mode (-m metadata) to generate a sample metadata.xml");
         }
         if (!metadataFile.isFile()) {
             throw new ArgumentValidationException(String.format(
@@ -78,6 +80,10 @@ public class DppInputParametersValidator {
         if (inputParameters.getCmdLineArgs().getOutput() == null) {
             throw new ArgumentValidationException("Audiomap.xml output path (-o, --output) must be specified in 'audiomap' mode");
         }
+    }
+
+    private DppInputParametersValidator() {
+
     }
 
 }

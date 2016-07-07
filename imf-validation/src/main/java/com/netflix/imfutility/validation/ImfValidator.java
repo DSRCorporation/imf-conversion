@@ -225,11 +225,13 @@ public class ImfValidator {
                         return imfErrorLogger.getErrors();
                     }
 
-                    HeaderPartition headerPartition = new HeaderPartition(new ByteArrayDataProvider(headerPartitionPayloadRecord.getPayload()),
+                    HeaderPartition headerPartition = new HeaderPartition(
+                            new ByteArrayDataProvider(headerPartitionPayloadRecord.getPayload()),
                             0L,
                             (long) headerPartitionPayloadRecord.getPayload().length,
                             imfErrorLogger);
-                    MXFOperationalPattern1A.HeaderPartitionOP1A headerPartitionOP1A = MXFOperationalPattern1A.checkOperationalPattern1ACompliance(headerPartition);
+                    MXFOperationalPattern1A.HeaderPartitionOP1A headerPartitionOP1A =
+                            MXFOperationalPattern1A.checkOperationalPattern1ACompliance(headerPartition);
                     IMFConstraints.checkIMFCompliance(headerPartitionOP1A);
                     return imfErrorLogger.getErrors();
                 });
@@ -280,7 +282,8 @@ public class ImfValidator {
         rangeEnd = archiveFileSize - 1;
 
         byte[] randomIndexPackBytes = resourceByteRangeProvider.getByteRangeAsBytes(rangeStart, rangeEnd);
-        PayloadRecord randomIndexPackPayload = new PayloadRecord(randomIndexPackBytes, PayloadRecord.PayloadAssetType.EssencePartition, rangeStart, rangeEnd);
+        PayloadRecord randomIndexPackPayload = new PayloadRecord(
+                randomIndexPackBytes, PayloadRecord.PayloadAssetType.EssencePartition, rangeStart, rangeEnd);
         List<Long> partitionByteOffsets = IMPValidator.getEssencePartitionOffsets(randomIndexPackPayload, randomIndexPackSize);
 
         if (partitionByteOffsets.size() < 2) {

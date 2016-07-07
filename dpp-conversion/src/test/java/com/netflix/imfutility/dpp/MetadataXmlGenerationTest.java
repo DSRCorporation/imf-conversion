@@ -43,7 +43,7 @@ public class MetadataXmlGenerationTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         //remove temp file;
         assertTrue("Temporary file cannot be deleted.", metadataXml.delete());
     }
@@ -51,10 +51,10 @@ public class MetadataXmlGenerationTest {
     /**
      * Tests empty test-metadata.xml generation.
      *
-     * @throws Exception
+     *
      */
     @Test
-    public void generateEmptyXml() throws Exception {
+    public void generateEmptyXml() {
         //try to generate Dpp test-metadata.xml
         MetadataXmlProvider.generateEmptyXml(metadataXml.getAbsolutePath());
 

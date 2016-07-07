@@ -29,14 +29,17 @@ public final class MetadataUtils {
     }
 
     public static File getCorrectMetadataXml() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-metadata.xml").getPath());
     }
 
     public static File getBrokenXmlMetadataXml() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-metadata.xml").getPath());
     }
 
     public static File getInvalidXsdMetadataXml() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-metadata.xml").getPath());
     }
 

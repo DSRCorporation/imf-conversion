@@ -21,7 +21,11 @@ package com.netflix.imfutility.mediainfo;
 import com.netflix.imfutility.conversion.executor.strategy.AbstractExecuteStrategy;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
-import com.netflix.imfutility.conversion.templateParameter.context.*;
+import com.netflix.imfutility.conversion.templateParameter.context.CustomParameterValue;
+import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.ResourceTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
@@ -38,9 +42,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.EnumSet;
 
-import static com.netflix.imfutility.util.TemplateParameterContextCreator.*;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.addResourceContextParameter;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.createDefaultContextProviderWithCPLContext;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.createResourceContextInfo;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.getSequenceUuid;
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * <ul>
@@ -56,7 +65,7 @@ import static org.junit.Assert.*;
 public class MediaInfoContextBuilderTest {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         AbstractExecuteStrategy.resetCount();
     }
 
@@ -130,23 +139,47 @@ public class MediaInfoContextBuilderTest {
         new TestMediaInfoContextBuilder(contextProvider, testExecutorLogger).build();
 
         // media info command must be run once for each sequenceType-essence pair
-        assertEquals("START: External Process 1: MediaInfoCommandVideoType_essence1, ExecuteOnceStrategy, mediaInfoCommandVideo FILE", testExecutorLogger.getNext());
-        assertEquals("FINISH: External Process 1: MediaInfoCommandVideoType_essence1, ExecuteOnceStrategy, mediaInfoCommandVideo FILE", testExecutorLogger.getNext());
+        assertEquals(
+                "START: External Process 1: MediaInfoCommandVideoType_essence1, ExecuteOnceStrategy, mediaInfoCommandVideo FILE",
+                testExecutorLogger.getNext());
+        assertEquals(
+                "FINISH: External Process 1: MediaInfoCommandVideoType_essence1, ExecuteOnceStrategy, mediaInfoCommandVideo FILE",
+                testExecutorLogger.getNext());
 
-        assertEquals("START: External Process 2: MediaInfoCommandVideoType_essence2, ExecuteOnceStrategy, mediaInfoCommandVideo FILE", testExecutorLogger.getNext());
-        assertEquals("FINISH: External Process 2: MediaInfoCommandVideoType_essence2, ExecuteOnceStrategy, mediaInfoCommandVideo FILE", testExecutorLogger.getNext());
+        assertEquals(
+                "START: External Process 2: MediaInfoCommandVideoType_essence2, ExecuteOnceStrategy, mediaInfoCommandVideo FILE",
+                testExecutorLogger.getNext());
+        assertEquals(
+                "FINISH: External Process 2: MediaInfoCommandVideoType_essence2, ExecuteOnceStrategy, mediaInfoCommandVideo FILE",
+                testExecutorLogger.getNext());
 
-        assertEquals("START: External Process 3: MediaInfoCommandVideoType_essence4, ExecuteOnceStrategy, mediaInfoCommandVideo FILE", testExecutorLogger.getNext());
-        assertEquals("FINISH: External Process 3: MediaInfoCommandVideoType_essence4, ExecuteOnceStrategy, mediaInfoCommandVideo FILE", testExecutorLogger.getNext());
+        assertEquals(
+                "START: External Process 3: MediaInfoCommandVideoType_essence4, ExecuteOnceStrategy, mediaInfoCommandVideo FILE",
+                testExecutorLogger.getNext());
+        assertEquals(
+                "FINISH: External Process 3: MediaInfoCommandVideoType_essence4, ExecuteOnceStrategy, mediaInfoCommandVideo FILE",
+                testExecutorLogger.getNext());
 
-        assertEquals("START: External Process 4: MediaInfoCommandAudioType_essence1, ExecuteOnceStrategy, mediaInfoCommandAudio FILE", testExecutorLogger.getNext());
-        assertEquals("FINISH: External Process 4: MediaInfoCommandAudioType_essence1, ExecuteOnceStrategy, mediaInfoCommandAudio FILE", testExecutorLogger.getNext());
+        assertEquals(
+                "START: External Process 4: MediaInfoCommandAudioType_essence1, ExecuteOnceStrategy, mediaInfoCommandAudio FILE",
+                testExecutorLogger.getNext());
+        assertEquals(
+                "FINISH: External Process 4: MediaInfoCommandAudioType_essence1, ExecuteOnceStrategy, mediaInfoCommandAudio FILE",
+                testExecutorLogger.getNext());
 
-        assertEquals("START: External Process 5: MediaInfoCommandAudioType_essence2, ExecuteOnceStrategy, mediaInfoCommandAudio FILE", testExecutorLogger.getNext());
-        assertEquals("FINISH: External Process 5: MediaInfoCommandAudioType_essence2, ExecuteOnceStrategy, mediaInfoCommandAudio FILE", testExecutorLogger.getNext());
+        assertEquals(
+                "START: External Process 5: MediaInfoCommandAudioType_essence2, ExecuteOnceStrategy, mediaInfoCommandAudio FILE",
+                testExecutorLogger.getNext());
+        assertEquals(
+                "FINISH: External Process 5: MediaInfoCommandAudioType_essence2, ExecuteOnceStrategy, mediaInfoCommandAudio FILE",
+                testExecutorLogger.getNext());
 
-        assertEquals("START: External Process 6: MediaInfoCommandAudioType_essence3, ExecuteOnceStrategy, mediaInfoCommandAudio FILE", testExecutorLogger.getNext());
-        assertEquals("FINISH: External Process 6: MediaInfoCommandAudioType_essence3, ExecuteOnceStrategy, mediaInfoCommandAudio FILE", testExecutorLogger.getNext());
+        assertEquals(
+                "START: External Process 6: MediaInfoCommandAudioType_essence3, ExecuteOnceStrategy, mediaInfoCommandAudio FILE",
+                testExecutorLogger.getNext());
+        assertEquals(
+                "FINISH: External Process 6: MediaInfoCommandAudioType_essence3, ExecuteOnceStrategy, mediaInfoCommandAudio FILE",
+                testExecutorLogger.getNext());
 
         assertFalse("There are more executed processes than expected!", testExecutorLogger.hasNext());
     }
@@ -234,7 +267,8 @@ public class MediaInfoContextBuilderTest {
 
     @Test
     public void testDynamicContextMediaInfoOutput() throws Exception {
-        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCPLContext(2, 2, 2, EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO));
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCPLContext(
+                2, 2, 2, EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO));
         new TestMediaInfoContextBuilder(contextProvider).build();
 
 
@@ -328,11 +362,11 @@ public class MediaInfoContextBuilderTest {
                     new TestExecutorLogger(), videoMediaInfoXml, audioMediaInfoXml);
         }
 
-        public TestMediaInfoContextBuilder(TemplateParameterContextProvider contextProvider, TestExecutorLogger testExecutorLogger) throws Exception {
+        public TestMediaInfoContextBuilder(TemplateParameterContextProvider contextProvider, TestExecutorLogger testExecutorLogger) {
             this(contextProvider, testExecutorLogger, MediaInfoUtils.getCorrectMediaInfoVideo(), MediaInfoUtils.getCorrectMediaInfoAudio());
         }
 
-        public TestMediaInfoContextBuilder(TemplateParameterContextProvider contextProvider) throws Exception {
+        public TestMediaInfoContextBuilder(TemplateParameterContextProvider contextProvider) {
             this(contextProvider, new TestExecutorLogger(),
                     MediaInfoUtils.getCorrectMediaInfoVideo(), MediaInfoUtils.getCorrectMediaInfoAudio());
         }

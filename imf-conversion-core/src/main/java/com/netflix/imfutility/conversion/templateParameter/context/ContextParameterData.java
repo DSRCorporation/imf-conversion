@@ -23,6 +23,8 @@ import java.util.Map;
 
 /**
  * A helper generic class to store template parameters.
+ *
+ * @param <T> parameter key type
  */
 public class ContextParameterData<T> {
 

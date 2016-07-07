@@ -29,7 +29,8 @@ public abstract class AbstractConversionExecutor implements IConversionExecutor 
     protected final TemplateParameterContextProvider contextProvider;
     protected final ExecuteStrategyFactory executeStrategyFactory;
 
-    public AbstractConversionExecutor(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory executeStrategyFactory) {
+    public AbstractConversionExecutor(final TemplateParameterContextProvider contextProvider,
+                                      final ExecuteStrategyFactory executeStrategyFactory) {
         this.contextProvider = contextProvider;
         this.executeStrategyFactory = executeStrategyFactory;
     }

@@ -21,7 +21,7 @@ package com.netflix.imfutility.dpp;
 import com.netflix.imfutility.IFormat;
 
 /**
- * Created by Alexander on 7/2/2016.
+ * DPP Format.
  */
 public class DppFormat implements IFormat {
 

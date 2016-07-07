@@ -241,7 +241,8 @@ public abstract class AbstractFormatBuilder {
 
         // 4. custom IMF validation
         if (configProvider.getConfig().getExternalTools().getMap().containsKey(CoreConstants.IMF_VALIDATION_TOOL)) {
-            String customImfValidation = configProvider.getConfig().getExternalTools().getMap().get(CoreConstants.IMF_VALIDATION_TOOL).getValue();
+            String customImfValidation = configProvider.getConfig().getExternalTools().getMap()
+                    .get(CoreConstants.IMF_VALIDATION_TOOL).getValue();
             if (!StringUtils.isEmpty(customImfValidation)) {
                 inputParameters.setCustomImfValidationTool(customImfValidation);
             }

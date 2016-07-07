@@ -62,10 +62,12 @@ public enum ResourceContextParameters {
     // it equals to the sum of durations of all segments prior the one containing the resource
     OFFSET_EDIT_UNIT("offsetEU"),
 
-    // in frame edit units (audio samples if essence contains audio only; video frames if essence contains video only or both video and audio)
+    // in frame edit units (audio samples if essence contains audio only; video frames if essence contains video only
+    // or both video and audio)
     START_TIME_FRAME_EDIT_UNIT("startTimeFrameEU"),
 
-    // in frame edit units (audio samples if essence contains audio only; video frames if essence contains video only or both video and audio)
+    // in frame edit units (audio samples if essence contains audio only; video frames if essence contains video only
+    // or both video and audio)
     DURATION_FRAME_EDIT_UNIT("durationFrameEU");
 
 

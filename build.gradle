@@ -89,14 +89,26 @@ configure(project.javaSubprojectList) {
         }
     }
 
-    // 4.3. license task
+    // 4.4. Checkstyle plugin.
+    apply plugin: 'checkstyle'
+
+    checkstyle {
+        sourceSets = [project.sourceSets.main]
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    }
+
+    tasks.withType(Checkstyle) {
+        exclude '**/generated/**'
+    }
+
+    // 4.5. license task
     apply plugin: 'com.github.hierynomus.license'
     license {
         header rootProject.file('config/GPL_HEADER')
         ext.year = Calendar.getInstance().get(Calendar.YEAR)
         ext.name = "Netflix, Inc."
         ext.product = "IMF Conversion Utility"
-        excludes(["**/generated/**", "**/xsd/imf/**", "**/*.xml"])
+        excludes(["**/generated/**", "**/xsd/imf/**", "**/*.xjb", "**/*.xml", "**/*.hdr", "**/*.mxf"])
     }
 
 }

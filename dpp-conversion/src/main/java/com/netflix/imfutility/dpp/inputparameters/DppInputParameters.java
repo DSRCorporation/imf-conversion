@@ -38,6 +38,8 @@ public class DppInputParameters extends ImfUtilityInputParameters {
     }
 
     /**
+     * Gets a metadata file as specified via command line arguments or null if it's not specified.
+     *
      * @return a metadata file as specified via command line arguments or null if it's not specified.
      */
     public File getMetadataFile() {
@@ -48,6 +50,8 @@ public class DppInputParameters extends ImfUtilityInputParameters {
     }
 
     /**
+     * Gets an audiomap file as specified via command line arguments or null if it's not specified.
+     *
      * @return an audiomap file as specified via command line arguments or null if it's not specified.
      */
     public File getAudiomapFile() {

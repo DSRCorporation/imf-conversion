@@ -29,18 +29,22 @@ public final class ImpUtils {
     }
 
     public static File getCorrectCpl() {
+        //noinspection ConstantConditions,ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL.xml").getPath());
     }
 
     public static File getCorrectCplOneEssence() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL-one-essence.xml").getPath());
     }
 
     public static File getBrokenXmlCpl() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-CPL.xml").getPath());
     }
 
     public static File getInvalidXsdCpl() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-CPL.xml").getPath());
     }
 
@@ -49,36 +53,46 @@ public final class ImpUtils {
     }
 
     public static File getImpFolder() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("imp").getPath());
     }
 
     public static File getCorrectAssetmap() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("imp/ASSETMAP.xml").getPath());
     }
 
     public static File getBrokenXmlAssetmap() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-ASSETMAP.xml").getPath());
     }
 
     public static File getInvalidXsdAssetmap() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-ASSETMAP.xml").getPath());
     }
 
 
     public static File getCorrectImpForValidation() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("imp-validate-correct").getPath());
     }
 
     public static File getCorrectCplForValidation() {
-        return new File(ClassLoader.getSystemClassLoader().getResource("imp-validate-correct/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml").getPath());
+        //noinspection ConstantConditions
+        return new File(ClassLoader.getSystemClassLoader().getResource(
+                "imp-validate-correct/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml").getPath());
     }
 
     public static File getInvalidImpForValidation() {
+        //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("imp-validate-invalid").getPath());
     }
 
     public static File getInvalidCplForValidation() {
-        return new File(ClassLoader.getSystemClassLoader().getResource("imp-validate-invalid/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml").getPath());
+        //noinspection ConstantConditions
+        return new File(ClassLoader.getSystemClassLoader().getResource(
+                "imp-validate-invalid/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml").getPath());
     }
 
 

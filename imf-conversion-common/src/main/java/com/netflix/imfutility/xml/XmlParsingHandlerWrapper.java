@@ -23,8 +23,6 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import java.io.File;
-
 /**
  * Created by Alexandr on 5/6/2016.
  * A helper to get human readable errors of an xml when loading and parsing, while passing parse events to another {@link ContentHandler}.
@@ -95,9 +93,9 @@ public class XmlParsingHandlerWrapper extends XmlParsingHandler {
         contentHandler.startDocument();
     }
 
-    public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-        super.startElement(uri, localName, qName, atts);
-        contentHandler.startElement(uri, localName, qName, atts);
+    public void startElement(String uri, String localName, String qName, Attributes attrs) throws SAXException {
+        super.startElement(uri, localName, qName, attrs);
+        contentHandler.startElement(uri, localName, qName, attrs);
     }
 
     public void startPrefixMapping(String prefix, String uri) throws SAXException {

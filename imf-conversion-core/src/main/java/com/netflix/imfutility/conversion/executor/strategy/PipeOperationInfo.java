@@ -24,7 +24,8 @@ import java.util.List;
 
 /**
  * Information about all conversion operations to be executed in a pipe.
- * It contains a list of operations to be piped (tail operations), and a list of operations executed sequentially one by one (cycle operations).
+ * It contains a list of operations to be piped (tail operations), and a list of operations executed sequentially
+ * one by one (cycle operations).
  * Each of the cycle operations is piped to the tail operations.
  * <p>
  * Example:

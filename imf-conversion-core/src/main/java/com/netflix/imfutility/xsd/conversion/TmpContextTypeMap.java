@@ -23,7 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Custom map for generated {@link TmpContextType}.
+ * Custom map for generated {@link com.netflix.imfutility.generated.conversion.TmpContextType}.
+ *
+ * @param  <String> tmpContext key type
+ * @param <TmpParamType> tnpContext value type
  */
 @XmlJavaTypeAdapter(TmpContextTypeMapAdapter.class)
 public class TmpContextTypeMap<String, TmpParamType> {

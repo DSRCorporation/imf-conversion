@@ -221,7 +221,7 @@ public class InputParametersTest extends ImfUtilityTest {
 
     @Test
     public void testValidateConfigCorrect() {
-        String[] args = new String[]{
+        @SuppressWarnings("ConstantConditions") String[] args = new String[]{
                 "-c", getClass().getClassLoader().getResource(ConfigUtils.getCorrectConfigXmlPath()).getPath()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(

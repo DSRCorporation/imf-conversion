@@ -24,10 +24,13 @@ import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 
 /**
- * A current state that helps to resolve a parameter by {@link com.netflix.imfutility.conversion.templateParameter.context.ITemplateParameterContext}.
- * All fields are optional there.  It depends on the conversion operation type (sequence, segment, etc.) what fields must be filled to be able to resolve a template parameter.
+ * A current state that helps to resolve a parameter by
+ * {@link com.netflix.imfutility.conversion.templateParameter.context.ITemplateParameterContext}.
+ * All fields are optional there.
+ * It depends on the conversion operation type (sequence, segment, etc.) what fields must be filled to be able to
+ * resolve a template parameter.
  */
-public class ContextInfo {
+public final class ContextInfo {
 
     public static final SegmentUUID DEFAULT_SEGMENT_UUID = null;
     public static final SequenceUUID DEFAULT_SEQUENCE_UUID = null;
@@ -49,18 +52,38 @@ public class ContextInfo {
         this.resourceUuid = resourceUuid;
     }
 
+    /**
+     * Gets Segment UUID.
+     *
+     * @return a segment UUID
+     */
     public SegmentUUID getSegmentUuid() {
         return segmentUuid;
     }
 
+    /**
+     * Gets Sequence (virtual track) UUID.
+     *
+     * @return a Sequence (virtual track) UUID
+     */
     public SequenceUUID getSequenceUuid() {
         return sequenceUuid;
     }
 
+    /**
+     * Gets Sequence (virtual track) type.
+     *
+     * @return a Sequence (virtual track) type
+     */
     public SequenceType getSequenceType() {
         return sequenceType;
     }
 
+    /**
+     * Gets ResourceUUID.
+     *
+     * @return a ResourceUUID
+     */
     public ResourceUUID getResourceUuid() {
         return resourceUuid;
     }

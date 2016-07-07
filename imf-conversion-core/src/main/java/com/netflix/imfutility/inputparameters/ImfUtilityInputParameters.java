@@ -78,7 +78,8 @@ public class ImfUtilityInputParameters {
      * Gets a full path to IMP directory. It can be defined either in config.xml or via command line arguments.
      * Setting a parameter via command line argument overwrites value from config.xml.
      *
-     * @return a file defining a full path to IMP directory or null if it's not specified neither in config.xml nor via command line arguments
+     * @return a file defining a full path to IMP directory or null if it's not specified neither in config.xml nor via
+     * command line arguments
      */
     public File getImpDirectoryFile() {
         // cmd line argument has first priority
@@ -93,7 +94,8 @@ public class ImfUtilityInputParameters {
      * Gets a full path to working directory. It can be defined either in config.xml or via command line arguments.
      * Setting a parameter via command line argument overwrites value from config.xml.
      *
-     * @return a file defining a full path to working directory or null if it's not specified neither in config.xml nor via command line arguments
+     * @return a file defining a full path to working directory or null if it's not specified neither in config.xml
+     * nor via command line arguments
      */
     public File getWorkingDirFile() {
         // cmd line argument has first priority

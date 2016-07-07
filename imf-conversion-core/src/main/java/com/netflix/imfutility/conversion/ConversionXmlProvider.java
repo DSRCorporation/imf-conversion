@@ -70,7 +70,8 @@ public class ConversionXmlProvider {
      * @throws XmlParsingException if the input is not a valid XML or it doesn't pass XSD validation
      */
     public ConversionXmlProvider(InputStream conversionXml, String conversionXmlPath, IFormat format) throws XmlParsingException {
-        this.conversion = XmlParser.parse(conversionXml, conversionXmlPath, new String[]{CONVERSION_XSD}, CONVERSION_PACKAGE, ConversionType.class);
+        this.conversion = XmlParser.parse(conversionXml, conversionXmlPath, new String[]{CONVERSION_XSD}, CONVERSION_PACKAGE,
+                ConversionType.class);
         this.formatType = conversion.getFormats().getMap().get(format.getName());
 
         if (this.formatType == null) {
@@ -80,6 +81,8 @@ public class ConversionXmlProvider {
     }
 
     /**
+     * Returns a root conversion instance corresponding to the input conversion.xml.
+     *
      * @return a root conversion instance corresponding to the input conversion.xml
      */
     public ConversionType getConversion() {
@@ -87,6 +90,8 @@ public class ConversionXmlProvider {
     }
 
     /**
+     * Returns a format instance corresponding to the input conversion.xml.
+     *
      * @return a format instance corresponding to the input conversion.xml
      */
     public FormatType getFormat() {
@@ -94,6 +99,8 @@ public class ConversionXmlProvider {
     }
 
     /**
+     * Returns a list of all conversion configuration for the given format ({@link #getFormat()}).
+     *
      * @return a list of all conversion configuration for the given format ({@link #getFormat()}).
      */
     public List<String> getConvertConfiguration() {
@@ -112,7 +119,8 @@ public class ConversionXmlProvider {
     public FormatConfigurationType getFormatConfigurationType(String configuration) {
         FormatConfigurationType formatConfigurationType = formatType.getFormatConfigurations().getMap().get(configuration);
         if (formatConfigurationType == null) {
-            throw new ConversionException(String.format("No configuration '%s' found for format '%s'.", configuration, formatType.getName()));
+            throw new ConversionException(String.format("No configuration '%s' found for format '%s'.",
+                    configuration, formatType.getName()));
         }
         return formatConfigurationType;
     }

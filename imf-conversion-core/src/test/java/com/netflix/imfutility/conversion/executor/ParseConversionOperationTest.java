@@ -78,8 +78,8 @@ public class ParseConversionOperationTest {
     @Test
     public void testSplitQuotes() {
         String conversionOperation =
-                "exec arg1 --arg2  \"arg3 in double quotes\" \"arg4 'in double quotes'\" " +
-                        "'arg5 in single quotes'  'arg6 \"in single quotes\"' arg7=\"value\" arg8='value'";
+                "exec arg1 --arg2  \"arg3 in double quotes\" \"arg4 'in double quotes'\" "
+                        + "'arg5 in single quotes'  'arg6 \"in single quotes\"' arg7=\"value\" arg8='value'";
 
         List<String> actual = parser.parseOperation(conversionOperation, ContextInfo.EMPTY);
         // all leading and tailing quotes must be removed
@@ -262,7 +262,8 @@ public class ParseConversionOperationTest {
     @Test
     public void testResolveComplexParameters() {
         String conversionOperation =
-                "exec arg1=%{tool.toolSimple} arg2=%{dynamic.dynamicSimple}/%{tmp.tmpParamSimple} %{dynamic.dynamicSimple}=%{tmp.tmpParamSimple}";
+                "exec arg1=%{tool.toolSimple} arg2=%{dynamic.dynamicSimple}/%{tmp.tmpParamSimple}"
+                        + " %{dynamic.dynamicSimple}=%{tmp.tmpParamSimple}";
 
         List<String> actual = parser.parseOperation(conversionOperation, ContextInfo.EMPTY);
         List<String> expected = Arrays.asList(
@@ -277,11 +278,11 @@ public class ParseConversionOperationTest {
     @Test
     public void testAddQuotesWhenNeededForComplexParameters() {
         String conversionOperation =
-                "exec " +
-                        "arg1=\"%{tool.toolWhitespace}\" arg2=\"%{tool.toolWhitespace}\" arg3='%{tool.toolWhitespace}' " +
-                        "arg4=\"%{dynamic.dynamicSimple}/%{tmp.tmpParamWhitespace}\"" +
-                        " %{dynamic.dynamicSimple}=\"%{tmp.tmpParamWhitespace}\" %{dynamic.dynamicSimple}=\"%{tmp.tmpParamWhitespace}\" " +
-                        "%{dynamic.dynamicSimple}='%{tmp.tmpParamWhitespace}'";
+                "exec "
+                        + "arg1=\"%{tool.toolWhitespace}\" arg2=\"%{tool.toolWhitespace}\" arg3='%{tool.toolWhitespace}' "
+                        + "arg4=\"%{dynamic.dynamicSimple}/%{tmp.tmpParamWhitespace}\""
+                        + " %{dynamic.dynamicSimple}=\"%{tmp.tmpParamWhitespace}\" %{dynamic.dynamicSimple}=\"%{tmp.tmpParamWhitespace}\" "
+                        + "%{dynamic.dynamicSimple}='%{tmp.tmpParamWhitespace}'";
 
         List<String> actual = parser.parseWithQuotes(conversionOperation, ContextInfo.EMPTY);
         List<String> expected = Arrays.asList(

@@ -33,15 +33,18 @@ import org.slf4j.LoggerFactory;
  * <li>Invokes an appropriate processor depending on the input format and mode</li>
  * </ul>
  */
-public class ImfUtility {
+public final class ImfUtility {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImfUtility.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImfUtility.class);
+
+    private ImfUtility() {
+    }
 
     public static void main(String... args) {
         try {
-            logger.info("Parsing command line arguments...");
+            LOGGER.info("Parsing command line arguments...");
             ImfUtilityAllCmdLineArgs imfArgs = CliFactory.parseArguments(ImfUtilityAllCmdLineArgs.class, args);
-            logger.info("Parsed command line arguments: OK\n");
+            LOGGER.info("Parsed command line arguments: OK\n");
 
             switch (imfArgs.getFormat()) {
                 case dpp:

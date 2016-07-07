@@ -27,10 +27,12 @@ import java.util.Map;
 /**
  * Maps generated {@link FormatConfigurationTypes} to {@link FormatConfigurationTypesMap}.
  */
-public class FormatConfigurationTypesMapAdapter extends XmlAdapter<FormatConfigurationTypes, FormatConfigurationTypesMap<String, FormatConfigurationType>> {
+public class FormatConfigurationTypesMapAdapter extends
+        XmlAdapter<FormatConfigurationTypes, FormatConfigurationTypesMap<String, FormatConfigurationType>> {
 
     @Override
-    public FormatConfigurationTypesMap<String, FormatConfigurationType> unmarshal(FormatConfigurationTypes formatConfigurations) throws Exception {
+    public FormatConfigurationTypesMap<String, FormatConfigurationType> unmarshal(FormatConfigurationTypes formatConfigurations)
+            throws Exception {
         FormatConfigurationTypesMap<String, FormatConfigurationType> map = new FormatConfigurationTypesMap<>();
         for (FormatConfigurationType fct : formatConfigurations.getFormatConfiguration()) {
             map.getMap().put(fct.getName(), fct);
