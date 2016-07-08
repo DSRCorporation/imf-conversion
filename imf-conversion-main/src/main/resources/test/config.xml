@@ -16,8 +16,8 @@
         <tool id="mxf2raw">D:\DSR\Project\_Netflix\test\bmx\mxf2raw.exe</tool>
         <tool id="x264">D:\DSR\Project\_Netflix\test\x264\x264-10b.exe</tool>
         <tool id="as-02-unwrap">D:\DSR\Project\_Netflix\git\asdcplib\bin\as-02-unwrap.exe</tool>
-        <tool id="java">C:\Program Files\Java\jre1.8.0_77\bin\java.exe</tool>
-        <tool id="ttml-to-stl">D:\DSR\Project\_Netflix\git\imf-conversion\ttml-to-stl\build\libs\ttml-to-stl.jar</tool>
+        <!--<tool id="java">C:\Program Files\Java\jre1.8.0_77\bin\java.exe</tool>-->
+        <!--<tool id="ttml-to-stl">D:\DSR\Project\_Netflix\git\imf-conversion\ttml-to-stl\build\libs\ttml-to-stl.jar</tool>-->
         <!--<tool id="imf-validation">imfValidation path</tool>-->
     </externalTools>
 

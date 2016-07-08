@@ -180,7 +180,7 @@
                         </execEachSegment>
 
                         <execOnce name="convert_ttml_to_stl">
-                            %{tool.java} -jar %{tool.ttml-to-stl} %{dynamic.concatTTML} --outputSTL %{seq.num}-captions.stl --metadata "%{dynamic.metadataXml}"
+                            %{dynamic.ttml-to-stl} %{dynamic.concatTTML} --outputSTL %{seq.num}-captions.stl --metadata "%{dynamic.metadataXml}"
                         </execOnce>
                     </execEachSequence>
                 </formatConfiguration>
