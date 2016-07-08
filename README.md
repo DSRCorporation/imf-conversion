@@ -34,6 +34,8 @@ The distribution includes
 3. Default tools used by the utility in the _tools_ folder.
 4. Sample _config.xml_.
 5. License.
+6. README
+7. Sample metadata.xml and audiomap.xml.
 
 ## Usage
 
