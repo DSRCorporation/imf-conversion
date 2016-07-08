@@ -27,4 +27,9 @@ public class FakeDefaultTools implements IDefaultTools {
     public String getImfValidationTool() {
         return "java -jar somejar.jar";
     }
+
+    @Override
+    public String getConversionXml() {
+        return "";
+    }
 }
