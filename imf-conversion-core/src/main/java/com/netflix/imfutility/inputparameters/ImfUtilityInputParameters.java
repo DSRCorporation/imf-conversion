@@ -107,6 +107,15 @@ public class ImfUtilityInputParameters {
     }
 
     /**
+     * A default conversion XML.
+     *
+     * @return a default conversion.xml
+     */
+    public String getDefaultConversionXml() {
+        return defaultTools.getConversionXml();
+    }
+
+    /**
      * Gets an IMF validation tool executable. Usually a default value is used (distributed with the utility),
      * but it can be overridden in config.xml.
      *

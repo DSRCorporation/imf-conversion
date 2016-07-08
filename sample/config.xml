@@ -23,7 +23,7 @@
         Allows/disallows silent conversion to format destination parameters if the input doesn't match.
         Conversion is allowed by default (if not specified here explicitly)
      -->
-    <conversionParameters>
+    <!--<conversionParameters>
         <video>
             <size>yes</size>
             <frameRate>yes</frameRate>
@@ -34,9 +34,9 @@
             <sampleRate>yes</sampleRate>
             <bitsSample>yes</bitsSample>
         </audio>
-    </conversionParameters>
+    </conversionParameters>-->
 
-    <cleanWorkingDir>true</cleanWorkingDir>
+    <cleanWorkingDir>false</cleanWorkingDir>
     <deleteTmpFilesOnExit>true</deleteTmpFilesOnExit>
     <deleteTmpFilesOnFail>false</deleteTmpFilesOnFail>
 

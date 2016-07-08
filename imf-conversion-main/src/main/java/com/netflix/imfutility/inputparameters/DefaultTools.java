@@ -37,4 +37,9 @@ public class DefaultTools implements IDefaultTools {
     protected File getCurrentLocation() {
         return new File(ImfUtility.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile();
     }
+
+    @Override
+    public String getConversionXml() {
+        return Constants.CONVERSION_XML;
+    }
 }

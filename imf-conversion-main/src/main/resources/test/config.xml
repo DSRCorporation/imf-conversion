@@ -17,7 +17,7 @@
         <tool id="x264">x264</tool>
         <tool id="asdcp-test">D:\asdcplib\asdcp-test.exe</tool>
         <!--<tool id="ttml-to-stl">ttmlToStl path</tool>-->
-        <!--<tool id="imf-validation">photon path</tool>-->
+        <!--<tool id="imf-validation">imfValidation path</tool>-->
     </externalTools>
 
     <!--
@@ -37,8 +37,8 @@
         </audio>
     </conversionParameters>
 
-    <cleanWorkingDir>false</cleanWorkingDir>
-    <deleteTmpFilesOnExit>false</deleteTmpFilesOnExit>
+    <cleanWorkingDir>true</cleanWorkingDir>
+    <deleteTmpFilesOnExit>true</deleteTmpFilesOnExit>
     <deleteTmpFilesOnFail>false</deleteTmpFilesOnFail>
 
 </Config>

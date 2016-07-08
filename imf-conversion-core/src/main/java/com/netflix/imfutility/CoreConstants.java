@@ -64,13 +64,12 @@ public final class CoreConstants {
 
     public static final boolean DEFAULT_DELETE_TMP_FILES_ON_EXIT = true;
     public static final boolean DEFAULT_DELETE_TMP_FILES_ON_FAIL = false;
-    public static final boolean DEFAULT_CLEAN_WORKING_DIR = true;
+    public static final boolean DEFAULT_CLEAN_WORKING_DIR = false;
 
 /* 5. Default values */
 
     public static final String DEFAULT_OUTPUT_VALIDATION_FILE = "errors.xml";
     public static final String VALIDATION_OUTPUT_XML_ERROR_TAG = "error";
-    public static final String DEFAULT_CONVERSION_XML = "xml/conversion.xml";
     public static final String MEDIA_INFO_SUFFIX = "mediaInfo";
 
 

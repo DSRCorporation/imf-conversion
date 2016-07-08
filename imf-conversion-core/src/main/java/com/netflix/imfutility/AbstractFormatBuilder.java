@@ -217,11 +217,11 @@ public abstract class AbstractFormatBuilder {
             this.conversionProvider = new ConversionXmlProvider(conversionXml, format);
         } else {
             // 2. use default one from resources
-            InputStream defaultConversionXml = ResourceHelper.getResourceInputStream(CoreConstants.DEFAULT_CONVERSION_XML);
+            InputStream defaultConversionXml = ResourceHelper.getResourceInputStream(inputParameters.getDefaultConversionXml());
             if (defaultConversionXml == null) {
                 throw new ConversionException("Conversion.xml is not found in neither default location nor config.xml");
             }
-            this.conversionProvider = new ConversionXmlProvider(defaultConversionXml, CoreConstants.DEFAULT_CONVERSION_XML, format);
+            this.conversionProvider = new ConversionXmlProvider(defaultConversionXml, inputParameters.getDefaultConversionXml(), format);
         }
 
         logger.info("Conversion.xml is processed: OK\n");
