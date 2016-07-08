@@ -153,7 +153,7 @@
                         5. create output .mxf from flatten encoded video and audio
                     -->
                     <execOnce name="muxing_mxf">
-                        %{tool.bmx} -t as11op1a -o "%{dynamic.output}"
+                        %{tool.bmx} -t as11op1a -o "%{dynamic.output}.mxf"
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
@@ -180,7 +180,7 @@
                         </execEachSegment>
 
                         <execOnce name="convert_ttml_to_stl">
-                            %{dynamic.ttml-to-stl} %{dynamic.concatTTML} --outputSTL %{seq.num}-captions.stl --metadata "%{dynamic.metadataXml}"
+                            %{dynamic.ttml-to-stl} %{dynamic.concatTTML} --outputSTL %{seq.num}-%{dynamic.output}.stl --metadata "%{dynamic.metadataXml}"
                         </execOnce>
                     </execEachSequence>
                 </formatConfiguration>

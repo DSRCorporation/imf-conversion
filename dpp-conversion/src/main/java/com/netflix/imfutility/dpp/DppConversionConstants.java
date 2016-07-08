@@ -37,7 +37,7 @@ public final class DppConversionConstants {
     public static final String DYNAMIC_PARAM_METADATA_XML = "metadataXml";
 
     // 1.2 dynamic parameters default values:
-    public static final String DYNAMIC_PARAM_VALUE_OUTPUT_MXF = "output.mxf";
+    public static final String DYNAMIC_PARAM_VALUE_OUTPUT_MXF = "output";
 
 /* 2. default values */
 
