@@ -33,9 +33,11 @@ distributions {
             from(copyDefaultTools) {
                 into "tools"
             }
-            from('../sample/config.xml') {
+            from('../sample') {
             }
             from('../COPYING') {
+            }
+            from('../README.md') {
             }
         }
     }

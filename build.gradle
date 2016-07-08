@@ -18,7 +18,7 @@ buildscript {
 // 2. group and version for all projects
 subprojects {
     group = 'com.netflix.imfutility'
-    version = '1.0'
+    version = '1.0-alpha'
 }
 
 // 3. define groups of projects with common configuration
