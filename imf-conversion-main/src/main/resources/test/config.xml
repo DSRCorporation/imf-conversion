@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Config xmlns="http://config.imfutility.netflix.com">
 
-    <imp>G:\Netflix\content\TEST\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV</imp>
-    <cpl>CPL-test.xml</cpl>
-    <workingDirectory>G:\Netflix\TMP4</workingDirectory>
+    <imp>D:\DSR\G\_DCA_media\Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV\Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV</imp>
+    <cpl>CPL_8a270edd-4f9d-4681-b15c-adcf0c7d5cf7.xml</cpl>
+    <workingDirectory>D:\DSR\G\_DCA_media\Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV\Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV\out</workingDirectory>
 
     <!--
         Path to external executables.
         May be used in both code and conversion.xml template operations.
      -->
     <externalTools>
-        <tool id="ffmpeg">ffmpeg</tool>
-        <tool id="ffprobe">ffprobe</tool>
-        <tool id="bmx">raw2bmx</tool>
-        <tool id="mxf2raw">mxf2raw</tool>
-        <tool id="x264">x264</tool>
-        <tool id="asdcp-test">D:\asdcplib\asdcp-test.exe</tool>
-        <!--<tool id="ttml-to-stl">ttmlToStl path</tool>-->
+        <tool id="ffmpeg">D:\DSR\Project\_Netflix\test\ffmpeg\bin\ffmpeg.exe</tool>
+        <tool id="ffprobe">D:\DSR\Project\_Netflix\test\ffmpeg\bin\ffprobe.exe</tool>
+        <tool id="bmx">D:\DSR\Project\_Netflix\test\bmx\raw2bmx.exe</tool>
+        <tool id="mxf2raw">D:\DSR\Project\_Netflix\test\bmx\mxf2raw.exe</tool>
+        <tool id="x264">D:\DSR\Project\_Netflix\test\x264\x264-10b.exe</tool>
+        <tool id="as-02-unwrap">D:\DSR\Project\_Netflix\git\asdcplib\bin\as-02-unwrap.exe</tool>
+        <!--<tool id="java">C:\Program Files\Java\jre1.8.0_77\bin\java.exe</tool>-->
+        <!--<tool id="ttml-to-stl">D:\DSR\Project\_Netflix\git\imf-conversion\ttml-to-stl\build\libs\ttml-to-stl.jar</tool>-->
         <!--<tool id="imf-validation">imfValidation path</tool>-->
     </externalTools>
 

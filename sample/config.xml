@@ -14,8 +14,9 @@
         <tool id="bmx">raw2bmx</tool>
         <tool id="mxf2raw">mxf2raw</tool>
         <tool id="x264">x264</tool>
-        <tool id="asdcp-test">asdcp-test</tool>
-        <!--<tool id="ttml-to-stl">ttmlToStl path</tool>-->
+        <tool id="as-02-unwrap">as-02-unwrap</tool>
+        <!--<tool id="java">java</tool>-->
+        <!--<tool id="ttml-to-stl">ttml-to-stl.jar</tool>-->
         <!--<tool id="imf-validation">validation path</tool>-->
     </externalTools>
 

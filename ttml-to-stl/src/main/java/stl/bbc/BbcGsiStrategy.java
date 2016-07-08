@@ -18,6 +18,7 @@
  */
 package stl.bbc;
 
+import com.netflix.imfutility.dpp.DppConversionXsdConstants;
 import com.netflix.imfutility.generated.dpp.metadata.DppType;
 import com.netflix.imfutility.generated.dpp.metadata.TimecodeType;
 import com.netflix.imfutility.xml.XmlParser;
@@ -43,9 +44,8 @@ import static stl.GsiAttribute.TCP;
  */
 public final class BbcGsiStrategy extends DefaultGsiStrategy {
 
-    private static final String METADATA_XML_SCHEME = "metadata.xsd";
-    private static final String METADATA_PACKAGE = "com.netflix.imfutility.xsd.metadata";
-
+    private static final String METADATA_XML_SCHEME = DppConversionXsdConstants.METADATA_XML_SCHEME;
+    private static final String METADATA_PACKAGE = DppConversionXsdConstants.METADATA_PACKAGE;
 
     private final DppType metadata;
 
