@@ -43,7 +43,7 @@
             <mediaInfoCommandAudio>%{tool.ffprobe} -select_streams a:0 -show_streams -noprivate -print_format xml=x=1
                 %{dynamic.mediaInfoInput}
             </mediaInfoCommandAudio>
-            <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams s:0 -show_streams -noprivate -print_format xml=x=1
+            <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams d:0 -show_streams -noprivate -print_format xml=x=1
                 %{dynamic.mediaInfoInput}
             </mediaInfoCommandSubtitle>
 
@@ -153,7 +153,7 @@
                         5. create output .mxf from flatten encoded video and audio
                     -->
                     <execOnce name="muxing_mxf">
-                        %{tool.bmx} -t as11op1a -o "%{dynamic.output}"
+                        %{tool.bmx} -t as11op1a -o "%{dynamic.output}.mxf"
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
@@ -168,7 +168,7 @@
                     <execEachSequence type="subtitle" name="extractSubtitleSegments">
                         <execEachSegment name="extract_ttml">
                             <execOnce name="extract_ttml">
-                                %{tool.asdcp-test} -x "%{seq.num}-%{segm.num}.xml" %{resource.essence}
+                                %{tool.as-02-unwrap} %{resource.essence} "%{seq.num}-%{segm.num}.xml"
                             </execOnce>
                             <!-- to delete intermediate files at the end -->
                             <dynamicParameter name="ttml-segment-tmp-%{seq.num}-%{segm.num}" deleteOnExit="true">
@@ -180,7 +180,7 @@
                         </execEachSegment>
 
                         <execOnce name="convert_ttml_to_stl">
-                            %{dynamic.ttml-to-stl} --outputSTL %{seq.num}-captions.stl
+                            %{dynamic.ttml-to-stl} %{dynamic.concatTTML} --outputSTL %{seq.num}-%{dynamic.output}.stl --metadata "%{dynamic.metadataXml}"
                         </execOnce>
                     </execEachSequence>
                 </formatConfiguration>
