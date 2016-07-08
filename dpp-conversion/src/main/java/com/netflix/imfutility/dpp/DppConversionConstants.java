@@ -34,6 +34,7 @@ public final class DppConversionConstants {
     public static final String DYNAMIC_AUDIO_MAP_XML = "audioMapXml";
     public static final String DYNAMIC_PARAM_OUTPUT_MXF = "output";
     public static final String DYNAMIC_PARAM_TTML_TO_STL = "ttml-to-stl";
+    public static final String DYNAMIC_PARAM_METADATA_XML = "metadataXml";
 
     // 1.2 dynamic parameters default values:
     public static final String DYNAMIC_PARAM_VALUE_OUTPUT_MXF = "output.mxf";

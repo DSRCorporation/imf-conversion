@@ -38,6 +38,7 @@ import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PA
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_TTML_TO_STL;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_UK_DPP_FILE;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_VALUE_OUTPUT_MXF;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_METADATA_XML;
 
 /**
  * DPP format builder (see {@link AbstractFormatBuilder}). It's used for conversion to DPP format ('convert' DPP mode).
@@ -64,6 +65,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         // fill output.mxf parameter
         dynamicContext.addParameter(DYNAMIC_PARAM_OUTPUT_MXF, DYNAMIC_PARAM_VALUE_OUTPUT_MXF, false);
         dynamicContext.addParameter(DYNAMIC_PARAM_TTML_TO_STL, dppInputParameters.getTtmlToStlTool());
+        dynamicContext.addParameter(DYNAMIC_PARAM_METADATA_XML, dppInputParameters.getMetadataFile().getAbsolutePath());
     }
 
     @Override
