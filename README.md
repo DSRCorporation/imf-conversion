@@ -14,7 +14,8 @@ $ ./gradlew build
 
 ## JDK requirements
 
-The project can be built using JDK-8 only.
+* The project can be built using JDK-8 only.
+* JAVA_HOME must be set and 'java' must be in the PATH.  
 
 ## Distribution
 
