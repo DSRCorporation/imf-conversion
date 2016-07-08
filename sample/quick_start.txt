@@ -4,15 +4,17 @@ Quick Start Guide for 'Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV' test package:
 
 1. Install external tools needed for conversion:
 
-    1.1 Get FFMPEG (https://ffmpeg.org/)
+    1.1 JDK-8 must be used. JAVA_HOME must be set and 'java' must be in the PATH. 
 
-    1.2. Get x264 Encoder (http://www.videolan.org/developers/x264.html).
+    1.2 Get FFMPEG (https://ffmpeg.org/)
+
+    1.3. Get x264 Encoder (http://www.videolan.org/developers/x264.html).
          10-bit version must be used!
          One can download official builds of x264: [x264-builds](http://download.videolan.org/pub/x264/binaries/)
 
-    1.3. Get BMX: bmx2raw and raw2bmx applications (https://sourceforge.net/projects/bmxlib/).
+    1.4. Get BMX: bmx2raw and raw2bmx applications (https://sourceforge.net/projects/bmxlib/).
 
-    1.4. Get ASDCP tool. Use the explicitly provided one which is enhanced to work properly with TTML wrapped in MXF.
+    1.5. Get ASDCP tool. Use the explicitly provided one which is enhanced to work properly with TTML wrapped in MXF.
          There is a Windows distribution there which can be used out of the box on Windows.
 
 2. Download the source code of IMF Conversion Utility.
