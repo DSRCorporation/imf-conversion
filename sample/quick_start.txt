@@ -35,7 +35,7 @@ Quick Start Guide for 'Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV' test package:
             <tool id="ffprobe">ffprobe</tool>
             <tool id="bmx">raw2bmx</tool>
             <tool id="mxf2raw">mxf2raw</tool>
-            <tool id="x264">x264</tool>
+            <tool id="x264">x264-10bit</tool>
             <tool id="asdcp-unwrap">as-02-unwrap</tool>
         </externalTools>
     
@@ -45,7 +45,7 @@ Quick Start Guide for 'Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV' test package:
             <tool id="ffprobe">/path/to/ffprobe</tool>
             <tool id="bmx">/path/to/raw2bmx</tool>
             <tool id="mxf2raw">/path/to/mxf2raw</tool>
-            <tool id="x264">/path/to/x264</tool>
+            <tool id="x264">/path/to/x264-10bit</tool>
             <tool id="asdcp-unwrap">/path/to/as-02-unwrap</tool>
         </externalTools>
     
