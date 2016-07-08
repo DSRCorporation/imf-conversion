@@ -184,7 +184,7 @@ There is a Windows distribution there which can be used out of the box on Window
 * The following command generates a sample metadata.xml
     
 ```
-imf-conversion-main -f dpp -m metadata -o metadata.xml
+imf-conversion-utility -f dpp -m metadata -o metadata.xml
 ```
 
 * The user can enter the values and they will be applied for the output MXF.
@@ -197,7 +197,7 @@ imf-conversion-main -f dpp -m metadata -o metadata.xml
 * If no audiomap.xml is specified, then default mapping will be used (each input audio track/channel will be mapped  to the output ones subsequently; remaining output tracks will be filled with silence).
 * The following command generates a sample audiomap.xml
 ```
-   imf-conversion-main -f dpp -m audiomap -o audiomap.xml
+   imf-conversion-utility -f dpp -m audiomap -o audiomap.xml
 ```
 * The number of _EBUTrack_ nodes must correspond to the number of output audio tracks defined by the selected layout.
 * _EBUTrack_ defines an input channel (of a CPL virtual track, or CPL audio sequence) to be used for the output audio track.
@@ -236,16 +236,16 @@ imf-conversion-main -f dpp -m metadata -o metadata.xml
 
 * If IMP, CPL and working directory are set in config.xml, and no custom audiomap is needed, then run the following command:
 ```
-imf-conversion-main -f dpp -c path-to/config.xml -m convert --metadata path-to/metadata.xml
+imf-conversion-utility -f dpp -c path-to/config.xml -m convert --metadata path-to/metadata.xml
 ```
 * If IMP, CPL and working directory are set in config.xml, and a custom audiomap is needed, then run the following command:
 ```
-imf-conversion-main -f dpp -c path-to/config.xml -m convert --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml
+imf-conversion-utility -f dpp -c path-to/config.xml -m convert --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml
 ```
 
 * A full command if IMP, CPL, and working directory are specified via command line arguments (the values from command line override values from config.xml):
 ```
-imf-conversion-main -f dpp -c path-to/config.xml -m convert --imp path-to/imp --cpl CPL.xml -w path-to/working-sir --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml
+imf-conversion-utility -f dpp -c path-to/config.xml -m convert --imp path-to/imp --cpl CPL.xml -w path-to/working-sir --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml
 ```
 
 #### Output and Logs

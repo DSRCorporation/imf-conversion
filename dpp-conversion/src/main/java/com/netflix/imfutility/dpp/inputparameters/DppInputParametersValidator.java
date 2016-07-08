@@ -58,15 +58,15 @@ public final class DppInputParametersValidator {
         }
         if (!metadataFile.isFile()) {
             throw new ArgumentValidationException(String.format(
-                    "Working directory '%s' must be an existing folder", metadataFile.getAbsolutePath()));
+                    "Metadata file '%s' must be an existing file", metadataFile.getAbsolutePath()));
 
         }
 
         File audiomapFile = inputParameters.getAudiomapFile();
         // audiomap.xml may be null. in this case a default audiomap is created.
-        if (audiomapFile != null && audiomapFile.isFile()) {
+        if (audiomapFile != null && !audiomapFile.isFile()) {
             throw new ArgumentValidationException(String.format(
-                    "Working directory '%s' must be an existing folder", audiomapFile.getAbsolutePath()));
+                    "Audiomap file '%s' must be an existing file", audiomapFile.getAbsolutePath()));
         }
     }
 
