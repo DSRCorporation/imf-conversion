@@ -290,17 +290,17 @@ imf-conversion-utility -f dpp -c path-to/config.xml -m convert --imp path-to/imp
         * Calls IMF validation.
         * Contains the logic of parsing conversion.xml and executing external tools.
         * A base project for all plugins.
-     * __dpp-conversion__
+    * __dpp-conversion__
         * A plugin to perform conversion to BBC DPP format.
         * Depends on imf-conversion-core and dpp-conversion-input-xsd
-     * __dpp-conversion-input-xsd__
+    * __dpp-conversion-input-xsd__
         * A plugin containing XSDs for DPP format input XML files (metadata.xml, audiomap.xml).
         * It's separated from _dpp_conversion_ as there are other projects that require DPP metadata.xml (for example, ttml-to-stl).
-     * __ttml-to-stl__
-        * An independent project to perform TTML to EBU STL caption conversion.
+    * __ttml-to-stl__
+       * An independent project to perform TTML to EBU STL caption conversion.
         * It's used as a default caption conversion tool by DPP plugin.
         * The project fat jar (ttml-to-stl.jar) is copied into the 'tools' folder within delivery.
-     * __imf-validation__
+    * __imf-validation__
         * An independent project to IMF package validation.
         * Uses Photon under the hood ([Photon](https://github.com/Netflix/photon)).
         * It's used as a default IMF validation tool.
