@@ -100,7 +100,7 @@ There is a Windows distribution there which can be used out of the box on Window
         <tool id="ffprobe">ffprobe</tool>
         <tool id="bmx">raw2bmx</tool>
         <tool id="mxf2raw">mxf2raw</tool>
-        <tool id="x264">x264</tool>
+        <tool id="x264">x264-10bit</tool>
         <tool id="asdcp-unwrap">as-02-unwrap</tool>
     </externalTools>
 ```
