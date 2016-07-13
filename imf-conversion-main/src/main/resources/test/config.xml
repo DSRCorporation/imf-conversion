@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2016 Netflix, Inc.
+  ~
+  ~     This file is part of IMF Conversion Utility.
+  ~
+  ~     IMF Conversion Utility is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     IMF Conversion Utility is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <Config xmlns="http://config.imfutility.netflix.com">
 
-    <imp>G:\Netflix\TEST-CONTENT\Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV</imp>
-    <cpl>CPL-test.xml</cpl>
-    <workingDirectory>D:\DSR\G\_DCA_media\Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV\Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV\out</workingDirectory>
+    <imp>C:\Projects\Netflix\Test\Content\Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV</imp>
+    <cpl>CPL_6f548f17-48c5-452a-94ea-9bb58c6c5b5b.xml</cpl>
+    <workingDirectory>C:\Projects\Netflix\Test\Output</workingDirectory>
 
     <!--
         Path to external executables.
@@ -14,7 +33,7 @@
         <tool id="ffprobe">ffprobe</tool>
         <tool id="bmx">raw2bmx</tool>
         <tool id="mxf2raw">mxf2raw</tool>
-        <tool id="x264">x264</tool>
+        <tool id="x264">x264-10b-r2694-3b70645</tool>
         <tool id="as-02-unwrap">as-02-unwrap</tool>
         <!--<tool id="java">C:\Program Files\Java\jre1.8.0_77\bin\java.exe</tool>-->
         <!--<tool id="ttml-to-stl">D:\DSR\Project\_Netflix\git\imf-conversion\ttml-to-stl\build\libs\ttml-to-stl.jar</tool>-->
@@ -39,7 +58,7 @@
     </conversionParameters>
 
     <cleanWorkingDir>true</cleanWorkingDir>
-    <deleteTmpFilesOnExit>true</deleteTmpFilesOnExit>
+    <deleteTmpFilesOnExit>false</deleteTmpFilesOnExit>
     <deleteTmpFilesOnFail>false</deleteTmpFilesOnFail>
 
 </Config>

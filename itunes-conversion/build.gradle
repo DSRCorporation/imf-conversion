@@ -17,16 +17,14 @@
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'imf-conversion'
-include 'imf-conversion-main'
-include 'imf-conversion-common'
-include 'imf-conversion-core'
-include 'dpp-conversion'
-include 'dpp-conversion-input-xsd'
-include 'imf-validation'
-include 'ttml-to-stl'
-include 'itunes-conversion'
-include 'itunes-conversion-input-xsd'
+description = "iTunes format plugin"
 
-project(":imf-conversion-main").name = "imf-conversion-utility"
+dependencies {
+    compile project(':imf-conversion-core')
+    compile project(':itunes-conversion-input-xsd')
+    testCompile project(path: ':imf-conversion-core', configuration: 'testArtifacts')
+}
 
+dependencies {
+    compile group: 'net.sf.saxon', name: 'Saxon-HE', version: '9.7.0-6'
+}

@@ -17,16 +17,17 @@
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'imf-conversion'
-include 'imf-conversion-main'
-include 'imf-conversion-common'
-include 'imf-conversion-core'
-include 'dpp-conversion'
-include 'dpp-conversion-input-xsd'
-include 'imf-validation'
-include 'ttml-to-stl'
-include 'itunes-conversion'
-include 'itunes-conversion-input-xsd'
+package com.netflix.imfutility.itunes;
 
-project(":imf-conversion-main").name = "imf-conversion-utility"
+import com.netflix.imfutility.IFormat;
 
+/**
+ * iTunes format.
+ */
+public class ITunesFormat implements IFormat {
+
+    @Override
+    public String getName() {
+        return "itunes";
+    }
+}
