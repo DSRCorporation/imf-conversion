@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config xmlns="http://config.imfutility.netflix.com">
+
+    <!--<imp>/tmp/TEST/Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV/Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV</imp>
+    <cpl>CPL_38f1005f-e24d-4aaa-93a8-2a5676387b17.xml</cpl>
+    <workingDirectory>/tmp/imf-conversion-output</workingDirectory>-->
+
+    <!--
+        Path to external executables.
+     -->
+    <externalTools>
+        <tool id="ffmpeg">ffmpeg</tool>
+        <tool id="ffprobe">ffprobe</tool>
+        <tool id="bmx">raw2bmx</tool>
+        <tool id="mxf2raw">mxf2raw</tool>
+        <tool id="x264">x264-10bit</tool>
+        <tool id="as-02-unwrap">as-02-unwrap</tool>
+        <!--<tool id="java">java</tool>-->
+        <!--<tool id="ttml-to-stl">ttml-to-stl.jar</tool>-->
+        <!--<tool id="imf-validation">validation path</tool>-->
+    </externalTools>
+
+    <!--
+        Allows/disallows silent conversion to format destination parameters if the input doesn't match.
+        Conversion is allowed by default (if not specified here explicitly)
+     -->
+    <!--<conversionParameters>
+        <video>
+            <size>yes</size>
+            <frameRate>yes</frameRate>
+            <pixelFormat>yes</pixelFormat>
+            <bitDepth>yes</bitDepth>
+        </video>
+        <audio>
+            <sampleRate>yes</sampleRate>
+            <bitsSample>yes</bitsSample>
+        </audio>
+    </conversionParameters>-->
+
+    <cleanWorkingDir>false</cleanWorkingDir>
+    <deleteTmpFilesOnExit>true</deleteTmpFilesOnExit>
+    <deleteTmpFilesOnFail>false</deleteTmpFilesOnFail>
+
+</Config>

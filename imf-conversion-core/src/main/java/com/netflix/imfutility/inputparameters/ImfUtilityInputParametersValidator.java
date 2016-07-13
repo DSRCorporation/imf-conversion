@@ -80,10 +80,6 @@ public final class ImfUtilityInputParametersValidator {
         if (workingDir == null) {
             throw new ArgumentValidationException("Working directory must be specified either as a command line argument or in config.xml");
         }
-        if (!workingDir.isDirectory()) {
-            throw new ArgumentValidationException(String.format(
-                    "Working directory '%s' must be an existing folder", workingDir.getAbsolutePath()));
-        }
     }
 
     private ImfUtilityInputParametersValidator() {

@@ -334,18 +334,4 @@ public class InputParametersTest extends ImfUtilityTest {
         ImfUtilityInputParametersValidator.validateInputParameters(inputParameters);
     }
 
-    @Test(expected = ArgumentValidationException.class)
-    public void testValidateWorkingDirNotExistentFolder() {
-        String[] args = new String[]{
-                "--imp", ImpUtils.getImpFolder().getAbsolutePath(),
-                "--cpl", ImpUtils.getCorrectCpl().getName(),
-                "-w", "someFolder"
-        };
-        ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
-                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
-                new FakeDefaultTools());
-
-        ImfUtilityInputParametersValidator.validateInputParameters(inputParameters);
-    }
-
 }
