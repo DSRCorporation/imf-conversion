@@ -20,7 +20,9 @@ package com.netflix.imfutility.util;
 
 import com.netflix.imfutility.resources.ResourceHelper;
 
+import java.io.File;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 
 /**
  * Test utility for config.xml.
@@ -36,6 +38,10 @@ public final class ConfigUtils {
 
     public static String getCorrectConfigXmlPath() {
         return "xml/test-config.xml";
+    }
+
+    public static File getCorrectConfigXmlFile() throws URISyntaxException {
+        return new File(ConfigUtils.class.getClassLoader().getResource(getCorrectConfigXmlPath()).toURI());
     }
 
     public static InputStream getBrokenXmlConfigXml() {

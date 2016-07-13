@@ -19,9 +19,11 @@
 package com.netflix.imfutility.inputparameters;
 
 import com.netflix.imfutility.Constants;
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.ImfUtility;
 
 import java.io.File;
+import java.net.URISyntaxException;
 
 /**
  * Defines executables for default tools.
@@ -30,12 +32,16 @@ public class DefaultTools implements IDefaultTools {
 
     @Override
     public String getImfValidationTool() {
-        return String.format("java -jar %s",
+        return String.format("java -jar '%s'",
                 new File(getCurrentLocation(), Constants.IMF_VALIDATION_PATH).getAbsolutePath());
     }
 
     protected File getCurrentLocation() {
-        return new File(ImfUtility.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile();
+        try {
+            return new File(ImfUtility.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile();
+        } catch (URISyntaxException e) {
+            throw new ConversionException("Can not get current location path.");
+        }
     }
 
     @Override

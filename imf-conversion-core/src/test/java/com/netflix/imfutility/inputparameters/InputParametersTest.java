@@ -120,7 +120,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test
-    public void testImpFolder() {
+    public void testImpFolder() throws Exception {
         String[] argsImp = new String[]{
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath()
         };
@@ -138,7 +138,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test
-    public void testDefaultImpFolder() {
+    public void testDefaultImpFolder() throws Exception {
         String[] args = new String[]{};
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
                 CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
@@ -150,7 +150,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test
-    public void testCmdLineImpReplacesDefault() {
+    public void testCmdLineImpReplacesDefault() throws Exception {
         String[] args = new String[]{
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath()
         };
@@ -164,7 +164,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test
-    public void testCpl() {
+    public void testCpl() throws Exception {
         String[] argsCplImp = new String[]{
                 "--cpl", ImpUtils.getCorrectCpl().getName(),
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath()
@@ -192,7 +192,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test
-    public void testDefaultCpl() {
+    public void testDefaultCpl() throws Exception {
         String[] args = new String[]{};
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
                 CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
@@ -205,7 +205,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test
-    public void testCmdLineCplReplacesDefault() {
+    public void testCmdLineCplReplacesDefault() throws Exception {
         String[] args = new String[]{
                 "--cpl", ImpUtils.getCorrectCpl().getName(),
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath()
@@ -220,9 +220,9 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test
-    public void testValidateConfigCorrect() {
+    public void testValidateConfigCorrect() throws Exception {
         @SuppressWarnings("ConstantConditions") String[] args = new String[]{
-                "-c", getClass().getClassLoader().getResource(ConfigUtils.getCorrectConfigXmlPath()).getPath()
+                "-c", ConfigUtils.getCorrectConfigXmlFile().getAbsolutePath()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
                 CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
@@ -232,7 +232,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test(expected = ArgumentValidationException.class)
-    public void testValidateConfigNotSpecified() {
+    public void testValidateConfigNotSpecified() throws Exception {
         String[] args = new String[]{};
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
                 CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
@@ -242,7 +242,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test(expected = ArgumentValidationException.class)
-    public void testValidateConfigNotExistentFile() {
+    public void testValidateConfigNotExistentFile() throws Exception {
         String[] args = new String[]{
                 "-c", "someFile"
         };
@@ -254,7 +254,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test
-    public void testValidateInputParamsCorrect() {
+    public void testValidateInputParamsCorrect() throws Exception {
         String[] args = new String[]{
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath(),
                 "--cpl", ImpUtils.getCorrectCpl().getName(),
@@ -268,7 +268,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test(expected = ArgumentValidationException.class)
-    public void testValidateImpNotSpecified() {
+    public void testValidateImpNotSpecified() throws Exception {
         String[] args = new String[]{
                 "--cpl", ImpUtils.getCorrectCpl().getName(),
                 "-w", TemplateParameterContextCreator.getWorkingDir().getAbsolutePath()
@@ -281,7 +281,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test(expected = ArgumentValidationException.class)
-    public void testValidateImpNotExistentFolder() {
+    public void testValidateImpNotExistentFolder() throws Exception {
         String[] args = new String[]{
                 "--imp", "someFolder",
                 "--cpl", ImpUtils.getCorrectCpl().getName(),
@@ -295,7 +295,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test(expected = ArgumentValidationException.class)
-    public void testValidateCplNotSpecified() {
+    public void testValidateCplNotSpecified() throws Exception {
         String[] args = new String[]{
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath(),
                 "-w", TemplateParameterContextCreator.getWorkingDir().getAbsolutePath()
@@ -308,7 +308,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test(expected = ArgumentValidationException.class)
-    public void testValidateCplNotExistentFile() {
+    public void testValidateCplNotExistentFile() throws Exception {
         String[] args = new String[]{
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath(),
                 "--cpl", "someFile",
@@ -322,7 +322,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test(expected = ArgumentValidationException.class)
-    public void testValidateWorkingDirNotSpecified() {
+    public void testValidateWorkingDirNotSpecified() throws Exception {
         String[] args = new String[]{
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath(),
                 "--cpl", ImpUtils.getCorrectCpl().getName()
@@ -335,7 +335,7 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test(expected = ArgumentValidationException.class)
-    public void testValidateWorkingDirNotExistentFolder() {
+    public void testValidateWorkingDirNotExistentFolder() throws Exception {
         String[] args = new String[]{
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath(),
                 "--cpl", ImpUtils.getCorrectCpl().getName(),

@@ -19,6 +19,7 @@
 package com.netflix.imfutility.util;
 
 import java.io.File;
+import java.net.URISyntaxException;
 
 /**
  * Test utility for metadata.xml.
@@ -28,19 +29,19 @@ public final class MetadataUtils {
     private MetadataUtils() {
     }
 
-    public static File getCorrectMetadataXml() {
+    public static File getCorrectMetadataXml() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-metadata.xml").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-metadata.xml").toURI());
     }
 
-    public static File getBrokenXmlMetadataXml() {
+    public static File getBrokenXmlMetadataXml() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-metadata.xml").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-metadata.xml").toURI());
     }
 
-    public static File getInvalidXsdMetadataXml() {
+    public static File getInvalidXsdMetadataXml() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-metadata.xml").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-metadata.xml").toURI());
     }
 
 }
