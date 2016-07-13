@@ -29,7 +29,7 @@ import java.io.File;
 public class DppTools extends DefaultTools implements IDppDefaultTools {
     @Override
     public String getTtmlToStlTool() {
-        return String.format("java -jar %s",
+        return String.format("java -jar '%s'",
                 new File(getCurrentLocation(), Constants.TTML_TO_STL_PATH).getAbsolutePath());
 
     }

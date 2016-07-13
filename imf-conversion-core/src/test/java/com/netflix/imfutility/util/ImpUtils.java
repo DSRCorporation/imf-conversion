@@ -19,6 +19,7 @@
 package com.netflix.imfutility.util;
 
 import java.io.File;
+import java.net.URISyntaxException;
 
 /**
  * Test utility for CPL.xml.
@@ -28,71 +29,71 @@ public final class ImpUtils {
     private ImpUtils() {
     }
 
-    public static File getCorrectCpl() {
+    public static File getCorrectCpl() throws URISyntaxException {
         //noinspection ConstantConditions,ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL.xml").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL.xml").toURI());
     }
 
-    public static File getCorrectCplOneEssence() {
+    public static File getCorrectCplOneEssence() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL-one-essence.xml").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL-one-essence.xml").toURI());
     }
 
-    public static File getBrokenXmlCpl() {
+    public static File getBrokenXmlCpl() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-CPL.xml").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-CPL.xml").toURI());
     }
 
-    public static File getInvalidXsdCpl() {
+    public static File getInvalidXsdCpl() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-CPL.xml").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-CPL.xml").toURI());
     }
 
-    public static String getAbsolutePath(String file) {
+    public static String getAbsolutePath(String file) throws URISyntaxException {
         return new File(getImpFolder(), file).getAbsolutePath();
     }
 
-    public static File getImpFolder() {
+    public static File getImpFolder() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("imp").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp").toURI());
     }
 
-    public static File getCorrectAssetmap() {
+    public static File getCorrectAssetmap() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("imp/ASSETMAP.xml").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp/ASSETMAP.xml").toURI());
     }
 
-    public static File getBrokenXmlAssetmap() {
+    public static File getBrokenXmlAssetmap() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-ASSETMAP.xml").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-ASSETMAP.xml").toURI());
     }
 
-    public static File getInvalidXsdAssetmap() {
+    public static File getInvalidXsdAssetmap() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-ASSETMAP.xml").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-ASSETMAP.xml").toURI());
     }
 
 
-    public static File getCorrectImpForValidation() {
+    public static File getCorrectImpForValidation() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("imp-validate-correct").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp-validate-correct").toURI());
     }
 
-    public static File getCorrectCplForValidation() {
+    public static File getCorrectCplForValidation() throws URISyntaxException {
         //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource(
-                "imp-validate-correct/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml").getPath());
+                "imp-validate-correct/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml").toURI());
     }
 
-    public static File getInvalidImpForValidation() {
+    public static File getInvalidImpForValidation() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("imp-validate-invalid").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp-validate-invalid").toURI());
     }
 
-    public static File getInvalidCplForValidation() {
+    public static File getInvalidCplForValidation() throws URISyntaxException {
         //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource(
-                "imp-validate-invalid/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml").getPath());
+                "imp-validate-invalid/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml").toURI());
     }
 
 

@@ -19,6 +19,7 @@
 package com.netflix.imfutility.util;
 
 import java.io.File;
+import java.net.URISyntaxException;
 
 /**
  * Test utility for audiomap.xml.
@@ -28,19 +29,19 @@ public final class AudioMapUtils {
     private AudioMapUtils() {
     }
 
-    public static File getCorrectAudiomapXml() {
+    public static File getCorrectAudiomapXml() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-audiomap.xml").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-audiomap.xml").toURI());
     }
 
-    public static File getBrokenXmlAudiomapXml() {
+    public static File getBrokenXmlAudiomapXml() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-audiomap.xml").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-audiomap.xml").toURI());
     }
 
-    public static File getInvalidXsdAudiomapXml() {
+    public static File getInvalidXsdAudiomapXml() throws URISyntaxException {
         //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-audiomap.xml").getPath());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-audiomap.xml").toURI());
     }
 
 }

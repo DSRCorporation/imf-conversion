@@ -18,6 +18,9 @@
  */
 package com.netflix.imfutility.util;
 
+import java.io.File;
+import java.net.URISyntaxException;
+
 /**
  * Test utility for mediaInfo.xml.
  */
@@ -26,45 +29,45 @@ public final class MediaInfoUtils {
     private MediaInfoUtils() {
     }
 
-    public static String getCorrectMediaInfoAudio() {
+    public static File getCorrectMediaInfoAudio() throws URISyntaxException {
         //noinspection ConstantConditions
-        return ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoAudio.xml").getPath();
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoAudio.xml").toURI());
     }
 
-    public static String getCorrectMediaInfoAudio2() {
+    public static File getCorrectMediaInfoAudio2() throws URISyntaxException {
         //noinspection ConstantConditions
-        return ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoAudio2.xml").getPath();
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoAudio2.xml").toURI());
     }
 
 
-    public static String getCorrectMediaInfoVideo() {
+    public static File getCorrectMediaInfoVideo() throws URISyntaxException {
         //noinspection ConstantConditions
-        return ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoVideo.xml").getPath();
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoVideo.xml").toURI());
     }
 
-    public static String getCorrectMediaInfoVideo2() {
+    public static File getCorrectMediaInfoVideo2() throws URISyntaxException {
         //noinspection ConstantConditions
-        return ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoVideo2.xml").getPath();
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoVideo2.xml").toURI());
     }
 
-    public static String getBrokenXmlMediaInfoAudio() {
+    public static File getBrokenXmlMediaInfoAudio() throws URISyntaxException {
         //noinspection ConstantConditions
-        return ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-mediaInfoAudio.xml").getPath();
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-mediaInfoAudio.xml").toURI());
     }
 
-    public static String getBrokenXmlMediaInfoVideo() {
+    public static File getBrokenXmlMediaInfoVideo() throws URISyntaxException {
         //noinspection ConstantConditions
-        return ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-mediaInfoVideo.xml").getPath();
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-mediaInfoVideo.xml").toURI());
     }
 
-    public static String getInvalidXsdMediaInfoAudio() {
+    public static File getInvalidXsdMediaInfoAudio() throws URISyntaxException {
         //noinspection ConstantConditions
-        return ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-mediaInfoAudio.xml").getPath();
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-mediaInfoAudio.xml").toURI());
     }
 
-    public static String getInvalidXsdMediaInfoVideo() {
+    public static File getInvalidXsdMediaInfoVideo() throws URISyntaxException {
         //noinspection ConstantConditions
-        return ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-mediaInfoVideo.xml").getPath();
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-mediaInfoVideo.xml").toURI());
     }
 
 }

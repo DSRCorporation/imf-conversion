@@ -40,6 +40,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.EnumSet;
 
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.addResourceContextParameter;
@@ -102,13 +103,13 @@ public class MediaInfoContextBuilderTest {
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePathVideo() throws Exception {
-        new TestMediaInfoContextBuilder("C:/invalid-path", MediaInfoUtils.getCorrectMediaInfoAudio())
+        new TestMediaInfoContextBuilder(new File("invalid-path"), MediaInfoUtils.getCorrectMediaInfoAudio())
                 .build();
     }
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePathAudio() throws Exception {
-        new TestMediaInfoContextBuilder(MediaInfoUtils.getCorrectMediaInfoVideo(), "C:/invalid-path")
+        new TestMediaInfoContextBuilder(MediaInfoUtils.getCorrectMediaInfoVideo(), new File("invalid-path"))
                 .build();
     }
 
@@ -330,19 +331,23 @@ public class MediaInfoContextBuilderTest {
 
             @Override
             FfprobeType parseOutputFile(File outputFile, ContextInfo contextInfo) throws XmlParsingException, FileNotFoundException {
-                switch (contextInfo.getSequenceType()) {
-                    case AUDIO:
-                        outputFile = contextInfo.getResourceUuid().getUuid().contains("0")
-                                ? new File(MediaInfoUtils.getCorrectMediaInfoAudio())
-                                : new File(MediaInfoUtils.getCorrectMediaInfoAudio2());
-                        break;
-                    case VIDEO:
-                        outputFile = contextInfo.getResourceUuid().getUuid().contains("0")
-                                ? new File(MediaInfoUtils.getCorrectMediaInfoVideo())
-                                : new File(MediaInfoUtils.getCorrectMediaInfoVideo2());
-                        break;
-                    default:
-                        throw new RuntimeException();
+                try {
+                    switch (contextInfo.getSequenceType()) {
+                        case AUDIO:
+                            outputFile = contextInfo.getResourceUuid().getUuid().contains("0")
+                                    ? MediaInfoUtils.getCorrectMediaInfoAudio()
+                                    : MediaInfoUtils.getCorrectMediaInfoAudio2();
+                            break;
+                        case VIDEO:
+                            outputFile = contextInfo.getResourceUuid().getUuid().contains("0")
+                                    ? MediaInfoUtils.getCorrectMediaInfoVideo()
+                                    : MediaInfoUtils.getCorrectMediaInfoVideo2();
+                            break;
+                        default:
+                            throw new RuntimeException();
+                    }
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
                 }
                 return super.parseOutputFile(outputFile, contextInfo);
             }
@@ -353,26 +358,26 @@ public class MediaInfoContextBuilderTest {
 
     private static class TestMediaInfoContextBuilder extends MediaInfoContextBuilder {
 
-        private final String videoMediaInfoXml;
-        private final String audioMediaInfoXml;
+        private final File videoMediaInfoXml;
+        private final File audioMediaInfoXml;
 
-        public TestMediaInfoContextBuilder(String videoMediaInfoXml, String audioMediaInfoXml) throws Exception {
+        public TestMediaInfoContextBuilder(File videoMediaInfoXml, File audioMediaInfoXml) throws Exception {
             this(createDefaultContextProviderWithCPLContext(
                     2, 2, 2, EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO)),
                     new TestExecutorLogger(), videoMediaInfoXml, audioMediaInfoXml);
         }
 
-        public TestMediaInfoContextBuilder(TemplateParameterContextProvider contextProvider, TestExecutorLogger testExecutorLogger) {
+        public TestMediaInfoContextBuilder(TemplateParameterContextProvider contextProvider, TestExecutorLogger testExecutorLogger) throws URISyntaxException {
             this(contextProvider, testExecutorLogger, MediaInfoUtils.getCorrectMediaInfoVideo(), MediaInfoUtils.getCorrectMediaInfoAudio());
         }
 
-        public TestMediaInfoContextBuilder(TemplateParameterContextProvider contextProvider) {
+        public TestMediaInfoContextBuilder(TemplateParameterContextProvider contextProvider) throws URISyntaxException {
             this(contextProvider, new TestExecutorLogger(),
                     MediaInfoUtils.getCorrectMediaInfoVideo(), MediaInfoUtils.getCorrectMediaInfoAudio());
         }
 
         public TestMediaInfoContextBuilder(TemplateParameterContextProvider contextProvider, TestExecutorLogger testExecutorLogger,
-                                           String videoMediaInfoXml, String audioMediaInfoXml) {
+                                           File videoMediaInfoXml, File audioMediaInfoXml) {
             super(contextProvider, new TestExecuteStrategyFactory(testExecutorLogger));
             this.videoMediaInfoXml = videoMediaInfoXml;
             this.audioMediaInfoXml = audioMediaInfoXml;
@@ -382,10 +387,10 @@ public class MediaInfoContextBuilderTest {
         FfprobeType parseOutputFile(File outputFile, ContextInfo contextInfo) throws XmlParsingException, FileNotFoundException {
             switch (contextInfo.getSequenceType()) {
                 case AUDIO:
-                    outputFile = new File(audioMediaInfoXml);
+                    outputFile = audioMediaInfoXml;
                     break;
                 case VIDEO:
-                    outputFile = new File(videoMediaInfoXml);
+                    outputFile = videoMediaInfoXml;
                     break;
                 default:
                     throw new RuntimeException();
