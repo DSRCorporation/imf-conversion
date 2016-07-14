@@ -26,6 +26,10 @@ public class Caption {
 	public Time start;
 	public Time end;
 
+
+    public Caption nodes[];
+    public Style styles[];
+
     /**
      * Raw content, before cleaning up templates and markup.
      */
