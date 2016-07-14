@@ -4,6 +4,7 @@ version=""
 dependencies {
     compile project(':imf-conversion-common')
     compile project(':dpp-conversion-input-xsd')
+    testCompile project(':dpp-conversion')
 }
 
 dependencies {
