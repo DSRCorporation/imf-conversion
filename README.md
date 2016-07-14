@@ -14,7 +14,7 @@ $ ./gradlew build
 
 ## JDK requirements
 
-* The project can be built using JDK-8 only.
+* The project can be built using JDK-8 only (not JRE!).
 * JAVA_HOME must be set and 'java' must be in the PATH.  
 
 ## Distribution
@@ -43,6 +43,7 @@ The distribution includes
 * IMF Conversion utilities uses a number of external tools to perform full conversion cycle.
 * The external tools are not distributed with the Utility, and must be prepared by the user.
 * The user just specifies the executables in config.xml.
+* The utility creates tmp files (which will be deleted when the conversion job finishes). So make sure that there is enough free disk space.
 
 ### Conversion to DPP format
 
