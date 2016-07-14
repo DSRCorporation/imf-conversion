@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
  * A wrapper on command line arguments with helper methods to get input parameters obtained from the command line.
  * Specified for iTunes format.
  */
-public class ItunesInputParameters extends ImfUtilityInputParameters {
+public class ITunesInputParameters extends ImfUtilityInputParameters {
 
     private final ITunesCmdLineArgs cmdLineArgs;
     private final ITunesDefaultTools defaultTools;
 
-    public ItunesInputParameters(ITunesCmdLineArgs cmdLineArgs, ITunesDefaultTools defaultTools) {
+    public ITunesInputParameters(ITunesCmdLineArgs cmdLineArgs, ITunesDefaultTools defaultTools) {
         super(cmdLineArgs, defaultTools);
         this.cmdLineArgs = cmdLineArgs;
         this.defaultTools = defaultTools;

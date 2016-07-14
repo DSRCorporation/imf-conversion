@@ -56,16 +56,16 @@ public class ITunesInputParametersTest {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
     }
 
-    private void testCmdLineFile(String option, String value, Function<ItunesInputParameters, File> paramFunction) {
-        ItunesInputParameters inputParametersExist = createInputParameters(new String[]{option, value});
-        ItunesInputParameters inputParametersNotExist = createInputParameters(new String[]{});
+    private void testCmdLineFile(String option, String value, Function<ITunesInputParameters, File> paramFunction) {
+        ITunesInputParameters inputParametersExist = createInputParameters(new String[]{option, value});
+        ITunesInputParameters inputParametersNotExist = createInputParameters(new String[]{});
 
         assertEquals(new File(value), paramFunction.apply(inputParametersExist));
         assertNull(paramFunction.apply(inputParametersNotExist));
     }
 
-    private ItunesInputParameters createInputParameters(String[] args) {
-        return new ItunesInputParameters(CliFactory.parseArguments(ITunesCmdLineArgs.class, args), new ITunesFakeDefaultTools());
+    private ITunesInputParameters createInputParameters(String[] args) {
+        return new ITunesInputParameters(CliFactory.parseArguments(ITunesCmdLineArgs.class, args), new ITunesFakeDefaultTools());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ITunesInputParametersTest {
     }
 
     private void validate(String[] args) {
-        ItunesInputParameters inputParameters = createInputParameters(args);
+        ITunesInputParameters inputParameters = createInputParameters(args);
 
         ITunesInputParametersValidator.validateCmdLineArguments(inputParameters);
     }

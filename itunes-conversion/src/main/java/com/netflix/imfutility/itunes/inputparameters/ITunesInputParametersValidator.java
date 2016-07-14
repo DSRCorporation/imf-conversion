@@ -37,7 +37,7 @@ public final class ITunesInputParametersValidator {
      * @param inputParameters the input parameters to be validated.
      * @throws ArgumentValidationException if some of the parameters are missing
      */
-    public static void validateCmdLineArguments(ItunesInputParameters inputParameters) throws ArgumentValidationException {
+    public static void validateCmdLineArguments(ITunesInputParameters inputParameters) throws ArgumentValidationException {
         switch (inputParameters.getCmdLineArgs().getMode()) {
             case convert:
                 validateConvertMode(inputParameters);
@@ -55,7 +55,7 @@ public final class ITunesInputParametersValidator {
         }
     }
 
-    private static void validateConvertMode(ItunesInputParameters inputParameters) throws ArgumentValidationException {
+    private static void validateConvertMode(ITunesInputParameters inputParameters) throws ArgumentValidationException {
         validateVendorId(inputParameters.getCmdLineArgs().getVendorId());
 
         // metadata.xml may be null. in this case a default metadata is created.
@@ -85,19 +85,19 @@ public final class ITunesInputParametersValidator {
         }
     }
 
-    private static void validateMetadataMode(ItunesInputParameters inputParameters) throws ArgumentValidationException {
+    private static void validateMetadataMode(ITunesInputParameters inputParameters) throws ArgumentValidationException {
         validateOutput(inputParameters, "Metadata.xml", ITunesMode.metadata);
     }
 
-    private static void validateAudiomapMode(ItunesInputParameters inputParameters) throws ArgumentValidationException {
+    private static void validateAudiomapMode(ITunesInputParameters inputParameters) throws ArgumentValidationException {
         validateOutput(inputParameters, "Audiomap.xml", ITunesMode.audiomap);
     }
 
-    private static void validateChaptersMode(ItunesInputParameters inputParameters) throws ArgumentValidationException {
+    private static void validateChaptersMode(ITunesInputParameters inputParameters) throws ArgumentValidationException {
         validateOutput(inputParameters, "Chapters.xml", ITunesMode.chapters);
     }
 
-    private static void validateOutput(ItunesInputParameters inputParameters, String fileName, ITunesMode mode)
+    private static void validateOutput(ITunesInputParameters inputParameters, String fileName, ITunesMode mode)
             throws ArgumentValidationException {
         if (inputParameters.getCmdLineArgs().getOutput() == null) {
             throw new ArgumentValidationException(String.format(

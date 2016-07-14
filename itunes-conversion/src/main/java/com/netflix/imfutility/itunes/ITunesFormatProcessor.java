@@ -21,7 +21,7 @@ package com.netflix.imfutility.itunes;
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.itunes.inputparameters.ITunesCmdLineArgs;
 import com.netflix.imfutility.itunes.inputparameters.ITunesDefaultTools;
-import com.netflix.imfutility.itunes.inputparameters.ItunesInputParameters;
+import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
 import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider;
 import com.netflix.imfutility.itunes.xmlprovider.ChaptersXmlProvider;
@@ -47,7 +47,7 @@ public class ITunesFormatProcessor {
         logger.info("iTunes format\n");
 
         // 1. wrap cmd line args to an input parameters object
-        ItunesInputParameters inputParameters = new ItunesInputParameters(cmdLineArgs, defaultTools);
+        ITunesInputParameters inputParameters = new ITunesInputParameters(cmdLineArgs, defaultTools);
 
         // 2. validate cmd line arguments
         logger.info("Validating command line arguments...");
@@ -70,7 +70,7 @@ public class ITunesFormatProcessor {
         throw new ConversionException("Unsupported ITunes mode" + inputParameters.getCmdLineArgs().getMode().toString());
     }
 
-    private int processMetadataMode(ItunesInputParameters inputParameters) {
+    private int processMetadataMode(ITunesInputParameters inputParameters) {
         logger.info("Metadata mode\n");
         logger.info("Generating a sample Metadata.xml file {}", inputParameters.getCmdLineArgs().getOutput());
         MetadataXmlProvider.generateSampleXml(inputParameters.getCmdLineArgs().getOutput());
@@ -78,7 +78,7 @@ public class ITunesFormatProcessor {
         return 0;
     }
 
-    private int processAudiomapMode(ItunesInputParameters inputParameters) {
+    private int processAudiomapMode(ITunesInputParameters inputParameters) {
         logger.info("Audiomap mode\n");
         logger.info("Generating a sample Audiomap.xml file {}", inputParameters.getCmdLineArgs().getOutput());
         AudioMapXmlProvider.generateSampleXml(inputParameters.getCmdLineArgs().getOutput());
@@ -86,7 +86,7 @@ public class ITunesFormatProcessor {
         return 0;
     }
 
-    private int processChaptersMode(ItunesInputParameters inputParameters) {
+    private int processChaptersMode(ITunesInputParameters inputParameters) {
         logger.info("Chapters mode\n");
         logger.info("Generating a sample Chapters.xml file {}", inputParameters.getCmdLineArgs().getOutput());
         ChaptersXmlProvider.generateSampleXml(inputParameters.getCmdLineArgs().getOutput());
@@ -94,7 +94,7 @@ public class ITunesFormatProcessor {
         return 0;
     }
 
-    private int processConversionMode(ItunesInputParameters inputParameters) {
+    private int processConversionMode(ITunesInputParameters inputParameters) {
         logger.info("Conversion mode\n");
         //  TODO: implement ITunesFormatBuilder
         return 0;
