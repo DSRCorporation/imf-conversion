@@ -16,41 +16,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility;
+package com.netflix.imfutility.itunes.inputparameters;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import com.netflix.imfutility.inputparameters.IDefaultTools;
 
 /**
- * Supported destination formats.
+ * Default tools mock for tests.
  */
-public enum Format implements IFormat {
+public class ITunesFakeDefaultTools implements ITunesDefaultTools {
 
-    dpp("dpp"), itunes("itunes");
-
-    private final String name;
-
-    Format(String name) {
-        this.name = name;
+    @Override
+    public String getImfValidationTool() {
+        return "java -jar somejar.jar";
     }
 
-    public static String getSupportedFormats() {
-        return Arrays.stream(Format.values())
-                .map(Format::getName)
-                .collect(Collectors.joining(" ", "[", "]"));
+    @Override
+    public String getConversionXml() {
+        return "";
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public static Format fromName(String name) {
-        for (Format format : values()) {
-            if (format.name.equals(name)) {
-                return format;
-            }
-        }
-        return null;
-    }
-
 }

@@ -16,41 +16,24 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
+package com.netflix.imfutility.itunes.xmlprovider;
 
 /**
- * Supported destination formats.
+ * Provides functionality to generate empty metadata.xml for iTunes format.
  */
-public enum Format implements IFormat {
+public final class MetadataXmlProvider {
 
-    dpp("dpp"), itunes("itunes");
-
-    private final String name;
-
-    Format(String name) {
-        this.name = name;
+    private MetadataXmlProvider() {
     }
 
-    public static String getSupportedFormats() {
-        return Arrays.stream(Format.values())
-                .map(Format::getName)
-                .collect(Collectors.joining(" ", "[", "]"));
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public static Format fromName(String name) {
-        for (Format format : values()) {
-            if (format.name.equals(name)) {
-                return format;
-            }
-        }
-        return null;
+    /**
+     * Generates a sample metadata.xml file.
+     *
+     * @param path a path to the output metadata.xml file
+     */
+    public static void generateSampleXml(String path) {
+        //  TODO: implement metadata generation
     }
 
 }
+
