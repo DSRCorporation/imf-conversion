@@ -50,7 +50,7 @@ public final class ImfUtility {
         try {
             if (args == null || args.length == 0 || args[0] == null) {
                 throw new IllegalArgumentException(String.format(
-                        "Format must be setted at the first argument. Supported formats: %s", Format.getSupportedFormats()));
+                        "Format must be set as the first argument. Supported formats: %s", Format.getSupportedFormats()));
             }
 
             Format format = Format.fromName(args[0].toLowerCase());
