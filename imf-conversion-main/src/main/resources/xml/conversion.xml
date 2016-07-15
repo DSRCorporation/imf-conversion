@@ -93,14 +93,14 @@
                             </execOnce>
                         </pipe>
                     </execEachSequence>
-                    
+
                     <!--
                         2. Extract each audio segment from MXF due to FFMPEG mxf reading issue
                     -->
                     <execEachSequence type="audio" name="extractAudioSegments">
                         <execEachSegment name="extract_audio">
                             <execOnce name="extract_audio">
-                                "%{tool.mxf2raw}" -p "%{seq.num}-%{segm.num}" --start %{resource.startTimeFrameEU}
+                                "%{tool.mxf2raw}" -p "%{seq.num}-%{segm.num}-%{resource.num}" --start %{resource.startTimeFrameEU}
                                 --dur %{resource.durationFrameEU} "%{resource.essence}"
                             </execOnce>
                             <!-- to delete intermediate files at the end -->
