@@ -21,7 +21,8 @@
 -->
 <conversion xmlns="http://conversion.imfutility.netflix.com">
 
-    <imfValidation>%{dynamic.validateTool} -i %{dynamic.imp} -c %{dynamic.cpl} -d %{dynamic.workingDir} -f %{dynamic.outputValidationFile}</imfValidation>
+    <imfValidation>%{dynamic.validateTool} -i %{dynamic.imp} -c %{dynamic.cpl} -d %{dynamic.workingDir} -f %{dynamic.outputValidationFile}
+    </imfValidation>
 
     <formats>
         <!--
@@ -93,7 +94,7 @@
                             </execOnce>
                         </pipe>
                     </execEachSequence>
-                    
+
                     <!--
                         2. Extract each audio segment from MXF due to FFMPEG mxf reading issue
                     -->
@@ -175,17 +176,56 @@
                                 %{seq.num}-%{segm.num}.xml
                             </dynamicParameter>
 
-                            <dynamicParameter name="concatTTML" concat="true"> --ttml %{seq.num}-%{segm.num}.xml %{resource.offsetTC} %{resource.startTimeTC} %{resource.endTimeTC}</dynamicParameter>
+                            <dynamicParameter name="concatTTML" concat="true">--ttml %{seq.num}-%{segm.num}.xml %{resource.offsetTC}
+                                %{resource.startTimeTC} %{resource.endTimeTC}
+                            </dynamicParameter>
 
                         </execEachSegment>
 
                         <execOnce name="convert_ttml_to_stl">
-                            %{dynamic.ttml-to-stl} %{dynamic.concatTTML} --outputSTL %{seq.num}-%{dynamic.output}.stl --metadata "%{dynamic.metadataXml}"
+                            %{dynamic.ttml-to-stl} %{dynamic.concatTTML} --outputSTL %{seq.num}-%{dynamic.output}.stl --metadata
+                            "%{dynamic.metadataXml}"
                         </execOnce>
                     </execEachSequence>
                 </formatConfiguration>
             </formatConfigurations>
         </format>
+
+        <format name="itunes">
+            <tmpContext/>
+            <mediaInfoCommandVideo>%{tool.ffprobe} -select_streams v:0 -show_streams -noprivate -print_format xml=x=1
+                %{dynamic.mediaInfoInput}
+            </mediaInfoCommandVideo>
+            <mediaInfoCommandAudio>%{tool.ffprobe} -select_streams a:0 -show_streams -noprivate -print_format xml=x=1
+                %{dynamic.mediaInfoInput}
+            </mediaInfoCommandAudio>
+            <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams s:0 -show_streams -noprivate -print_format xml=x=1
+                %{dynamic.mediaInfoInput}
+            </mediaInfoCommandSubtitle>
+
+            <formatConfigurations>
+                <formatConfiguration name="main">
+                    <conversionParameters>
+                        <video>
+                            <width>1920</width>
+                            <height>1080</height>
+                            <frameRate>25 1</frameRate>
+                            <pixelFormat>yuv422p10le</pixelFormat>
+                            <bitDepth>10</bitDepth>
+                        </video>
+                        <audio>
+                            <sampleRate>48000</sampleRate>
+                            <bitsSample>24</bitsSample>
+                        </audio>
+                    </conversionParameters>
+                    <execOnce name="stub">
+                        %{tool.ffprobe} -select_streams s:0 -show_streams -noprivate -print_format xml=x=1
+                        %{dynamic.mediaInfoInput}
+                    </execOnce>
+                </formatConfiguration>
+            </formatConfigurations>
+        </format>
+
     </formats>
 </conversion>
 

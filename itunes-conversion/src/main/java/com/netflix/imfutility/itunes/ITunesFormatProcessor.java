@@ -96,8 +96,7 @@ public class ITunesFormatProcessor {
 
     private int processConversionMode(ITunesInputParameters inputParameters) {
         logger.info("Conversion mode\n");
-        //  TODO: implement ITunesFormatBuilder
-        return 0;
+        return new ITunesFormatBuilder(inputParameters).build();
     }
 
 }
