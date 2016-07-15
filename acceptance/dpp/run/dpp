@@ -34,6 +34,7 @@ if [ -z "$4" ]; then
     exit 1
 fi
 
+cd "${BASH_SOURCE%/*}"
 PROG="$5"
 if [ -z "$5" ]; then
     PROG="../../../install/imf-conversion-utility/bin/imf-conversion-utility"

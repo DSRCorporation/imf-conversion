@@ -1,4 +1,5 @@
 @echo off
+pushd %~dp0
 if [%1]==[] goto first-missing
 if [%2]==[] goto second-missing
 
