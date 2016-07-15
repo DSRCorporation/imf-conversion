@@ -19,6 +19,7 @@
 package com.netflix.imfutility.itunes;
 
 import com.netflix.imfutility.AbstractFormatBuilder;
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
@@ -83,7 +84,8 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         File itmspDir = new File(contextProvider.getWorkingDir(), itmspName);
         logger.info("Itmsp output directory: {}", itmspDir);
         if (!itmspDir.mkdir()) {
-            logger.error("Couldn't create {} output directory!", itmspName);
+            throw new ConversionException(String.format(
+                    "Couldn't create %s output directory!", itmspName));
         }
 
         logger.info("Created {} output directory: OK\n", itmspName);
