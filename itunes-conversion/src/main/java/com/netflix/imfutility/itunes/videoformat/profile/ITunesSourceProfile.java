@@ -16,41 +16,26 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
+package com.netflix.imfutility.itunes.videoformat.profile;
 
 /**
- * Supported destination formats.
+ * Source profile specified for iTunes.
  */
-public enum Format implements IFormat {
+public enum ITunesSourceProfile implements SourceProfile {
+    HD("HD"),
+    SD_TV_NTSC("SD TV NTSC"),
+    SD_TV_PAL("SD TV PAL"),
+    SD_FILM_NTSC("SD Film NTSC"),
+    SD_FILM_PAL("SD Film PAL");
 
-    dpp("dpp"), itunes("itunes");
+    private String name;
 
-    private final String name;
-
-    Format(String name) {
+    ITunesSourceProfile(String name) {
         this.name = name;
     }
 
-    public static String getSupportedFormats() {
-        return Arrays.stream(Format.values())
-                .map(Format::getName)
-                .collect(Collectors.joining(" ", "[", "]"));
-    }
-
+    @Override
     public String getName() {
         return name;
     }
-
-    public static Format fromName(String name) {
-        for (Format format : values()) {
-            if (format.name.equals(name)) {
-                return format;
-            }
-        }
-        return null;
-    }
-
 }

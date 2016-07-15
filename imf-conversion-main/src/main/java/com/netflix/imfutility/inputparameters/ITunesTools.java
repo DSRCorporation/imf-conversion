@@ -16,41 +16,12 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility;
+package com.netflix.imfutility.inputparameters;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import com.netflix.imfutility.itunes.inputparameters.ITunesDefaultTools;
 
 /**
- * Supported destination formats.
+ * Defines executables for iTunes-related default tools.
  */
-public enum Format implements IFormat {
-
-    dpp("dpp"), itunes("itunes");
-
-    private final String name;
-
-    Format(String name) {
-        this.name = name;
-    }
-
-    public static String getSupportedFormats() {
-        return Arrays.stream(Format.values())
-                .map(Format::getName)
-                .collect(Collectors.joining(" ", "[", "]"));
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public static Format fromName(String name) {
-        for (Format format : values()) {
-            if (format.name.equals(name)) {
-                return format;
-            }
-        }
-        return null;
-    }
-
+public class ITunesTools extends DefaultTools implements ITunesDefaultTools {
 }

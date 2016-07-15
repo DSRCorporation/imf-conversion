@@ -16,41 +16,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility;
+package com.netflix.imfutility.itunes.util;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.io.File;
+import java.net.URISyntaxException;
 
 /**
- * Supported destination formats.
+ * Test utility for metadata.xml.
  */
-public enum Format implements IFormat {
+public class MetadataUtils {
 
-    dpp("dpp"), itunes("itunes");
-
-    private final String name;
-
-    Format(String name) {
-        this.name = name;
+    private MetadataUtils() {
     }
 
-    public static String getSupportedFormats() {
-        return Arrays.stream(Format.values())
-                .map(Format::getName)
-                .collect(Collectors.joining(" ", "[", "]"));
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public static Format fromName(String name) {
-        for (Format format : values()) {
-            if (format.name.equals(name)) {
-                return format;
-            }
-        }
-        return null;
-    }
-
+    public static File getCorrectMetadataXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-metadata.xml").toURI());
+}
 }

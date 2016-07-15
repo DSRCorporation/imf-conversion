@@ -16,41 +16,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
+package com.netflix.imfutility.itunes.xmlprovider;
 
 /**
- * Supported destination formats.
+ * Basic functionality for audiomap.xml handling.
  */
-public enum Format implements IFormat {
+public final class AudioMapXmlProvider {
 
-    dpp("dpp"), itunes("itunes");
-
-    private final String name;
-
-    Format(String name) {
-        this.name = name;
+    private AudioMapXmlProvider() {
     }
 
-    public static String getSupportedFormats() {
-        return Arrays.stream(Format.values())
-                .map(Format::getName)
-                .collect(Collectors.joining(" ", "[", "]"));
+    /**
+     * Generates a sample audiomap.xml file.
+     *
+     * @param path a path to the output audiomap.xml file
+     */
+    public static void generateSampleXml(String path) {
+        //  TODO: implement audiomap generation
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public static Format fromName(String name) {
-        for (Format format : values()) {
-            if (format.name.equals(name)) {
-                return format;
-            }
-        }
-        return null;
-    }
-
 }
