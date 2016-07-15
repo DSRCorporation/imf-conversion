@@ -61,7 +61,7 @@ The distribution includes
 6. [Optional] Edit audiomap.xml to map input audio streams and channels. 
 7. Run conversion job:
     * --format [-f] dpp
-    * --mode [-m] convert
+    * --mode [-m] convert (may be omitted as it's a default mode)
     * --config [-c] config.xml
     * --metadata metadata.xml
     * --audiomap audiomap.xml (optional)
