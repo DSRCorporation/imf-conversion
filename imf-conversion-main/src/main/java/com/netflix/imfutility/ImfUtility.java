@@ -46,13 +46,15 @@ public final class ImfUtility {
     public static void main(String... args) {
         try {
             if (args == null || args.length == 0 || args[0] == null) {
-                throw new IllegalArgumentException("Utility expected at least one argument");
+                throw new IllegalArgumentException(String.format(
+                        "Format must be set as the first argument. Supported formats: %s", Format.getSupportedFormats()));
             }
 
             Format format = Format.fromName(args[0].toLowerCase());
 
             if (format == null) {
-                throw new ConversionException(String.format("Unsupported format '%s'", args[0]));
+                throw new ConversionException(String.format(
+                        "Unsupported format '%s'. Supported formats: %s", args[0], Format.getSupportedFormats()));
             }
 
             int exitCode = 0;
@@ -62,7 +64,8 @@ public final class ImfUtility {
                     System.exit(exitCode);
                     break;
                 default:
-                    throw new ConversionException(String.format("Unsupported format '%s'", args[0]));
+                    throw new ConversionException(String.format(
+                            "Unsupported format '%s'. Supported formats: %s", args[0], Format.getSupportedFormats()));
             }
 
         } catch (HelpRequestedException e) {
