@@ -127,10 +127,10 @@ There is a Windows distribution there which can be used out of the box on Window
     * Including IMF package and CPL into _config.xml_ can be used to reduce number of command line arguments when using the same IMP and CPL for different conversions.
     * To set IMF package and CPL in _config.xml_, add the following:    
 ```
-    <imp>absolute path to imp</imp>
-    <cpl>relative path of CPL.xml</cpl>
+    <imp>path to imp</imp>
+    <cpl>path of CPL.xml</cpl>
 ```
-    * Please note that CPL is just a name of CPL.xml within IMP folder (an IMF package may contain several CPLs, so we should select the one to be used for conversion).
+    * Please note that the CPL can be specified either as a path to CPL.xml or as a name of CPL.xml within IMP folder (an IMF package may contain several CPLs, so we should select the one to be used for conversion).
 
 5. Output directory
     * The output directory is a folder where the output flat file (_output.mxf_) will be created.
@@ -140,7 +140,7 @@ There is a Windows distribution there which can be used out of the box on Window
     * If it's specified in both places, then values from command line parameters will be used.
     * To set the output directory in _config.xml_, add the following:    
 ```
-    <workingDirectory>absolute path to output directory</workingDirectory>
+    <workingDirectory>path to output directory</workingDirectory>
 ```
 
 6. Allows/disallows silent conversion 

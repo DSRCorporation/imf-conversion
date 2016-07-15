@@ -187,7 +187,7 @@ public class InputParametersTest extends ImfUtilityTest {
                 new FakeDefaultTools());
 
         assertEquals(ImpUtils.getCorrectCpl(), inputParametersCplImp.getCplFile());
-        assertNull(inputParametersCplNoImp.getCplFile());
+        assertEquals(new File(ImpUtils.getCorrectCpl().getName()), inputParametersCplNoImp.getCplFile());
         assertNull(inputParametersNoCplNoImp.getCplFile());
     }
 
@@ -254,10 +254,24 @@ public class InputParametersTest extends ImfUtilityTest {
     }
 
     @Test
-    public void testValidateInputParamsCorrect() throws Exception {
+    public void testValidateInputParamsCorrectRelativeCpl() throws Exception {
         String[] args = new String[]{
                 "--imp", ImpUtils.getImpFolder().getAbsolutePath(),
                 "--cpl", ImpUtils.getCorrectCpl().getName(),
+                "-w", TemplateParameterContextCreator.getWorkingDir().getAbsolutePath()
+        };
+        ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
+                CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args),
+                new FakeDefaultTools());
+
+        ImfUtilityInputParametersValidator.validateInputParameters(inputParameters);
+    }
+
+    @Test
+    public void testValidateInputParamsCorrectAbsoluteCpl() throws Exception {
+        String[] args = new String[]{
+                "--imp", ImpUtils.getImpFolder().getAbsolutePath(),
+                "--cpl", ImpUtils.getCorrectCpl().getAbsolutePath(),
                 "-w", TemplateParameterContextCreator.getWorkingDir().getAbsolutePath()
         };
         ImfUtilityInputParameters inputParameters = new ImfUtilityInputParameters(
