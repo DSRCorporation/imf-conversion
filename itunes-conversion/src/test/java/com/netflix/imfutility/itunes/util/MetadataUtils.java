@@ -30,6 +30,6 @@ public class MetadataUtils {
     }
 
     public static File getCorrectMetadataXml() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-audiomap.xml").toURI());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-metadata.xml").toURI());
 }
 }
