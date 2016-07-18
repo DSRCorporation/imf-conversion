@@ -158,11 +158,19 @@ public class Cpl2013ContextBuilder {
         }
         TrackFileResourceType trackFileResource = (TrackFileResourceType) resource;
 
+        BigInteger repeatCount = trackFileResource.getRepeatCount() != null
+                ? trackFileResource.getRepeatCount() : BigInteger.ONE;
+
+        for (long i = 0; i < repeatCount.longValue(); i++) {
+            processResourceRepeat(trackFileResource, i);
+        }
+    }
+
+    private void processResourceRepeat(TrackFileResourceType trackFileResource, long repeat) {
         // 1. init resource context
-        ResourceUUID resourceId = ResourceUUID.create(trackFileResource.getId());
+        ResourceUUID resourceId = ResourceUUID.create(trackFileResource.getId(), repeat);
         ResourceKey resourceKey = ResourceKey.create(currentSegmentUuid, currentSequenceUuid, currentSequenceType);
         contextProvider.getResourceContext().initResource(resourceKey, resourceId);
-
 
         // 2. Init essence parameter. Check that we have a corresponding track file in assetmap
         // asset map already contains full absolute paths
@@ -176,7 +184,7 @@ public class Cpl2013ContextBuilder {
                 ResourceContextParameters.ESSENCE, assetPath);
 
         // 3. Init startTime parameter
-        BigFraction editRate = trackFileResource.getEditRate() != null
+        BigFraction editRate = ((trackFileResource.getEditRate() != null) && !trackFileResource.getEditRate().isEmpty())
                 ? ConversionHelper.parseEditRate(trackFileResource.getEditRate()) : compositionEditRate;
         BigInteger startTimeEditUnit = trackFileResource.getEntryPoint() != null
                 ? trackFileResource.getEntryPoint() : BigInteger.valueOf(0);
@@ -212,24 +220,25 @@ public class Cpl2013ContextBuilder {
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
                 ResourceContextParameters.END_TIME_TIMECODE, ConversionHelper.editUnitToTimecode(endTimeEditUnit, editRate));
 
-        // 6. init offset parameter
-        BigInteger offsetEditUnit = lastSegmentDuration.get(currentSequenceUuid);
-        contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
-                ResourceContextParameters.OFFSET_EDIT_UNIT, offsetEditUnit.toString());
-        contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
-                ResourceContextParameters.OFFSET_TIMECODE, ConversionHelper.editUnitToTimecode(offsetEditUnit, editRate));
-
-        // 7. init edit rate parameter
+        // 6. init edit rate parameter
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
                 ResourceContextParameters.EDIT_RATE, ConversionHelper.toEditRate(editRate));
 
-        // 8. init repeat count parameter
+        // 7. init total repeat count parameter
         BigInteger repeatCount = trackFileResource.getRepeatCount() != null
                 ? trackFileResource.getRepeatCount() : BigInteger.ONE;
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
                 ResourceContextParameters.REPEAT_COUNT, repeatCount.toString());
 
-        // 9. calculate the total duration of the current segment
+
+        // 8. init offset parameter
+        BigInteger offsetEditUnit = lastSegmentDuration.get(currentSequenceUuid).add(currentSegmentDuration);
+        contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
+                ResourceContextParameters.OFFSET_EDIT_UNIT, offsetEditUnit.toString());
+        contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
+                ResourceContextParameters.OFFSET_TIMECODE, ConversionHelper.editUnitToTimecode(offsetEditUnit, editRate));
+
+        // 9. increment the total duration of the current segment
         currentSegmentDuration = currentSegmentDuration.add(durationEditUnit);
 
         // 10. save all video essences to later re-check DURATION_FRAME_EDIT_UNIT and START_TIME_FRAME_EDIT_UNIT for

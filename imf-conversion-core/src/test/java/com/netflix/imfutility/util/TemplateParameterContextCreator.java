@@ -49,7 +49,7 @@ public final class TemplateParameterContextCreator {
 
     public static final String SEGMENT_UUID_FORMAT = "urn:uuid:segm:%d";
     public static final String SEQUENCE_UUID_FORMAT = "urn:uuid:seq:%s:%d";
-    public static final String RESOURCE_UUID_FORMAT = "urn:uuid:res:segm-%d-seq-%d-%s-%d";
+    public static final String RESOURCE_UUID_FORMAT = "urn:uuid:res:segm-%d-seq-%d-%s-%d-%d";
     public static final String RESOURCE_PARAMETER_FORMAT = "%s-%s";
 
     public static final String WORKING_DIR = "ImfUtilityTest";
@@ -132,29 +132,31 @@ public final class TemplateParameterContextCreator {
             for (int seq = 0; seq < seqCount; seq++) {
                 for (int res = 0; res < resourceCount; res++) {
                     for (SequenceType seqType : sequenceTypes) {
-                        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(segm), getSequenceUuid(seq, seqType), seqType);
-                        ResourceUUID resourceUuid = getResourceUuid(segm, seq, seqType, res);
+                        for (int repeat = 0; repeat < repeatCountForResource; repeat++) {
+                            ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(segm), getSequenceUuid(seq, seqType), seqType);
+                            ResourceUUID resourceUuid = getResourceUuid(segm, seq, seqType, res, repeat);
 
-                        // init default params
-                        resourceContext.initResource(resourceKey, resourceUuid);
+                            // init default params
+                            resourceContext.initResource(resourceKey, resourceUuid);
 
-                        // init essence, startTime and duration
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
-                                ResourceContextParameters.ESSENCE);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
-                                ResourceContextParameters.DURATION_TIMECODE);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
-                                ResourceContextParameters.DURATION_EDIT_UNIT);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
-                                ResourceContextParameters.DURATION_FRAME_EDIT_UNIT);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
-                                ResourceContextParameters.START_TIME_TIMECODE);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
-                                ResourceContextParameters.START_TIME_EDIT_UNIT);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
-                                ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT);
-                        fillResourceParam(resourceContext, resourceKey, resourceUuid,
-                                ResourceContextParameters.REPEAT_COUNT, String.valueOf(repeatCountForResource));
+                            // init essence, startTime and duration
+                            fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                    ResourceContextParameters.ESSENCE);
+                            fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                    ResourceContextParameters.DURATION_TIMECODE);
+                            fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                    ResourceContextParameters.DURATION_EDIT_UNIT);
+                            fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                    ResourceContextParameters.DURATION_FRAME_EDIT_UNIT);
+                            fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                    ResourceContextParameters.START_TIME_TIMECODE);
+                            fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                    ResourceContextParameters.START_TIME_EDIT_UNIT);
+                            fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                    ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT);
+                            fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                    ResourceContextParameters.REPEAT_COUNT, String.valueOf(repeatCountForResource));
+                        }
                     }
                 }
             }
@@ -171,19 +173,25 @@ public final class TemplateParameterContextCreator {
                 String.format(SEQUENCE_UUID_FORMAT, seqType.value(), seq));
     }
 
-    public static ResourceUUID getResourceUuid(int segm, int seq, SequenceType seqType, int res) {
+    public static ResourceUUID getResourceUuid(int segm, int seq, SequenceType seqType, int res, int repeat) {
         return ResourceUUID.create(
-                String.format(RESOURCE_UUID_FORMAT, segm, seq, seqType.value(), res));
+                String.format(RESOURCE_UUID_FORMAT, segm, seq, seqType.value(), res, repeat), repeat);
+    }
+
+    public static void addResourceContextParameter(TemplateParameterContextProvider contextProvider, int segm, int seq,
+                                                   SequenceType seqType, int res, int repeat,
+                                                   ResourceContextParameters param, String paramValue) {
+        contextProvider.getResourceContext().addResourceParameter(
+                ResourceKey.create(getSegmentUuid(segm), getSequenceUuid(seq, seqType), seqType),
+                getResourceUuid(segm, seq, seqType, res, repeat),
+                param,
+                paramValue);
     }
 
     public static void addResourceContextParameter(TemplateParameterContextProvider contextProvider, int segm, int seq,
                                                    SequenceType seqType, int res,
                                                    ResourceContextParameters param, String paramValue) {
-        contextProvider.getResourceContext().addResourceParameter(
-                ResourceKey.create(getSegmentUuid(segm), getSequenceUuid(seq, seqType), seqType),
-                getResourceUuid(segm, seq, seqType, res),
-                param,
-                paramValue);
+        addResourceContextParameter(contextProvider, segm, seq, seqType, res, 0, param, paramValue);
     }
 
     public static void addSequenceContextParameter(TemplateParameterContextProvider contextProvider, int seq, SequenceType seqType,
@@ -203,12 +211,12 @@ public final class TemplateParameterContextCreator {
                 paramValue);
     }
 
-    public static ContextInfo createResourceContextInfo(int segm, int seq, SequenceType seqType, int res) {
+    public static ContextInfo createResourceContextInfo(int segm, int seq, SequenceType seqType, int res, int repeat) {
         return new ContextInfoBuilder()
                 .setSequenceType(seqType)
                 .setSegmentUuid(getSegmentUuid(segm))
                 .setSequenceUuid(getSequenceUuid(seq, seqType))
-                .setResourceUuid(getResourceUuid(segm, seq, seqType, res))
+                .setResourceUuid(getResourceUuid(segm, seq, seqType, res, repeat))
                 .build();
     }
 

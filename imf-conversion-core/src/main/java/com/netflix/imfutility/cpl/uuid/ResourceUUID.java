@@ -23,11 +23,43 @@ package com.netflix.imfutility.cpl.uuid;
  */
 public class ResourceUUID extends UUID {
 
-    public static ResourceUUID create(String uuid) {
-        return new ResourceUUID(uuid);
+    public static ResourceUUID create(String uuid, long repeat) {
+        return new ResourceUUID(uuid, repeat);
     }
 
-    protected ResourceUUID(String uuid) {
+    private final long repeat;
+
+    protected ResourceUUID(String uuid, long repeat) {
         super(uuid);
+        this.repeat = repeat;
+    }
+
+    public long getRepeat() {
+        return repeat;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        ResourceUUID that = (ResourceUUID) o;
+
+        return repeat == that.repeat;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (int) (repeat ^ (repeat >>> 32));
+        return result;
     }
 }

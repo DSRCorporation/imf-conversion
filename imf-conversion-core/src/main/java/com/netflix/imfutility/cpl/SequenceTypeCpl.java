@@ -19,6 +19,9 @@
 package com.netflix.imfutility.cpl;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -30,21 +33,22 @@ public enum SequenceTypeCpl {
 
     IMAGE("MainImageSequence"),
 
-    SUBTITLE("SubtitlesSequence");
+    SUBTITLE("SubtitlesSequence", "HearingImpairedCaptionsSequence", "VisuallyImpairedTextSequence",
+            "CommentarySequence", "KaraokeSequence");
 
-    private final String name;
+    private final Set<String> names;
 
-    SequenceTypeCpl(String name) {
-        this.name = name;
+    SequenceTypeCpl(String... names) {
+        this.names = new HashSet<>(Arrays.asList(names));
     }
 
-    public String getName() {
-        return name;
+    public Set<String> getNames() {
+        return names;
     }
 
     public static SequenceTypeCpl fromName(String name) {
         for (SequenceTypeCpl e : values()) {
-            if (e.getName().equals(name)) {
+            if (e.getNames().contains(name)) {
                 return e;
             }
         }
@@ -53,7 +57,8 @@ public enum SequenceTypeCpl {
 
     public static String getSupportedTypes() {
         return Arrays.stream(SequenceTypeCpl.values())
-                .map(SequenceTypeCpl::getName)
+                .map(SequenceTypeCpl::getNames)
+                .flatMap(Collection::stream)
                 .collect(Collectors.joining(" ", "[", "]"));
     }
 
