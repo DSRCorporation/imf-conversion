@@ -19,7 +19,6 @@
 package com.netflix.imfutility.conversion.templateParameter.context;
 
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
-import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
@@ -69,6 +68,7 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
             int resourceNum = getResourceCount(resourceKey);
             doAddParameter(resourceKey, uuid, ResourceContextParameters.UUID, uuid.getUuid());
             doAddParameter(resourceKey, uuid, ResourceContextParameters.NUM, String.valueOf(resourceNum));
+            doAddParameter(resourceKey, uuid, ResourceContextParameters.REPEAT, String.valueOf(uuid.getRepeat()));
         }
         return this;
     }
@@ -126,24 +126,6 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
             return Collections.emptyList();
         }
         return resourceData.getUuids();
-    }
-
-    /**
-     * How many times the resource should be repeated.
-     *
-     * @param resourceKey  a resource key defining the parameter.
-     * @param resourceUuid a resource UUID defining the parameter.
-     * @return a positive number of how many times the resource should be repeated (default is 1).
-     */
-    public long getRepeatCount(ResourceKey resourceKey, ResourceUUID resourceUuid) {
-        ContextInfo contextInfo = new ContextInfoBuilder()
-                .setSequenceUuid(resourceKey.getSequenceUuid())
-                .setSequenceType(resourceKey.getSequenceType())
-                .setSegmentUuid(resourceKey.getSegmentUuid())
-                .setResourceUuid(resourceUuid)
-                .build();
-        String repeatCountStr = getParameterValue(ResourceContextParameters.REPEAT_COUNT, contextInfo);
-        return Long.parseLong(repeatCountStr);
     }
 
     /**

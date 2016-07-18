@@ -62,14 +62,20 @@ public class ImfUtilityInputParameters {
      * @return a file defining a full path to CPL or null if it's not specified neither in config.xml nor via command line arguments
      */
     public File getCplFile() {
-        File impDirectory = getImpDirectoryFile();
-        if (impDirectory == null) {
-            return null;
-        }
         // cmd line argument has first priority
         String cpl = cmdLineArgs.getCpl() != null ? cmdLineArgs.getCpl() : defaultCpl;
         if (cpl == null) {
             return null;
+        }
+        // try if a valid path for CPL is specified.
+        File cplFile = new File(cpl);
+        if (cplFile.isFile()) {
+            return cplFile;
+        }
+        // assume that the CPL is relative to IMP.
+        File impDirectory = getImpDirectoryFile();
+        if (impDirectory == null) {
+            return cplFile;
         }
         return new File(impDirectory, cpl);
     }
