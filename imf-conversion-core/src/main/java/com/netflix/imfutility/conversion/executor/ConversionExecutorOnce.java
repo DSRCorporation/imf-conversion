@@ -23,7 +23,6 @@ import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.generated.conversion.ExecOnceType;
-import com.netflix.imfutility.util.ExecTypeUtils;
 
 import java.io.IOException;
 
@@ -45,7 +44,9 @@ public class ConversionExecutorOnce extends AbstractConversionExecutor {
     @Override
     public void execute() throws IOException {
         OperationInfo operationInfo = new OperationInfo(operation.getValue(), operation.getName(), ContextInfo.EMPTY,
-                ExecTypeUtils.isSkip(operation));
+                skipOperationResolver
+                        .setContextInfo(ContextInfo.EMPTY)
+                        .isSkip(operation));
         executeStrategyFactory.createExecuteOnceStrategy(contextProvider).execute(operationInfo);
     }
 
