@@ -70,7 +70,7 @@ public class DefaultTtiStrategy implements ITtiStrategy {
     private String[] splitAndCleanText(Caption caption) throws IOException {
         ByteArrayOutputStream allText = new ByteArrayOutputStream();
 
-        String[] lines = caption.content.split("\r");
+        String[] lines = caption.content.split("\n");
 
         return lines;
     }
