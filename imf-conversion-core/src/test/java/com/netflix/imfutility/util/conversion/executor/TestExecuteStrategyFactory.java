@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -18,7 +18,10 @@
  */
 package com.netflix.imfutility.util.conversion.executor;
 
+import com.netflix.imfutility.conversion.executor.strategy.ExecuteOnceStrategy;
+import com.netflix.imfutility.conversion.executor.strategy.ExecutePipeStrategy;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
+import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 
 /**
  * A test execute strategy facytory to create execute straegies that start {@link FakeProcess} instead of real ones.
@@ -33,6 +36,16 @@ public class TestExecuteStrategyFactory extends ExecuteStrategyFactory {
 
     public TestExecuteStrategyFactory(TestExecutorLogger executorLogger) {
         this.executorLogger = executorLogger;
+    }
+
+    @Override
+    public ExecuteOnceStrategy createExecuteOnceStrategy(TemplateParameterContextProvider contextProvider) {
+        return new TestExecuteOnceStrategy(contextProvider, getProcessStarter(), executorLogger);
+    }
+
+    @Override
+    public ExecutePipeStrategy createExecutePipeStrategy(TemplateParameterContextProvider contextProvider) {
+        return new TestExecutePipeStrategy(contextProvider, getProcessStarter(), executorLogger);
     }
 
     @Override

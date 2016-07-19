@@ -16,31 +16,29 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.conversion.executor.strategy;
+package com.netflix.imfutility.util.conversion.executor;
 
-import com.netflix.imfutility.conversion.executor.ExternalProcess;
-import com.netflix.imfutility.conversion.executor.OutputRedirect;
 import com.netflix.imfutility.conversion.executor.ProcessStarter;
+import com.netflix.imfutility.conversion.executor.strategy.ExecuteOnceStrategy;
+import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 
-import java.io.IOException;
-
 /**
- * Simply starts the conversion operation and waits until it's finished.
+ * Test execute strategy that logs skipped operations.
  */
-public class ExecuteOnceStrategy extends AbstractExecuteStrategy {
+public class TestExecuteOnceStrategy extends ExecuteOnceStrategy {
 
-    public ExecuteOnceStrategy(TemplateParameterContextProvider contextProvider, ProcessStarter processStarter) {
+    private final TestExecutorLogger executorLogger;
+
+    public TestExecuteOnceStrategy(TemplateParameterContextProvider contextProvider, ProcessStarter processStarter,
+                                   TestExecutorLogger executorLogger) {
         super(contextProvider, processStarter);
+        this.executorLogger = executorLogger;
     }
 
-    public void execute(OperationInfo operationInfo) throws IOException {
-        if (operationInfo.isSkip()) {
-            skipOperation(operationInfo);
-            return;
-        }
-        ExternalProcess process = startProcess(operationInfo, OutputRedirect.ERR_LOG);
-        process.finishWaitFor();
+    @Override
+    protected void logSkipped(OperationInfo operationInfo) {
+        super.logSkipped(operationInfo);
+        executorLogger.skipOperation(operationInfo);
     }
-
 }
