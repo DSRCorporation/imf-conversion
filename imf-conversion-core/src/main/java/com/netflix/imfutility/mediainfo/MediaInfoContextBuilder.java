@@ -48,7 +48,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.netflix.imfutility.CoreConstants.MEDIAINFO_PACKAGE;
-import static com.netflix.imfutility.CoreConstants.MEDIAINFO_XSD;
 
 /**
  * Builds template parameters context related to Media Info.
@@ -227,7 +226,8 @@ public class MediaInfoContextBuilder {
             throw new FileNotFoundException(String.format("Invalid media info output file: '%s' not found", outputFile.getAbsolutePath()));
         }
 
-        return XmlParser.parse(outputFile, new String[]{MEDIAINFO_XSD}, MEDIAINFO_PACKAGE, FfprobeType.class);
+        // do not validate according to XSD as sometimes the output may contain not all required attributes
+        return XmlParser.parse(outputFile, null, MEDIAINFO_PACKAGE, FfprobeType.class);
     }
 
     private void buildSequenceContext(VirtualTrackInfo virtualTrackInfo, ContextInfo contextInfo) {

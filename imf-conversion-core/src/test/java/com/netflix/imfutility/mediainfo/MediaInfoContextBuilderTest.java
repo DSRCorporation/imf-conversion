@@ -36,6 +36,7 @@ import com.netflix.imfutility.util.conversion.executor.TestExecuteStrategyFactor
 import com.netflix.imfutility.util.conversion.executor.TestExecutorLogger;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -88,14 +89,17 @@ public class MediaInfoContextBuilderTest {
                 .build();
     }
 
-
+    // currently we do not validate according to XSD as sometimes the output may contain not all required attributes
     @Test(expected = XmlParsingException.class)
+    @Ignore
     public void testParseInvalidXsdVideo() throws Exception {
         new TestMediaInfoContextBuilder(MediaInfoUtils.getInvalidXsdMediaInfoVideo(), MediaInfoUtils.getCorrectMediaInfoAudio())
                 .build();
     }
 
+    // currently we do not validate according to XSD as sometimes the output may contain not all required attributes
     @Test(expected = XmlParsingException.class)
+    @Ignore
     public void testParseInvalidXsdAudio() throws Exception {
         new TestMediaInfoContextBuilder(MediaInfoUtils.getCorrectMediaInfoVideo(), MediaInfoUtils.getInvalidXsdMediaInfoAudio())
                 .build();

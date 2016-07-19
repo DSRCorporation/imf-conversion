@@ -326,6 +326,7 @@
                 <xs:attribute type="xs:string" name="name" use="required"/>
                 <xs:attribute type="xs:boolean" name="concat" use="optional"/>
                 <xs:attribute type="xs:boolean" name="deleteOnExit" default="false"/>
+                <xs:attribute type="xs:boolean" name="concatWhitespace" default="false"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

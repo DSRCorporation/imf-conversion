@@ -315,17 +315,37 @@ public class TemplateParameterInitializationTest {
         dynamicParameter4.setConcat(true);
         dynamicParameter4.setDeleteOnExit(true);
 
+        DynamicParameterConcatType dynamicParameter3_whitespace = new DynamicParameterConcatType();
+        dynamicParameter3_whitespace.setName("appendDynamicSimple3_ws");
+        dynamicParameter3_whitespace.setValue("addDynamicValue3");
+        dynamicParameter3_whitespace.setConcat(false);
+        dynamicParameter3_whitespace.setDeleteOnExit(false);
+        dynamicParameter3_whitespace.setConcatWhitespace(true);
+
+        DynamicParameterConcatType dynamicParameter4_whitespace = new DynamicParameterConcatType();
+        dynamicParameter4_whitespace.setName("appendDynamicSimple3_ws");
+        dynamicParameter4_whitespace.setValue("addDynamicValue4");
+        dynamicParameter4_whitespace.setConcat(true);
+        dynamicParameter4_whitespace.setDeleteOnExit(false);
+        dynamicParameter4_whitespace.setConcatWhitespace(true);
+
         contextProvider.getDynamicContext().addParameter(dynamicParameter1, ContextInfo.EMPTY);
         contextProvider.getDynamicContext().addParameter(dynamicParameter2, ContextInfo.EMPTY);
         contextProvider.getDynamicContext().addParameter(dynamicParameter3, ContextInfo.EMPTY);
         contextProvider.getDynamicContext().addParameter(dynamicParameter4, ContextInfo.EMPTY);
+        contextProvider.getDynamicContext().addParameter(dynamicParameter3_whitespace, ContextInfo.EMPTY);
+        contextProvider.getDynamicContext().addParameter(dynamicParameter4_whitespace, ContextInfo.EMPTY);
 
-        assertEquals(DEFAULT_PARAMETERS_COUNT + 2, contextProvider.getDynamicContext().getAllParametersAsString().size());
+        assertEquals(DEFAULT_PARAMETERS_COUNT + 3, contextProvider.getDynamicContext().getAllParametersAsString().size());
         assertEquals("addDynamicValue1_1", contextProvider.getDynamicContext().getParameterValueAsString("addDynamicSimple1"));
         assertEquals("addDynamicValue3addDynamicValue4", contextProvider.getDynamicContext()
                 .getParameterValueAsString("appendDynamicSimple3"));
+        assertEquals("addDynamicValue3 addDynamicValue4", contextProvider.getDynamicContext()
+                .getParameterValueAsString("appendDynamicSimple3_ws"));
+
         assertTrue(contextProvider.getDynamicContext().getParameterValue("addDynamicSimple1").isDeleteOnExit());
         assertTrue(contextProvider.getDynamicContext().getParameterValue("appendDynamicSimple3").isDeleteOnExit());
+        assertFalse(contextProvider.getDynamicContext().getParameterValue("appendDynamicSimple3_ws").isDeleteOnExit());
     }
 
     @Test
