@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -194,7 +194,7 @@ public class MediaInfoContextBuilder {
 
         String operationName = String.format("%s_%s", mediaInfoCommand.getClass().getSimpleName(), new File(essence).getName());
         OperationInfo operationInfo = new OperationInfo(
-                mediaInfoCommand.getValue(), operationName, ContextInfo.EMPTY, outputFile);
+                mediaInfoCommand.getValue(), operationName, ContextInfo.EMPTY, false, outputFile);
         executeStrategyFactory.createExecuteOnceStrategy(contextProvider).execute(operationInfo);
     }
 

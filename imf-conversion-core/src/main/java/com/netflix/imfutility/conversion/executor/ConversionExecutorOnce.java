@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -23,6 +23,7 @@ import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.generated.conversion.ExecOnceType;
+import com.netflix.imfutility.util.ExecTypeUtils;
 
 import java.io.IOException;
 
@@ -43,7 +44,8 @@ public class ConversionExecutorOnce extends AbstractConversionExecutor {
 
     @Override
     public void execute() throws IOException {
-        OperationInfo operationInfo = new OperationInfo(operation.getValue(), operation.getName(), ContextInfo.EMPTY);
+        OperationInfo operationInfo = new OperationInfo(operation.getValue(), operation.getName(), ContextInfo.EMPTY,
+                ExecTypeUtils.isSkip(operation));
         executeStrategyFactory.createExecuteOnceStrategy(contextProvider).execute(operationInfo);
     }
 

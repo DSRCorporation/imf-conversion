@@ -78,7 +78,7 @@ public final class ITunesInputParametersValidator {
                     "Vendor identifier (--vendor-id) must be specified in '%s' mode", ITunesMode.convert.name()));
         }
 
-        if (!vendorId.matches("[a-zA-z0-9_]{6,}")) {
+        if (!vendorId.matches("[a-zA-Z0-9_]{6,}")) {
             throw new ArgumentValidationException(String.format(
                     "Vendor identifier '%s' can only contain alphanumeric symbols and underscores "
                             + "and must be at least six characters long", vendorId));

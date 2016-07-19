@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -36,6 +36,7 @@ import com.netflix.imfutility.generated.conversion.ExecOnceType;
 import com.netflix.imfutility.generated.conversion.PipeSequenceType;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.conversion.SubPipeType;
+import com.netflix.imfutility.util.ExecTypeUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -151,7 +152,8 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
                 .setSequenceUuid(currentSeqUuid)
                 .setSequenceType(seqType)
                 .build();
-        return new OperationInfo(execOnce.getValue(), execOnce.getName(), contextInfo);
+        return new OperationInfo(execOnce.getValue(), execOnce.getName(), contextInfo,
+                ExecTypeUtils.isSkip(execOnce, execEachSeq));
     }
 
     private List<OperationInfo> getSubPipeOperations(SubPipeType subPipe) {
@@ -161,7 +163,8 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
                 .setSequenceType(seqType)
                 .build();
         result.addAll(subPipe.getExecOnce().stream()
-                .map(execOnce -> new OperationInfo(execOnce.getValue(), execOnce.getName(), contextInfo))
+                .map(execOnce -> new OperationInfo(execOnce.getValue(), execOnce.getName(), contextInfo,
+                        ExecTypeUtils.isSkip(execOnce, execEachSeq)))
                 .collect(Collectors.toList()));
         return result;
     }
@@ -186,7 +189,8 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
                     // executable: operation info
                     if (execSegment.getExecOnce() != null) {
                         OperationInfo operationInfo = new OperationInfo(execSegment.getExecOnce().getValue(),
-                                execSegment.getName(), contextInfo);
+                                execSegment.getName(), contextInfo,
+                                ExecTypeUtils.isSkip(execSegment.getExecOnce(), execSegment, execEachSeq));
                         result.add(operationInfo);
                     }
 
@@ -224,7 +228,8 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
                     if (execSegment.getPipe() != null) {
                         List<OperationInfo> pipeOperations = new ArrayList<>();
                         for (ExecOnceType execOnceType : execSegment.getPipe().getExecOnce()) {
-                            OperationInfo operationInfo = new OperationInfo(execOnceType.getValue(), execOnceType.getName(), contextInfo);
+                            OperationInfo operationInfo = new OperationInfo(execOnceType.getValue(), execOnceType.getName(), contextInfo,
+                                    ExecTypeUtils.isSkip(execOnceType, execSegment, execEachSeq));
                             pipeOperations.add(operationInfo);
                         }
                         result.add(pipeOperations);
