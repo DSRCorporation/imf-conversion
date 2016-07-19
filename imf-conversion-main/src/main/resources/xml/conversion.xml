@@ -21,7 +21,9 @@
 -->
 <conversion xmlns="http://conversion.imfutility.netflix.com">
 
-    <imfValidation>%{dynamic.validateTool} -i "%{dynamic.imp}" -c "%{dynamic.cpl}" -d "%{dynamic.workingDir}" -f "%{dynamic.outputValidationFile}"</imfValidation>
+    <imfValidation>%{dynamic.validateTool} -i "%{dynamic.imp}" -c "%{dynamic.cpl}" -d "%{dynamic.workingDir}"
+        -f "%{dynamic.outputValidationFile}"
+    </imfValidation>
 
     <formats>
         <!--
@@ -77,7 +79,8 @@
                             <cycle>
                                 <execEachSegment name="decode_video">
                                     <execOnce name="decode_video">
-                                        "%{tool.ffmpeg}" -y -i "%{resource.essence}" -map 0:0 -ss %{resource.startTimeTC}
+                                        "%{tool.ffmpeg}" -y -i "%{resource.essence}" -map 0:0
+                                        -ss %{resource.startTimeTC}
                                         -t %{resource.durationTC} -an
                                         -vf
                                         "scale=iw*sar*min(1920/(iw*sar)\,1080/ih):ih*min(1920/(iw*sar)\,1080/ih),pad=1920:1080:(ow-iw)/2:(oh-ih)/2,fps=25"
@@ -100,11 +103,13 @@
                     <execEachSequence type="audio" name="extractAudioSegments">
                         <execEachSegment name="extract_audio">
                             <execOnce name="extract_audio">
-                                "%{tool.mxf2raw}" -p "%{seq.num}-%{segm.num}-%{resource.num}" --start %{resource.startTimeFrameEU}
+                                "%{tool.mxf2raw}" -p "%{seq.num}-%{segm.num}-%{resource.num}" --start
+                                %{resource.startTimeFrameEU}
                                 --dur %{resource.durationFrameEU} "%{resource.essence}"
                             </execOnce>
                             <!-- to delete intermediate files at the end -->
-                            <dynamicParameter name="audio-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}" deleteOnExit="true">
+                            <dynamicParameter name="audio-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}"
+                                              deleteOnExit="true">
                                 %{seq.num}-%{segm.num}-%{resource.num}_a0.raw
                             </dynamicParameter>
                         </execEachSegment>
@@ -119,8 +124,10 @@
                             <cycle>
                                 <execEachSegment name="decode_audio">
                                     <execOnce name="decode_audio">
-                                        "%{tool.ffmpeg}" -f s%{seq.bits_per_sample}le -ar %{seq.sample_rate} -ac %{seq.channels_num}
-                                        -i "%{dynamic.audio-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}}" -vn -af aresample=48000
+                                        "%{tool.ffmpeg}" -f s%{seq.bits_per_sample}le -ar %{seq.sample_rate}
+                                        -ac %{seq.channels_num}
+                                        -i "%{dynamic.audio-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}}" -vn -af
+                                        aresample=48000
                                         -acodec pcm_s24le -f s24le -
                                     </execOnce>
                                 </execEachSegment>
@@ -130,9 +137,11 @@
                                 copy -f wav %{seq.num}-audio-encoded.wav
                             </execOnce>
                         </pipe>
-                        <dynamicParameter name="concatAudioInput" concat="true">-i "%{seq.num}-audio-encoded.wav"
+                        <dynamicParameter name="concatAudioInput" concat="true" concatWhitespace="true">
+                            -i "%{seq.num}-audio-encoded.wav"
                         </dynamicParameter>
-                        <dynamicParameter name="concatAudioMap" concat="true">[%{seq.num}:a]</dynamicParameter>
+                        <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false">[%{seq.num}:a]
+                        </dynamicParameter>
                         <!-- to delete intermediate files at the end -->
                         <dynamicParameter name="audio-virtual-track-wav-%{seq.num}" deleteOnExit="true">
                             %{seq.num}-audio-encoded.wav
@@ -168,19 +177,26 @@
                     <execEachSequence type="subtitle" name="extractSubtitleSegments">
                         <execEachSegment name="extract_ttml">
                             <execOnce name="extract_ttml">
-                                "%{tool.as-02-unwrap}" "%{resource.essence}" "%{seq.num}-%{segm.num}.xml"
+                                "%{tool.as-02-unwrap}" "%{resource.essence}"
+                                "%{seq.num}-%{segm.num}-%{resource.num}.xml"
                             </execOnce>
                             <!-- to delete intermediate files at the end -->
-                            <dynamicParameter name="ttml-segment-tmp-%{seq.num}-%{segm.num}" deleteOnExit="true">
-                                %{seq.num}-%{segm.num}.xml
+                            <dynamicParameter name="ttml-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}"
+                                              deleteOnExit="true">
+                                %{seq.num}-%{segm.num}-%{resource.num}.xml
                             </dynamicParameter>
 
-                            <dynamicParameter name="concatTTML" concat="true"> --ttml %{seq.num}-%{segm.num}.xml %{resource.offsetTC} %{resource.startTimeTC} %{resource.endTimeTC}</dynamicParameter>
+                            <dynamicParameter name="concatTTML" concat="true" concatWhitespace="true">
+                                --ttml
+                                %{seq.num}-%{segm.num}-%{resource.num}.xml %{resource.offsetTC} %{resource.startTimeTC}
+                                %{resource.endTimeTC}
+                            </dynamicParameter>
 
                         </execEachSegment>
 
                         <execOnce name="convert_ttml_to_stl">
-                            %{dynamic.ttml-to-stl} %{dynamic.concatTTML} --outputSTL %{seq.num}-%{dynamic.output}.stl --metadata "%{dynamic.metadataXml}"
+                            %{dynamic.ttml-to-stl} %{dynamic.concatTTML} --outputSTL %{seq.num}-%{dynamic.output}.stl
+                            --metadata "%{dynamic.metadataXml}"
                         </execOnce>
                     </execEachSequence>
                 </formatConfiguration>
