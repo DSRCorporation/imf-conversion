@@ -22,12 +22,12 @@ import com.netflix.imfutility.conversion.templateParameter.context.DynamicTempla
 import com.netflix.imfutility.itunes.videoformat.VideoFormat;
 
 /**
- * Wrapper to set video format parameters into passed {@link DynamicTemplateParameterContext}.
+ * Helper to set video format parameters into passed {@link DynamicTemplateParameterContext}.
  */
-public class VideoFormatContextWrapper {
+public class VideoFormatContextHelper {
     private final DynamicTemplateParameterContext dynamicContext;
 
-    public VideoFormatContextWrapper(DynamicTemplateParameterContext dynamicContext) {
+    public VideoFormatContextHelper(DynamicTemplateParameterContext dynamicContext) {
         this.dynamicContext = dynamicContext;
     }
 

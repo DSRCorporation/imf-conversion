@@ -51,11 +51,11 @@ import static com.netflix.imfutility.conversion.templateParameter.context.parame
  * width, height extracted from {@link SequenceTemplateParameterContext}
  * duration extracted from {@link ResourceTemplateParameterContext}
  */
-public class VideoFormatContextBuilderWrapper {
+public class VideoFormatContextBuilder {
     private final TemplateParameterContextProvider contextProvider;
     private final VideoFormatBuilder videoFormatBuilder;
 
-    public VideoFormatContextBuilderWrapper(TemplateParameterContextProvider contextProvider, VideoFormatBuilder videoFormatBuilder) {
+    public VideoFormatContextBuilder(TemplateParameterContextProvider contextProvider, VideoFormatBuilder videoFormatBuilder) {
         this.contextProvider = contextProvider;
         this.videoFormatBuilder = videoFormatBuilder;
     }

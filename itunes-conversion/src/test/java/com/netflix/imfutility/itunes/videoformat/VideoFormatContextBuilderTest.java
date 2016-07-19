@@ -28,7 +28,7 @@ import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.itunes.util.FakeVideoFormatBuilder;
-import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextBuilderWrapper;
+import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextBuilder;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -40,7 +40,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Tests that video format context builds correctly.
  */
-public class VideoFormatContextBuilderWrapperTest {
+public class VideoFormatContextBuilderTest {
 
     private static final int SEGMENT_COUNT = 2;
     private static final int SEQ_COUNT = 2;
@@ -104,9 +104,9 @@ public class VideoFormatContextBuilderWrapperTest {
     }
 
     @Test
-    public void testBuildIncorrectVideoFormatWidth() throws Exception {
+    public void testBuildCorrectVideoFormat() throws Exception {
 
-        VideoFormatContextBuilderWrapper contextBuilder = new VideoFormatContextBuilderWrapper(contextProvider,
+        VideoFormatContextBuilder contextBuilder = new VideoFormatContextBuilder(contextProvider,
                 new FakeVideoFormatBuilder());
 
         VideoFormat videoFormat = contextBuilder.build();

@@ -25,8 +25,8 @@ import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
 import com.netflix.imfutility.itunes.videoformat.VideoFormat;
 import com.netflix.imfutility.itunes.videoformat.builder.ITunesVideoFormatBuilder;
-import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextWrapper;
-import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextBuilderWrapper;
+import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextHelper;
+import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextBuilder;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
@@ -111,10 +111,10 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
         VideoFormat videoFormat = iTunesInputParameters.getCmdLineArgs().getVideoFormat();
         if (videoFormat == null) {
-            videoFormat = new VideoFormatContextBuilderWrapper(contextProvider, new ITunesVideoFormatBuilder()).build();
+            videoFormat = new VideoFormatContextBuilder(contextProvider, new ITunesVideoFormatBuilder()).build();
         }
 
-        new VideoFormatContextWrapper(dynamicContext).setVideoFormat(videoFormat);
+        new VideoFormatContextHelper(dynamicContext).setVideoFormat(videoFormat);
     }
 
     private void setOSParameters() {

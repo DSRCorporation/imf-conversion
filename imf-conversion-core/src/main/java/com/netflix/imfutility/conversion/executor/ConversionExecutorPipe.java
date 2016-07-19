@@ -26,7 +26,6 @@ import com.netflix.imfutility.conversion.templateParameter.context.TemplateParam
 import com.netflix.imfutility.generated.conversion.ExecOnceType;
 import com.netflix.imfutility.generated.conversion.PipeType;
 import com.netflix.imfutility.generated.conversion.SubPipeType;
-import com.netflix.imfutility.util.ExecTypeUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -72,13 +71,17 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
 
     private OperationInfo getExecOnceOperation(ExecOnceType execOnce) {
         return new OperationInfo(execOnce.getValue(), execOnce.getName(), ContextInfo.EMPTY,
-                ExecTypeUtils.isSkip(execOnce));
+                skipOperationResolver
+                        .setContextInfo(ContextInfo.EMPTY)
+                        .isSkip(execOnce));
     }
 
     private List<OperationInfo> getSubPipeOperations(SubPipeType subPipe) {
         return subPipe.getExecOnce().stream()
                 .map(execOnce -> new OperationInfo(execOnce.getValue(), execOnce.getName(), ContextInfo.EMPTY,
-                        ExecTypeUtils.isSkip(execOnce)))
+                        skipOperationResolver
+                                .setContextInfo(ContextInfo.EMPTY)
+                                .isSkip(execOnce)))
                 .collect(Collectors.toList());
     }
 
