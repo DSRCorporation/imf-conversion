@@ -70,11 +70,7 @@ public class DefaultTtiStrategy implements ITtiStrategy {
     private String[] splitAndCleanText(Caption caption) throws IOException {
         ByteArrayOutputStream allText = new ByteArrayOutputStream();
 
-        String[] lines = caption.content.split("<br />");
-        //we clean XML, span would be implemented here
-        for (int i = 0; i < lines.length; i++) {
-            lines[i] = lines[i].replaceAll("\\<.*?\\>", "");
-        }
+        String[] lines = caption.content.split("\r");
 
         return lines;
     }
@@ -244,9 +240,11 @@ public class DefaultTtiStrategy implements ITtiStrategy {
             nextEndTimeMs = next.end.getMseconds();
         }
 
-        Integer currentEndTimeMs = stlSubtitle.getCaption().end.getMseconds();
 
-        if ((prevEndTimeMs != null) && (nextEndTimeMs != null)
+
+
+        Integer currentEndTimeMs = stlSubtitle.getCaption().end.getMseconds();
+         if ((prevEndTimeMs != null) && (nextEndTimeMs != null)
                 && prevEndTimeMs.equals(currentEndTimeMs) && nextEndTimeMs.equals(currentEndTimeMs)) {
             return (byte) 0x02; // intermediate
         } else if ((nextEndTimeMs != null) && nextEndTimeMs.equals(currentEndTimeMs)) {
