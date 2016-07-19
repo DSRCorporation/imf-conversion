@@ -32,8 +32,7 @@
                             <Id>urn:uuid:96ba877d-9a87-4627-a3d7-4b4d8d6354c1</Id>
                             <EditRate>30000 1001</EditRate>
                             <IntrinsicDuration>55638</IntrinsicDuration>
-                            <EntryPoint>400</EntryPoint>
-                            <SourceDuration>400</SourceDuration>
+                            <SourceDuration>100</SourceDuration>
                             <SourceEncoding>urn:uuid:7136bf35-50a3-42a0-a693-b67e49b6afcb</SourceEncoding>
                             <TrackFileId>urn:uuid:de1faaa5-ce43-4de9-8639-331d5c4e73d6</TrackFileId>
                         </Resource>
@@ -47,13 +46,45 @@
                             <Id>urn:uuid:4422c9ed-6b53-4b67-bd27-5ce68c43e9ac</Id>
                             <EditRate>48000 1</EditRate>
                             <IntrinsicDuration>89109909</IntrinsicDuration>
-                            <EntryPoint></EntryPoint>
-                            <SourceDuration>89109909</SourceDuration>
+                            <SourceDuration>160160</SourceDuration>
                             <SourceEncoding>urn:uuid:12db7c06-40d2-4963-9039-53905a878aca</SourceEncoding>
                             <TrackFileId>urn:uuid:14d97197-22c6-4b81-bf72-e39fd3d6d3ba</TrackFileId>
                         </Resource>
                     </ResourceList>
                 </cc:MainAudioSequence>
+                <cc:SubtitlesSequence xmlns:cc="http://www.smpte-ra.org/schemas/2067-2/2013">
+                    <Id>urn:uuid:f5c7f5bb-f45d-477f-8be0-47ad54a2e7af</Id>
+                    <TrackId>urn:uuid:5a812a25-8978-4201-88a7-e43d904cfe8d</TrackId>
+                    <ResourceList>
+                        <Resource xsi:type="TrackFileResourceType">
+                            <Id>urn:uuid:4422c9ed-6b53-4b67-bd27-5ce68c43e9ac</Id>
+                            <EditRate>30000 1001</EditRate>
+                            <IntrinsicDuration>55638</IntrinsicDuration>
+                            <SourceDuration>1000</SourceDuration>
+                            <SourceEncoding>urn:uuid:12db7c06-40d2-4963-9039-53905a878acb</SourceEncoding>
+                            <TrackFileId>urn:uuid:14d97197-22c6-4b81-bf72-e39fd3d6d3bb</TrackFileId>
+                        </Resource>
+                        <Resource xsi:type="TrackFileResourceType">
+                            <Id>urn:uuid:4422c9ed-6b53-4b67-bd27-5ce68c43e9ad</Id>
+                            <EditRate>30000 1001</EditRate>
+                            <IntrinsicDuration>55638</IntrinsicDuration>
+                            <EntryPoint>1500</EntryPoint>
+                            <SourceDuration>500</SourceDuration>
+                            <SourceEncoding>urn:uuid:12db7c06-40d2-4963-9039-53905a878acb</SourceEncoding>
+                            <TrackFileId>urn:uuid:14d97197-22c6-4b81-bf72-e39fd3d6d3bb</TrackFileId>
+                        </Resource>
+                        <Resource xsi:type="TrackFileResourceType">
+                            <Id>urn:uuid:4422c9ed-6b53-4b67-bd27-5ce68c43e9af</Id>
+                            <EditRate>30000 1001</EditRate>
+                            <IntrinsicDuration>55638</IntrinsicDuration>
+                            <EntryPoint>2000</EntryPoint>
+                            <SourceDuration>500</SourceDuration>
+                            <RepeatCount>3</RepeatCount>
+                            <SourceEncoding>urn:uuid:12db7c06-40d2-4963-9039-53905a878acb</SourceEncoding>
+                            <TrackFileId>urn:uuid:14d97197-22c6-4b81-bf72-e39fd3d6d3bb</TrackFileId>
+                        </Resource>
+                    </ResourceList>
+                </cc:SubtitlesSequence>
             </SequenceList>
         </Segment>
     </SegmentList>
