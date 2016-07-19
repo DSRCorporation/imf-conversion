@@ -60,21 +60,23 @@ public class FormatTTML implements TimedTextFileFormat {
 
     private TimedTextObject tto = new TimedTextObject();
     private Integer parsedFileCount = 0;
-
-
-    public TimedTextObject parseFile(String fileName, InputStream is) throws IOException, FatalParsingException {
-        return parseFile(fileName, is, null, null, null);
-    }
+    private String startTC = null;
+    private String endTC = null;
+    private String offsetTC = null;
+    private Document doc = null;
 
     public TimedTextObject parseFile(String fileName, InputStream is, String startTC, String endTC, String offsetTC) throws IOException, FatalParsingException {
-        //TimedTextObject tto = new TimedTextObject();
         tto.fileName = fileName;
+        this.startTC = startTC;
+        this.endTC = endTC;
+        this.offsetTC = offsetTC;
+        this.doc = null;
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder;
         try {
             dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(is);
+            doc = dBuilder.parse(is);
             doc.getDocumentElement().normalize();
 
             //we recover the metadata
@@ -119,12 +121,12 @@ public class FormatTTML implements TimedTextFileFormat {
                 //we check for background color
                 currentAtr = attr.getNamedItem("tts:backgroundColor");
                 if (currentAtr != null)
-                    style.backgroundColor = parseColor(currentAtr.getNodeValue(), tto);
+                    style.backgroundColor = parseColor(currentAtr.getNodeValue());
 
                 //we check for color
                 currentAtr = attr.getNamedItem("tts:color");
                 if (currentAtr != null)
-                    style.color = parseColor(currentAtr.getNodeValue(), tto);
+                    style.color = parseColor(currentAtr.getNodeValue());
 
                 //we check for font family
                 currentAtr = attr.getNamedItem("tts:fontFamily");
@@ -197,75 +199,15 @@ public class FormatTTML implements TimedTextFileFormat {
 
             //we parse the captions
             for (int i = 0; i < captionsN.getLength(); i++) {
-                Caption caption = new Caption();
-                caption.content = "";
-                boolean validCaption = true;
-                node = captionsN.item(i);
 
-                NamedNodeMap attr = node.getAttributes();
-                //we get the begin time
-                Node currentAtr = attr.getNamedItem("begin");
-                //if no begin is present, 0 is assumed
-                caption.start = new Time("", "");
-                caption.end = new Time("", "");
-                if (currentAtr != null)
-                    caption.start.mseconds = parseTimeExpression(currentAtr.getNodeValue(), tto, doc);
-
-                //we get the end time, if present, duration is ignored, otherwise end is calculated from duration
-                currentAtr = attr.getNamedItem("end");
-                if (currentAtr != null)
-                    caption.end.mseconds = parseTimeExpression(currentAtr.getNodeValue(), tto, doc);
-                else {
-                    currentAtr = attr.getNamedItem("dur");
-                    if (currentAtr != null)
-                        caption.end.mseconds = caption.start.mseconds + parseTimeExpression(currentAtr.getNodeValue(), tto, doc);
-                    else
-                        //no end or duration, invalid format, caption is discarded
-                        validCaption = false;
-                }
-
-                //Lets filter captions and fit timecodes in accordance with startTC/endTC/offsetTC
-                if (validCaption) {
-                    if (!fitCaptionTimecodes(caption, doc, startTC, endTC, offsetTC)) {
-                        //Caption must be filtered out.
-                        continue;
-                    }
-                }
-
-                //we get the style
-                currentAtr = attr.getNamedItem("style");
-                if (currentAtr != null) {
-                    //FIXME: there can be several style ID in row.
-                    Style style = tto.styling.get(getMutlyInputStyleId(currentAtr.getNodeValue()));
-                    if (style != null)
-                        caption.style = style;
-                    else
-                        //unrecognized style
-                        tto.warnings += "unrecoginzed style referenced: " + currentAtr.getNodeValue() + "\n\n";
-                }
-
-                //we save the text
-                NodeList textN = node.getChildNodes();
-                for (int j = 0; j < textN.getLength(); j++) {
-                    if (textN.item(j).getNodeName().equals("#text"))
-                        caption.content += textN.item(j).getTextContent().trim();
-                    else if (textN.item(j).getNodeName().equals("br"))
-                        caption.content += "<br />";
-                    else if (textN.item(j).getNodeName().equals("span")) {
-                        //FIXME: Span can have its own style and attr so here we just take text, but in the perfect case
-                        //FIXME: we need to review this class if conversion will require such deep inheritance.
-                        caption.content += textN.item(j).getTextContent().trim();
-                    }
-
-                }
-                //is this check worth it?
-                if (caption.content.replaceAll("<br />", "").trim().isEmpty())
-                    validCaption = false;
+                Caption caption = fillCaptionAttributes(captionsN.item(i));
 
                 //and save the caption
-                if (validCaption) {
+                if (caption != null) {
+                    caption.content = caption.content.trim().replaceAll("[ \\t]+", " ");
                     int key = caption.start.mseconds;
                     //in case the key is already there, we increase it by a millisecond, since no duplicates are allowed
+                    // FIXME: for regions it must be changed (region can intersect in start time)
                     while (tto.captions.containsKey(key)) key++;
                     tto.captions.put(key, caption);
                 }
@@ -282,23 +224,137 @@ public class FormatTTML implements TimedTextFileFormat {
         return tto;
     }
 
-
-    private Boolean fitCaptionTimecodes(Caption caption, Document doc, String startTC, String endTC, String offsetTC) {
-        int startTCMilliseconds = 0;
-        int endTCMilliseconds = Integer.MAX_VALUE;
-        int offsetTCMilliseconds = 0;
-
-        if (startTC != null) {
-            startTCMilliseconds = parseTimeExpression(startTC, tto, doc);
+    private String traverseAttributeUp(Node node, String attrName) {
+        NamedNodeMap attr = node.getAttributes();
+        if (attr != null) {
+            Node currentAtr = attr.getNamedItem(attrName);
+            if (currentAtr != null) {
+                String attrValue = currentAtr.getNodeValue().trim();
+                if (attrValue.length() > 0) {
+                    return attrValue;
+                }
+            }
         }
 
-        if (endTC != null) {
-            endTCMilliseconds = parseTimeExpression(endTC, tto, doc);
+        if (node.getParentNode() != null) {
+            return traverseAttributeUp(node.getParentNode(), attrName);
         }
 
-        if (offsetTC != null) {
-            offsetTCMilliseconds = parseTimeExpression(offsetTC, tto, doc);
+        return null;
+    }
+
+    private Time traverseTimecode(Node node, String timecodeName) {
+        String timecodeValue = traverseAttributeUp(node, timecodeName);
+
+        if (timecodeValue != null) {
+            Time nodeTime = new Time("", "");
+            nodeTime.mseconds = parseTimeExpression(timecodeValue);
+            return nodeTime;
         }
+
+        return null;
+    }
+
+
+    private Caption fillCaptionAttributes(Node node) {
+
+        //+define parentStartTime
+        //+define parentEndTime
+        //define parentStyles : it must be inherited from container also
+        //define parentRegion : even body can have it, can be single only
+        //origin and extent (x and y of view/region area) - omit for now.
+
+        Caption caption = new Caption();
+        caption.content = "";
+
+        //get region
+        caption.region = traverseAttributeUp(node, "region");
+
+        caption.start = traverseTimecode(node, "begin");
+        if (caption.start == null) {
+            caption.start = new Time("", "");
+        }
+
+        caption.end = traverseTimecode(node, "end");
+        if (caption.end == null) {
+            caption.end = new Time("", "");
+            Time durTime = traverseTimecode(node, "dur");
+            if (durTime != null) {
+                caption.end.mseconds = caption.start.mseconds + durTime.mseconds;
+            } else {
+                caption.end.mseconds = Integer.MAX_VALUE;
+            }
+        }
+
+        //Lets filter captions and fit timecodes in accordance with startTC/endTC
+        if (!fitAndCheckCaptionTimecodeRange(caption)) {
+            //Caption must be filtered out.
+            return null;
+        }
+
+        NamedNodeMap attr = node.getAttributes();
+        if (attr != null) {
+            //we get the style
+            Node currentAtr = attr.getNamedItem("style");
+            if (currentAtr != null) {
+                String stylesStr[] = currentAtr.getNodeValue().split("\\s+");
+                caption.styles = new Style[stylesStr.length];
+
+                for (int i = 0; i < stylesStr.length; i++) {
+                    Style style = tto.styling.get(getMutlyInputStyleId(stylesStr[i]));
+                    if (style != null) {
+                        // FIXME: AL: We should override style items for style later
+                        caption.style = style; //set last style for container, later it should not be used. use styles.
+                        caption.styles[i] = style;
+                    } else {
+                        //unrecognized style
+                        tto.warnings += "unrecoginzed style referenced: " + currentAtr.getNodeValue() + "\n\n";
+                    }
+                }
+            }
+        }
+
+        //we save the text
+        NodeList textN = node.getChildNodes();
+        caption.nodes = new Caption[textN.getLength()];
+        if (textN.getLength() == 0) {
+            if (node.getNodeName().equals("#text")) {
+                //don't trim anything here. trim and remove multiple spaces at final string build.
+                caption.content = node.getTextContent();
+                //replace new lines to spaces.
+                caption.content = caption.content.replaceAll("\r\n", " ").replaceAll("\r", " ").replaceAll("\n", " ");
+            } else if (node.getNodeName().equals("br")) {
+                caption.content = "\n";
+            }
+        }
+        else {
+            for (int j = 0; j < textN.getLength(); j++) {
+                Node childNode = textN.item(j);
+                caption.nodes[j] = fillCaptionAttributes(childNode);
+            }
+        }
+
+        //Build final string for whole container.
+        buildCaptionString(caption);
+        return caption;
+    }
+
+
+    private void buildCaptionString(Caption caption) {
+        if (caption.nodes.length > 0) {
+            caption.content = "";
+            for (Caption subCaption : caption.nodes) {
+                buildCaptionString(subCaption);
+
+                caption.content += subCaption.content;
+            }
+        }
+    }
+
+    private Boolean fitAndCheckCaptionTimecodeRange(Caption caption) {
+        int startTCMilliseconds = startTC != null ? parseTimeExpression(startTC) : 0;
+        int endTCMilliseconds = endTC != null ? parseTimeExpression(endTC) : Integer.MAX_VALUE;
+        int offsetTCMilliseconds = offsetTC != null ? parseTimeExpression(offsetTC) : 0;
 
         if (startTCMilliseconds > caption.end.mseconds
                 || endTCMilliseconds < caption.start.mseconds) {
@@ -306,8 +362,11 @@ public class FormatTTML implements TimedTextFileFormat {
             return false;
         }
 
-        caption.start.mseconds = offsetTCMilliseconds + Math.max(caption.start.mseconds, startTCMilliseconds);
-        caption.end.mseconds = offsetTCMilliseconds + Math.min(caption.end.mseconds, endTCMilliseconds);
+        caption.start.mseconds = Math.max(caption.start.mseconds, startTCMilliseconds);
+        caption.end.mseconds = Math.min(caption.end.mseconds, endTCMilliseconds);
+
+        caption.start.mseconds = offsetTCMilliseconds + caption.start.mseconds - startTCMilliseconds;
+        caption.end.mseconds = offsetTCMilliseconds + caption.end.mseconds - startTCMilliseconds;
 
         return true;
     }
@@ -404,13 +463,14 @@ public class FormatTTML implements TimedTextFileFormat {
         Iterator<Caption> itrC = tto.captions.values().iterator();
         while (itrC.hasNext()) {
             Caption caption = itrC.next();
+            String content = caption.content.replace("\n", "<br/>");
             //we open the subtitle line
             line = "\t\t\t<p begin=\"" + caption.start.getTime("hh:mm:ss,ms").replace(',', '.') + "\"";
             line += " end=\"" + caption.end.getTime("hh:mm:ss,ms").replace(',', '.') + "\"";
             if (caption.style != null)
                 line += " style=\"" + caption.style.iD + "\"";
             //attributes are done being inserted, if region was implemented it should be added before this.
-            line += " >" + caption.content + "</p>\n";
+            line += " >" + content + "</p>\n";
             //we write the line
             file.add(index++, line);
         }
@@ -441,7 +501,7 @@ public class FormatTTML implements TimedTextFileFormat {
      * @param color
      * @return
      */
-    private String parseColor(String color, TimedTextObject tto) {
+    private String parseColor(String color) {
         String value = "";
         String[] values;
         if (color.startsWith("#")) {
@@ -506,7 +566,7 @@ public class FormatTTML implements TimedTextFileFormat {
      * @param timeExpression
      * @return
      */
-    private int parseTimeExpression(String timeExpression, TimedTextObject tto, Document doc) {
+    private int parseTimeExpression(String timeExpression) {
         int mSeconds = 0;
         if (timeExpression.contains(":")) {
             //it is a clock time
@@ -525,7 +585,10 @@ public class FormatTTML implements TimedTextFileFormat {
                 float f;
                 int frameRate = 25;
                 //we recover the frame rate
-                Node n = doc.getElementsByTagName("ttp:frameRate").item(0);
+                Node n = doc.getDocumentElement().getAttributes().getNamedItem("ttp:frameRate");
+                if (n == null) {
+                    n = doc.getElementsByTagName("ttp:frameRate").item(0);
+                }
                 if (n != null) {
                     //used as auxiliary string
                     String aux = n.getNodeValue();

@@ -21,10 +21,14 @@ package ttml;
 public class Caption {
 	
 	public Style style;
-	public Region region;
+	public String region;
 	
 	public Time start;
 	public Time end;
+
+
+    public Caption nodes[];
+    public Style styles[];
 
     /**
      * Raw content, before cleaning up templates and markup.
