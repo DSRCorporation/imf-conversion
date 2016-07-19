@@ -14,7 +14,7 @@ $ ./gradlew build
 
 ## JDK requirements
 
-* The project can be built using JDK-8 only.
+* The project can be built using JDK-8 only (not JRE!).
 * JAVA_HOME must be set and 'java' must be in the PATH.  
 
 ## Distribution
@@ -43,6 +43,7 @@ The distribution includes
 * IMF Conversion utilities uses a number of external tools to perform full conversion cycle.
 * The external tools are not distributed with the Utility, and must be prepared by the user.
 * The user just specifies the executables in config.xml.
+* The utility creates tmp files (which will be deleted when the conversion job finishes). So make sure that there is enough free disk space.
 
 ### Conversion to DPP format
 
@@ -60,7 +61,7 @@ The distribution includes
 6. [Optional] Edit audiomap.xml to map input audio streams and channels. 
 7. Run conversion job:
     * --format [-f] dpp
-    * --mode [-m] convert
+    * --mode [-m] convert (may be omitted as it's a default mode)
     * --config [-c] config.xml
     * --metadata metadata.xml
     * --audiomap audiomap.xml (optional)
@@ -126,10 +127,10 @@ There is a Windows distribution there which can be used out of the box on Window
     * Including IMF package and CPL into _config.xml_ can be used to reduce number of command line arguments when using the same IMP and CPL for different conversions.
     * To set IMF package and CPL in _config.xml_, add the following:    
 ```
-    <imp>absolute path to imp</imp>
-    <cpl>relative path of CPL.xml</cpl>
+    <imp>path to imp</imp>
+    <cpl>path of CPL.xml</cpl>
 ```
-    * Please note that CPL is just a name of CPL.xml within IMP folder (an IMF package may contain several CPLs, so we should select the one to be used for conversion).
+    * Please note that the CPL can be specified either as a path to CPL.xml or as a name of CPL.xml within IMP folder (an IMF package may contain several CPLs, so we should select the one to be used for conversion).
 
 5. Output directory
     * The output directory is a folder where the output flat file (_output.mxf_) will be created.
@@ -139,7 +140,7 @@ There is a Windows distribution there which can be used out of the box on Window
     * If it's specified in both places, then values from command line parameters will be used.
     * To set the output directory in _config.xml_, add the following:    
 ```
-    <workingDirectory>absolute path to output directory</workingDirectory>
+    <workingDirectory>path to output directory</workingDirectory>
 ```
 
 6. Allows/disallows silent conversion 
