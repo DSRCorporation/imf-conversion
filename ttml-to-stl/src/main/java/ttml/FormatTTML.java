@@ -224,26 +224,6 @@ public class FormatTTML implements TimedTextFileFormat {
         return tto;
     }
 
-
-    private String traverseStylesUp(Node node, String attrName) {
-        NamedNodeMap attr = node.getAttributes();
-        if (attr != null) {
-            Node currentAtr = attr.getNamedItem(attrName);
-            if (currentAtr != null) {
-                String attrValue = currentAtr.getNodeValue().trim();
-                if (attrValue.length() > 0) {
-                    return attrValue;
-                }
-            }
-        }
-
-        if (node.getParentNode() != null) {
-            return traverseAttributeUp(node.getParentNode(), attrName);
-        }
-
-        return null;
-    }
-
     private String traverseAttributeUp(Node node, String attrName) {
         NamedNodeMap attr = node.getAttributes();
         if (attr != null) {
