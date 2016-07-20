@@ -28,10 +28,6 @@ public final class Constants {
     public static final String IMF_VALIDATION_PATH = "../tools/imf-validation.jar";
     public static final String TTML_TO_STL_PATH = "../tools/ttml-to-stl.jar";
 
-/* 2. default values */
-
-    public static final String CONVERSION_XML = "xml/conversion.xml";
-
     private Constants() {
     }
 }

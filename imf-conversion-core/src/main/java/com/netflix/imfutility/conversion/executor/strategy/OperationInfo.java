@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -30,16 +30,18 @@ public final class OperationInfo {
     private final String operation;
     private final String operationName;
     private final ContextInfo contextInfo;
+    private final boolean skip;
     private final File output;
 
-    public OperationInfo(String operation, String operationName, ContextInfo contextInfo) {
-        this(operation, operationName, contextInfo, null);
+    public OperationInfo(String operation, String operationName, ContextInfo contextInfo, boolean skip) {
+        this(operation, operationName, contextInfo, skip, null);
     }
 
-    public OperationInfo(String operation, String operationName, ContextInfo contextInfo, File output) {
+    public OperationInfo(String operation, String operationName, ContextInfo contextInfo, boolean skip, File output) {
         this.operation = operation;
         this.operationName = operationName;
         this.contextInfo = contextInfo;
+        this.skip = skip;
         this.output = output;
     }
 
@@ -55,7 +57,21 @@ public final class OperationInfo {
         return contextInfo;
     }
 
+    public boolean isSkip() {
+        return skip;
+    }
+
+    public boolean isExecutable() {
+        return !skip;
+    }
+
     public File getOutput() {
         return output;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "%s [ %s ]", operationName, operation.replaceAll("\n", " ").trim());
     }
 }

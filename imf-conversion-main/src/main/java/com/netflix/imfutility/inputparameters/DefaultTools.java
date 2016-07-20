@@ -44,8 +44,4 @@ public class DefaultTools implements IDefaultTools {
         }
     }
 
-    @Override
-    public String getConversionXml() {
-        return Constants.CONVERSION_XML;
-    }
 }

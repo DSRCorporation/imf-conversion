@@ -19,13 +19,14 @@
 package com.netflix.imfutility.inputparameters;
 
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * A wrapper on command line arguments with helper methods to get input parameters obtained from the command line.
  * Some of the parameters (such as CPL, IMP, working directory paths) can be defined either in config.xml or via command line arguments.
  * Setting a parameter via command line argument overwrites value from config.xml.
  */
-public class ImfUtilityInputParameters {
+public abstract class ImfUtilityInputParameters {
 
     private final ImfUtilityCmdLineArgs cmdLineArgs;
     private final IDefaultTools defaultTools;
@@ -117,9 +118,15 @@ public class ImfUtilityInputParameters {
      *
      * @return a default conversion.xml
      */
-    public String getDefaultConversionXml() {
-        return defaultTools.getConversionXml();
-    }
+    public abstract InputStream getDefaultConversionXml();
+
+    /**
+     * A default conversion XML path.
+     *
+     * @return a default conversion.xml path.
+     */
+    public abstract String getDefaultConversionXmlPath();
+
 
     /**
      * Gets an IMF validation tool executable. Usually a default value is used (distributed with the utility),

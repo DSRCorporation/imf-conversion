@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -30,32 +30,32 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A base executor strategy. Invokes parsing of the operation and starting an external process.
  */
 public class AbstractExecuteStrategy {
 
-    private final Logger logger = LoggerFactory.getLogger(AbstractExecuteStrategy.class);
-
+    private static int count = 1; // the current number of executed conversion operations.
     protected final ConversionOperationParser conversionOperationParser;
     protected final TemplateParameterResolver parameterResolver;
     protected final ProcessStarter processStarter;
+    private final Logger logger = LoggerFactory.getLogger(AbstractExecuteStrategy.class);
 
-    private static int count = 1; // the current number of executed conversion operations.
+    public AbstractExecuteStrategy(TemplateParameterContextProvider contextProvider, ProcessStarter processStarter) {
+        this.parameterResolver = new TemplateParameterResolver(contextProvider);
+        this.conversionOperationParser = new ConversionOperationParser(parameterResolver);
+        this.processStarter = processStarter;
+    }
 
     /**
      * Resets the current number of executed conversion operations.
      */
     public static void resetCount() {
         count = 1;
-    }
-
-    public AbstractExecuteStrategy(TemplateParameterContextProvider contextProvider, ProcessStarter processStarter) {
-        this.parameterResolver = new TemplateParameterResolver(contextProvider);
-        this.conversionOperationParser = new ConversionOperationParser(parameterResolver);
-        this.processStarter = processStarter;
     }
 
     final ExternalProcess startProcess(OperationInfo operationInfo, OutputRedirect defaultOutputRedirect) throws IOException {
@@ -81,5 +81,19 @@ public class AbstractExecuteStrategy {
                 parameterResolver.getContextProvider().getWorkingDir(), outputRedirect, operationInfo.getOutput());
     }
 
+    protected List<OperationInfo> skipOperations(Collection<OperationInfo> operations) {
+        //  log skipped operations
+        operations.stream().filter(OperationInfo::isSkip).distinct().forEach(this::logSkipped);
+        //  return executable operations
+        return operations.stream().filter(OperationInfo::isExecutable).collect(Collectors.toList());
+    }
+
+    protected void skipOperation(OperationInfo operation) {
+        logSkipped(operation);
+    }
+
+    protected void logSkipped(OperationInfo operationInfo) {
+        logger.info("Skipped {}: OK\n", operationInfo.toString());
+    }
 
 }

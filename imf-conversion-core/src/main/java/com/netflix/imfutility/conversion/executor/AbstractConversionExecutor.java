@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -19,7 +19,9 @@
 package com.netflix.imfutility.conversion.executor;
 
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
+import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.util.SkipOperationResolver;
 
 /**
  * Base conversion executor. A specific conversion executor is created for each conversion operation type.
@@ -28,11 +30,13 @@ public abstract class AbstractConversionExecutor implements IConversionExecutor 
 
     protected final TemplateParameterContextProvider contextProvider;
     protected final ExecuteStrategyFactory executeStrategyFactory;
+    protected final SkipOperationResolver skipOperationResolver;
 
     public AbstractConversionExecutor(final TemplateParameterContextProvider contextProvider,
                                       final ExecuteStrategyFactory executeStrategyFactory) {
         this.contextProvider = contextProvider;
         this.executeStrategyFactory = executeStrategyFactory;
+        this.skipOperationResolver = new SkipOperationResolver(new TemplateParameterResolver(contextProvider));
     }
 
 }

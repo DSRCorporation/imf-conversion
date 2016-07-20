@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -76,7 +76,7 @@ public class ImfValidator {
     private void executeValidationCommand() throws IOException {
         ImfValidationType imfValidationCommand = contextProvider.getConversionProvider().getConversion().getImfValidation();
         OperationInfo operationInfo = new OperationInfo(
-                imfValidationCommand.getValue(), imfValidationCommand.getClass().getSimpleName(), ContextInfo.EMPTY);
+                imfValidationCommand.getValue(), imfValidationCommand.getClass().getSimpleName(), ContextInfo.EMPTY, false);
         executeStrategyFactory.createExecuteOnceStrategy(contextProvider).execute(operationInfo);
     }
 
