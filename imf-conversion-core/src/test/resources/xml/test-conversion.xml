@@ -2,7 +2,8 @@
 
 <conversion xmlns="http://conversion.imfutility.netflix.com">
 
-    <imfValidation>%{dynamic.validateTool} -i %{dynamic.imp} -c %{dynamic.cpl} -d %{dynamic.workingDir} -f %{dynamic.outputValidationFile}</imfValidation>
+    <imfValidation>%{dynamic.validateTool} -i %{dynamic.imp} -c %{dynamic.cpl} -d %{dynamic.workingDir} -f %{dynamic.outputValidationFile}
+    </imfValidation>
 
     <formats>
         <!--
@@ -51,11 +52,20 @@
                             seqVideoExecOnce1Exec - param
                         </execOnce>
 
+                        <execOnce name="seqVideoExecOnceSkip" if="false">
+                            seqVideoExecOnceSkipExec - param
+                        </execOnce>
+
                         <pipe>
                             <cycle>
                                 <execOnce name="seqVideoPipeCycleExecOnce1">
                                     seqVideoPipeCycleExecOnce1Exec - param
                                 </execOnce>
+                                <execEachSegment name="seqVideoPipeCycleExecSegmentSkip" unless="true">
+                                    <execOnce name="seqVideoPipeCycleExecSegmentExecOnce">
+                                        seqVideoPipeCycleExecSegmentSkipExec - param
+                                    </execOnce>
+                                </execEachSegment>
                                 <execEachSegment name="seqVideoPipeCycleExecSegment">
                                     <execOnce name="seqVideoPipeCycleExecSegmentExecOnce">
                                         seqVideoPipeCycleExecSegmentExec - param
@@ -65,6 +75,10 @@
 
                             <execOnce name="seqVideoPipeExecOnce1">
                                 seqVideoPipeExecOnce1Exec - param
+                            </execOnce>
+
+                            <execOnce name="seqVideoPipeExecOnceSkip" if="true" unless="true">
+                                seqVideoPipeExecOnceSkipExec - param
                             </execOnce>
 
                             <execOnce name="seqVideoPipeExecOnce2">
@@ -80,6 +94,40 @@
                     <execOnce name="execOnce2">
                         execOnce2Exec - param
                     </execOnce>
+
+                    <!--test 1 element pipe with skipped exec-->
+
+                    <execEachSequence type="audio" name="seqAudio">
+                        <pipe>
+                            <cycle>
+                                <execEachSegment name="seqAudioPipeCycleExecSeq">
+                                    <execOnce name="seqAudioPipeCycleExecSeqExecOnce" if="false">
+                                        seqAudioPipeCycleExecSeqExecOnceExec -param
+                                    </execOnce>
+                                </execEachSegment>
+                            </cycle>
+                            <execOnce name="seqAudioPipeExecOnce">
+                                seqAudioPipeExecOnceExec - param
+                            </execOnce>
+                        </pipe>
+                    </execEachSequence>
+
+                    <!--test empty (skipped all exec) pipe -->
+
+                    <execEachSequence type="video" name="seqSubtitle">
+                        <pipe>
+                            <cycle>
+                                <execEachSegment name="seqSubtitlePipeCycleExecSeq" if="false">
+                                    <execOnce name="seqSubtitlePipeCycleExecSeqExecOnce">
+                                        seqSubtitlePipeCycleExecSeqExecOnceExec -param
+                                    </execOnce>
+                                </execEachSegment>
+                            </cycle>
+                            <execOnce name="seqSubtitlePipeExecOnce" unless="true">
+                                seqSubtitlePipeExecOnceExec - param
+                            </execOnce>
+                        </pipe>
+                    </execEachSequence>
 
                 </formatConfiguration>
             </formatConfigurations>

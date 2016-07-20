@@ -182,13 +182,27 @@
         <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:complexType>
 
+    <xs:complexType name="execSimpleType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="required"/>
+                <xs:attribute type="xs:string" name="if" default="true"/>
+                <xs:attribute type="xs:string" name="unless" default="false"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="execComplexType">
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="if" default="true"/>
+        <xs:attribute type="xs:string" name="unless" default="false"/>
+    </xs:complexType>
     <!--
         Defines a Conversion Operation that is executed only once.
     -->
     <xs:complexType name="execOnceType">
         <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="name" use="required"/>
+            <xs:extension base="execSimpleType">
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -196,28 +210,34 @@
         Defines a Conversion Operation which is executed for each segment in a cycle
     -->
     <xs:complexType name="execEachSegmentSequenceType">
-        <xs:choice maxOccurs="unbounded" minOccurs="1">
-            <xs:element type="pipeSegmentType" name="pipe"/>
-            <xs:element type="execOnceType" name="execOnce"/>
-            <xs:element type="execEachSequenceType" name="execEachSequence"/>
-            <xs:element type="dynamicParameterConcatType" name="dynamicParameter"/>
-        </xs:choice>
-        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:complexContent>
+            <xs:extension base="execComplexType">
+                <xs:choice maxOccurs="unbounded" minOccurs="1">
+                    <xs:element type="pipeSegmentType" name="pipe"/>
+                    <xs:element type="execOnceType" name="execOnce"/>
+                    <xs:element type="execEachSequenceType" name="execEachSequence"/>
+                    <xs:element type="dynamicParameterConcatType" name="dynamicParameter"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <!--
         Defines a Conversion Operation which is executed for each sequence in a cycle
         for an essence type (audio/video/subtitle) for a particular segment
     -->
     <xs:complexType name="execEachSequenceType">
-        <xs:sequence>
-            <xs:choice maxOccurs="1" minOccurs="1">
-                <xs:element type="subPipeType" name="pipe"/>
-                <xs:element type="execOnceType" name="execOnce"/>
-            </xs:choice>
-            <xs:element type="dynamicParameterConcatType" name="dynamicParameter" maxOccurs="unbounded" minOccurs="0"/>
-        </xs:sequence>
-        <xs:attribute type="sequenceType" name="type" use="required"/>
-        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:complexContent>
+            <xs:extension base="execComplexType">
+                <xs:sequence>
+                    <xs:choice maxOccurs="1" minOccurs="1">
+                        <xs:element type="subPipeType" name="pipe"/>
+                        <xs:element type="execOnceType" name="execOnce"/>
+                    </xs:choice>
+                    <xs:element type="dynamicParameterConcatType" name="dynamicParameter" maxOccurs="unbounded" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute type="sequenceType" name="type" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <!--
         Defines a pipeline consisting of several Conversion Operation
@@ -246,28 +266,34 @@
         for an essence type (audio/video/subtitle)
     -->
     <xs:complexType name="execEachSequenceSegmentType">
-        <xs:choice maxOccurs="unbounded" minOccurs="1">
-            <xs:element type="pipeSequenceType" name="pipe"/>
-            <xs:element type="execOnceType" name="execOnce"/>
-            <xs:element type="execEachSegmentType" name="execEachSegment"/>
-            <xs:element type="dynamicParameterConcatType" name="dynamicParameter"/>
-        </xs:choice>
-        <xs:attribute type="sequenceType" name="type" use="required"/>
-        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:complexContent>
+            <xs:extension base="execComplexType">
+                <xs:choice maxOccurs="unbounded" minOccurs="1">
+                    <xs:element type="pipeSequenceType" name="pipe"/>
+                    <xs:element type="execOnceType" name="execOnce"/>
+                    <xs:element type="execEachSegmentType" name="execEachSegment"/>
+                    <xs:element type="dynamicParameterConcatType" name="dynamicParameter"/>
+                </xs:choice>
+                <xs:attribute type="sequenceType" name="type" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <!--
         Defines a Conversion Operation which is executed for each segment in a cycle
         for the given sequence
     -->
     <xs:complexType name="execEachSegmentType">
-        <xs:sequence>
-            <xs:choice maxOccurs="1" minOccurs="1">
-                <xs:element type="subPipeType" name="pipe"/>
-                <xs:element type="execOnceType" name="execOnce"/>
-            </xs:choice>
-            <xs:element type="dynamicParameterConcatType" name="dynamicParameter" maxOccurs="unbounded" minOccurs="0"/>
-        </xs:sequence>
-        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:complexContent>
+            <xs:extension base="execComplexType">
+                <xs:sequence>
+                    <xs:choice maxOccurs="1" minOccurs="1">
+                        <xs:element type="subPipeType" name="pipe"/>
+                        <xs:element type="execOnceType" name="execOnce"/>
+                    </xs:choice>
+                    <xs:element type="dynamicParameterConcatType" name="dynamicParameter" maxOccurs="unbounded" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <!--
         Defines a pipeline consisting of several Conversion Operation

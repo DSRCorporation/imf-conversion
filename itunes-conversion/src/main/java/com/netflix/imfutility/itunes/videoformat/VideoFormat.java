@@ -35,4 +35,6 @@ public interface VideoFormat {
     double getFps();
 
     ScanType getScanType();
+
+    Long getMaxDuration();
 }

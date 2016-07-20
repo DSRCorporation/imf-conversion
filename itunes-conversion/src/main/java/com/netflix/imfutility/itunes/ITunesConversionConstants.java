@@ -29,4 +29,5 @@ public final class ITunesConversionConstants {
 
     // 1.1 dynamic parameters:
     public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "output";
+    public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
 }

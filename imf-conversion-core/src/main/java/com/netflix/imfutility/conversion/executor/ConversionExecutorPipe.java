@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -70,12 +70,18 @@ public class ConversionExecutorPipe extends AbstractConversionExecutor {
 
 
     private OperationInfo getExecOnceOperation(ExecOnceType execOnce) {
-        return new OperationInfo(execOnce.getValue(), execOnce.getName(), ContextInfo.EMPTY);
+        return new OperationInfo(execOnce.getValue(), execOnce.getName(), ContextInfo.EMPTY,
+                skipOperationResolver
+                        .setContextInfo(ContextInfo.EMPTY)
+                        .isSkip(execOnce));
     }
 
     private List<OperationInfo> getSubPipeOperations(SubPipeType subPipe) {
         return subPipe.getExecOnce().stream()
-                .map(execOnce -> new OperationInfo(execOnce.getValue(), execOnce.getName(), ContextInfo.EMPTY))
+                .map(execOnce -> new OperationInfo(execOnce.getValue(), execOnce.getName(), ContextInfo.EMPTY,
+                        skipOperationResolver
+                                .setContextInfo(ContextInfo.EMPTY)
+                                .isSkip(execOnce)))
                 .collect(Collectors.toList());
     }
 

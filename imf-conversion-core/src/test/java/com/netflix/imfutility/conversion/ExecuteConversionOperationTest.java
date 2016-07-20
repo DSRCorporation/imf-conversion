@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -86,103 +86,190 @@ public class ExecuteConversionOperationTest {
     public void testExec() throws Exception {
         conversionEngine.convert(conversionProvider.getFormatConfigurationType("1"), contextProvider);
 
-        assertEquals("START: External Process 1: execOnce1, ExecuteOnceStrategy, execOnce1Exec ERR_LOG",
+        assertEquals("START: External Process 1: execOnce1, TestExecuteOnceStrategy, execOnce1Exec ERR_LOG",
                 executorLogger.getNext());
-        assertEquals("FINISH: External Process 1: execOnce1, ExecuteOnceStrategy, execOnce1Exec ERR_LOG",
+        assertEquals("FINISH: External Process 1: execOnce1, TestExecuteOnceStrategy, execOnce1Exec ERR_LOG",
                 executorLogger.getNext());
 
         // Start Sequence 0:
 
-        assertEquals("START: External Process 2: seqVideoExecOnce1, ExecuteOnceStrategy, seqVideoExecOnce1Exec ERR_LOG",
+        assertEquals("START: External Process 2: seqVideoExecOnce1, TestExecuteOnceStrategy, seqVideoExecOnce1Exec ERR_LOG",
                 executorLogger.getNext());
-        assertEquals("FINISH: External Process 2: seqVideoExecOnce1, ExecuteOnceStrategy, seqVideoExecOnce1Exec ERR_LOG",
+        assertEquals("FINISH: External Process 2: seqVideoExecOnce1, TestExecuteOnceStrategy, seqVideoExecOnce1Exec ERR_LOG",
+                executorLogger.getNext());
+        assertEquals("SKIPPED: seqVideoExecOnceSkip [ seqVideoExecOnceSkipExec - param ]",
                 executorLogger.getNext());
 
         // start pipe
-        assertEquals("START: External Process 3: seqVideoPipeExecOnce1, ExecutePipeStrategy, seqVideoPipeExecOnce1Exec PIPE",
+
+        // skip operations
+        // we have 2 segments and 2 resources in each segment which is repeated to 2 times
+        for (int i = 1; i <= SEGMENT_COUNT * RESOURCE_COUNT * REPEAT_COUNT; i++) {
+            assertEquals("SKIPPED: seqVideoPipeCycleExecSegmentSkip [ seqVideoPipeCycleExecSegmentSkipExec - param ]",
+                    executorLogger.getNext());
+        }
+        assertEquals("SKIPPED: seqVideoPipeExecOnceSkip [ seqVideoPipeExecOnceSkipExec - param ]",
                 executorLogger.getNext());
-        assertEquals("START: External Process 4: seqVideoPipeExecOnce2, ExecutePipeStrategy, seqVideoPipeExecOnce2Exec ERR_LOG",
+
+        //  start
+
+        assertEquals("START: External Process 3: seqVideoPipeExecOnce1, TestExecutePipeStrategy, seqVideoPipeExecOnce1Exec PIPE",
+                executorLogger.getNext());
+        assertEquals("START: External Process 4: seqVideoPipeExecOnce2, TestExecutePipeStrategy, seqVideoPipeExecOnce2Exec ERR_LOG",
                 executorLogger.getNext());
 
         // pipe cycle
-        assertEquals("START: External Process 5: seqVideoPipeCycleExecOnce1, ExecutePipeStrategy, seqVideoPipeCycleExecOnce1Exec PIPE",
+        assertEquals("START: External Process 5: seqVideoPipeCycleExecOnce1, TestExecutePipeStrategy, seqVideoPipeCycleExecOnce1Exec PIPE",
                 executorLogger.getNext());
-        assertEquals("FINISH: External Process 5: seqVideoPipeCycleExecOnce1, ExecutePipeStrategy, seqVideoPipeCycleExecOnce1Exec PIPE",
+        assertEquals("FINISH: External Process 5: seqVideoPipeCycleExecOnce1, TestExecutePipeStrategy, seqVideoPipeCycleExecOnce1Exec PIPE",
                 executorLogger.getNext());
 
         // we have 2 segments and 2 resources in each segment which is repeated to 2 times
         for (int i = 1; i <= SEGMENT_COUNT * RESOURCE_COUNT * REPEAT_COUNT; i++) {
             assertEquals(String.format(
-                    "START: External Process %d: seqVideoPipeCycleExecSegment, ExecutePipeStrategy, seqVideoPipeCycleExecSegmentExec PIPE",
+                    "START: External Process %d: seqVideoPipeCycleExecSegment, TestExecutePipeStrategy, seqVideoPipeCycleExecSegmentExec PIPE",
                     5 + i),
                     executorLogger.getNext());
             assertEquals(String.format(
-                    "FINISH: External Process %d: seqVideoPipeCycleExecSegment, ExecutePipeStrategy, seqVideoPipeCycleExecSegmentExec PIPE",
+                    "FINISH: External Process %d: seqVideoPipeCycleExecSegment, TestExecutePipeStrategy, seqVideoPipeCycleExecSegmentExec PIPE",
                     5 + i),
                     executorLogger.getNext());
         }
 
         // finish pipe
-        assertEquals("FINISH: External Process 3: seqVideoPipeExecOnce1, ExecutePipeStrategy, seqVideoPipeExecOnce1Exec PIPE",
+        assertEquals("FINISH: External Process 3: seqVideoPipeExecOnce1, TestExecutePipeStrategy, seqVideoPipeExecOnce1Exec PIPE",
                 executorLogger.getNext());
-        assertEquals("FINISH: External Process 4: seqVideoPipeExecOnce2, ExecutePipeStrategy, seqVideoPipeExecOnce2Exec ERR_LOG",
+        assertEquals("FINISH: External Process 4: seqVideoPipeExecOnce2, TestExecutePipeStrategy, seqVideoPipeExecOnce2Exec ERR_LOG",
                 executorLogger.getNext());
 
-        assertEquals("START: External Process 14: seqVideoExecOnce2, ExecuteOnceStrategy, seqVideoExecOnce2Exec ERR_LOG",
+        assertEquals("START: External Process 14: seqVideoExecOnce2, TestExecuteOnceStrategy, seqVideoExecOnce2Exec ERR_LOG",
                 executorLogger.getNext());
-        assertEquals("FINISH: External Process 14: seqVideoExecOnce2, ExecuteOnceStrategy, seqVideoExecOnce2Exec ERR_LOG",
+        assertEquals("FINISH: External Process 14: seqVideoExecOnce2, TestExecuteOnceStrategy, seqVideoExecOnce2Exec ERR_LOG",
                 executorLogger.getNext());
 
         // End Sequence 0:
 
         // Start Sequence 1:
 
-        assertEquals("START: External Process 15: seqVideoExecOnce1, ExecuteOnceStrategy, seqVideoExecOnce1Exec ERR_LOG",
+        assertEquals("START: External Process 15: seqVideoExecOnce1, TestExecuteOnceStrategy, seqVideoExecOnce1Exec ERR_LOG",
                 executorLogger.getNext());
-        assertEquals("FINISH: External Process 15: seqVideoExecOnce1, ExecuteOnceStrategy, seqVideoExecOnce1Exec ERR_LOG",
+        assertEquals("FINISH: External Process 15: seqVideoExecOnce1, TestExecuteOnceStrategy, seqVideoExecOnce1Exec ERR_LOG",
+                executorLogger.getNext());
+        assertEquals("SKIPPED: seqVideoExecOnceSkip [ seqVideoExecOnceSkipExec - param ]",
                 executorLogger.getNext());
 
         // start pipe
-        assertEquals("START: External Process 16: seqVideoPipeExecOnce1, ExecutePipeStrategy, seqVideoPipeExecOnce1Exec PIPE",
+
+        // skip operations
+        // we have 2 segments and 2 resources in each segment which is repeated to 2 times
+        for (int i = 1; i <= SEGMENT_COUNT * RESOURCE_COUNT * REPEAT_COUNT; i++) {
+            assertEquals("SKIPPED: seqVideoPipeCycleExecSegmentSkip [ seqVideoPipeCycleExecSegmentSkipExec - param ]",
+                    executorLogger.getNext());
+        }
+        assertEquals("SKIPPED: seqVideoPipeExecOnceSkip [ seqVideoPipeExecOnceSkipExec - param ]",
                 executorLogger.getNext());
-        assertEquals("START: External Process 17: seqVideoPipeExecOnce2, ExecutePipeStrategy, seqVideoPipeExecOnce2Exec ERR_LOG",
+
+        //  start
+
+        assertEquals("START: External Process 16: seqVideoPipeExecOnce1, TestExecutePipeStrategy, seqVideoPipeExecOnce1Exec PIPE",
+                executorLogger.getNext());
+        assertEquals("START: External Process 17: seqVideoPipeExecOnce2, TestExecutePipeStrategy, seqVideoPipeExecOnce2Exec ERR_LOG",
                 executorLogger.getNext());
 
         // pipe cycle
-        assertEquals("START: External Process 18: seqVideoPipeCycleExecOnce1, ExecutePipeStrategy, seqVideoPipeCycleExecOnce1Exec PIPE",
+        assertEquals("START: External Process 18: seqVideoPipeCycleExecOnce1, TestExecutePipeStrategy, seqVideoPipeCycleExecOnce1Exec PIPE",
                 executorLogger.getNext());
-        assertEquals("FINISH: External Process 18: seqVideoPipeCycleExecOnce1, ExecutePipeStrategy, seqVideoPipeCycleExecOnce1Exec PIPE",
+        assertEquals("FINISH: External Process 18: seqVideoPipeCycleExecOnce1, TestExecutePipeStrategy, seqVideoPipeCycleExecOnce1Exec PIPE",
                 executorLogger.getNext());
 
         // we have 2 segments and 2 resources in each segment which is repeated to 2 times
         for (int i = 1; i <= SEGMENT_COUNT * RESOURCE_COUNT * REPEAT_COUNT; i++) {
             assertEquals(String.format(
-                    "START: External Process %d: seqVideoPipeCycleExecSegment, ExecutePipeStrategy, seqVideoPipeCycleExecSegmentExec PIPE",
+                    "START: External Process %d: seqVideoPipeCycleExecSegment, TestExecutePipeStrategy, seqVideoPipeCycleExecSegmentExec PIPE",
                     18 + i),
                     executorLogger.getNext());
             assertEquals(String.format(
-                    "FINISH: External Process %d: seqVideoPipeCycleExecSegment, ExecutePipeStrategy, seqVideoPipeCycleExecSegmentExec PIPE",
+                    "FINISH: External Process %d: seqVideoPipeCycleExecSegment, TestExecutePipeStrategy, seqVideoPipeCycleExecSegmentExec PIPE",
                     18 + i),
                     executorLogger.getNext());
         }
 
         // finish pipe
-        assertEquals("FINISH: External Process 16: seqVideoPipeExecOnce1, ExecutePipeStrategy, seqVideoPipeExecOnce1Exec PIPE",
+        assertEquals("FINISH: External Process 16: seqVideoPipeExecOnce1, TestExecutePipeStrategy, seqVideoPipeExecOnce1Exec PIPE",
                 executorLogger.getNext());
-        assertEquals("FINISH: External Process 17: seqVideoPipeExecOnce2, ExecutePipeStrategy, seqVideoPipeExecOnce2Exec ERR_LOG",
+        assertEquals("FINISH: External Process 17: seqVideoPipeExecOnce2, TestExecutePipeStrategy, seqVideoPipeExecOnce2Exec ERR_LOG",
                 executorLogger.getNext());
 
-        assertEquals("START: External Process 27: seqVideoExecOnce2, ExecuteOnceStrategy, seqVideoExecOnce2Exec ERR_LOG",
+        assertEquals("START: External Process 27: seqVideoExecOnce2, TestExecuteOnceStrategy, seqVideoExecOnce2Exec ERR_LOG",
                 executorLogger.getNext());
-        assertEquals("FINISH: External Process 27: seqVideoExecOnce2, ExecuteOnceStrategy, seqVideoExecOnce2Exec ERR_LOG",
+        assertEquals("FINISH: External Process 27: seqVideoExecOnce2, TestExecuteOnceStrategy, seqVideoExecOnce2Exec ERR_LOG",
                 executorLogger.getNext());
 
         // End Sequence 1
 
-        assertEquals("START: External Process 28: execOnce2, ExecuteOnceStrategy, execOnce2Exec ERR_LOG",
+        assertEquals("START: External Process 28: execOnce2, TestExecuteOnceStrategy, execOnce2Exec ERR_LOG",
                 executorLogger.getNext());
-        assertEquals("FINISH: External Process 28: execOnce2, ExecuteOnceStrategy, execOnce2Exec ERR_LOG",
+        assertEquals("FINISH: External Process 28: execOnce2, TestExecuteOnceStrategy, execOnce2Exec ERR_LOG",
                 executorLogger.getNext());
+
+        //  Test sequence with 1 noncycle exec (other must be skipped)
+
+        // Start Sequence 0:
+
+        // start pipe
+        // skip operations
+        // we have 2 segments and 2 resources in each segment which is repeated to 2 times
+        for (int i = 1; i <= SEGMENT_COUNT * RESOURCE_COUNT * REPEAT_COUNT; i++) {
+            assertEquals("SKIPPED: seqAudioPipeCycleExecSeq [ seqAudioPipeCycleExecSeqExecOnceExec -param ]",
+                    executorLogger.getNext());
+        }
+        //start
+        assertEquals("START: External Process 29: seqAudioPipeExecOnce, TestExecutePipeStrategy, seqAudioPipeExecOnceExec ERR_LOG",
+                executorLogger.getNext());
+        // finish pipe
+        assertEquals("FINISH: External Process 29: seqAudioPipeExecOnce, TestExecutePipeStrategy, seqAudioPipeExecOnceExec ERR_LOG",
+                executorLogger.getNext());
+
+        // End Sequence 0
+
+        // Start Sequence 1:
+
+        // start pipe
+        // skip operations
+        // we have 2 segments and 2 resources in each segment which is repeated to 2 times
+        for (int i = 1; i <= SEGMENT_COUNT * RESOURCE_COUNT * REPEAT_COUNT; i++) {
+            assertEquals("SKIPPED: seqAudioPipeCycleExecSeq [ seqAudioPipeCycleExecSeqExecOnceExec -param ]",
+                    executorLogger.getNext());
+        }
+        //start
+        assertEquals("START: External Process 30: seqAudioPipeExecOnce, TestExecutePipeStrategy, seqAudioPipeExecOnceExec ERR_LOG",
+                executorLogger.getNext());
+        // finish pipe
+        assertEquals("FINISH: External Process 30: seqAudioPipeExecOnce, TestExecutePipeStrategy, seqAudioPipeExecOnceExec ERR_LOG",
+                executorLogger.getNext());
+
+        // End Sequence 1
+
+        //  Test sequence with all skipped operations
+        //  Log skipped operations only
+
+        // Start Sequence 0:
+        for (int i = 1; i <= SEGMENT_COUNT * RESOURCE_COUNT * REPEAT_COUNT; i++) {
+            assertEquals("SKIPPED: seqSubtitlePipeCycleExecSeq [ seqSubtitlePipeCycleExecSeqExecOnceExec -param ]",
+                    executorLogger.getNext());
+        }
+        assertEquals("SKIPPED: seqSubtitlePipeExecOnce [ seqSubtitlePipeExecOnceExec - param ]",
+                executorLogger.getNext());
+        // End Sequence 0
+
+        // Start Sequence 1:
+        for (int i = 1; i <= SEGMENT_COUNT * RESOURCE_COUNT * REPEAT_COUNT; i++) {
+            assertEquals("SKIPPED: seqSubtitlePipeCycleExecSeq [ seqSubtitlePipeCycleExecSeqExecOnceExec -param ]",
+                    executorLogger.getNext());
+        }
+        assertEquals("SKIPPED: seqSubtitlePipeExecOnce [ seqSubtitlePipeExecOnceExec - param ]",
+                executorLogger.getNext());
+        // End Sequence 1
 
         assertFalse("There are more executed processes than expected!", executorLogger.hasNext());
     }
