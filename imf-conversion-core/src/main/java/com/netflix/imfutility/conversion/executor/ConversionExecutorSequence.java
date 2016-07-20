@@ -188,15 +188,15 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
                         .setResourceUuid(resourceUuid)
                         .build();
 
-                    // executable: operation info
-                    if (execSegment.getExecOnce() != null) {
-                        OperationInfo operationInfo = new OperationInfo(execSegment.getExecOnce().getValue(),
-                                execSegment.getName(), contextInfo,
-                                skipOperationResolver
-                                        .setContextInfo(contextInfo)
-                                        .isSkip(execSegment.getExecOnce(), execSegment, execEachSeq));
-                        result.add(operationInfo);
-                    }
+                // executable: operation info
+                if (execSegment.getExecOnce() != null) {
+                    OperationInfo operationInfo = new OperationInfo(execSegment.getExecOnce().getValue(),
+                            execSegment.getName(), contextInfo,
+                            skipOperationResolver
+                                    .setContextInfo(contextInfo)
+                                    .isSkip(execSegment.getExecOnce(), execSegment, execEachSeq));
+                    result.add(operationInfo);
+                }
 
                 // dynamic parameter
                 if (execSegment.getDynamicParameter() != null) {
@@ -226,18 +226,18 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
                         .setResourceUuid(resourceUuid)
                         .build();
 
-                    // executable: operation info
-                    if (execSegment.getPipe() != null) {
-                        List<OperationInfo> pipeOperations = new ArrayList<>();
-                        for (ExecOnceType execOnceType : execSegment.getPipe().getExecOnce()) {
-                            OperationInfo operationInfo = new OperationInfo(execOnceType.getValue(), execOnceType.getName(), contextInfo,
-                                    skipOperationResolver
-                                            .setContextInfo(contextInfo)
-                                            .isSkip(execOnceType, execSegment, execEachSeq));
-                            pipeOperations.add(operationInfo);
-                        }
-                        result.add(pipeOperations);
+                // executable: operation info
+                if (execSegment.getPipe() != null) {
+                    List<OperationInfo> pipeOperations = new ArrayList<>();
+                    for (ExecOnceType execOnceType : execSegment.getPipe().getExecOnce()) {
+                        OperationInfo operationInfo = new OperationInfo(execOnceType.getValue(), execOnceType.getName(), contextInfo,
+                                skipOperationResolver
+                                        .setContextInfo(contextInfo)
+                                        .isSkip(execOnceType, execSegment, execEachSeq));
+                        pipeOperations.add(operationInfo);
                     }
+                    result.add(pipeOperations);
+                }
 
                 // dynamic parameter
                 if (execSegment.getDynamicParameter() != null) {

@@ -30,11 +30,4 @@ public interface IDefaultTools {
      */
     String getImfValidationTool();
 
-    /**
-     * A path to conversion.xml.
-     *
-     * @return a path to conversion.xml
-     */
-    String getConversionXml();
-
 }

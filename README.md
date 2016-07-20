@@ -50,17 +50,17 @@ The distribution includes
 1. [Done Once] Prepare external tools used for conversion.
 2. [Done Once; edit when needed] Prepare config.xml.
 3. Run Utility with appropriate command line arguments to generate metadata.xml to enter DPP metadata values.
-    * --format [-f] dpp
+    * dpp
     * --mode [-m] metadata
     * --output [-o] metadata.xml
 4. Enter required DPP metadata values manually ([DPP_MMS_TechMetadata](http://www.amwa.tv/downloads/specifications/DPP_MMS_TechMetadata_V1.1_2013-10-08.xls)).
 5. [Optional] Run Utility with appropriate command line arguments to generate audiomap.xml to map input audio tracks and channels to the output ones depending on the _AudioTrackLayout_ parameter set in metadata.xml.
-    * --format [-f] dpp
+    * dpp
     * --mode [-m] audiomap
     * --output [-o] audiomap.xml
 6. [Optional] Edit audiomap.xml to map input audio streams and channels. 
 7. Run conversion job:
-    * --format [-f] dpp
+    * dpp
     * --mode [-m] convert (may be omitted as it's a default mode)
     * --config [-c] config.xml
     * --metadata metadata.xml
@@ -68,6 +68,7 @@ The distribution includes
     * --imp path-to-imp-folder (optional: can be set in config.xml)
     * --cpl CPL.xml (optional: can be set in config.xml)
     * --working-dir [-w] path-to-output-folder (optional: can be set in config.xml)
+    * -- output [-o] the output .mxf file name without .mxf extension (optional: if not set, 'output' default name will be used).
 8. An output flat file is created under the specified output directory (-w) and is called _output.mxf_.
 9. Logs:
     * The current conversion job log file: _/logs/imf-utility.log_.
@@ -188,7 +189,7 @@ There is a Windows distribution there which can be used out of the box on Window
 * The following command generates a sample metadata.xml
     
 ```
-imf-conversion-utility -f dpp -m metadata -o metadata.xml
+imf-conversion-utility dpp -m metadata -o metadata.xml
 ```
 
 * The user can enter the values and they will be applied for the output MXF.
@@ -201,7 +202,7 @@ imf-conversion-utility -f dpp -m metadata -o metadata.xml
 * If no audiomap.xml is specified, then default mapping will be used (each input audio track/channel will be mapped  to the output ones subsequently; remaining output tracks will be filled with silence).
 * The following command generates a sample audiomap.xml
 ```
-   imf-conversion-utility -f dpp -m audiomap -o audiomap.xml
+   imf-conversion-utility dpp -m audiomap -o audiomap.xml
 ```
 * The number of _EBUTrack_ nodes must correspond to the number of output audio tracks defined by the selected layout.
 * _EBUTrack_ defines an input channel (of a CPL virtual track, or CPL audio sequence) to be used for the output audio track.
@@ -240,16 +241,16 @@ imf-conversion-utility -f dpp -m metadata -o metadata.xml
 
 * If IMP, CPL and working directory are set in config.xml, and no custom audiomap is needed, then run the following command:
 ```
-imf-conversion-utility -f dpp -c path-to/config.xml -m convert --metadata path-to/metadata.xml
+imf-conversion-utility dpp -c path-to/config.xml -m convert --metadata path-to/metadata.xml -o outputName
 ```
 * If IMP, CPL and working directory are set in config.xml, and a custom audiomap is needed, then run the following command:
 ```
-imf-conversion-utility -f dpp -c path-to/config.xml -m convert --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml
+imf-conversion-utility dpp -c path-to/config.xml -m convert --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml -o outputName
 ```
 
 * A full command if IMP, CPL, and working directory are specified via command line arguments (the values from command line override values from config.xml):
 ```
-imf-conversion-utility -f dpp -c path-to/config.xml -m convert --imp path-to/imp --cpl CPL.xml -w path-to/working-sir --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml
+imf-conversion-utility dpp -c path-to/config.xml -m convert --imp path-to/imp --cpl CPL.xml -w path-to/working-sir --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml -o outputName
 ```
 
 #### Output and Logs
