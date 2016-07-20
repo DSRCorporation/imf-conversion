@@ -119,7 +119,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     protected void postConvert() throws IOException, XmlParsingException {
         logger.info("Conversion output:");
         String fileName = getOutputName() + ".mxf";
-        logger.info("   {}.mxf", new File(inputParameters.getWorkingDirFile(), fileName).getAbsoluteFile());
+        logger.info("   {}", new File(inputParameters.getWorkingDirFile(), fileName).getAbsoluteFile());
         int subtitleCount = contextProvider.getSequenceContext().getSequenceCount(SequenceType.SUBTITLE);
         for (int i = 0; i < subtitleCount; i++) {
             fileName = i + getOutputName() + ".stl";
