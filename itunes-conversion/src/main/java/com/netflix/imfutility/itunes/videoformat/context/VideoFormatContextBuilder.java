@@ -40,7 +40,6 @@ import java.util.Collection;
 
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters.DURATION_EDIT_UNIT;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters.EDIT_RATE;
-import static com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters.REPEAT_COUNT;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters.FRAME_RATE;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters.HEIGHT;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters.WIDTH;
@@ -117,11 +116,9 @@ public class VideoFormatContextBuilder {
                 .getParameterValue(EDIT_RATE, contextInfo));
         BigInteger durationEU = new BigInteger(resourceContext
                 .getParameterValue(DURATION_EDIT_UNIT, contextInfo));
-        BigInteger repeat = new BigInteger(resourceContext
-                .getParameterValue(REPEAT_COUNT, contextInfo));
 
         //  to get time in millis
-        return ConversionHelper.toNewEditRate(durationEU, editRate, new BigFraction(1000)) * repeat.longValue();
+        return ConversionHelper.toMilliSeconds(durationEU, editRate);
     }
 
 }
