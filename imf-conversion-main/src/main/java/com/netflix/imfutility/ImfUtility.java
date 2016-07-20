@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -21,10 +21,13 @@ package com.netflix.imfutility;
 import com.lexicalscope.jewel.cli.CliFactory;
 import com.lexicalscope.jewel.cli.HelpRequestedException;
 import com.netflix.imfutility.dpp.DppFormatProcessor;
+import com.netflix.imfutility.dpp.inputparameters.DppCmdLineArgs;
 import com.netflix.imfutility.inputparameters.DppTools;
-import com.netflix.imfutility.inputparameters.ImfUtilityAllCmdLineArgs;
+import com.netflix.imfutility.inputparameters.ImfUtilityCmdLineArgs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 /**
  * The main class.
@@ -42,24 +45,37 @@ public final class ImfUtility {
 
     public static void main(String... args) {
         try {
-            LOGGER.info("Parsing command line arguments...");
-            ImfUtilityAllCmdLineArgs imfArgs = CliFactory.parseArguments(ImfUtilityAllCmdLineArgs.class, args);
-            LOGGER.info("Parsed command line arguments: OK\n");
+            if (args == null || args.length == 0 || args[0] == null) {
+                throw new IllegalArgumentException("Utility expected at least one argument");
+            }
 
-            switch (imfArgs.getFormat()) {
+            Format format = Format.fromName(args[0].toLowerCase());
+
+            if (format == null) {
+                throw new ConversionException(String.format("Unsupported format '%s'", args[0]));
+            }
+
+            int exitCode = 0;
+            switch (format) {
                 case dpp:
-                    int exitCode = new DppFormatProcessor(new DppTools()).process(imfArgs);
+                    exitCode = new DppFormatProcessor(new DppTools()).process(parseArgs(DppCmdLineArgs.class, args));
                     System.exit(exitCode);
                     break;
                 default:
-                    throw new ConversionException("Unsupported format " + imfArgs.getFormat());
+                    throw new ConversionException(String.format("Unsupported format '%s'", args[0]));
             }
 
         } catch (HelpRequestedException e) {
             System.out.println(e.getMessage());
             System.exit(0);
         }
+    }
 
+    private static <T extends ImfUtilityCmdLineArgs> T parseArgs(Class<T> clazz, String[] args) {
+        LOGGER.info("Parsing command line arguments...");
+        T imfArgs = CliFactory.parseArguments(clazz, Arrays.copyOfRange(args, 1, args.length));
+        LOGGER.info("Parsed command line arguments: OK\n");
+        return imfArgs;
     }
 
 }
