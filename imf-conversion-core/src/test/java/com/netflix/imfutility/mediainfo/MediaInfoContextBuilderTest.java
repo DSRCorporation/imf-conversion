@@ -36,6 +36,7 @@ import com.netflix.imfutility.util.conversion.executor.TestExecuteStrategyFactor
 import com.netflix.imfutility.util.conversion.executor.TestExecutorLogger;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -88,14 +89,17 @@ public class MediaInfoContextBuilderTest {
                 .build();
     }
 
-
+    // currently we do not validate according to XSD as sometimes the output may contain not all required attributes
     @Test(expected = XmlParsingException.class)
+    @Ignore
     public void testParseInvalidXsdVideo() throws Exception {
         new TestMediaInfoContextBuilder(MediaInfoUtils.getInvalidXsdMediaInfoVideo(), MediaInfoUtils.getCorrectMediaInfoAudio())
                 .build();
     }
 
+    // currently we do not validate according to XSD as sometimes the output may contain not all required attributes
     @Test(expected = XmlParsingException.class)
+    @Ignore
     public void testParseInvalidXsdAudio() throws Exception {
         new TestMediaInfoContextBuilder(MediaInfoUtils.getCorrectMediaInfoVideo(), MediaInfoUtils.getInvalidXsdMediaInfoAudio())
                 .build();
@@ -276,13 +280,13 @@ public class MediaInfoContextBuilderTest {
         // essence
         ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
         String essenceAudio1 = resourceContext.getParameterValue(ResourceContextParameters.ESSENCE,
-                createResourceContextInfo(0, 0, SequenceType.AUDIO, 0));
+                createResourceContextInfo(0, 0, SequenceType.AUDIO, 0, 0));
         String essenceAudio2 = resourceContext.getParameterValue(ResourceContextParameters.ESSENCE,
-                createResourceContextInfo(1, 1, SequenceType.AUDIO, 1));
+                createResourceContextInfo(1, 1, SequenceType.AUDIO, 1, 0));
         String essenceVideo1 = resourceContext.getParameterValue(ResourceContextParameters.ESSENCE,
-                createResourceContextInfo(0, 0, SequenceType.VIDEO, 0));
+                createResourceContextInfo(0, 0, SequenceType.VIDEO, 0, 0));
         String essenceVideo2 = resourceContext.getParameterValue(ResourceContextParameters.ESSENCE,
-                createResourceContextInfo(1, 1, SequenceType.VIDEO, 1));
+                createResourceContextInfo(1, 1, SequenceType.VIDEO, 1, 0));
 
         // dynamic parameter for each mediaInfo.xml created for each essence
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
@@ -334,12 +338,12 @@ public class MediaInfoContextBuilderTest {
                 try {
                     switch (contextInfo.getSequenceType()) {
                         case AUDIO:
-                            outputFile = contextInfo.getResourceUuid().getUuid().contains("0")
+                            outputFile = contextInfo.getResourceUuid().getUuid().contains("-0-")
                                     ? MediaInfoUtils.getCorrectMediaInfoAudio()
                                     : MediaInfoUtils.getCorrectMediaInfoAudio2();
                             break;
                         case VIDEO:
-                            outputFile = contextInfo.getResourceUuid().getUuid().contains("0")
+                            outputFile = contextInfo.getResourceUuid().getUuid().contains("-0-")
                                     ? MediaInfoUtils.getCorrectMediaInfoVideo()
                                     : MediaInfoUtils.getCorrectMediaInfoVideo2();
                             break;

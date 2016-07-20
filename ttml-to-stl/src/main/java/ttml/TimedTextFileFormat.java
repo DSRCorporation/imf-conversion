@@ -53,13 +53,9 @@ public interface TimedTextFileFormat {
 	/**
 	 * This methods receives the path to a file, parses it, and returns a TimedTextObject
 	 * 
-	 * @param path String that contains the path to the file
 	 * @return TimedTextObject representing the parsed file
 	 * @throws java.io.IOException when having trouble reading the file from the given path
 	 */
-	TimedTextObject parseFile(String fileName, InputStream is) throws IOException, FatalParsingException;
-
-
 	TimedTextObject parseFile(String fileName, InputStream is, String startTC, String endTC, String offsetTC) throws IOException, FatalParsingException;
 	
 	/**

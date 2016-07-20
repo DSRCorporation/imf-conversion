@@ -111,39 +111,42 @@ public abstract class AbstractFormatBuilder {
             // 5. validate input parameters
             validateInputParameters();
 
-            // 6. clear working dir
+            // 6. create working sir if not exist
+            createWorkingDir();
+
+            // 7. clear working dir
             if (isCleanWorkingDir()) {
                 cleanWorkingDir();
             }
 
-            // 7. create logs dir in the working dir
+            // 8. create logs dir in the working dir
             createLogsDir();
 
-            // 8. init template parameter contexts
+            // 9. init template parameter contexts
             initContexts();
 
-            // 9. fill dynamic context
+            // 10. fill dynamic context
             buildDynamicContext();
 
-            // 10. perform validation of the input IMP and CPL
+            // 11. perform validation of the input IMP and CPL
             validateImpAndCpl();
 
-            // 11. build IMF CPL contexts
+            // 12. build IMF CPL contexts
             buildCplContext();
 
-            // 12. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
+            // 13. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
             buildMediaInfoContext();
 
-            // 13. select a conversion config within format.
+            // 14. select a conversion config within format.
             selectConversionConfig();
 
-            // 14. check whether we can silently convert to destination parameters
+            // 15. check whether we can silently convert to destination parameters
             checkForSilentConversion();
 
-            // 15. convert
+            // 16. convert
             doConvert();
 
-            // 16. delete tmp files.
+            // 17. delete tmp files.
             if (isDeleteTmpFilesOnExit()) {
                 deleteTmpFiles();
             }
@@ -255,6 +258,18 @@ public abstract class AbstractFormatBuilder {
         logger.info("Checking required input parameters for conversion...");
         ImfUtilityInputParametersValidator.validateInputParameters(inputParameters);
         logger.info("Checked required input parameters for conversion: OK\n");
+    }
+
+    private void createWorkingDir() throws IOException {
+        logger.info("Creating working directory...");
+        if (!inputParameters.getWorkingDirFile().exists()) {
+            boolean result = inputParameters.getWorkingDirFile().mkdirs();
+            if (!result) {
+                throw new ConversionException(
+                        String.format("Could not create working directory '%s'", inputParameters.getWorkingDirFile().getAbsolutePath()));
+            }
+        }
+        logger.info("Created working directory: OK\n");
     }
 
     private void cleanWorkingDir() throws IOException {

@@ -197,5 +197,11 @@ task copyDistr(type: Copy) {
     from 'imf-conversion-main/build/distributions'
     into "$buildDir"
 }
+task copyInstall(type: Copy) {
+    from 'imf-conversion-main/build/install'
+    into 'install'
+}
+
 copyDistr.dependsOn(subprojects.build)
-build.finalizedBy(copyDistr)
+copyInstall.dependsOn(':imf-conversion-utility:installDist')
+build.finalizedBy(copyDistr, copyInstall)

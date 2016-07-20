@@ -29,6 +29,11 @@ public final class ImpUtils {
     private ImpUtils() {
     }
 
+    public static File getCplSequence() throws URISyntaxException {
+        //noinspection ConstantConditions,ConstantConditions
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL-sequence.xml").toURI());
+    }
+
     public static File getCorrectCpl() throws URISyntaxException {
         //noinspection ConstantConditions,ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL.xml").toURI());

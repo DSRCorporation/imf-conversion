@@ -175,14 +175,13 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
             // process operations for each resource within segment and sequence
             ResourceKey resKey = ResourceKey.create(currentSegmentUuid, seqUuid, seqType);
             for (ResourceUUID resourceUuid : contextProvider.getResourceContext().getUuids(resKey)) {
-                for (long i = 0; i < contextProvider.getResourceContext().getRepeatCount(resKey, resourceUuid); i++) {
-                    // context info
-                    ContextInfo contextInfo = new ContextInfoBuilder()
-                            .setSequenceUuid(seqUuid)
-                            .setSequenceType(seqType)
-                            .setSegmentUuid(currentSegmentUuid)
-                            .setResourceUuid(resourceUuid)
-                            .build();
+                // context info
+                ContextInfo contextInfo = new ContextInfoBuilder()
+                        .setSequenceUuid(seqUuid)
+                        .setSequenceType(seqType)
+                        .setSegmentUuid(currentSegmentUuid)
+                        .setResourceUuid(resourceUuid)
+                        .build();
 
                     // executable: operation info
                     if (execSequence.getExecOnce() != null) {
@@ -194,11 +193,10 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
                         result.add(operationInfo);
                     }
 
-                    // dynamic parameter
-                    if (execSequence.getDynamicParameter() != null) {
-                        for (DynamicParameterConcatType dynamicParam : execSequence.getDynamicParameter()) {
-                            contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo);
-                        }
+                // dynamic parameter
+                if (execSequence.getDynamicParameter() != null) {
+                    for (DynamicParameterConcatType dynamicParam : execSequence.getDynamicParameter()) {
+                        contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo);
                     }
                 }
             }
@@ -218,14 +216,13 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
             // process operations for each resource within segment and sequence
             ResourceKey resKey = ResourceKey.create(currentSegmentUuid, seqUuid, seqType);
             for (ResourceUUID resourceUuid : contextProvider.getResourceContext().getUuids(resKey)) {
-                for (long i = 0; i < contextProvider.getResourceContext().getRepeatCount(resKey, resourceUuid); i++) {
-                    // context info
-                    ContextInfo contextInfo = new ContextInfoBuilder()
-                            .setSequenceUuid(seqUuid)
-                            .setSequenceType(seqType)
-                            .setSegmentUuid(currentSegmentUuid)
-                            .setResourceUuid(resourceUuid)
-                            .build();
+                // context info
+                ContextInfo contextInfo = new ContextInfoBuilder()
+                        .setSequenceUuid(seqUuid)
+                        .setSequenceType(seqType)
+                        .setSegmentUuid(currentSegmentUuid)
+                        .setResourceUuid(resourceUuid)
+                        .build();
 
                     // executable: operation info
                     if (execSequence.getPipe() != null) {
@@ -240,11 +237,10 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
                         result.add(pipeOperations);
                     }
 
-                    // dynamic parameter
-                    if (execSequence.getDynamicParameter() != null) {
-                        for (DynamicParameterConcatType dynamicParam : execSequence.getDynamicParameter()) {
-                            contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo);
-                        }
+                // dynamic parameter
+                if (execSequence.getDynamicParameter() != null) {
+                    for (DynamicParameterConcatType dynamicParam : execSequence.getDynamicParameter()) {
+                        contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo);
                     }
                 }
             }

@@ -134,7 +134,7 @@ public class TemplateParameterResolverTest {
                 new ContextInfoBuilder()
                         .setSegmentUuid(getSegmentUuid(0))
                         .setSequenceUuid(getSequenceUuid(0, SequenceType.AUDIO))
-                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0))
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0, 0))
                         .setSequenceType(SequenceType.AUDIO).build());
 
         String resolved1 = resolver.resolveTemplateParameter(
@@ -142,7 +142,7 @@ public class TemplateParameterResolverTest {
                 new ContextInfoBuilder()
                         .setSegmentUuid(getSegmentUuid(0))
                         .setSequenceUuid(getSequenceUuid(0, SequenceType.AUDIO))
-                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0))
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.AUDIO, 0, 0))
                         .setSequenceType(SequenceType.AUDIO).build());
 
         assertNotNull(resolved1);
@@ -193,41 +193,47 @@ public class TemplateParameterResolverTest {
             for (SequenceType seqType : SEQUENCE_TYPES) {
                 for (int seq = 0; seq < SEQ_COUNT; seq++) {
                     for (int res = 0; res < RESOURCE_COUNT; res++) {
-                        ResourceUUID resourceUuid = getResourceUuid(segm, seq, seqType, res);
-                        ContextInfo contextInfo = new ContextInfoBuilder()
-                                .setSegmentUuid(getSegmentUuid(segm))
-                                .setSequenceUuid(getSequenceUuid(seq, seqType))
-                                .setSequenceType(seqType)
-                                .setResourceUuid(resourceUuid)
-                                .build();
+                        for (int repeat = 0; repeat < REPEAT_COUNT; repeat++) {
+                            ResourceUUID resourceUuid = getResourceUuid(segm, seq, seqType, res, repeat);
+                            ContextInfo contextInfo = new ContextInfoBuilder()
+                                    .setSegmentUuid(getSegmentUuid(segm))
+                                    .setSequenceUuid(getSequenceUuid(seq, seqType))
+                                    .setSequenceType(seqType)
+                                    .setResourceUuid(resourceUuid)
+                                    .build();
 
-                        String resolvedNum = resolver.resolveTemplateParameter("%{resource.num}", contextInfo);
-                        String resolvedUuid = resolver.resolveTemplateParameter("%{resource.uuid}", contextInfo);
-                        String resolvedEssence = resolver.resolveTemplateParameter("%{resource.essence}", contextInfo);
-                        String resolvedStartTimeTC = resolver.resolveTemplateParameter("%{resource.startTimeTC}", contextInfo);
-                        String resolvedDurationTC = resolver.resolveTemplateParameter("%{resource.durationTC}", contextInfo);
-                        String resolvedStartTimeEU = resolver.resolveTemplateParameter("%{resource.startTimeEU}", contextInfo);
-                        String resolvedDurationEU = resolver.resolveTemplateParameter("%{resource.durationEU}", contextInfo);
-                        String resolvedStartTimeFrame = resolver.resolveTemplateParameter("%{resource.startTimeFrameEU}", contextInfo);
-                        String resolvedDurationFrame = resolver.resolveTemplateParameter("%{resource.durationFrameEU}", contextInfo);
-                        String resolvedRepeatCount = resolver.resolveTemplateParameter("%{resource.repeatCount}", contextInfo);
+                            String resolvedNum = resolver.resolveTemplateParameter("%{resource.num}", contextInfo);
+                            String resolvedUuid = resolver.resolveTemplateParameter("%{resource.uuid}", contextInfo);
+                            String resolvedEssence = resolver.resolveTemplateParameter("%{resource.essence}", contextInfo);
+                            String resolvedStartTimeTC = resolver.resolveTemplateParameter("%{resource.startTimeTC}", contextInfo);
+                            String resolvedDurationTC = resolver.resolveTemplateParameter("%{resource.durationTC}", contextInfo);
+                            String resolvedStartTimeEU = resolver.resolveTemplateParameter("%{resource.startTimeEU}", contextInfo);
+                            String resolvedDurationEU = resolver.resolveTemplateParameter("%{resource.durationEU}", contextInfo);
+                            String resolvedStartTimeFrame = resolver.resolveTemplateParameter("%{resource.startTimeFrameEU}", contextInfo);
+                            String resolvedDurationFrame = resolver.resolveTemplateParameter("%{resource.durationFrameEU}", contextInfo);
+                            String resolvedRepeatCount = resolver.resolveTemplateParameter("%{resource.repeatCount}", contextInfo);
+                            String resolvedRepeat = resolver.resolveTemplateParameter("%{resource.repeat}", contextInfo);
 
-                        assertNotNull(resolvedNum);
-                        assertEquals(String.valueOf(res), resolvedNum);
+                            assertNotNull(resolvedNum);
+                            assertEquals(String.valueOf(REPEAT_COUNT * res + repeat), resolvedNum);
 
-                        assertNotNull(resolvedUuid);
-                        assertEquals(resourceUuid.getUuid(), resolvedUuid);
+                            assertNotNull(resolvedUuid);
+                            assertEquals(resourceUuid.getUuid(), resolvedUuid);
 
-                        assertNotNull(resolvedRepeatCount);
-                        assertEquals(String.valueOf(REPEAT_COUNT), resolvedRepeatCount);
+                            assertNotNull(resolvedRepeatCount);
+                            assertEquals(String.valueOf(REPEAT_COUNT), resolvedRepeatCount);
 
-                        assertResourceParameter(resolvedEssence, resourceUuid, ResourceContextParameters.ESSENCE);
-                        assertResourceParameter(resolvedStartTimeTC, resourceUuid, ResourceContextParameters.START_TIME_TIMECODE);
-                        assertResourceParameter(resolvedDurationTC, resourceUuid, ResourceContextParameters.DURATION_TIMECODE);
-                        assertResourceParameter(resolvedStartTimeEU, resourceUuid, ResourceContextParameters.START_TIME_EDIT_UNIT);
-                        assertResourceParameter(resolvedDurationEU, resourceUuid, ResourceContextParameters.DURATION_EDIT_UNIT);
-                        assertResourceParameter(resolvedStartTimeFrame, resourceUuid, ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT);
-                        assertResourceParameter(resolvedDurationFrame, resourceUuid, ResourceContextParameters.DURATION_FRAME_EDIT_UNIT);
+                            assertNotNull(resolvedRepeat);
+                            assertEquals(String.valueOf(repeat), resolvedRepeat);
+
+                            assertResourceParameter(resolvedEssence, resourceUuid, ResourceContextParameters.ESSENCE);
+                            assertResourceParameter(resolvedStartTimeTC, resourceUuid, ResourceContextParameters.START_TIME_TIMECODE);
+                            assertResourceParameter(resolvedDurationTC, resourceUuid, ResourceContextParameters.DURATION_TIMECODE);
+                            assertResourceParameter(resolvedStartTimeEU, resourceUuid, ResourceContextParameters.START_TIME_EDIT_UNIT);
+                            assertResourceParameter(resolvedDurationEU, resourceUuid, ResourceContextParameters.DURATION_EDIT_UNIT);
+                            assertResourceParameter(resolvedStartTimeFrame, resourceUuid, ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT);
+                            assertResourceParameter(resolvedDurationFrame, resourceUuid, ResourceContextParameters.DURATION_FRAME_EDIT_UNIT);
+                        }
                     }
                 }
             }
@@ -332,7 +338,7 @@ public class TemplateParameterResolverTest {
                         .setSegmentUuid(getSegmentUuid(0))
                         .setSequenceUuid(getSequenceUuid(0, SequenceType.VIDEO))
                         .setSequenceType(SequenceType.VIDEO)
-                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.VIDEO, 0))
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.VIDEO, 0, 0))
                         .build());
     }
 
@@ -344,7 +350,7 @@ public class TemplateParameterResolverTest {
                         .setSegmentUuid(getSegmentUuid(10))
                         .setSequenceUuid(getSequenceUuid(0, SequenceType.VIDEO))
                         .setSequenceType(SequenceType.VIDEO)
-                        .setResourceUuid(getResourceUuid(10, 0, SequenceType.VIDEO, 0))
+                        .setResourceUuid(getResourceUuid(10, 0, SequenceType.VIDEO, 0, 0))
                         .build());
     }
 
@@ -356,7 +362,7 @@ public class TemplateParameterResolverTest {
                         .setSegmentUuid(getSegmentUuid(0))
                         .setSequenceUuid(getSequenceUuid(10, SequenceType.VIDEO))
                         .setSequenceType(SequenceType.VIDEO)
-                        .setResourceUuid(getResourceUuid(0, 10, SequenceType.VIDEO, 0))
+                        .setResourceUuid(getResourceUuid(0, 10, SequenceType.VIDEO, 0, 0))
                         .build());
     }
 
@@ -368,7 +374,7 @@ public class TemplateParameterResolverTest {
                         .setSegmentUuid(getSegmentUuid(0))
                         .setSequenceUuid(getSequenceUuid(0, SequenceType.VIDEO))
                         .setSequenceType(SequenceType.VIDEO)
-                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.VIDEO, 10))
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.VIDEO, 10, 0))
                         .build());
     }
 
@@ -380,9 +386,20 @@ public class TemplateParameterResolverTest {
                         .setSegmentUuid(getSegmentUuid(0))
                         .setSequenceUuid(getSequenceUuid(0, SequenceType.SUBTITLE))
                         .setSequenceType(SequenceType.SUBTITLE)
-                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.SUBTITLE, 0))
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.SUBTITLE, 0, 0))
                         .build());
     }
 
+    @Test(expected = TemplateParameterNotFoundException.class)
+    public void exceptionOnIncorrectResourceParameterRepeat() {
+        // we didn't fill subtitle type
+        resolver.resolveTemplateParameter("%{resource.essence}",
+                new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(0))
+                        .setSequenceUuid(getSequenceUuid(0, SequenceType.SUBTITLE))
+                        .setSequenceType(SequenceType.SUBTITLE)
+                        .setResourceUuid(getResourceUuid(0, 0, SequenceType.SUBTITLE, 0, 10))
+                        .build());
+    }
 
 }

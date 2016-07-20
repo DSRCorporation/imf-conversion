@@ -95,6 +95,7 @@ public class CmdParametersHelper {
         Option metadataOpt = Option.builder()
                 .longOpt("metadata")
                 .desc("DPP Metadata.xml")
+                .required()
                 .hasArg()
                 .argName("metadata")
                 .build();

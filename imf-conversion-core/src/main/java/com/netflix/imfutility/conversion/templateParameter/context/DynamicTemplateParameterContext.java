@@ -99,7 +99,7 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         String paramName = dynamicParameter.getName().trim();
         String paramValue = dynamicParameter.getValue().trim();
         if (dynamicParameter.isConcat() != null && dynamicParameter.isConcat()) {
-            appendParameter(paramName, paramValue, dynamicParameter.isDeleteOnExit(), contextInfo);
+            appendParameter(paramName, paramValue, dynamicParameter.isDeleteOnExit(), dynamicParameter.isConcatWhitespace(), contextInfo);
         } else {
             addParameter(paramName, paramValue, dynamicParameter.isDeleteOnExit(), contextInfo);
         }
@@ -258,7 +258,7 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
      */
     public DynamicTemplateParameterContext appendParameter(DynamicContextParameters param, String paramValue,
                                                            boolean deleteOnExit, ContextInfo contextInfo) {
-        return appendParameter(param.getName(), paramValue, deleteOnExit, contextInfo);
+        return appendParameter(param.getName(), paramValue, deleteOnExit, false, contextInfo);
     }
 
     /**
@@ -320,17 +320,19 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
      * @param paramName    parameter name
      * @param paramValue   parameter value
      * @param deleteOnExit whether a file defined by the parameter value must be deleted on exit (must be true for tmp files).
+     * @param useWhitespace whether to add a whitespace between concatenated values.
      * @param contextInfo  a context info to resolved template parameters within the given parameter value.
      * @return this dynamic parameter context.
      */
     public DynamicTemplateParameterContext appendParameter(String paramName, String paramValue,
-                                                           boolean deleteOnExit, ContextInfo contextInfo) {
+                                                           boolean deleteOnExit, boolean useWhitespace, ContextInfo contextInfo) {
         paramName = parameterResolver.resolveTemplateParameter(paramName, contextInfo);
         paramValue = parameterResolver.resolveTemplateParameter(paramValue, contextInfo);
         if (!params.containsKey(paramName)) {
             params.put(paramName, new CustomParameterValue(paramValue, deleteOnExit));
         } else {
-            paramValue = params.get(paramName).getValue().concat(paramValue);
+            String separator = useWhitespace ? " " : "";
+            paramValue = params.get(paramName).getValue() + separator + paramValue;
             params.put(paramName, new CustomParameterValue(paramValue, deleteOnExit));
         }
         return this;
@@ -350,7 +352,7 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
      * @return this dynamic parameter context.
      */
     public DynamicTemplateParameterContext appendParameter(String paramName, String paramValue, ContextInfo contextInfo) {
-        return appendParameter(paramName, paramValue, false, contextInfo);
+        return appendParameter(paramName, paramValue, false, false, contextInfo);
     }
 
     /**
@@ -366,7 +368,7 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
      * @return this dynamic parameter context.
      */
     public DynamicTemplateParameterContext appendParameter(String paramName, String paramValue, boolean deleteOnExit) {
-        return appendParameter(paramName, paramValue, deleteOnExit, ContextInfo.EMPTY);
+        return appendParameter(paramName, paramValue, deleteOnExit, false, ContextInfo.EMPTY);
     }
 
     /**

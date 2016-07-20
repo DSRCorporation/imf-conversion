@@ -28,16 +28,19 @@ public interface ImfUtilityCmdLineArgs {
     @Option(helpRequest = true, description = "display help", shortName = {"h"}, longName = {"help"})
     boolean getHelp();
 
-    @Option(description = "a full path to the IMP folder", longName = {"imp"}, defaultToNull = true)
+    @Option(description = "a path to the IMP folder", longName = {"imp"}, defaultToNull = true)
     String getImp();
 
-    @Option(description = "a name of the CPL within the IMP folder", longName = {"cpl"}, defaultToNull = true)
+    @Option(description = "a path to the CPL within the IMP folder. "
+            + "Either a CPL name within the IMP folder or a path to the CPL can be specified.",
+            longName = {"cpl"}, defaultToNull = true)
     String getCpl();
 
-    @Option(description = "a full path to a config.xml", shortName = {"c"}, longName = {"config"}, defaultToNull = true)
+    @Option(description = "a path to config.xml", shortName = {"c"}, longName = {"config"}, defaultToNull = true)
     String getConfig();
 
-    @Option(description = "a working directory where conversion is performed and output flatten file(s) are placed",
+    @Option(description = "a path to the working directory where conversion is performed and output flatten file(s) are placed. "
+            + "If the directory doesn't exist, it will be created.",
             shortName = {"w"}, longName = {"working-dir"}, defaultToNull = true)
     String getWorkingDirectory();
 
