@@ -85,6 +85,17 @@ public final class ConversionHelper {
     }
 
     /**
+     * Converts the edit untis to milliseconds according to the given edit rate.
+     * @param eu         edit units number
+     * @param unitsInSec edit rate
+     * @return milliseconds
+     */
+    public static long toMilliSeconds(BigInteger eu, BigFraction unitsInSec) {
+        BigFraction editUnits = new BigFraction(eu);
+        return editUnits.divide(unitsInSec).multiply(1000).longValue();
+    }
+
+    /**
      * Returns a fraction corresponding to the given edit rate string.
      * The edit rate is assumed to be a list containing of two elements: numerator and denominator.
      *

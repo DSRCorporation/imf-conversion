@@ -177,7 +177,7 @@ public class SkipOperationResolverTest {
         assertFalse(resolver
                 .setContextInfo(new ContextInfoBuilder()
                         .setSequenceUuid(SequenceUUID.create("seq:urn"))
-                        .setResourceUuid(ResourceUUID.create("res:urn"))
+                        .setResourceUuid(ResourceUUID.create("res:urn", 0))
                         .build())
                 .isSkip(exec));
     }
