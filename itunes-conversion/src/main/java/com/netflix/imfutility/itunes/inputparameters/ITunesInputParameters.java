@@ -19,8 +19,11 @@
 package com.netflix.imfutility.itunes.inputparameters;
 
 import com.netflix.imfutility.inputparameters.ImfUtilityInputParameters;
+import com.netflix.imfutility.itunes.ITunesConversionConstants;
+import com.netflix.imfutility.resources.ResourceHelper;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -38,6 +41,17 @@ public class ITunesInputParameters extends ImfUtilityInputParameters {
         super(cmdLineArgs, defaultTools);
         this.cmdLineArgs = cmdLineArgs;
         this.defaultTools = defaultTools;
+    }
+
+
+    @Override
+    public InputStream getDefaultConversionXml() {
+        return ResourceHelper.getResourceInputStream(ITunesConversionConstants.CONVERSION_XML);
+    }
+
+    @Override
+    public String getDefaultConversionXmlPath() {
+        return ITunesConversionConstants.CONVERSION_XML;
     }
 
     /**
