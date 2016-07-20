@@ -27,21 +27,48 @@ import com.netflix.imfutility.inputparameters.ImfUtilityCmdLineArgs;
  */
 public interface DppCmdLineArgs extends ImfUtilityCmdLineArgs {
 
-    @Option(description = "DPP format: DPP mode. Possible values: [convert, metadata, audiomap]. "
-            + "'convert' mode performs conversion to DPP format. 'metadata' mode generates an empty metadata.xml. "
-            + "'audiomap' mode generates a default audiomap.xml.",
-            shortName = {"m"}, longName = {"mode"}, defaultValue = "convert")
+    @Option(
+            description =
+                    "DPP mode."
+                            + "\n\t\tPossible values: [convert, metadata, audiomap]."
+                            + "\n\t\t\t'convert' mode performs conversion to DPP format."
+                            + "\n\t\t\t'metadata' mode generates an empty metadata.xml."
+                            + "\n\t\t\t'audiomap' mode generates a default audiomap.xml.",
+            shortName = {"m"},
+            longName = {"mode"},
+            defaultValue = "convert"
+    )
     DppMode getMode();
 
-    @Option(description = "DPP format: 'convert' mode only. A full path to metadata.xml", longName = {"metadata"}, defaultToNull = true)
+    @Option(
+            description =
+                    "a path to metadata.xml"
+                            + " ('convert' mode only).",
+            longName = {"metadata"},
+            defaultToNull = true
+    )
     String getMetadata();
 
-    @Option(description = "DPP format: 'convert' mode only. A full path to audiomap.xml", longName = {"audiomap"}, defaultToNull = true)
+    @Option(
+            description =
+                    "a path to audiomap.xml"
+                            + " ('audiomap' mode only).",
+            longName = {"audiomap"},
+            defaultToNull = true
+    )
     String getAudioMap();
 
-    @Option(description = "DPP format: 'metadata' and 'audiomap' modes only. "
-            + "A full path to the generated file (either metadata.xml or audiomap.xml)",
-            shortName = "o", longName = {"output"}, defaultToNull = true)
+    @Option(
+            description =
+                    "the output name"
+                            + "\n\t\t'convert' mode: the output .mxf file name (without .mxf extension)."
+                            + "\n\t\t'metadata' mode: a path to the generated metadata.xml (including 'metadata.xml' file name)."
+                            + "\n\t\t'audiomap' mode: a path to the generated audiomap.xml (including 'audiomap.xml' file name)."
+            ,
+            shortName = "o",
+            longName = {"output"},
+            defaultToNull = true
+    )
     String getOutput();
 
 }

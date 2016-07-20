@@ -68,6 +68,7 @@ The distribution includes
     * --imp path-to-imp-folder (optional: can be set in config.xml)
     * --cpl CPL.xml (optional: can be set in config.xml)
     * --working-dir [-w] path-to-output-folder (optional: can be set in config.xml)
+    * -- output [-o] the output .mxf file name without .mxf extension (optional: if not set, 'output' default name will be used).
 8. An output flat file is created under the specified output directory (-w) and is called _output.mxf_.
 9. Logs:
     * The current conversion job log file: _/logs/imf-utility.log_.
@@ -240,16 +241,16 @@ imf-conversion-utility dpp -m metadata -o metadata.xml
 
 * If IMP, CPL and working directory are set in config.xml, and no custom audiomap is needed, then run the following command:
 ```
-imf-conversion-utility dpp -c path-to/config.xml -m convert --metadata path-to/metadata.xml
+imf-conversion-utility dpp -c path-to/config.xml -m convert --metadata path-to/metadata.xml -o outputName
 ```
 * If IMP, CPL and working directory are set in config.xml, and a custom audiomap is needed, then run the following command:
 ```
-imf-conversion-utility dpp -c path-to/config.xml -m convert --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml
+imf-conversion-utility dpp -c path-to/config.xml -m convert --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml -o outputName
 ```
 
 * A full command if IMP, CPL, and working directory are specified via command line arguments (the values from command line override values from config.xml):
 ```
-imf-conversion-utility dpp -c path-to/config.xml -m convert --imp path-to/imp --cpl CPL.xml -w path-to/working-sir --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml
+imf-conversion-utility dpp -c path-to/config.xml -m convert --imp path-to/imp --cpl CPL.xml -w path-to/working-sir --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml -o outputName
 ```
 
 #### Output and Logs

@@ -61,6 +61,15 @@ public class DppInputParameters extends ImfUtilityInputParameters {
         return new File(cmdLineArgs.getAudioMap());
     }
 
+    /**
+     * Gets a custom name for the output.mxf file (without .mxf extension).
+     *
+     * @return a custom name for the output .mxf file (without .mxf extension).
+     */
+    public String getOutputName() {
+        return cmdLineArgs.getOutput();
+    }
+
     @Override
     public DppCmdLineArgs getCmdLineArgs() {
         return cmdLineArgs;
