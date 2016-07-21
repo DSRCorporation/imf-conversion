@@ -27,7 +27,10 @@ public final class ITunesConversionConstants {
 
 /* 1. Conversion.xml */
 
-    // 1.1 dynamic parameters:
+    // 1.1. conversion.xml location
+    public static final String CONVERSION_XML = "xml/conversion.xml";
+
+    // 1.2 dynamic parameters:
     public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "output";
     public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
 }

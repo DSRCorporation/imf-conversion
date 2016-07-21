@@ -30,8 +30,4 @@ public class ITunesFakeDefaultTools implements ITunesDefaultTools {
         return "java -jar somejar.jar";
     }
 
-    @Override
-    public String getConversionXml() {
-        return "";
-    }
 }

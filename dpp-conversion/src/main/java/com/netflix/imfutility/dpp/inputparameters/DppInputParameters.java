@@ -18,9 +18,12 @@
  */
 package com.netflix.imfutility.dpp.inputparameters;
 
+import com.netflix.imfutility.dpp.DppConversionConstants;
 import com.netflix.imfutility.inputparameters.ImfUtilityInputParameters;
+import com.netflix.imfutility.resources.ResourceHelper;
 
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * A wrapper on command line arguments with helper methods to get input parameters obtained from the command line.
@@ -35,6 +38,16 @@ public class DppInputParameters extends ImfUtilityInputParameters {
         super(cmdLineArgs, defaultTools);
         this.defaultTools = defaultTools;
         this.cmdLineArgs = cmdLineArgs;
+    }
+
+    @Override
+    public InputStream getDefaultConversionXml() {
+        return ResourceHelper.getResourceInputStream(DppConversionConstants.CONVERSION_XML);
+    }
+
+    @Override
+    public String getDefaultConversionXmlPath() {
+        return DppConversionConstants.CONVERSION_XML;
     }
 
     /**
@@ -59,6 +72,15 @@ public class DppInputParameters extends ImfUtilityInputParameters {
             return null;
         }
         return new File(cmdLineArgs.getAudioMap());
+    }
+
+    /**
+     * Gets a custom name for the output.mxf file (without .mxf extension).
+     *
+     * @return a custom name for the output .mxf file (without .mxf extension).
+     */
+    public String getOutputName() {
+        return cmdLineArgs.getOutput();
     }
 
     @Override

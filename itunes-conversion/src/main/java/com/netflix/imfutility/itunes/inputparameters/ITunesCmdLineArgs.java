@@ -30,59 +30,111 @@ import java.util.List;
  */
 public interface ITunesCmdLineArgs extends ImfUtilityCmdLineArgs {
 
-    @Option(description = "iTunes format: iTunes mode. Possible values: [convert, metadata, audiomap, chapters]. "
-            + "'convert' mode performs conversion to iTunes format. "
-            + "'metadata' mode generates an empty metadata.xml. "
-            + "'audiomap' mode generates a default audiomap.xml. "
-            + "'chapters' mode generates a default chapters.xml.",
-            shortName = {"m"}, longName = {"mode"}, defaultValue = "convert")
+    @Option(
+            description =
+                    "iTunes mode. "
+                            + "\n\t\tPossible values: [convert, metadata, audiomap, chapters]. "
+                            + "\n\t\t\t'convert' mode performs conversion to iTunes format. "
+                            + "\n\t\t\t'metadata' mode generates an empty metadata.xml. "
+                            + "\n\t\t\t'audiomap' mode generates a default audiomap.xml. "
+                            + "\n\t\t\t'chapters' mode generates a default chapters.xml.",
+            shortName = {"m"},
+            longName = {"mode"},
+            defaultValue = "convert"
+    )
     ITunesMode getMode();
 
-    @Option(description = "iTunes format: 'convert' mode only. A vendor identifier. "
-            + "Can only contain alphanumeric symbols or underscores"
-            + "Must be at least 6 characters in length",
-            longName = {"vendor-id"}, defaultToNull = true)
+    @Option(
+            description =
+                    "a vendor identifier. "
+                            + " ('convert' mode only)"
+                            + " Can only contain alphanumeric symbols or underscores."
+                            + " Must be at least 6 characters in length.",
+            longName = {"vendor-id"},
+            defaultToNull = true
+    )
     String getVendorId();
 
-    @Option(description = "iTunes format: 'convert' mode only. A full path to metadata.xml",
-            longName = {"metadata"}, defaultToNull = true)
+    @Option(
+            description =
+                    "a full path to metadata.xml"
+                            + " ('convert' mode only).",
+            longName = {"metadata"},
+            defaultToNull = true
+    )
     String getMetadata();
 
-    @Option(description = "iTunes format: 'convert' mode only. A full path to audiomap.xml",
-            longName = {"audiomap"}, defaultToNull = true)
+    @Option(
+            description =
+                    "a full path to audiomap.xml"
+                            + " ('convert' mode only).",
+            longName = {"audiomap"},
+            defaultToNull = true
+    )
     String getAudioMap();
 
-    @Option(description = "iTunes format: 'convert' mode only. A destination encoded video format",
-            shortName = {"f"}, longName = {"format"}, defaultToNull = true)
+    @Option(
+            description = "a destination encoded video format"
+                    + " ('convert' mode only).",
+            shortName = {"f"},
+            longName = {"format"},
+            defaultToNull = true
+    )
     ITunesVideoFormat getVideoFormat();
 
-    @Option(description = "iTunes format: 'convert' mode only. A full path to trailer. "
-            + "Must be MOV container",
-            longName = {"trailer"}, defaultToNull = true)
+    @Option(
+            description = "a path to trailer. "
+                    + " ('convert' mode only)."
+                    + " Must be MOV container",
+            longName = {"trailer"},
+            defaultToNull = true
+    )
     String getTrailer();
 
-    @Option(description = "iTunes format: 'convert' mode only. A full path to poster. "
-            + "Must be JPG file",
-            longName = {"poster"}, defaultToNull = true)
+    @Option(
+            description = "a full path to poster. "
+                    + " ('convert' mode only)."
+                    + " Must be JPG file.",
+            longName = {"poster"},
+            defaultToNull = true
+    )
     String getPoster();
 
-    @Option(description = "iTunes format: 'convert' mode only. A full path to chapters.xml",
-            longName = {"chapters"}, defaultToNull = true)
+    @Option(
+            description = "a full path to chapters.xml"
+                    + " ('convert' mode only).",
+            longName = {"chapters"},
+            defaultToNull = true
+    )
     String getChapters();
 
-    @Option(description = "iTunes format: 'convert' mode only. A paths to external caption assets. "
-            + "If not set, then only CPL TTML will be processed, else only specified. "
-            + "TTML will be converted to ITT. SCC will be passed through",
-            longName = {"cc"}, defaultToNull = true)
+    @Option(
+            description = "a paths to external caption assets. "
+                    + " ('convert' mode only)."
+                    + " If not set, then only CPL TTML will be processed."
+                    + " Otherwise only the specified TTML will be converted to ITT and SCC will be passed through.",
+            longName = {"cc"},
+            defaultToNull = true
+    )
     List<String> getCc();
 
-    @Option(description = "iTunes format: 'convert' mode only. A main locale of iTunes package. "
-            + "Will be used if CPL or metadata locale are not set",
-            longName = {"fallback-locale"}, defaultToNull = true)
+    @Option(
+            description = "A main locale of iTunes package. "
+                    + " ('convert' mode only)."
+                    + " It's used if CPL or metadata locale is not set.",
+            longName = {"fallback-locale"},
+            defaultToNull = true
+    )
     String getFallbackLocale();
 
-    @Option(description = "iTunes format: 'metadata', 'audiomap' and 'chapters' modes only. "
-            + "A full path to the generated file",
-            shortName = {"o"}, longName = {"output"}, defaultToNull = true)
+    @Option(
+            description = "a full path to the generated file"
+                    + "\n\t\t'metadata' mode: a path to the generated metadata.xml (including 'metadata.xml' file name)."
+                    + "\n\t\t'audiomap' mode: a path to the generated audiomap.xml (including 'audiomap.xml' file name)."
+                    + "\n\t\t'chapters' mode: a path to the generated chapters.xml (including 'chapters.xml' file name).",
+            shortName = {"o"},
+            longName = {"output"},
+            defaultToNull = true
+    )
     String getOutput();
 }

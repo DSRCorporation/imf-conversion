@@ -58,7 +58,7 @@ Quick Start Guide for 'Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV' test package:
 7. Edit metadata.xml if needed (can be used as is for tests).
      
 8. Run conversion by executing the following command:
-    bin/imf-conversion-utility -f dpp -c config.xml --metadata metadata.xml --audiomap audiomap.xml
+    bin/imf-conversion-utility dpp -c config.xml --metadata metadata.xml --audiomap audiomap.xml -o outputName
     
 9. An output flat file is created under the specified output directory and is called '{output-dir}/output.mxf'.
 

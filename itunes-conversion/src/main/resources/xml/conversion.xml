@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2016 Netflix, Inc.
+
+        This file is part of IMF Conversion Utility.
+
+        IMF Conversion Utility is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+
+        IMF Conversion Utility is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<conversion xmlns="http://conversion.imfutility.netflix.com">
+
+    <imfValidation>%{dynamic.validateTool} -i "%{dynamic.imp}" -c "%{dynamic.cpl}" -d "%{dynamic.workingDir}"
+        -f "%{dynamic.outputValidationFile}"
+    </imfValidation>
+
+    <formats>
+        <!--
+            specific configuration for each format
+        -->
+        <format name="itunes">
+
+            <!--
+                tmp context for temporary template parameters
+            -->
+            <tmpContext>
+                <param id="videoEncoded" deleteOnExit="true">output.mov</param>
+                <param id="audioEncoded" deleteOnExit="true">output.pcm</param>
+            </tmpContext>
+
+            <mediaInfoCommandVideo>%{tool.ffprobe} -select_streams v:0 -show_streams -noprivate -print_format xml=x=1
+                %{dynamic.mediaInfoInput}
+            </mediaInfoCommandVideo>
+            <mediaInfoCommandAudio>%{tool.ffprobe} -select_streams a:0 -show_streams -noprivate -print_format xml=x=1
+                %{dynamic.mediaInfoInput}
+            </mediaInfoCommandAudio>
+            <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams s:0 -show_streams -noprivate -print_format xml=x=1
+                %{dynamic.mediaInfoInput}
+            </mediaInfoCommandSubtitle>
+
+            <formatConfigurations>
+                <formatConfiguration name="main">
+                    <conversionParameters>
+                        <video>
+                            <pixelFormat>yuv422p10le</pixelFormat>
+                            <bitDepth>10</bitDepth>
+                        </video>
+                        <audio>
+                            <sampleRate>48000</sampleRate>
+                            <bitsSample>24</bitsSample>
+                        </audio>
+                    </conversionParameters>
+
+                    <!--
+                        1. decode each video segment and redirect output to encode's input
+                        => flatten encoded video
+                    -->
+
+                    <execEachSequence type="video" name="encodeVideo">
+                        <pipe>
+                            <cycle>
+                                <execEachSegment name="decode_video">
+                                    <execOnce name="decode_video">
+                                        %{tool.ffmpeg} -y -i %{resource.essence} -map 0:0 -ss %{resource.startTimeTC}
+                                        -t %{resource.durationTC} -an
+                                        -vf scale=%{dynamic.fw}:%{dynamic.fh},fps=%{dynamic.fps}
+                                        -pix_fmt yuv422p10le -f rawvideo -
+                                    </execOnce>
+                                </execEachSegment>
+                            </cycle>
+
+                            <!--
+                                includes Linux/Windows and OS X command line to encode with ProRes encoder
+                                Linux/Windows -> ffmpeg, OS X -> prenc (uses native/system ProRes codec on OS X)
+                            -->
+                            <execOnce name="encode_video" unless="%{dynamic.isOSX}">
+                                %{tool.ffmpeg} -y -i -
+                                -c:v prores_ks
+                                -pix_fmt yuv422p10le
+                                -vf %{dynamic.proresParams}
+                                %{tmp.videoEncoded}
+                            </execOnce>
+                            <execOnce name="encode_video" if="%{dynamic.isOSX}">
+                                %{tool.prenc} -f %{dynamic.proresParams} -o %{tmp.videoEncoded}
+                            </execOnce>
+                        </pipe>
+                    </execEachSequence>
+
+                    <!--
+                        2. Extract each audio segment from MXF due to FFMPEG mxf reading issue
+                    -->
+                    <execEachSequence type="audio" name="extractAudioSegments">
+                        <execEachSegment name="extract_audio">
+                            <execOnce name="extract_audio">
+                                %{tool.mxf2raw} -p "%{seq.num}-%{segm.num}" --start %{resource.startTimeFrameEU}
+                                --dur %{resource.durationFrameEU} "%{resource.essence}"
+                            </execOnce>
+                            <!-- to delete intermediate files at the end -->
+                            <dynamicParameter name="audio-segment-tmp-%{seq.num}-%{segm.num}" deleteOnExit="true">
+                                %{seq.num}-%{segm.num}_a0.raw
+                            </dynamicParameter>
+                        </execEachSegment>
+                    </execEachSequence>
+
+                    <!--
+                        3. decode each audio segment and redirect output to encode's input
+                           => flatten encoded audio
+                    -->
+                    <execEachSequence type="audio" name="encodeAudio">
+                        <pipe>
+                            <cycle>
+                                <execEachSegment name="decode_audio">
+                                    <execOnce name="decode_audio">
+                                        %{tool.ffmpeg} -f s%{seq.bits_per_sample}le -ar %{seq.sample_rate} -ac %{seq.channels_num}
+                                        -i %{seq.num}-%{segm.num}_a0.raw -vn -af aresample=48000
+                                        -acodec pcm_s24le -f s24le -
+                                    </execOnce>
+                                </execEachSegment>
+                            </cycle>
+                            <execOnce name="encode_audio">
+                                %{tool.ffmpeg} -f s24le -ar %{seq.sample_rate} -ac %{seq.channels_num} -i - -vn -c:a
+                                copy -f wav %{seq.num}-audio-encoded.wav
+                            </execOnce>
+                        </pipe>
+                        <dynamicParameter name="concatAudioInput" concat="true">-i "%{seq.num}-audio-encoded.wav"
+                        </dynamicParameter>
+                        <dynamicParameter name="concatAudioMap" concat="true">[%{seq.num}:a]</dynamicParameter>
+                        <!-- to delete intermediate files at the end -->
+                        <dynamicParameter name="audio-virtual-track-wav-%{seq.num}" deleteOnExit="true">
+                            %{seq.num}-audio-encoded.wav
+                        </dynamicParameter>
+                    </execEachSequence>
+
+                    <!--
+                        4. Remap audio in accordance with AudioMap.xml
+                    -->
+                    <execOnce name="audioMaping">
+                        <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
+                        %{tool.ffmpeg} %{dynamic.concatAudioInput} -filter_complex
+                        "%{dynamic.concatAudioMap}[0:a]amerge,pan=%{dynamic.panParameter}[aout]"
+                        -map "[aout]" -acodec pcm_s24le -ar 48000 -f s24le %{dynamic.mainAudio}
+                    </execOnce>
+
+                    <!--
+                        5. create output .mov from flatten encoded video and audio
+                    -->
+                    <execOnce name="muxing_mov">
+                        %{tool.ffmpeg} -i %{tmp.videoEncoded} -i %{dynamic.mainAudio}
+                        -c:v copy -c:a copy %{dynamic.vendorId}-source.mov
+                    </execOnce>
+
+                    <!--
+                        6. Extract each subtitle TTML segment from MXF or just convert external TTML
+                    -->
+                    <execEachSequence type="subtitle" name="convertTTML2ITT" if="%{dynamic.isTTML}">
+                        <execEachSegment name="extract_ttml" if="%{dynamic.isCPL}">
+                            <execOnce name="extract_ttml">
+                                %{tool.asdcp-test} -x "%{seq.num}-%{segm.num}.xml" %{resource.essence}
+                            </execOnce>
+                            <!-- to delete intermediate files at the end -->
+                            <dynamicParameter name="ttml-segment-tmp-%{seq.num}-%{segm.num}" deleteOnExit="true">
+                                %{seq.num}-%{segm.num}.xml
+                            </dynamicParameter>
+
+                            <dynamicParameter name="concatTTML" concat="true">--ttml %{seq.num}-%{segm.num}.xml %{resource.offsetTC}
+                                %{resource.startTimeTC} %{resource.endTimeTC}
+                            </dynamicParameter>
+
+                        </execEachSegment>
+
+                        <execOnce name="convert_ttml_to_itt">
+                            %{tool.java} subtitleConverter.java %{dynamic.concatTTML} --outputITT %{dynamic.vendorId}-%{seq.subLang}.itt
+                        </execOnce>
+                    </execEachSequence>
+
+                </formatConfiguration>
+            </formatConfigurations>
+        </format>
+
+    </formats>
+</conversion>
+
