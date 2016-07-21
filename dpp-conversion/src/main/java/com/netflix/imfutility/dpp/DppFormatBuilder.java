@@ -62,7 +62,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     }
 
     @Override
-    protected void doBuildDynamicContext() {
+    protected void doBuildDynamicContextPreCpl() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         logger.info("Output file name: '{}.mxf'.", getOutputName());
         dynamicContext.addParameter(DYNAMIC_PARAM_OUTPUT_MXF, getOutputName(), false);
@@ -83,7 +83,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     }
 
     @Override
-    protected void preConvert() throws IOException, XmlParsingException {
+    protected void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
 
         // 1. load metadata.xml
@@ -113,6 +113,11 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
                 metadataXmlProvider.getBmxDppParameterFile(DMFramework.AS11CORE).getAbsolutePath(), true);
         dynamicContext.addParameter(DYNAMIC_PARAM_AS11_SEGM_FILE,
                 metadataXmlProvider.getBmxDppParameterFile(DMFramework.AS11Segmentation).getAbsolutePath(), true);
+
+    }
+
+    @Override
+    protected void preConvert() throws IOException, XmlParsingException {
     }
 
     @Override

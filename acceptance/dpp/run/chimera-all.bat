@@ -10,18 +10,18 @@ SET Chimera50Dir=Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV
 
 @echo on
 :: default as-is full CPLs for all test packages
-::call .\chimera23-default "%~1\%Chimera23Dir%" %2 %3
-::call .\chimera25-default "%~1\%Chimera25Dir%" %2 %3
-::call .\chimera50-default "%~1\%Chimera50Dir%" %2 %3
-::call .\chimera29-default "%~1\%Chimera29Dir%" %2 %3
+call .\chimera23-default "%~1\%Chimera23Dir%" %2 %3
+call .\chimera25-default "%~1\%Chimera25Dir%" %2 %3
+call .\chimera50-default "%~1\%Chimera50Dir%" %2 %3
+call .\chimera29-default "%~1\%Chimera29Dir%" %2 %3
 
 :: short versions
-::call .\chimera25-short "%~1\%Chimera25Dir%" %2 %3
-::call .\chimera50-short "%~1\%Chimera50Dir%" %2 %3
+call .\chimera25-short "%~1\%Chimera25Dir%" %2 %3
+call .\chimera50-short "%~1\%Chimera50Dir%" %2 %3
 
 :: Closed Captions
-::call .\chimera29-CC "%~1\%Chimera29Dir%" %2 %3
-::call .\chimera29-CC-short "%~1\%Chimera29Dir%" %2 %3
+call .\chimera29-CC "%~1\%Chimera29Dir%" %2 %3
+call .\chimera29-CC-short "%~1\%Chimera29Dir%" %2 %3
 
 :: no audio/video/CC
 call .\chimera50-no-audio "%~1\%Chimera50Dir%" %2 %3
