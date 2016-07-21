@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
-  ~ Copyright (C) 2016 Netflix, Inc.
-  ~
-  ~     This file is part of IMF Conversion Utility.
-  ~
-  ~     IMF Conversion Utility is free software: you can redistribute it and/or modify
-  ~     it under the terms of the GNU General Public License as published by
-  ~     the Free Software Foundation, either version 3 of the License, or
-  ~     (at your option) any later version.
-  ~
-  ~     IMF Conversion Utility is distributed in the hope that it will be useful,
-  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~     GNU General Public License for more details.
-  ~
-  ~     You should have received a copy of the GNU General Public License
-  ~     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-<xs:schema
-        xmlns:xs="http://www.w3.org/2001/XMLSchema"
-        xmlns:iso-3166-1="http://www.codesynthesis.com/xmlns/xsstl"
-        elementFormDefault="qualified" attributeFormDefault="unqualified"
-        targetNamespace="http://apple.com/itunes/importer"
-        xmlns="http://apple.com/itunes/importer">
 
-    <!--Must be formatted according to -->
+    Copyright (C) 2016 Netflix, Inc.
+
+        This file is part of IMF Conversion Utility.
+
+        IMF Conversion Utility is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+
+        IMF Conversion Utility is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<xs:schema xmlns="http://apple.com/itunes/importer"
+           xmlns:iso-3166-1="http://iso3166.metadata.itunes.imfutility.netflix.com"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified" attributeFormDefault="unqualified"
+           targetNamespace="http://apple.com/itunes/importer"
+           version="1.1">
+
+    <xs:import schemaLocation="iso-3166-1.xsd" namespace="http://iso3166.metadata.itunes.imfutility.netflix.com"/>
+
+    <!-- Must be formatted according to _xmlinit_ format style -->
+    <!-- Empty tags and null data not allowed -->
 
     <!--
       Root element
@@ -37,62 +41,74 @@
     -->
     <xs:complexType name="PackageType">
         <xs:sequence>
-            <xs:element name="language" type="LanguageType"/>
             <xs:element name="provider" type="xs:string"/>
+            <xs:element name="language" type="LanguageType"/>
             <xs:element name="video" type="VideoType"/>
         </xs:sequence>
         <xs:attribute name="version" type="xs:string" use="required" fixed="film5.0"/>
     </xs:complexType>
 
     <xs:complexType name="VideoType">
-        <xs:sequence>
+        <xs:sequence> <!--TODO maybe _all_ instead?-->
             <xs:element name="type" type="VideoTypeType"/>
             <xs:element name="subtype" type="VideoTypeSubType"/>
             <xs:element name="vendor_offer_code" type="VendorType" minOccurs="0"/>
             <xs:element name="vendor_id" type="VendorType"/>
-            <xs:element name="isan" type="xs:string" minOccurs="0"/> <!--TODO pattern-->
+            <xs:element name="isan" type="IsanType" minOccurs="0"/>
             <xs:element name="upc" type="xs:string" minOccurs="0"/>
-            <xs:element name="country" type="CountryType"/>
-            <xs:element name="original_spoken_locale" type="LanguageType"/>
-            <xs:element name="title" type="xs:string"/> <!--TODO limit 255 bytes-->
-            <xs:element name="synopsis" type="xs:string"/> <!--TODO limit 4000 bytes-->
-            <xs:element name="production_company" type="xs:string"/><!--TODO limit 255 bytes-->
-            <xs:element name="copyright_cline" type="xs:string"/><!--TODO limit 1000 bytes-->
-            <xs:element name="theatrical_release_date" type="xs:date"/>
+            <xs:element name="country" type="iso-3166-1:ISO3166CountryCode"/>
+            <xs:element name="original_spoken_locale" type="LanguageType" minOccurs="0"/> <!-- TODO required for films -->
+            <xs:group ref="TitleGroup"/>
+            <xs:element name="locales" type="LocalesTitleType" minOccurs="0"/>
+            <xs:element name="production_company" type="xs:string"/>    <!--TODO limit 255 bytes-->
+            <xs:group ref="ReleaseGroup"/>
+            <xs:element name="regions" type="RegionsType" minOccurs="0"/>
             <xs:element name="genres" type="GenresType" minOccurs="0"/>
             <xs:element name="ratings" type="RatingsType"/>
-            <xs:element name="cast" type="CastType"/>
-            <xs:element name="crew" type="CrewType"/>
+            <xs:choice>
+                <xs:sequence>
+                    <xs:element name="cast" type="CastType"/>
+                    <xs:element name="crew" type="CrewType"/>
+                </xs:sequence>
+                <xs:element name="artists" type="ArtistsType"/>
+            </xs:choice>
             <xs:element name="chapters" type="ChaptersType"/>
             <xs:element name="assets" type="AssetsType"/>
             <xs:element name="products" type="ProductsType"/>
+            <xs:element name="cue_sheet" type="CueSheetType" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:simpleType name="VideoTypeType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="film"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <!-- Locales & Regions -->
 
-    <xs:simpleType name="VideoTypeSubType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="feature"/>
-            <xs:enumeration value="short"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <xs:complexType name="LocalesTitleType">
+        <xs:sequence>
+            <xs:element name="locale" type="LocaleTitleType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
 
-    <xs:simpleType name="VendorType">
-        <xs:restriction base="xs:string">
-            <xs:pattern value="[a-zA-Z0-9][a-zA-Z0-9_]{5,99}"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <xs:complexType name="RegionsType">
+        <xs:sequence>
+            <xs:element name="region" type="RegionType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RegionType">
+        <xs:sequence>
+            <xs:element name="territory" type="TerritoryType"/>
+            <xs:group ref="ReleaseGroup"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Genres -->
 
     <xs:complexType name="GenresType">
         <xs:sequence>
             <xs:element name="genre" type="GenreType" maxOccurs="unbounded" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
+
+    <!-- Ratings -->
 
     <xs:complexType name="RatingsType">
         <xs:sequence>
@@ -102,12 +118,11 @@
 
     <xs:complexType name="RatingType">
         <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <!--TODO-->
+            <xs:extension base="RatingLabelType">
+                <xs:attribute name="system" type="RatingSystemType" use="required"/>
+                <xs:attribute name="reason" type="xs:string"/>
             </xs:extension>
         </xs:simpleContent>
-        <xs:attribute name="system" type="xs:string" use="required"/>
-        <xs:attribute name="reason" type="xs:string"/>
     </xs:complexType>
 
     <!-- Cast & crew -->
@@ -120,10 +135,16 @@
 
     <xs:complexType name="CastMemberType">
         <xs:sequence>
-            <xs:element name="display_name" type="xs:string"/><!-- TODO limit 250 bytes-->
-            <xs:element name="character_name" type="xs:string"/><!-- TODO limit 250 bytes-->
+            <xs:group ref="CastNameGroup"/>
+            <xs:element name="locales" type="LocalesCastType" minOccurs="0"/>
         </xs:sequence>
-        <xs:attribute name="billing" type="xs:string" default="ordered"/>
+        <xs:attribute name="billing" type="BillingType" default="ordered"/>
+    </xs:complexType>
+
+    <xs:complexType name="LocalesCastType">
+        <xs:sequence>
+            <xs:element name="locale" type="LocaleCastType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="CrewType">
@@ -134,15 +155,51 @@
 
     <xs:complexType name="CrewMemberType">
         <xs:sequence>
-            <xs:element name="display_name" type="xs:string"/><!-- TODO limit 250 bytes-->
-            <xs:element name="roles" type="RolesType"/>
+            <xs:group ref="CrewNameGroup"/>
+            <xs:element name="locales" type="LocalesCrewType" minOccurs="0"/>
+            <xs:element name="roles" type="CrewRolesType"/>
         </xs:sequence>
-        <xs:attribute name="billing" type="xs:string" default="ordered"/>
+        <xs:attribute name="billing" type="BillingType" default="ordered"/>
     </xs:complexType>
 
-    <xs:complexType name="RolesType">
+    <xs:complexType name="LocalesCrewType">
         <xs:sequence>
-            <xs:element name="role" type="RoleType" maxOccurs="unbounded" minOccurs="1"/>
+            <xs:element name="locale" type="LocaleCrewType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CrewRolesType">
+        <xs:sequence>
+            <xs:element name="role" type="CrewRoleType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Artists -->
+
+    <xs:complexType name="ArtistsType">
+        <xs:sequence>
+            <xs:element name="artist" type="ArtistType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ArtistType">
+        <xs:sequence>
+            <xs:group ref="ArtistNameGroup"/>
+            <xs:element name="locales" type="LocaleArtistType" minOccurs="0"/>
+            <xs:element name="roles" type="ArtistRolesType"/>
+            <xs:element name="primary" type="xs:boolean" minOccurs="0" default="false"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LocalesArtistType">
+        <xs:sequence>
+            <xs:element name="locale" type="LocaleArtistType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ArtistRolesType">
+        <xs:sequence>
+            <xs:element name="role" type="ArtistRoleType" maxOccurs="unbounded" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -150,31 +207,38 @@
 
     <xs:complexType name="ChaptersType">
         <xs:sequence>
-            <xs:element name="timecode_format" type="xs:string" minOccurs="0"/> <!--TODO-->
+            <xs:element name="timecode_format" type="TimecodeFormatType" minOccurs="0"/> <!--TODO-->
             <xs:element name="chapter" type="ChapterType" maxOccurs="unbounded" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="ChapterType">
         <xs:sequence>
-            <xs:element name="start_time" type="xs:string"/> <!--TODO-->
-            <xs:element name="title" type="TitleType"/>
+            <xs:element name="start_time" type="xs:string"/> <!--TODO test value depends on time_code_format-->
+            <xs:choice>
+                <xs:element name="title" type="TitleType"/>
+                <xs:element name="titles" type="TitlesType" minOccurs="0"/>
+            </xs:choice>
             <xs:element name="artwork_file" type="ArtWorkFileType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TitlesType">
+        <xs:sequence>
+            <xs:element name="title" type="TitleType" maxOccurs="unbounded" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="TitleType">
         <xs:simpleContent>
-            <xs:extension base="xs:string"/> <!--TODO 255 bytes limit-->
+            <xs:extension base="xs:string">
+                <xs:attribute name="locale" type="LanguageType"/>
+            </xs:extension> <!--TODO 255 bytes limit-->
         </xs:simpleContent>
-        <xs:attribute name="locale" type="LanguageType"/>
     </xs:complexType>
 
     <xs:complexType name="ArtWorkFileType">
-        <xs:complexContent>
-            <xs:extension base="FileType"/>
-        </xs:complexContent>
-        <xs:attribute name="locale" type="LanguageType"/>
+        <xs:group ref="FileGroup"/>
     </xs:complexType>
 
     <!-- Assets -->
@@ -187,29 +251,27 @@
 
     <xs:complexType name="AssetType">
         <xs:sequence>
-            <xs:element name="territories" type="TerritoriesType" minOccurs="0"/> <!--TODO-->
+            <xs:element name="territories" type="TerritoriesType" minOccurs="0"/> <!--TODO allow only for preview and artwork -->
             <xs:element name="data_file" type="DataFileType" maxOccurs="unbounded" minOccurs="1"/>
         </xs:sequence>
         <xs:attribute name="type" type="AssetTypeType" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="DataFileType">
-        <xs:complexContent>
-            <xs:extension base="FileType">
-                <xs:sequence>
-                    <xs:element name="locale" type="LocaleType"/>
-                    <xs:element name="attribute" type="AttributeType"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-        <xs:attribute name="role" type="xs:string"/> <!--TODO -->
+        <xs:sequence>
+            <xs:element name="locale" type="LocaleType" minOccurs="0"/>
+            <xs:group ref="FileGroup"/>
+            <xs:element name="attribute" type="AttributeType" maxOccurs="5" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="role" type="DataFileRoleType"/> <!--TODO limit depends on asset type attribute-->
     </xs:complexType>
 
     <xs:complexType name="AttributeType">
         <xs:simpleContent>
-            <xs:extension base="xs:string"/>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="AttributeNameType" use="required"/>
+            </xs:extension>
         </xs:simpleContent>
-        <xs:attribute name="name" type="AttributeNameType" use="required"/>
     </xs:complexType>
 
     <!-- Territory -->
@@ -221,7 +283,7 @@
     </xs:complexType>
 
     <xs:simpleType name="TerritoryType">
-        <xs:union memberTypes="CountryType WWType"/>
+        <xs:union memberTypes="iso-3166-1:ISO3166CountryCode WWType"/>
     </xs:simpleType>
 
     <!-- Products -->
@@ -235,10 +297,10 @@
     <xs:complexType name="ProductType">
         <xs:sequence>
             <xs:element name="territory" type="TerritoryType"/>
+            <xs:element name="intervals" type="IntervalsType" minOccurs="0"/>
             <xs:element name="cleared_for_sale" type="xs:boolean"/>
             <xs:element name="cleared_for_hd_sale" type="xs:boolean" minOccurs="0"/>
-            <xs:element name="wholesale_price_tier" type="xs:positiveInteger" minOccurs="0"/> <!--TODO required for EST-->
-            <xs:element name="hd_wholesale_price_tier" type="xs:positiveInteger" minOccurs="0"/>
+            <xs:group ref="WholesaleGroup" minOccurs="0"/> <!-- TODO enable only if not set intervals-->
             <xs:element name="preorder_sales_start_date" type="xs:date" minOccurs="0"/>
             <xs:element name="sales_start_date" type="xs:date" minOccurs="0"/>
             <xs:element name="sales_end_date" type="xs:date" minOccurs="0"/>
@@ -251,16 +313,111 @@
         </xs:sequence>
     </xs:complexType>
 
+    <!-- Intervals -->
+
+    <xs:complexType name="IntervalsType">
+        <xs:sequence>
+            <xs:element name="interval" type="IntervalType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="IntervalType">
+        <xs:sequence>
+            <xs:element name="start_date" type="xs:date"/>
+            <xs:element name="end_date" type="xs:date" minOccurs="0"/>
+            <xs:group ref="WholesaleGroup"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Cue sheet -->
+
+    <xs:complexType name="CueSheetType">
+        <xs:sequence>
+            <xs:element name="cue" type="CueType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CueType">
+        <xs:sequence>
+            <xs:element name="sequence_number" type="xs:nonNegativeInteger"/> <!--TODO unique-->
+            <xs:element name="time" type="TimeType"/>
+            <xs:element name="title" type="xs:string"/> <!--TODO limit 255 bytes-->
+            <xs:element name="artists" type="ArtistsType"/>
+            <xs:element name="isrc" type="IsrcType" minOccurs="0"/>
+            <xs:element name="iswc" type="IswcType" minOccurs="0"/>
+            <xs:element name="copyright_cline" type="xs:string" minOccurs="0"/>
+            <xs:element name="copyright_pline" type="xs:string" minOccurs="0"/>
+            <xs:element name="usage" type="UsageType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TimeType">
+        <xs:sequence>
+            <xs:element name="start_timecode" type="xs:time" minOccurs="0"/>
+            <xs:element name="duration" type="xs:time"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Groups -->
+
+    <xs:group name="TitleGroup">
+        <xs:sequence>
+            <xs:element name="title" type="xs:string"/> <!--TODO limit 255 bytes-->
+            <xs:element name="phonetic_title" type="xs:string" minOccurs="0"/>  <!--TODO limit 255 bytes-->
+            <xs:element name="synopsis" type="xs:string"/> <!--TODO limit 4000 bytes-->
+        </xs:sequence>
+    </xs:group>
+
+    <xs:group name="ReleaseGroup">
+        <xs:sequence>
+            <xs:element name="copyright_cline" type="xs:string"/><!--TODO limit 1000 bytes-->
+            <xs:element name="theatrical_release_date" type="xs:date"/>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:group name="CastNameGroup">
+        <xs:sequence>
+            <xs:element name="display_name" type="xs:string"/><!-- TODO limit 250 bytes-->
+            <xs:element name="character_name" type="xs:string"/><!-- TODO limit 250 bytes-->
+        </xs:sequence>
+    </xs:group>
+
+    <xs:group name="CrewNameGroup">
+        <xs:sequence>
+            <xs:element name="display_name" type="xs:string"/><!-- TODO limit 250 bytes-->
+        </xs:sequence>
+    </xs:group>
+
+    <xs:group name="ArtistNameGroup">
+        <xs:sequence>
+            <xs:element name="artist_name" type="xs:string"/><!-- TODO limit 250 bytes-->
+        </xs:sequence>
+    </xs:group>
+
+    <xs:group name="WholesaleGroup">
+        <xs:sequence>
+            <xs:element name="wholesale_price_tier" type="xs:positiveInteger" minOccurs="0"/> <!--TODO required for EST-->
+            <xs:element name="hd_wholesale_price_tier" type="xs:positiveInteger" minOccurs="0"/>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:group name="FileGroup">
+        <xs:sequence>
+            <xs:element name="file_name" type="xs:string"/>
+            <xs:element name="size" type="xs:positiveInteger"/>
+            <xs:element name="checksum" type="CheckSumType"/>
+        </xs:sequence>
+    </xs:group>
+
     <!-- Common types -->
 
     <xs:simpleType name="LanguageType">
-        <xs:extension base="xs:language"> <!--TODO restrict languages according iTunes specification-->
-        </xs:extension>
+        <xs:restriction base="xs:language"/>  <!--TODO restrict languages according iTunes specification-->
     </xs:simpleType>
 
-    <xs:simpleType name="CountryType">
-        <xs:extension base="iso-3166-1:ISO3166CountyCode"/>
-    </xs:simpleType>
+    <xs:complexType name="LocaleType">
+        <xs:attribute name="name" type="LanguageType"/>
+    </xs:complexType>
 
     <xs:simpleType name="WWType">
         <xs:restriction base="xs:string">
@@ -268,26 +425,100 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="FileType">
-        <xs:all>
-            <xs:element name="file_name" type="xs:string"/>
-            <xs:element name="size" type="xs:positiveInteger"/>
-            <xs:element name="checksum" type="CheckSumType"/>
-        </xs:all>
-    </xs:complexType>
-
     <xs:complexType name="CheckSumType">
         <xs:simpleContent>
-            <xs:extension base="xs:hexBinary"/>
+            <xs:extension base="xs:hexBinary">
+                <xs:attribute name="type" type="xs:string" fixed="md5"/> <!--TODO-->
+            </xs:extension>
         </xs:simpleContent>
-        <xs:attribute name="type" type="xs:string" fixed="md5"/> <!--TODO-->
     </xs:complexType>
 
-    <xs:complexType name="LocaleType">
-        <xs:attribute name="name" type="LanguageType"/>
+    <xs:complexType name="FileType">
+        <xs:group ref="FileGroup"/>
     </xs:complexType>
+    <!-- Locales extensions -->
+
+    <xs:complexType name="LocaleTitleType">
+        <xs:complexContent>
+            <xs:extension base="LocaleType">
+                <xs:sequence>
+                    <xs:group ref="TitleGroup"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="LocaleCastType">
+        <xs:complexContent>
+            <xs:extension base="LocaleType">
+                <xs:sequence>
+                    <xs:group ref="CastNameGroup"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="LocaleCrewType">
+        <xs:complexContent>
+            <xs:extension base="LocaleType">
+                <xs:sequence>
+                    <xs:group ref="CrewNameGroup"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="LocaleArtistType">
+        <xs:complexContent>
+            <xs:extension base="LocaleType">
+                <xs:sequence>
+                    <xs:group ref="ArtistNameGroup"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- Patterns -->
+
+    <xs:simpleType name="VendorType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[a-zA-Z0-9][a-zA-Z0-9_]{5,99}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="IsanType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([0-9a-fA-F]{4}-){4}[a-zA-Z0-9]-([0-9a-fA-F]{4}-){2}[a-zA-Z0-9]"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="IsrcType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([A-Z]){2}([A-Z0-9]){3}([0-9]){7}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="IswcType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Z]-([0-9]{3}\.){2}[0-9]{3}-[0-9]"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <!-- Enumerations -->
+
+    <xs:simpleType name="VideoTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="film"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="VideoTypeSubType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="feature"/>
+            <xs:enumeration value="short"/>
+            <xs:enumeration value="concert"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:simpleType name="GenreType">
         <xs:restriction base="xs:string">
@@ -311,16 +542,53 @@
             <xs:enumeration value="Special Interest"/>
             <xs:enumeration value="Thriller"/>
             <xs:enumeration value="Sports"/>
+            <xs:enumeration value="War"/>
             <xs:enumeration value="Western"/>
             <xs:enumeration value="Urban"/>
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="RoleType">
+    <xs:simpleType name="RatingSystemType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="mpaa"/>
+            <xs:enumeration value="de-fsk"/>
+            <xs:enumeration value="fr-cnc"/>
+            <!--TODO-->
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="RatingLabelType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="G"/>
+            <xs:enumeration value="PG-13"/>
+            <xs:enumeration value="R"/>
+            <xs:enumeration value="UR"/>
+            <xs:enumeration value="NR"/>
+            <!--TODO-->
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="CrewRoleType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="Director"/>
             <xs:enumeration value="Producer"/>
             <xs:enumeration value="Screenwriter"/>
+            <xs:enumeration value="Dub Artist"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ArtistRoleType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Creator"/>
+            <xs:enumeration value="Composer"/>
+            <xs:enumeration value="DJ"/>
+            <xs:enumeration value="Featuring"/>
+            <xs:enumeration value="Narrator"/>
+            <xs:enumeration value="Performer"/>
+            <xs:enumeration value="Producer"/>
+            <xs:enumeration value="Remixer"/>
+            <xs:enumeration value="Songwriter"/>
+            <xs:enumeration value="with"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -339,6 +607,27 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="DataFileRoleType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="source"/>
+            <xs:enumeration value="audio"/>
+            <xs:enumeration value="video.end.dub_credits"/>
+            <xs:enumeration value="subtitles"/>
+            <xs:enumeration value="forced_subtitles"/>
+            <xs:enumeration value="captions"/>
+            <xs:enumeration value="notes"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="TimecodeFormatType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="qt_text"/> <!--HH:MM:SS-->
+            <xs:enumeration value="30/999 1000/nonDrop"/> <!--HH:MM:SS:FF-->
+            <xs:enumeration value="30/999 1000/dropNTSC"/><!--HH:MM:SS;FF-->
+            <xs:enumeration value="24/999 1000/nonDrop"/><!--HH:MM:SS:FF-->
+            <xs:enumeration value="25/1 1/nonDrop "/><!--HH:MM:SS:FF-->
+        </xs:restriction>
+    </xs:simpleType>
     <xs:simpleType name="AttributeNameType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="crop.top"/>
@@ -353,6 +642,28 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="New Release"/>
             <xs:enumeration value="Library"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="UsageType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Background"/>
+            <xs:enumeration value="Featured"/>
+            <xs:enumeration value="Signature"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- String restrictions-->
+
+    <xs:simpleType name="nonEmptyString">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="limitedString">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="1"/>
         </xs:restriction>
     </xs:simpleType>
 

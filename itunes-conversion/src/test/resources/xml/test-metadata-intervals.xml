@@ -24,12 +24,10 @@
     <video>
         <type>film</type>
         <subtype>feature</subtype>
-        <vendor_offer_code>408CH98720X103</vendor_offer_code>
         <vendor_id>09736156444</vendor_id>
         <isan>0000-0000-03B6-0000-O-0000-0000-2</isan>
         <upc>09736156444</upc>
         <country>US</country>
-        <original_spoken_locale>en-US</original_spoken_locale>
         <title>Forrest Gump</title>
         <synopsis>"Stupid is as stupid does," says Forrest Gump (played by Tom
             Hanks in an Oscar-winning performance) as he discusses his relative level of
@@ -49,8 +47,7 @@
             <genre>Drama</genre>
         </genres>
         <ratings>
-            <rating system="mpaa" reason="Rated PG-13 for drug content, some
-                sensuality and war violence.">PG-13
+            <rating system="mpaa" reason="Rated PG-13 for drug content, some sensuality and war violence.">PG-13
             </rating>
         </ratings>
         <cast>
@@ -62,6 +59,7 @@
                 <display_name>Robin Wright Penn</display_name>
                 <character_name>Jenny Curran</character_name>
             </cast_member>
+            <!-- Additional cast members here -->
         </cast>
         <crew>
             <crew_member billing="top">
@@ -76,6 +74,7 @@
                     <role>Producer</role>
                 </roles>
             </crew_member>
+            <!-- Additional crew members here -->
         </crew>
         <chapters>
             <timecode_format>24/999 1000/nonDrop</timecode_format>
@@ -99,6 +98,7 @@
                     </checksum>
                 </artwork_file>
             </chapter>
+            <!-- Additional chapters here. -->
         </chapters>
         <assets>
             <asset type="full">
@@ -121,6 +121,8 @@
                     </checksum>
                 </data_file>
             </asset>
+            <!-- World Trailer. Will be used where territory-specific trailer has
+            not been provided -->
             <asset type="preview">
                 <territories>
                     <territory>WW</territory>
@@ -137,6 +139,8 @@
                     <attribute name="crop.right">50</attribute>
                 </data_file>
             </asset>
+            <!-- World Poster Art. Will be used where territory-specific poster
+            art has not been provided -->
             <asset type="artwork">
                 <territories>
                     <territory>WW</territory>
@@ -152,16 +156,64 @@
         <products>
             <product>
                 <territory>US</territory>
+                <intervals>
+                    <interval>
+                        <start_date>2011-07-01</start_date>
+                        <end_date>2011-09-01</end_date>
+                        <wholesale_price_tier>3</wholesale_price_tier>
+                        <hd_wholesale_price_tier>1</hd_wholesale_price_tier>
+                    </interval>
+                    <interval>
+                        <start_date>2011-09-01</start_date>
+                        <end_date>2011-10-01</end_date>
+                        <wholesale_price_tier>5</wholesale_price_tier>
+                        <hd_wholesale_price_tier>3</hd_wholesale_price_tier>
+                    </interval>
+                    <interval>
+                        <start_date>2011-10-01</start_date>
+                        <wholesale_price_tier>3</wholesale_price_tier>
+                        <hd_wholesale_price_tier>1</hd_wholesale_price_tier>
+                    </interval>
+                </intervals>
                 <cleared_for_sale>true</cleared_for_sale>
                 <cleared_for_hd_sale>true</cleared_for_hd_sale>
-                <wholesale_price_tier>3</wholesale_price_tier>
-                <hd_wholesale_price_tier>1</hd_wholesale_price_tier>
                 <preorder_sales_start_date>2011-02-10</preorder_sales_start_date>
                 <sales_start_date>2011-03-12</sales_start_date>
+                <sales_end_date>2011-12-12</sales_end_date>
                 <cleared_for_vod>true</cleared_for_vod>
                 <vod_type>New Release</vod_type>
-                <available_for_vod_date>2012-11-12</available_for_vod_date>
-                <unavailable_for_vod_date>20138-11-12</unavailable_for_vod_date>
+                <available_for_vod_date>2011-11-12</available_for_vod_date>
+                <unavailable_for_vod_date>2012-11-12</unavailable_for_vod_date>
+                <physical_release_date>2007-08-01</physical_release_date>
+                <cleared_for_hd_vod>false</cleared_for_hd_vod>
+            </product>
+            <product>
+                <territory>GB</territory>
+                <intervals>
+                    <interval>
+                        <start_date>2011-07-01</start_date>
+                        <end_date>2011-09-01</end_date>
+                        <wholesale_price_tier>3</wholesale_price_tier>
+                    </interval>
+                    <interval>
+                        <start_date>2011-09-01</start_date>
+                        <end_date>2011-10-01</end_date>
+                        <wholesale_price_tier>5</wholesale_price_tier>
+                    </interval>
+                    <interval>
+                        <start_date>2011-10-01</start_date>
+                        <wholesale_price_tier>3</wholesale_price_tier>
+                    </interval>
+                </intervals>
+                <cleared_for_sale>true</cleared_for_sale>
+                <cleared_for_hd_sale>true</cleared_for_hd_sale>
+                <preorder_sales_start_date>2011-02-10</preorder_sales_start_date>
+                <sales_start_date>2011-03-12</sales_start_date>
+                <sales_end_date>2011-12-12</sales_end_date>
+                <cleared_for_vod>true</cleared_for_vod>
+                <vod_type>New Release</vod_type>
+                <available_for_vod_date>2011-11-12</available_for_vod_date>
+                <unavailable_for_vod_date>2012-11-12</unavailable_for_vod_date>
                 <physical_release_date>2007-08-01</physical_release_date>
                 <cleared_for_hd_vod>false</cleared_for_hd_vod>
             </product>
