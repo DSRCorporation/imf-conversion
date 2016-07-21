@@ -27,10 +27,12 @@ import com.netflix.imfutility.conversion.ConversionXmlProvider;
 import com.netflix.imfutility.conversion.SilentConversionChecker;
 import com.netflix.imfutility.conversion.templateParameter.context.CustomParameterValue;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.cpl.CplContextBuilder;
 import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
+import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.inputparameters.ImfUtilityInputParameters;
 import com.netflix.imfutility.inputparameters.ImfUtilityInputParametersValidator;
 import com.netflix.imfutility.mediainfo.MediaInfoContextBuilder;
@@ -124,10 +126,10 @@ public abstract class AbstractFormatBuilder {
             // 9. init template parameter contexts
             initContexts();
 
-            // 10. fill dynamic context
-            buildDynamicContext();
+            // 10. fill dynamic context before parsing CPL
+            buildDynamicContextPreCpl();
 
-            // 11. perform validation of the input IMP and CPL
+            // 11. perform validation of the input IMP and CPL (after dynamic context is filled).
             validateImpAndCpl();
 
             // 12. build IMF CPL contexts
@@ -136,16 +138,19 @@ public abstract class AbstractFormatBuilder {
             // 13. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
             buildMediaInfoContext();
 
-            // 14. select a conversion config within format.
+            // 14. fill dynamic context post CPL
+            buildDynamicContextPostCpl();
+
+            // 15. select a conversion config within format.
             selectConversionConfig();
 
-            // 15. check whether we can silently convert to destination parameters
+            // 16. check whether we can silently convert to destination parameters
             checkForSilentConversion();
 
-            // 16. convert
+            // 17. convert
             doConvert();
 
-            // 17. delete tmp files.
+            // 18. delete tmp files.
             if (isDeleteTmpFilesOnExit()) {
                 deleteTmpFiles();
             }
@@ -297,8 +302,8 @@ public abstract class AbstractFormatBuilder {
         logger.info("Initialized template parameter contexts: OK\n");
     }
 
-    private void buildDynamicContext() {
-        logger.info("Building Dynamic context...");
+    private void buildDynamicContextPreCpl() {
+        logger.info("Building Dynamic context before parsing CPL...");
 
         // build default dynamic parameters
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
@@ -307,12 +312,12 @@ public abstract class AbstractFormatBuilder {
         dynamicContext.addParameter(DynamicContextParameters.VALIDATION_TOOL, inputParameters.getImfValidationTool());
 
         // build format-specific dynamic parameters
-        doBuildDynamicContext();
+        doBuildDynamicContextPreCpl();
 
-        logger.info("Built Dynamic context: OK\n");
+        logger.info("Built Dynamic context before parsing CPL: OK\n");
     }
 
-    protected abstract void doBuildDynamicContext();
+    protected abstract void doBuildDynamicContextPreCpl();
 
     private void validateImpAndCpl() throws IOException, ImfValidationException {
         logger.info("Validating input IMP and CPL...");
@@ -343,6 +348,30 @@ public abstract class AbstractFormatBuilder {
 
         logger.info("Built Metadata Info contexts: OK\n");
     }
+
+    private void buildDynamicContextPostCpl() throws IOException, XmlParsingException {
+        logger.info("Building Dynamic context after CPL is parsed...");
+
+        // build default dynamic parameters
+        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
+        SequenceTemplateParameterContext seqContext = contextProvider.getSequenceContext();
+        boolean hasAudio = seqContext.getSequenceCount(SequenceType.AUDIO) > 0;
+        boolean hasVideo = seqContext.getSequenceCount(SequenceType.VIDEO) > 0;
+        boolean hasSubtitle = seqContext.getSequenceCount(SequenceType.SUBTITLE) > 0;
+        dynamicContext.addParameter(DynamicContextParameters.HAS_AUDIO, String.valueOf(hasAudio));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_VIDEO, String.valueOf(hasVideo));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_SUBTITLE, String.valueOf(hasSubtitle));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_AUDIO_AND_VIDEO, String.valueOf(hasAudio && hasVideo));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_AUDIO_ONLY, String.valueOf(hasAudio && !hasVideo));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_VIDEO_ONLY, String.valueOf(!hasAudio && hasVideo));
+
+        // build format-specific dynamic parameters
+        doBuildDynamicContextPostCpl();
+
+        logger.info("Built Dynamic context after CPL is parsed: OK\n");
+    }
+
+    protected abstract void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException;
 
     private void selectConversionConfig() {
         String conversionConfig = getConversionConfiguration();
