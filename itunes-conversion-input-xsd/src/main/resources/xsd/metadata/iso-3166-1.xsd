@@ -1,0 +1,288 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (C) 2016 Netflix, Inc.
+  ~
+  ~     This file is part of IMF Conversion Utility.
+  ~
+  ~     IMF Conversion Utility is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     IMF Conversion Utility is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.codesynthesis.com/xmlns/xsstl">
+
+    <xsd:annotation>
+        <xsd:documentation>
+            Copyright (C) 2006-2007 Code Synthesis Tools CC
+
+            Redistribution and use with or without modification are permitted
+            under the terms of the new BSD license. See the accompanying LICENSE
+            file.
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:simpleType name="ISO3166CountyCode">
+        <xsd:annotation>
+            <xsd:documentation>
+                Two-letter (alpha-2) ISO 3166-1 code for one of the 243 countries.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="AF"/> <!-- AFGHANISTAN -->
+            <xsd:enumeration value="AX"/> <!-- &Aring;LAND ISLANDS -->
+            <xsd:enumeration value="AL"/> <!-- ALBANIA -->
+            <xsd:enumeration value="DZ"/> <!-- ALGERIA -->
+            <xsd:enumeration value="AS"/> <!-- AMERICAN SAMOA -->
+            <xsd:enumeration value="AD"/> <!-- ANDORRA -->
+            <xsd:enumeration value="AO"/> <!-- ANGOLA -->
+            <xsd:enumeration value="AI"/> <!-- ANGUILLA -->
+            <xsd:enumeration value="AQ"/> <!-- ANTARCTICA -->
+            <xsd:enumeration value="AG"/> <!-- ANTIGUA AND BARBUDA -->
+            <xsd:enumeration value="AR"/> <!-- ARGENTINA -->
+            <xsd:enumeration value="AM"/> <!-- ARMENIA -->
+            <xsd:enumeration value="AW"/> <!-- ARUBA -->
+            <xsd:enumeration value="AU"/> <!-- AUSTRALIA -->
+            <xsd:enumeration value="AT"/> <!-- AUSTRIA -->
+            <xsd:enumeration value="AZ"/> <!-- AZERBAIJAN -->
+            <xsd:enumeration value="BS"/> <!-- BAHAMAS -->
+            <xsd:enumeration value="BH"/> <!-- BAHRAIN -->
+            <xsd:enumeration value="BD"/> <!-- BANGLADESH -->
+            <xsd:enumeration value="BB"/> <!-- BARBADOS -->
+            <xsd:enumeration value="BY"/> <!-- BELARUS -->
+            <xsd:enumeration value="BE"/> <!-- BELGIUM -->
+            <xsd:enumeration value="BZ"/> <!-- BELIZE -->
+            <xsd:enumeration value="BJ"/> <!-- BENIN -->
+            <xsd:enumeration value="BM"/> <!-- BERMUDA -->
+            <xsd:enumeration value="BT"/> <!-- BHUTAN -->
+            <xsd:enumeration value="BO"/> <!-- BOLIVIA -->
+            <xsd:enumeration value="BA"/> <!-- BOSNIA AND HERZEGOVINA -->
+            <xsd:enumeration value="BW"/> <!-- BOTSWANA -->
+            <xsd:enumeration value="BV"/> <!-- BOUVET ISLAND -->
+            <xsd:enumeration value="BR"/> <!-- BRAZIL -->
+            <xsd:enumeration value="IO"/> <!-- BRITISH INDIAN OCEAN TERRITORY -->
+            <xsd:enumeration value="BN"/> <!-- BRUNEI DARUSSALAM -->
+            <xsd:enumeration value="BG"/> <!-- BULGARIA -->
+            <xsd:enumeration value="BF"/> <!-- BURKINA FASO -->
+            <xsd:enumeration value="BI"/> <!-- BURUNDI -->
+            <xsd:enumeration value="KH"/> <!-- CAMBODIA -->
+            <xsd:enumeration value="CM"/> <!-- CAMEROON -->
+            <xsd:enumeration value="CA"/> <!-- CANADA -->
+            <xsd:enumeration value="CV"/> <!-- CAPE VERDE -->
+            <xsd:enumeration value="KY"/> <!-- CAYMAN ISLANDS -->
+            <xsd:enumeration value="CF"/> <!-- CENTRAL AFRICAN REPUBLIC -->
+            <xsd:enumeration value="TD"/> <!-- CHAD -->
+            <xsd:enumeration value="CL"/> <!-- CHILE -->
+            <xsd:enumeration value="CN"/> <!-- CHINA -->
+            <xsd:enumeration value="CX"/> <!-- CHRISTMAS ISLAND -->
+            <xsd:enumeration value="CC"/> <!-- COCOS (KEELING) ISLANDS -->
+            <xsd:enumeration value="CO"/> <!-- COLOMBIA -->
+            <xsd:enumeration value="KM"/> <!-- COMOROS -->
+            <xsd:enumeration value="CG"/> <!-- CONGO -->
+            <xsd:enumeration value="CD"/> <!-- CONGO, THE DEMOCRATIC REPUBLIC OF THE -->
+            <xsd:enumeration value="CK"/> <!-- COOK ISLANDS -->
+            <xsd:enumeration value="CR"/> <!-- COSTA RICA -->
+            <xsd:enumeration value="CI"/> <!-- COTE D'IVOIRE -->
+            <xsd:enumeration value="HR"/> <!-- CROATIA -->
+            <xsd:enumeration value="CU"/> <!-- CUBA -->
+            <xsd:enumeration value="CY"/> <!-- CYPRUS -->
+            <xsd:enumeration value="CZ"/> <!-- CZECH REPUBLIC -->
+            <xsd:enumeration value="DK"/> <!-- DENMARK -->
+            <xsd:enumeration value="DJ"/> <!-- DJIBOUTI -->
+            <xsd:enumeration value="DM"/> <!-- DOMINICA -->
+            <xsd:enumeration value="DO"/> <!-- DOMINICAN REPUBLIC -->
+            <xsd:enumeration value="EC"/> <!-- ECUADOR -->
+            <xsd:enumeration value="EG"/> <!-- EGYPT -->
+            <xsd:enumeration value="SV"/> <!-- EL SALVADOR -->
+            <xsd:enumeration value="GQ"/> <!-- EQUATORIAL GUINEA -->
+            <xsd:enumeration value="ER"/> <!-- ERITREA -->
+            <xsd:enumeration value="EE"/> <!-- ESTONIA -->
+            <xsd:enumeration value="ET"/> <!-- ETHIOPIA -->
+            <xsd:enumeration value="FK"/> <!-- FALKLAND ISLANDS (MALVINAS) -->
+            <xsd:enumeration value="FO"/> <!-- FAROE ISLANDS -->
+            <xsd:enumeration value="FJ"/> <!-- FIJI -->
+            <xsd:enumeration value="FI"/> <!-- FINLAND -->
+            <xsd:enumeration value="FR"/> <!-- FRANCE -->
+            <xsd:enumeration value="GF"/> <!-- FRENCH GUIANA -->
+            <xsd:enumeration value="PF"/> <!-- FRENCH POLYNESIA -->
+            <xsd:enumeration value="TF"/> <!-- FRENCH SOUTHERN TERRITORIES -->
+            <xsd:enumeration value="GA"/> <!-- GABON -->
+            <xsd:enumeration value="GM"/> <!-- GAMBIA -->
+            <xsd:enumeration value="GE"/> <!-- GEORGIA -->
+            <xsd:enumeration value="DE"/> <!-- GERMANY -->
+            <xsd:enumeration value="GH"/> <!-- GHANA -->
+            <xsd:enumeration value="GI"/> <!-- GIBRALTAR -->
+            <xsd:enumeration value="GR"/> <!-- GREECE -->
+            <xsd:enumeration value="GL"/> <!-- GREENLAND -->
+            <xsd:enumeration value="GD"/> <!-- GRENADA -->
+            <xsd:enumeration value="GP"/> <!-- GUADELOUPE -->
+            <xsd:enumeration value="GU"/> <!-- GUAM -->
+            <xsd:enumeration value="GT"/> <!-- GUATEMALA -->
+            <xsd:enumeration value="GG"/> <!-- GUERNSEY -->
+            <xsd:enumeration value="GN"/> <!-- GUINEA -->
+            <xsd:enumeration value="GW"/> <!-- GUINEA-BISSAU -->
+            <xsd:enumeration value="GY"/> <!-- GUYANA -->
+            <xsd:enumeration value="HT"/> <!-- HAITI -->
+            <xsd:enumeration value="HM"/> <!-- HEARD ISLAND AND MCDONALD ISLANDS -->
+            <xsd:enumeration value="VA"/> <!-- HOLY SEE (VATICAN CITY STATE) -->
+            <xsd:enumeration value="HN"/> <!-- HONDURAS -->
+            <xsd:enumeration value="HK"/> <!-- HONG KONG -->
+            <xsd:enumeration value="HU"/> <!-- HUNGARY -->
+            <xsd:enumeration value="IS"/> <!-- ICELAND -->
+            <xsd:enumeration value="IN"/> <!-- INDIA -->
+            <xsd:enumeration value="ID"/> <!-- INDONESIA -->
+            <xsd:enumeration value="IR"/> <!-- IRAN, ISLAMIC REPUBLIC OF -->
+            <xsd:enumeration value="IQ"/> <!-- IRAQ -->
+            <xsd:enumeration value="IE"/> <!-- IRELAND -->
+            <xsd:enumeration value="IM"/> <!-- ISLE OF MAN -->
+            <xsd:enumeration value="IL"/> <!-- ISRAEL -->
+            <xsd:enumeration value="IT"/> <!-- ITALY -->
+            <xsd:enumeration value="JM"/> <!-- JAMAICA -->
+            <xsd:enumeration value="JP"/> <!-- JAPAN -->
+            <xsd:enumeration value="JE"/> <!-- JERSEY -->
+            <xsd:enumeration value="JO"/> <!-- JORDAN -->
+            <xsd:enumeration value="KZ"/> <!-- KAZAKHSTAN -->
+            <xsd:enumeration value="KE"/> <!-- KENYA -->
+            <xsd:enumeration value="KI"/> <!-- KIRIBATI -->
+            <xsd:enumeration value="KP"/> <!-- KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF -->
+            <xsd:enumeration value="KR"/> <!-- KOREA, REPUBLIC OF -->
+            <xsd:enumeration value="KW"/> <!-- KUWAIT -->
+            <xsd:enumeration value="KG"/> <!-- KYRGYZSTAN -->
+            <xsd:enumeration value="LA"/> <!-- LAO PEOPLE'S DEMOCRATIC REPUBLIC -->
+            <xsd:enumeration value="LV"/> <!-- LATVIA -->
+            <xsd:enumeration value="LB"/> <!-- LEBANON -->
+            <xsd:enumeration value="LS"/> <!-- LESOTHO -->
+            <xsd:enumeration value="LR"/> <!-- LIBERIA -->
+            <xsd:enumeration value="LY"/> <!-- LIBYAN ARAB JAMAHIRIYA -->
+            <xsd:enumeration value="LI"/> <!-- LIECHTENSTEIN -->
+            <xsd:enumeration value="LT"/> <!-- LITHUANIA -->
+            <xsd:enumeration value="LU"/> <!-- LUXEMBOURG -->
+            <xsd:enumeration value="MO"/> <!-- MACAO -->
+            <xsd:enumeration value="MK"/> <!-- MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF -->
+            <xsd:enumeration value="MG"/> <!-- MADAGASCAR -->
+            <xsd:enumeration value="MW"/> <!-- MALAWI -->
+            <xsd:enumeration value="MY"/> <!-- MALAYSIA -->
+            <xsd:enumeration value="MV"/> <!-- MALDIVES -->
+            <xsd:enumeration value="ML"/> <!-- MALI -->
+            <xsd:enumeration value="MT"/> <!-- MALTA -->
+            <xsd:enumeration value="MH"/> <!-- MARSHALL ISLANDS -->
+            <xsd:enumeration value="MQ"/> <!-- MARTINIQUE -->
+            <xsd:enumeration value="MR"/> <!-- MAURITANIA -->
+            <xsd:enumeration value="MU"/> <!-- MAURITIUS -->
+            <xsd:enumeration value="YT"/> <!-- MAYOTTE -->
+            <xsd:enumeration value="MX"/> <!-- MEXICO -->
+            <xsd:enumeration value="FM"/> <!-- MICRONESIA, FEDERATED STATES OF -->
+            <xsd:enumeration value="MD"/> <!-- MOLDOVA, REPUBLIC OF -->
+            <xsd:enumeration value="MC"/> <!-- MONACO -->
+            <xsd:enumeration value="MN"/> <!-- MONGOLIA -->
+            <xsd:enumeration value="MS"/> <!-- MONTSERRAT -->
+            <xsd:enumeration value="MA"/> <!-- MOROCCO -->
+            <xsd:enumeration value="MZ"/> <!-- MOZAMBIQUE -->
+            <xsd:enumeration value="MM"/> <!-- MYANMAR -->
+            <xsd:enumeration value="NA"/> <!-- NAMIBIA -->
+            <xsd:enumeration value="NR"/> <!-- NAURU -->
+            <xsd:enumeration value="NP"/> <!-- NEPAL -->
+            <xsd:enumeration value="NL"/> <!-- NETHERLANDS -->
+            <xsd:enumeration value="AN"/> <!-- NETHERLANDS ANTILLES -->
+            <xsd:enumeration value="NC"/> <!-- NEW CALEDONIA -->
+            <xsd:enumeration value="NZ"/> <!-- NEW ZEALAND -->
+            <xsd:enumeration value="NI"/> <!-- NICARAGUA -->
+            <xsd:enumeration value="NE"/> <!-- NIGER -->
+            <xsd:enumeration value="NG"/> <!-- NIGERIA -->
+            <xsd:enumeration value="NU"/> <!-- NIUE -->
+            <xsd:enumeration value="NF"/> <!-- NORFOLK ISLAND -->
+            <xsd:enumeration value="MP"/> <!-- NORTHERN MARIANA ISLANDS -->
+            <xsd:enumeration value="NO"/> <!-- NORWAY -->
+            <xsd:enumeration value="OM"/> <!-- OMAN -->
+            <xsd:enumeration value="PK"/> <!-- PAKISTAN -->
+            <xsd:enumeration value="PW"/> <!-- PALAU -->
+            <xsd:enumeration value="PS"/> <!-- PALESTINIAN TERRITORY, OCCUPIED -->
+            <xsd:enumeration value="PA"/> <!-- PANAMA -->
+            <xsd:enumeration value="PG"/> <!-- PAPUA NEW GUINEA -->
+            <xsd:enumeration value="PY"/> <!-- PARAGUAY -->
+            <xsd:enumeration value="PE"/> <!-- PERU -->
+            <xsd:enumeration value="PH"/> <!-- PHILIPPINES -->
+            <xsd:enumeration value="PN"/> <!-- PITCAIRN -->
+            <xsd:enumeration value="PL"/> <!-- POLAND -->
+            <xsd:enumeration value="PT"/> <!-- PORTUGAL -->
+            <xsd:enumeration value="PR"/> <!-- PUERTO RICO -->
+            <xsd:enumeration value="QA"/> <!-- QATAR -->
+            <xsd:enumeration value="RE"/> <!-- REUNION -->
+            <xsd:enumeration value="RO"/> <!-- ROMANIA -->
+            <xsd:enumeration value="RU"/> <!-- RUSSIAN FEDERATION -->
+            <xsd:enumeration value="RW"/> <!-- RWANDA -->
+            <xsd:enumeration value="SH"/> <!-- SAINT HELENA -->
+            <xsd:enumeration value="KN"/> <!-- SAINT KITTS AND NEVIS -->
+            <xsd:enumeration value="LC"/> <!-- SAINT LUCIA -->
+            <xsd:enumeration value="PM"/> <!-- SAINT PIERRE AND MIQUELON -->
+            <xsd:enumeration value="VC"/> <!-- SAINT VINCENT AND THE GRENADINES -->
+            <xsd:enumeration value="WS"/> <!-- SAMOA -->
+            <xsd:enumeration value="SM"/> <!-- SAN MARINO -->
+            <xsd:enumeration value="ST"/> <!-- SAO TOME AND PRINCIPE -->
+            <xsd:enumeration value="SA"/> <!-- SAUDI ARABIA -->
+            <xsd:enumeration value="SN"/> <!-- SENEGAL -->
+            <xsd:enumeration value="CS"/> <!-- SERBIA AND MONTENEGRO -->
+            <xsd:enumeration value="SC"/> <!-- SEYCHELLES -->
+            <xsd:enumeration value="SL"/> <!-- SIERRA LEONE -->
+            <xsd:enumeration value="SG"/> <!-- SINGAPORE -->
+            <xsd:enumeration value="SK"/> <!-- SLOVAKIA -->
+            <xsd:enumeration value="SI"/> <!-- SLOVENIA -->
+            <xsd:enumeration value="SB"/> <!-- SOLOMON ISLANDS -->
+            <xsd:enumeration value="SO"/> <!-- SOMALIA -->
+            <xsd:enumeration value="ZA"/> <!-- SOUTH AFRICA -->
+            <xsd:enumeration value="GS"/> <!-- SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS -->
+            <xsd:enumeration value="ES"/> <!-- SPAIN -->
+            <xsd:enumeration value="LK"/> <!-- SRI LANKA -->
+            <xsd:enumeration value="SD"/> <!-- SUDAN -->
+            <xsd:enumeration value="SR"/> <!-- SURINAME -->
+            <xsd:enumeration value="SJ"/> <!-- SVALBARD AND JAN MAYEN -->
+            <xsd:enumeration value="SZ"/> <!-- SWAZILAND -->
+            <xsd:enumeration value="SE"/> <!-- SWEDEN -->
+            <xsd:enumeration value="CH"/> <!-- SWITZERLAND -->
+            <xsd:enumeration value="SY"/> <!-- SYRIAN ARAB REPUBLIC -->
+            <xsd:enumeration value="TW"/> <!-- TAIWAN, PROVINCE OF CHINA -->
+            <xsd:enumeration value="TJ"/> <!-- TAJIKISTAN -->
+            <xsd:enumeration value="TZ"/> <!-- TANZANIA, UNITED REPUBLIC OF -->
+            <xsd:enumeration value="TH"/> <!-- THAILAND -->
+            <xsd:enumeration value="TL"/> <!-- TIMOR-LESTE -->
+            <xsd:enumeration value="TG"/> <!-- TOGO -->
+            <xsd:enumeration value="TK"/> <!-- TOKELAU -->
+            <xsd:enumeration value="TO"/> <!-- TONGA -->
+            <xsd:enumeration value="TT"/> <!-- TRINIDAD AND TOBAGO -->
+            <xsd:enumeration value="TN"/> <!-- TUNISIA -->
+            <xsd:enumeration value="TR"/> <!-- TURKEY -->
+            <xsd:enumeration value="TM"/> <!-- TURKMENISTAN -->
+            <xsd:enumeration value="TC"/> <!-- TURKS AND CAICOS ISLANDS -->
+            <xsd:enumeration value="TV"/> <!-- TUVALU -->
+            <xsd:enumeration value="UG"/> <!-- UGANDA -->
+            <xsd:enumeration value="UA"/> <!-- UKRAINE -->
+            <xsd:enumeration value="AE"/> <!-- UNITED ARAB EMIRATES -->
+            <xsd:enumeration value="GB"/> <!-- UNITED KINGDOM -->
+            <xsd:enumeration value="US"/> <!-- UNITED STATES -->
+            <xsd:enumeration value="UM"/> <!-- UNITED STATES MINOR OUTLYING ISLANDS -->
+            <xsd:enumeration value="UY"/> <!-- URUGUAY -->
+            <xsd:enumeration value="UZ"/> <!-- UZBEKISTAN -->
+            <xsd:enumeration value="VU"/> <!-- VANUATU -->
+            <xsd:enumeration value="VE"/> <!-- VENEZUELA -->
+            <xsd:enumeration value="VN"/> <!-- VIET NAM -->
+            <xsd:enumeration value="VG"/> <!-- VIRGIN ISLANDS, BRITISH -->
+            <xsd:enumeration value="VI"/> <!-- VIRGIN ISLANDS, U.S. -->
+            <xsd:enumeration value="WF"/> <!-- WALLIS AND FUTUNA -->
+            <xsd:enumeration value="EH"/> <!-- WESTERN SAHARA -->
+            <xsd:enumeration value="YE"/> <!-- YEMEN -->
+            <xsd:enumeration value="ZM"/> <!-- ZAMBIA -->
+            <xsd:enumeration value="ZW"/> <!-- ZIMBABWE -->
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

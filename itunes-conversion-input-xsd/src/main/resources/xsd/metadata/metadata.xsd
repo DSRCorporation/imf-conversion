@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (C) 2016 Netflix, Inc.
+  ~
+  ~     This file is part of IMF Conversion Utility.
+  ~
+  ~     IMF Conversion Utility is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     IMF Conversion Utility is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:iso-3166-1="http://www.codesynthesis.com/xmlns/xsstl"
+        elementFormDefault="qualified" attributeFormDefault="unqualified"
+        targetNamespace="http://apple.com/itunes/importer"
+        xmlns="http://apple.com/itunes/importer">
+
+    <!--Must be formatted according to -->
+
+    <!--
+      Root element
+    -->
+    <xs:element name="package" type="PackageType"/>
+
+    <!--
+      Root type
+    -->
+    <xs:complexType name="PackageType">
+        <xs:sequence>
+            <xs:element name="language" type="LanguageType"/>
+            <xs:element name="provider" type="xs:string"/>
+            <xs:element name="video" type="VideoType"/>
+        </xs:sequence>
+        <xs:attribute name="version" type="xs:string" use="required" fixed="film5.0"/>
+    </xs:complexType>
+
+    <xs:complexType name="VideoType">
+        <xs:sequence>
+            <xs:element name="type" type="VideoTypeType"/>
+            <xs:element name="subtype" type="VideoTypeSubType"/>
+            <xs:element name="vendor_offer_code" type="VendorType" minOccurs="0"/>
+            <xs:element name="vendor_id" type="VendorType"/>
+            <xs:element name="isan" type="xs:string" minOccurs="0"/> <!--TODO pattern-->
+            <xs:element name="upc" type="xs:string" minOccurs="0"/>
+            <xs:element name="country" type="CountryType"/>
+            <xs:element name="original_spoken_locale" type="LanguageType"/>
+            <xs:element name="title" type="xs:string"/> <!--TODO limit 255 bytes-->
+            <xs:element name="synopsis" type="xs:string"/> <!--TODO limit 4000 bytes-->
+            <xs:element name="production_company" type="xs:string"/><!--TODO limit 255 bytes-->
+            <xs:element name="copyright_cline" type="xs:string"/><!--TODO limit 1000 bytes-->
+            <xs:element name="theatrical_release_date" type="xs:date"/>
+            <xs:element name="genres" type="GenresType" minOccurs="0"/>
+            <xs:element name="ratings" type="RatingsType"/>
+            <xs:element name="cast" type="CastType"/>
+            <xs:element name="crew" type="CrewType"/>
+            <xs:element name="chapters" type="ChaptersType"/>
+            <xs:element name="assets" type="AssetsType"/>
+            <xs:element name="products" type="ProductsType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="VideoTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="film"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="VideoTypeSubType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="feature"/>
+            <xs:enumeration value="short"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="VendorType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[a-zA-Z0-9][a-zA-Z0-9_]{5,99}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="GenresType">
+        <xs:sequence>
+            <xs:element name="genre" type="GenreType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RatingsType">
+        <xs:sequence>
+            <xs:element name="rating" type="RatingType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RatingType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <!--TODO-->
+            </xs:extension>
+        </xs:simpleContent>
+        <xs:attribute name="system" type="xs:string" use="required"/>
+        <xs:attribute name="reason" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Cast & crew -->
+
+    <xs:complexType name="CastType">
+        <xs:sequence>
+            <xs:element name="cast_member" type="CastMemberType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CastMemberType">
+        <xs:sequence>
+            <xs:element name="display_name" type="xs:string"/><!-- TODO limit 250 bytes-->
+            <xs:element name="character_name" type="xs:string"/><!-- TODO limit 250 bytes-->
+        </xs:sequence>
+        <xs:attribute name="billing" type="xs:string" default="ordered"/>
+    </xs:complexType>
+
+    <xs:complexType name="CrewType">
+        <xs:sequence>
+            <xs:element name="crew_member" type="CrewMemberType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CrewMemberType">
+        <xs:sequence>
+            <xs:element name="display_name" type="xs:string"/><!-- TODO limit 250 bytes-->
+            <xs:element name="roles" type="RolesType"/>
+        </xs:sequence>
+        <xs:attribute name="billing" type="xs:string" default="ordered"/>
+    </xs:complexType>
+
+    <xs:complexType name="RolesType">
+        <xs:sequence>
+            <xs:element name="role" type="RoleType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Chapters -->
+
+    <xs:complexType name="ChaptersType">
+        <xs:sequence>
+            <xs:element name="timecode_format" type="xs:string" minOccurs="0"/> <!--TODO-->
+            <xs:element name="chapter" type="ChapterType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ChapterType">
+        <xs:sequence>
+            <xs:element name="start_time" type="xs:string"/> <!--TODO-->
+            <xs:element name="title" type="TitleType"/>
+            <xs:element name="artwork_file" type="ArtWorkFileType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TitleType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string"/> <!--TODO 255 bytes limit-->
+        </xs:simpleContent>
+        <xs:attribute name="locale" type="LanguageType"/>
+    </xs:complexType>
+
+    <xs:complexType name="ArtWorkFileType">
+        <xs:complexContent>
+            <xs:extension base="FileType"/>
+        </xs:complexContent>
+        <xs:attribute name="locale" type="LanguageType"/>
+    </xs:complexType>
+
+    <!-- Assets -->
+
+    <xs:complexType name="AssetsType">
+        <xs:sequence>
+            <xs:element name="asset" type="AssetType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AssetType">
+        <xs:sequence>
+            <xs:element name="territories" type="TerritoriesType" minOccurs="0"/> <!--TODO-->
+            <xs:element name="data_file" type="DataFileType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="type" type="AssetTypeType" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="DataFileType">
+        <xs:complexContent>
+            <xs:extension base="FileType">
+                <xs:sequence>
+                    <xs:element name="locale" type="LocaleType"/>
+                    <xs:element name="attribute" type="AttributeType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+        <xs:attribute name="role" type="xs:string"/> <!--TODO -->
+    </xs:complexType>
+
+    <xs:complexType name="AttributeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string"/>
+        </xs:simpleContent>
+        <xs:attribute name="name" type="AttributeNameType" use="required"/>
+    </xs:complexType>
+
+    <!-- Territory -->
+
+    <xs:complexType name="TerritoriesType">
+        <xs:sequence>
+            <xs:element name="territory" type="TerritoryType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="TerritoryType">
+        <xs:union memberTypes="CountryType WWType"/>
+    </xs:simpleType>
+
+    <!-- Products -->
+
+    <xs:complexType name="ProductsType">
+        <xs:sequence>
+            <xs:element name="product" type="ProductType" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ProductType">
+        <xs:sequence>
+            <xs:element name="territory" type="TerritoryType"/>
+            <xs:element name="cleared_for_sale" type="xs:boolean"/>
+            <xs:element name="cleared_for_hd_sale" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="wholesale_price_tier" type="xs:positiveInteger" minOccurs="0"/> <!--TODO required for EST-->
+            <xs:element name="hd_wholesale_price_tier" type="xs:positiveInteger" minOccurs="0"/>
+            <xs:element name="preorder_sales_start_date" type="xs:date" minOccurs="0"/>
+            <xs:element name="sales_start_date" type="xs:date" minOccurs="0"/>
+            <xs:element name="sales_end_date" type="xs:date" minOccurs="0"/>
+            <xs:element name="cleared_for_vod" type="xs:boolean" minOccurs="0"/> <!--TODO required for VOD-->
+            <xs:element name="vod_type" type="VodType" minOccurs="0"/> <!--TODO <cleared_for_vod> is true.-->
+            <xs:element name="available_for_vod_date" type="xs:date" minOccurs="0"/>
+            <xs:element name="unavailable_for_vod_date" type="xs:date" minOccurs="0"/>
+            <xs:element name="physical_release_date" type="xs:date" minOccurs="0"/>
+            <xs:element name="cleared_for_hd_vod" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Common types -->
+
+    <xs:simpleType name="LanguageType">
+        <xs:extension base="xs:language"> <!--TODO restrict languages according iTunes specification-->
+        </xs:extension>
+    </xs:simpleType>
+
+    <xs:simpleType name="CountryType">
+        <xs:extension base="iso-3166-1:ISO3166CountyCode"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="WWType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="WW"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="FileType">
+        <xs:all>
+            <xs:element name="file_name" type="xs:string"/>
+            <xs:element name="size" type="xs:positiveInteger"/>
+            <xs:element name="checksum" type="CheckSumType"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="CheckSumType">
+        <xs:simpleContent>
+            <xs:extension base="xs:hexBinary"/>
+        </xs:simpleContent>
+        <xs:attribute name="type" type="xs:string" fixed="md5"/> <!--TODO-->
+    </xs:complexType>
+
+    <xs:complexType name="LocaleType">
+        <xs:attribute name="name" type="LanguageType"/>
+    </xs:complexType>
+
+    <!-- Enumerations -->
+
+    <xs:simpleType name="GenreType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Action &amp; Adventure"/>
+            <xs:enumeration value="Anime"/>
+            <xs:enumeration value="Classics"/>
+            <xs:enumeration value="Comedy"/>
+            <xs:enumeration value="Concert Films"/>
+            <xs:enumeration value="Documentary"/>
+            <xs:enumeration value="Drama"/>
+            <xs:enumeration value="Foreign"/>
+            <xs:enumeration value="Horror"/>
+            <xs:enumeration value="Independent"/>
+            <xs:enumeration value="Kids &amp; Family"/>
+            <xs:enumeration value="Music Documentary"/>
+            <xs:enumeration value="Music Feature Film"/>
+            <xs:enumeration value="Musicals"/>
+            <xs:enumeration value="Romance"/>
+            <xs:enumeration value="Sci-Fi &amp; Fantasy"/>
+            <xs:enumeration value="Short Films"/>
+            <xs:enumeration value="Special Interest"/>
+            <xs:enumeration value="Thriller"/>
+            <xs:enumeration value="Sports"/>
+            <xs:enumeration value="Western"/>
+            <xs:enumeration value="Urban"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="RoleType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Director"/>
+            <xs:enumeration value="Producer"/>
+            <xs:enumeration value="Screenwriter"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="BillingType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="top"/>
+            <xs:enumeration value="ordered"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="AssetTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="full"/>
+            <xs:enumeration value="preview"/>
+            <xs:enumeration value="artwork"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="AttributeNameType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="crop.top"/>
+            <xs:enumeration value="crop.bottom"/>
+            <xs:enumeration value="crop.left"/>
+            <xs:enumeration value="crop.right"/>
+            <xs:enumeration value="image.textless_master"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="VodType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="New Release"/>
+            <xs:enumeration value="Library"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>
