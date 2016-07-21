@@ -27,10 +27,12 @@ import com.netflix.imfutility.conversion.ConversionXmlProvider;
 import com.netflix.imfutility.conversion.SilentConversionChecker;
 import com.netflix.imfutility.conversion.templateParameter.context.CustomParameterValue;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.cpl.CplContextBuilder;
 import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
+import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.inputparameters.ImfUtilityInputParameters;
 import com.netflix.imfutility.inputparameters.ImfUtilityInputParametersValidator;
 import com.netflix.imfutility.mediainfo.MediaInfoContextBuilder;
@@ -124,17 +126,17 @@ public abstract class AbstractFormatBuilder {
             // 9. init template parameter contexts
             initContexts();
 
-            // 10. fill dynamic context
-            buildDynamicContext();
-
-            // 11. perform validation of the input IMP and CPL
+            // 10. perform validation of the input IMP and CPL
             validateImpAndCpl();
 
-            // 12. build IMF CPL contexts
+            // 11. build IMF CPL contexts
             buildCplContext();
 
-            // 13. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
+            // 12. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
             buildMediaInfoContext();
+
+            // 13. fill dynamic context (do it after CPL contexts!)
+            buildDynamicContext();
 
             // 14. select a conversion config within format.
             selectConversionConfig();
@@ -305,6 +307,17 @@ public abstract class AbstractFormatBuilder {
         dynamicContext.addParameter(DynamicContextParameters.IMP, inputParameters.getImpDirectoryFile().getAbsolutePath());
         dynamicContext.addParameter(DynamicContextParameters.CPL, inputParameters.getCplFile().getAbsolutePath());
         dynamicContext.addParameter(DynamicContextParameters.VALIDATION_TOOL, inputParameters.getImfValidationTool());
+
+        SequenceTemplateParameterContext seqContext = contextProvider.getSequenceContext();
+        boolean hasAudio = seqContext.getSequenceCount(SequenceType.AUDIO) > 0;
+        boolean hasVideo = seqContext.getSequenceCount(SequenceType.VIDEO) > 0;
+        boolean hasSubtitle = seqContext.getSequenceCount(SequenceType.SUBTITLE) > 0;
+        dynamicContext.addParameter(DynamicContextParameters.HAS_AUDIO, String.valueOf(hasAudio));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_VIDEO, String.valueOf(hasVideo));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_SUBTITLE, String.valueOf(hasSubtitle));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_AUDIO_AND_VIDEO, String.valueOf(hasAudio && hasVideo));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_AUDIO_ONLY, String.valueOf(hasAudio && !hasVideo));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_VIDEO_ONLY, String.valueOf(!hasAudio && hasVideo));
 
         // build format-specific dynamic parameters
         doBuildDynamicContext();

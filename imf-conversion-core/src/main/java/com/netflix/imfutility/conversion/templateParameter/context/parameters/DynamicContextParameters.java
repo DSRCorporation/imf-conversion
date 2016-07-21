@@ -38,8 +38,19 @@ public enum DynamicContextParameters {
 
     WORKING_DIR("workingDir"),
 
-    OUTPUT_VALIDATION_FILE("outputValidationFile");
+    HAS_AUDIO("hasAudio"),
 
+    HAS_VIDEO("hasVideo"),
+
+    HAS_SUBTITLE("hasSubtitle"),
+
+    HAS_AUDIO_AND_VIDEO("hasAudioAndVideo"),
+
+    HAS_AUDIO_ONLY("hasAudioOnly"),
+
+    HAS_VIDEO_ONLY("hasVideoOnly"),
+
+    OUTPUT_VALIDATION_FILE("outputValidationFile");
 
     private final String name;
 

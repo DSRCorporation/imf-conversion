@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CompositionPlaylist xmlns="http://www.smpte-ra.org/schemas/2067-3/2013"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Id>urn:uuid:6f548f17-48c5-452a-94ea-9bb58c6c5b5b</Id>
+    <Annotation>Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV</Annotation>
+    <IssueDate>2015-06-22T20:54:45-00:00</IssueDate>
+    <Issuer>fotokem</Issuer>
+    <Creator>Clipster 5.9.3.4 (build 91860)</Creator>
+    <ContentTitle>Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV</ContentTitle>
+    <ContentKind>Feature</ContentKind>
+    <ContentVersionList>
+        <ContentVersion>
+            <Id>urn:uuid:374cdf99-da9b-4d39-a867-5551c386e653</Id>
+            <LabelText>Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV</LabelText>
+        </ContentVersion>
+    </ContentVersionList>
+    <CompositionTimecode>
+        <TimecodeDropFrame>0</TimecodeDropFrame>
+        <TimecodeRate>50</TimecodeRate>
+        <TimecodeStartAddress>00:00:00:00</TimecodeStartAddress>
+    </CompositionTimecode>
+    <EditRate>50 1</EditRate>
+    <SegmentList>
+        <Segment>
+            <Id>urn:uuid:20544b5c-be3c-4274-8633-249ee8a5ad16</Id>
+            <SequenceList>
+                <cc:MainAudioSequence xmlns:cc="http://www.smpte-ra.org/schemas/2067-2/2013">
+                    <Id>urn:uuid:12c89d6e-c1ab-452d-bf0e-b1766ee1e173</Id>
+                    <TrackId>urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711</TrackId>
+                    <ResourceList>
+                        <Resource xsi:type="TrackFileResourceType">
+                            <Id>urn:uuid:895820ef-e379-4021-a69e-8a898b0a9094</Id>
+                            <EditRate>48000 1</EditRate>
+                            <IntrinsicDuration>1629120</IntrinsicDuration>
+                            <SourceDuration>96000</SourceDuration>
+                            <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602794</SourceEncoding>
+                            <TrackFileId>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0</TrackFileId>
+                        </Resource>
+                    </ResourceList>
+                </cc:MainAudioSequence>
+            </SequenceList>
+        </Segment>
+    </SegmentList>
+</CompositionPlaylist>
