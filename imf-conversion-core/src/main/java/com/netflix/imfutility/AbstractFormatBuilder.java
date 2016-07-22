@@ -460,7 +460,7 @@ public abstract class AbstractFormatBuilder {
 
         File tmpFile = new File(paramValue);
         if (!tmpFile.isAbsolute() || !tmpFile.isFile()) {
-            tmpFile = new File(contextProvider.getWorkingDir(), paramValue);
+            tmpFile = new File(contextProvider.getWorkingDir().getAbsoluteFile(), paramValue);
         }
 
         if (!tmpFile.isAbsolute() || !tmpFile.isFile()) {
