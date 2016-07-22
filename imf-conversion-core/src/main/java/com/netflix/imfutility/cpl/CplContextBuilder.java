@@ -22,6 +22,7 @@ import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.asset.AssetMap;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.cpl._2013.Cpl2013ContextBuilder;
+import com.netflix.imfutility.cpl._2016.Cpl2016ContextBuilder;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 
@@ -69,8 +70,8 @@ public class CplContextBuilder {
         CplNamespace cplNamespace = CplNamespace.fromName(cplNamespaceStr);
         if (cplNamespace == null) {
             throw new ConversionException(String.format(
-                    "CPL '%s' has unsupported namespace '%s'",
-                    cplFile.getAbsolutePath(), cplNamespaceStr));
+                    "CPL '%s' has unsupported namespace '%s'. Currently we support only the following namespaces: %s",
+                    cplFile.getAbsolutePath(), cplNamespaceStr, CplNamespace.getSupportedNamespaces()));
         }
 
         // 2. call a CPL parser depending on the namespace.
@@ -79,9 +80,14 @@ public class CplContextBuilder {
                 new Cpl2013ContextBuilder(contextProvider, assetMap).build(cplFile);
                 break;
             case CPL_2016:
-                // TODO
+                new Cpl2016ContextBuilder(contextProvider, assetMap).build(cplFile);
                 break;
-            default: // nothing
+            default:
+                throw new ConversionException(
+                        String.format(
+                                "Unsupported IMF namespace '%s'. Currently we support only '%s' and '%s'",
+                                cplNamespace, CplNamespace.CPL_2013.getName(), CplNamespace.CPL_2016.getName()
+                        ));
         }
     }
 

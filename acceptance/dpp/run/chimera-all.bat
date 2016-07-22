@@ -18,6 +18,7 @@ call .\chimera29-default "%~1\%Chimera29Dir%" %2 %3
 :: short versions
 call .\chimera25-short "%~1\%Chimera25Dir%" %2 %3
 call .\chimera50-short "%~1\%Chimera50Dir%" %2 %3
+call .\chimera25-2016-namespace "%~1\%Chimera25Dir%" %2 %3
 
 :: Closed Captions
 call .\chimera29-CC "%~1\%Chimera29Dir%" %2 %3
