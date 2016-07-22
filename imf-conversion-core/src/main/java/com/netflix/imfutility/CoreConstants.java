@@ -62,6 +62,7 @@ public final class CoreConstants {
 
 /* 4. Command line args*/
 
+    public static final boolean DEFAULT_VALIDATE_IMF = true;
     public static final boolean DEFAULT_DELETE_TMP_FILES_ON_EXIT = true;
     public static final boolean DEFAULT_DELETE_TMP_FILES_ON_FAIL = false;
     public static final boolean DEFAULT_CLEAN_WORKING_DIR = false;
