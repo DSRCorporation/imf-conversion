@@ -40,6 +40,7 @@
 
             <xs:element type="xs:string" name="conversionConfig" maxOccurs="1" minOccurs="0"/>
 
+            <xs:element type="xs:boolean" name="validateImf" maxOccurs="1" minOccurs="0"/>
             <xs:element type="xs:boolean" name="cleanWorkingDir" maxOccurs="1" minOccurs="0"/>
             <xs:element type="xs:boolean" name="deleteTmpFilesOnExit" maxOccurs="1" minOccurs="0"/>
             <xs:element type="xs:boolean" name="deleteTmpFilesOnFail" maxOccurs="1" minOccurs="0"/>

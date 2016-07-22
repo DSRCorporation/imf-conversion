@@ -56,7 +56,8 @@ import java.io.InputStream;
  * <li>Contains logic common for all formats</li>
  * <li>Designed for inheritance</li>
  * <li>Provides a common conversion workflow in a {@link #build()}  method</li>
- * <li>Subclasses must provide logic related to context creation: {@link #buildDynamicContext()} and {@link }</li>
+ * <li>Subclasses must provide logic related to context creation: {@link #doBuildDynamicContextPreCpl()} ()}
+ * and {@link #doBuildDynamicContextPostCpl()}</li>
  * <li>Subclasses may customize the workflow using {@link #preConvert()} and {@link #postConvert()} methods</li>
  * <li>Common workflow ({@link #build()}):
  * <ul>
@@ -116,9 +117,7 @@ public abstract class AbstractFormatBuilder {
             createWorkingDir();
 
             // 7. clear working dir
-            if (isCleanWorkingDir()) {
-                cleanWorkingDir();
-            }
+            cleanWorkingDir();
 
             // 8. create logs dir in the working dir
             createLogsDir();
@@ -151,18 +150,14 @@ public abstract class AbstractFormatBuilder {
             doConvert();
 
             // 18. delete tmp files.
-            if (isDeleteTmpFilesOnExit()) {
-                deleteTmpFiles();
-            }
+            deleteTmpFilesOnExit();
 
             logger.info("Conversion to '{}' format: OK\n", format.getName());
 
             return 0;
         } catch (Exception e) {
             logger.error(String.format("Conversion to '%s' format aborted", format.getName()), e);
-            if (isDeleteTmpFilesOnFail()) {
-                deleteTmpFiles();
-            }
+            deleteTmpFilesOnFail();
             return 1;
         }
 
@@ -279,8 +274,12 @@ public abstract class AbstractFormatBuilder {
 
     private void cleanWorkingDir() throws IOException {
         logger.info("Cleaning working directory...");
-        FileUtils.cleanDirectory(inputParameters.getWorkingDirFile());
-        logger.info("Cleaned working directory: OK\n");
+        if (isCleanWorkingDir()) {
+            FileUtils.cleanDirectory(inputParameters.getWorkingDirFile());
+            logger.info("Cleaned working directory: OK\n");
+        } else {
+            logger.info("Cleaning working directory is DISABLED in config.xml\n");
+        }
     }
 
     private void createLogsDir() {
@@ -319,10 +318,24 @@ public abstract class AbstractFormatBuilder {
 
     protected abstract void doBuildDynamicContextPreCpl();
 
+    private boolean isValidateImpAndCpl() {
+        if (configProvider == null) {
+            return CoreConstants.DEFAULT_VALIDATE_IMF;
+        }
+        if (configProvider.getConfig().isValidateImf() == null) {
+            return CoreConstants.DEFAULT_VALIDATE_IMF;
+        }
+        return configProvider.getConfig().isValidateImf();
+    }
+
     private void validateImpAndCpl() throws IOException, ImfValidationException {
         logger.info("Validating input IMP and CPL...");
-        new ImfValidator(contextProvider, new ConversionEngine().getExecuteStrategyFactory()).validate();
-        logger.info("Validated input IMP and CPL: OK\n");
+        if (isValidateImpAndCpl()) {
+            new ImfValidator(contextProvider, new ConversionEngine().getExecuteStrategyFactory()).validate();
+            logger.info("Validated input IMP and CPL: OK\n");
+        } else {
+            logger.info("IMP and CPL validation is DISABLED in config.xml\n");
+        }
     }
 
     private void buildCplContext() throws XmlParsingException, FileNotFoundException {
@@ -400,9 +413,33 @@ public abstract class AbstractFormatBuilder {
 
     protected abstract String getConversionConfiguration();
 
-    private void deleteTmpFiles() {
+    private void deleteTmpFilesOnExit() {
         logger.info("Deleting tmp files created during conversion...");
+        if (isDeleteTmpFilesOnExit()) {
+            if (doDeleteTmpFiles()) {
+                logger.info("Deleted tmp files created during conversion: OK\n");
+            } else {
+                logger.info("Deleted tmp files created during conversion: FAIL\n");
+            }
+        } else {
+            logger.info("Deleting tmp files is DISABLED in config.xml\n");
+        }
+    }
 
+    private void deleteTmpFilesOnFail() {
+        logger.info("Deleting tmp files created during conversion...");
+        if (isDeleteTmpFilesOnFail()) {
+            if (doDeleteTmpFiles()) {
+                logger.info("Deleted tmp files created during conversion: OK\n");
+            } else {
+                logger.info("Deleted tmp files created during conversion: FAIL\n");
+            }
+        } else {
+            logger.info("Deleting tmp files is DISABLED in config.xml\n");
+        }
+    }
+
+    private boolean doDeleteTmpFiles() {
         boolean success = true;
         for (CustomParameterValue tmpParam : contextProvider.getTmpContext().getAllParameters()) {
             if (tmpParam.isDeleteOnExit()) {
@@ -415,9 +452,7 @@ public abstract class AbstractFormatBuilder {
             }
         }
 
-        if (success) {
-            logger.info("Deleted tmp files created during conversion: OK\n");
-        }
+        return success;
     }
 
     private boolean doDeleteTmpFile(String paramValue) {
