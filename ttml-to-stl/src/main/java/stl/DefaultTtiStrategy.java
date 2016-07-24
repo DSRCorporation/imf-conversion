@@ -61,6 +61,24 @@ public class DefaultTtiStrategy implements ITtiStrategy {
             this.stlSubtitles.add(stlSubtitle);
         }
 
+        //call it when this.stlSubtitles initially populated.
+        defineTimesLinesAndCumulativeSubtitlesLines();
+
+        // build result STL
+        for (StlSubtitle stlSubtitle : this.stlSubtitles) {
+            // 5. create a TTI block for each EB
+            for (int ebn = 0; ebn < stlSubtitle.getExtensionBlocks().length; ebn++) {
+                byte[] ttiBlock = doBuildTtiBlock(stlSubtitle, sn, ebn);
+                result.write(ttiBlock);
+                sn++;
+            }
+        }
+
+        return result.toByteArray();
+    }
+
+
+    private void defineTimesLinesAndCumulativeSubtitlesLines() {
         // Define start/end cumulative subtitles taking into account the there should not be more line than MNR
         int mnr = GsiAttribute.MNR.getIntValue();
         Time previousEndCSTime = null;
@@ -133,19 +151,6 @@ public class DefaultTtiStrategy implements ITtiStrategy {
             i = lastCSindex;
             previousEndCSTime = endCSTime;
         }
-
-
-        // build result STL
-        for (StlSubtitle stlSubtitle : this.stlSubtitles) {
-            // 5. create a TTI block for each EB
-            for (int ebn = 0; ebn < stlSubtitle.getExtensionBlocks().length; ebn++) {
-                byte[] ttiBlock = doBuildTtiBlock(stlSubtitle, sn, ebn);
-                result.write(ttiBlock);
-                sn++;
-            }
-        }
-
-        return result.toByteArray();
     }
 
     private String[] splitAndCleanText(Caption caption) throws IOException {
