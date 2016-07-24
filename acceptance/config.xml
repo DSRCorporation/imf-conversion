@@ -37,6 +37,7 @@
         </audio>
     </conversionParameters>-->
 
+    <validateImf>true</validateImf>
     <cleanWorkingDir>true</cleanWorkingDir>
     <deleteTmpFilesOnExit>true</deleteTmpFilesOnExit>
     <deleteTmpFilesOnFail>false</deleteTmpFilesOnFail>

@@ -25,7 +25,10 @@ public final class DppConversionConstants {
 
 /* 1. Conversion.xml */
 
-    // 1.1 dynamic parameters:
+    // 1.1. conversion.xml location
+    public static final String CONVERSION_XML = "xml/conversion.xml";
+
+    // 1.2 dynamic parameters:
     public static final String DYNAMIC_PARAM_PAN = "panParameter";
     public static final String DYNAMIC_PARAM_EBU_AUDIO_TRACKS = "ebuAudioTracks";
     public static final String DYNAMIC_PARAM_UK_DPP_FILE = "ukDppFramework";
@@ -36,7 +39,7 @@ public final class DppConversionConstants {
     public static final String DYNAMIC_PARAM_TTML_TO_STL = "ttml-to-stl";
     public static final String DYNAMIC_PARAM_METADATA_XML = "metadataXml";
 
-    // 1.2 dynamic parameters default values:
+    // 1.3 dynamic parameters default values:
     public static final String DYNAMIC_PARAM_VALUE_OUTPUT_MXF = "output";
 
 /* 2. default values */

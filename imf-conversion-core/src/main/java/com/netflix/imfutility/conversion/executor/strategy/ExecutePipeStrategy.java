@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -61,17 +61,19 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
     }
 
     public void execute(PipeOperationInfo operations) throws IOException {
+        PipeOperationInfo actualOperations = skipPipeOperations(operations);
+
         List<ExternalProcess> tailProcesses = new ArrayList<>();
 
         try {
             // 1. start all tailing operation
-            startTailProcesses(operations, tailProcesses);
+            startTailProcesses(actualOperations, tailProcesses);
 
             // 2. start all cycle processes in a sequence subsequently in pipelines
-            if (operations.getCycleOperations().isEmpty()) {
+            if (actualOperations.getCycleOperations().isEmpty()) {
                 processNonCycle(tailProcesses);
             } else {
-                processCycle(operations, tailProcesses);
+                processCycle(actualOperations, tailProcesses);
             }
         } finally {
             // 3. close all tail processes.
@@ -120,6 +122,9 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
     }
 
     private void pipe(List<ExternalProcess> pipeline) {
+        if (pipeline.isEmpty()) {
+            return;
+        }
         // 1. start a new thread to copy input - output in a pipeline
         ExternalProcess p1;
         ExternalProcess p2;
@@ -134,6 +139,18 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
         // 2. Wait for the first process in chain
         ExternalProcess firstProcess = pipeline.get(0);
         firstProcess.finishWaitFor();
+    }
+
+    protected PipeOperationInfo skipPipeOperations(PipeOperationInfo operations) {
+        PipeOperationInfo newOperations = new PipeOperationInfo();
+        for (List<OperationInfo> cycleOperations : operations.getCycleOperations()) {
+            List<OperationInfo> executable = skipOperations(cycleOperations);
+            if (!executable.isEmpty()) {
+                newOperations.addCycleOperation(executable);
+            }
+        }
+        newOperations.addTailOperations(skipOperations(operations.getTailOperations()));
+        return newOperations;
     }
 
     private static class Piper implements Runnable {

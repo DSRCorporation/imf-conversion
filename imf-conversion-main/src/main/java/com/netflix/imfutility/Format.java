@@ -34,14 +34,23 @@ public enum Format implements IFormat {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public static String getSupportedFormats() {
         return Arrays.stream(Format.values())
                 .map(Format::getName)
                 .collect(Collectors.joining(" ", "[", "]"));
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public static Format fromName(String name) {
+        for (Format format : values()) {
+            if (format.name.equals(name)) {
+                return format;
+            }
+        }
+        return null;
     }
 
 }

@@ -151,7 +151,7 @@
                     <!--
                         4. Remap audio in accordance with AudioMap.xml
                     -->
-                    <execOnce name="audioMaping">
+                    <execOnce name="audioMaping" if="%{dynamic.hasAudio}">
                         <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
                         "%{tool.ffmpeg}" %{dynamic.concatAudioInput} -filter_complex
                         "%{dynamic.concatAudioMap}[0:a]amerge,pan=%{dynamic.panParameter}[aout]"
@@ -161,7 +161,7 @@
                     <!--
                         5. create output .mxf from flatten encoded video and audio
                     -->
-                    <execOnce name="muxing_mxf">
+                    <execOnce name="muxing_mxf_audio_video" if="%{dynamic.hasAudioAndVideo}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
@@ -169,6 +169,21 @@
                         --afd 10 --avci100_1080i "%{tmp.videoEncoded}"
                         -q 24 -s 48000 --audio-chan %{dynamic.ebuAudioTracks}
                         --pcm "%{tmp.audioEncoded}"
+                    </execOnce>
+                    <execOnce name="muxing_mxf_audio_only" if="%{dynamic.hasAudioOnly}">
+                        "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
+                        --dm-file as11 "%{dynamic.as11CoreFramework}"
+                        --dm-file dpp "%{dynamic.ukDppFramework}"
+                        --seg "%{dynamic.as11SegmentationFramework}"
+                        -q 24 -s 48000 --audio-chan %{dynamic.ebuAudioTracks}
+                        --pcm "%{tmp.audioEncoded}"
+                    </execOnce>
+                    <execOnce name="muxing_mxf_video_only" if="%{dynamic.hasVideoOnly}">
+                        "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
+                        --dm-file as11 "%{dynamic.as11CoreFramework}"
+                        --dm-file dpp "%{dynamic.ukDppFramework}"
+                        --seg "%{dynamic.as11SegmentationFramework}"
+                        --afd 10 --avci100_1080i "%{tmp.videoEncoded}"
                     </execOnce>
 
                     <!--

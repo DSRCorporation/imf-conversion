@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -19,6 +19,7 @@
 package com.netflix.imfutility.util.conversion.executor;
 
 import com.netflix.imfutility.conversion.executor.ExternalProcess;
+import com.netflix.imfutility.conversion.executor.strategy.OperationInfo;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,6 +42,10 @@ public class TestExecutorLogger {
 
     public void finishProcess(ExternalProcess.ExternalProcessInfo processInfo) {
         processes.add(String.format("FINISH: %s %s", processInfo.toString(), processInfo.getOutputRedirect().toString()));
+    }
+
+    public void skipOperation(OperationInfo operationInfo) {
+        processes.add(String.format("SKIPPED: %s", operationInfo.toString()));
     }
 
     public int getProcessCount() {

@@ -27,15 +27,16 @@ import com.netflix.imfutility.conversion.ConversionXmlProvider;
 import com.netflix.imfutility.conversion.SilentConversionChecker;
 import com.netflix.imfutility.conversion.templateParameter.context.CustomParameterValue;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.cpl.CplContextBuilder;
 import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
+import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.inputparameters.ImfUtilityInputParameters;
 import com.netflix.imfutility.inputparameters.ImfUtilityInputParametersValidator;
 import com.netflix.imfutility.mediainfo.MediaInfoContextBuilder;
 import com.netflix.imfutility.mediainfo.MediaInfoException;
-import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.validate.ImfValidationException;
 import com.netflix.imfutility.validate.ImfValidator;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -55,7 +56,8 @@ import java.io.InputStream;
  * <li>Contains logic common for all formats</li>
  * <li>Designed for inheritance</li>
  * <li>Provides a common conversion workflow in a {@link #build()}  method</li>
- * <li>Subclasses must provide logic related to context creation: {@link #buildDynamicContext()} and {@link }</li>
+ * <li>Subclasses must provide logic related to context creation: {@link #doBuildDynamicContextPreCpl()} ()}
+ * and {@link #doBuildDynamicContextPostCpl()}</li>
  * <li>Subclasses may customize the workflow using {@link #preConvert()} and {@link #postConvert()} methods</li>
  * <li>Common workflow ({@link #build()}):
  * <ul>
@@ -115,9 +117,7 @@ public abstract class AbstractFormatBuilder {
             createWorkingDir();
 
             // 7. clear working dir
-            if (isCleanWorkingDir()) {
-                cleanWorkingDir();
-            }
+            cleanWorkingDir();
 
             // 8. create logs dir in the working dir
             createLogsDir();
@@ -125,10 +125,10 @@ public abstract class AbstractFormatBuilder {
             // 9. init template parameter contexts
             initContexts();
 
-            // 10. fill dynamic context
-            buildDynamicContext();
+            // 10. fill dynamic context before parsing CPL
+            buildDynamicContextPreCpl();
 
-            // 11. perform validation of the input IMP and CPL
+            // 11. perform validation of the input IMP and CPL (after dynamic context is filled).
             validateImpAndCpl();
 
             // 12. build IMF CPL contexts
@@ -137,28 +137,27 @@ public abstract class AbstractFormatBuilder {
             // 13. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
             buildMediaInfoContext();
 
-            // 14. select a conversion config within format.
+            // 14. fill dynamic context post CPL
+            buildDynamicContextPostCpl();
+
+            // 15. select a conversion config within format.
             selectConversionConfig();
 
-            // 15. check whether we can silently convert to destination parameters
+            // 16. check whether we can silently convert to destination parameters
             checkForSilentConversion();
 
-            // 16. convert
+            // 17. convert
             doConvert();
 
-            // 17. delete tmp files.
-            if (isDeleteTmpFilesOnExit()) {
-                deleteTmpFiles();
-            }
+            // 18. delete tmp files.
+            deleteTmpFilesOnExit();
 
             logger.info("Conversion to '{}' format: OK\n", format.getName());
 
             return 0;
         } catch (Exception e) {
             logger.error(String.format("Conversion to '%s' format aborted", format.getName()), e);
-            if (isDeleteTmpFilesOnFail()) {
-                deleteTmpFiles();
-            }
+            deleteTmpFilesOnFail();
             return 1;
         }
 
@@ -220,11 +219,12 @@ public abstract class AbstractFormatBuilder {
             this.conversionProvider = new ConversionXmlProvider(conversionXml, format);
         } else {
             // 2. use default one from resources
-            InputStream defaultConversionXml = ResourceHelper.getResourceInputStream(inputParameters.getDefaultConversionXml());
+            InputStream defaultConversionXml = inputParameters.getDefaultConversionXml();
             if (defaultConversionXml == null) {
                 throw new ConversionException("Conversion.xml is not found in neither default location nor config.xml");
             }
-            this.conversionProvider = new ConversionXmlProvider(defaultConversionXml, inputParameters.getDefaultConversionXml(), format);
+            this.conversionProvider = new ConversionXmlProvider(
+                    defaultConversionXml, inputParameters.getDefaultConversionXmlPath(), format);
         }
 
         logger.info("Conversion.xml is processed: OK\n");
@@ -274,8 +274,12 @@ public abstract class AbstractFormatBuilder {
 
     private void cleanWorkingDir() throws IOException {
         logger.info("Cleaning working directory...");
-        FileUtils.cleanDirectory(inputParameters.getWorkingDirFile());
-        logger.info("Cleaned working directory: OK\n");
+        if (isCleanWorkingDir()) {
+            FileUtils.cleanDirectory(inputParameters.getWorkingDirFile());
+            logger.info("Cleaned working directory: OK\n");
+        } else {
+            logger.info("Cleaning working directory is DISABLED in config.xml\n");
+        }
     }
 
     private void createLogsDir() {
@@ -297,8 +301,8 @@ public abstract class AbstractFormatBuilder {
         logger.info("Initialized template parameter contexts: OK\n");
     }
 
-    private void buildDynamicContext() {
-        logger.info("Building Dynamic context...");
+    private void buildDynamicContextPreCpl() {
+        logger.info("Building Dynamic context before parsing CPL...");
 
         // build default dynamic parameters
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
@@ -307,17 +311,31 @@ public abstract class AbstractFormatBuilder {
         dynamicContext.addParameter(DynamicContextParameters.VALIDATION_TOOL, inputParameters.getImfValidationTool());
 
         // build format-specific dynamic parameters
-        doBuildDynamicContext();
+        doBuildDynamicContextPreCpl();
 
-        logger.info("Built Dynamic context: OK\n");
+        logger.info("Built Dynamic context before parsing CPL: OK\n");
     }
 
-    protected abstract void doBuildDynamicContext();
+    protected abstract void doBuildDynamicContextPreCpl();
+
+    private boolean isValidateImpAndCpl() {
+        if (configProvider == null) {
+            return CoreConstants.DEFAULT_VALIDATE_IMF;
+        }
+        if (configProvider.getConfig().isValidateImf() == null) {
+            return CoreConstants.DEFAULT_VALIDATE_IMF;
+        }
+        return configProvider.getConfig().isValidateImf();
+    }
 
     private void validateImpAndCpl() throws IOException, ImfValidationException {
         logger.info("Validating input IMP and CPL...");
-        new ImfValidator(contextProvider, new ConversionEngine().getExecuteStrategyFactory()).validate();
-        logger.info("Validated input IMP and CPL: OK\n");
+        if (isValidateImpAndCpl()) {
+            new ImfValidator(contextProvider, new ConversionEngine().getExecuteStrategyFactory()).validate();
+            logger.info("Validated input IMP and CPL: OK\n");
+        } else {
+            logger.info("IMP and CPL validation is DISABLED in config.xml\n");
+        }
     }
 
     private void buildCplContext() throws XmlParsingException, FileNotFoundException {
@@ -343,6 +361,30 @@ public abstract class AbstractFormatBuilder {
 
         logger.info("Built Metadata Info contexts: OK\n");
     }
+
+    private void buildDynamicContextPostCpl() throws IOException, XmlParsingException {
+        logger.info("Building Dynamic context after CPL is parsed...");
+
+        // build default dynamic parameters
+        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
+        SequenceTemplateParameterContext seqContext = contextProvider.getSequenceContext();
+        boolean hasAudio = seqContext.getSequenceCount(SequenceType.AUDIO) > 0;
+        boolean hasVideo = seqContext.getSequenceCount(SequenceType.VIDEO) > 0;
+        boolean hasSubtitle = seqContext.getSequenceCount(SequenceType.SUBTITLE) > 0;
+        dynamicContext.addParameter(DynamicContextParameters.HAS_AUDIO, String.valueOf(hasAudio));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_VIDEO, String.valueOf(hasVideo));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_SUBTITLE, String.valueOf(hasSubtitle));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_AUDIO_AND_VIDEO, String.valueOf(hasAudio && hasVideo));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_AUDIO_ONLY, String.valueOf(hasAudio && !hasVideo));
+        dynamicContext.addParameter(DynamicContextParameters.HAS_VIDEO_ONLY, String.valueOf(!hasAudio && hasVideo));
+
+        // build format-specific dynamic parameters
+        doBuildDynamicContextPostCpl();
+
+        logger.info("Built Dynamic context after CPL is parsed: OK\n");
+    }
+
+    protected abstract void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException;
 
     private void selectConversionConfig() {
         String conversionConfig = getConversionConfiguration();
@@ -371,9 +413,33 @@ public abstract class AbstractFormatBuilder {
 
     protected abstract String getConversionConfiguration();
 
-    private void deleteTmpFiles() {
+    private void deleteTmpFilesOnExit() {
         logger.info("Deleting tmp files created during conversion...");
+        if (isDeleteTmpFilesOnExit()) {
+            if (doDeleteTmpFiles()) {
+                logger.info("Deleted tmp files created during conversion: OK\n");
+            } else {
+                logger.info("Deleted tmp files created during conversion: FAIL\n");
+            }
+        } else {
+            logger.info("Deleting tmp files is DISABLED in config.xml\n");
+        }
+    }
 
+    private void deleteTmpFilesOnFail() {
+        logger.info("Deleting tmp files created during conversion...");
+        if (isDeleteTmpFilesOnFail()) {
+            if (doDeleteTmpFiles()) {
+                logger.info("Deleted tmp files created during conversion: OK\n");
+            } else {
+                logger.info("Deleted tmp files created during conversion: FAIL\n");
+            }
+        } else {
+            logger.info("Deleting tmp files is DISABLED in config.xml\n");
+        }
+    }
+
+    private boolean doDeleteTmpFiles() {
         boolean success = true;
         for (CustomParameterValue tmpParam : contextProvider.getTmpContext().getAllParameters()) {
             if (tmpParam.isDeleteOnExit()) {
@@ -386,9 +452,7 @@ public abstract class AbstractFormatBuilder {
             }
         }
 
-        if (success) {
-            logger.info("Deleted tmp files created during conversion: OK\n");
-        }
+        return success;
     }
 
     private boolean doDeleteTmpFile(String paramValue) {
@@ -396,7 +460,7 @@ public abstract class AbstractFormatBuilder {
 
         File tmpFile = new File(paramValue);
         if (!tmpFile.isAbsolute() || !tmpFile.isFile()) {
-            tmpFile = new File(contextProvider.getWorkingDir(), paramValue);
+            tmpFile = new File(contextProvider.getWorkingDir().getAbsoluteFile(), paramValue);
         }
 
         if (!tmpFile.isAbsolute() || !tmpFile.isFile()) {

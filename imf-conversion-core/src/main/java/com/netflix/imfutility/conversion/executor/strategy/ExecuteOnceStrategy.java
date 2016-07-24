@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -35,6 +35,10 @@ public class ExecuteOnceStrategy extends AbstractExecuteStrategy {
     }
 
     public void execute(OperationInfo operationInfo) throws IOException {
+        if (operationInfo.isSkip()) {
+            skipOperation(operationInfo);
+            return;
+        }
         ExternalProcess process = startProcess(operationInfo, OutputRedirect.ERR_LOG);
         process.finishWaitFor();
     }
