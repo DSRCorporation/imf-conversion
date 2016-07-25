@@ -148,13 +148,18 @@
                         </dynamicParameter>
                     </execEachSequence>
 
+                    <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
+                    <execEachSequence name="concatSingleAudio" type="audio" if="%{dynamic.singleAudio}">
+                        <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false">[%{seq.num}:a]
+                        </dynamicParameter>
+                    </execEachSequence>
+
                     <!--
                         4. Remap audio in accordance with AudioMap.xml
                     -->
                     <execOnce name="audioMaping" if="%{dynamic.hasAudio}">
-                        <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
                         "%{tool.ffmpeg}" %{dynamic.concatAudioInput} -filter_complex
-                        "%{dynamic.concatAudioMap}[0:a]amerge,pan=%{dynamic.panParameter}[aout]"
+                        "%{dynamic.concatAudioMap}amerge,pan=%{dynamic.panParameter}[aout]"
                         -map "[aout]" -acodec pcm_s24le -ar 48000 -f s24le "%{tmp.audioEncoded}"
                     </execOnce>
 

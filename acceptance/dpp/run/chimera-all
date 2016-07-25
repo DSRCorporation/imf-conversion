@@ -53,3 +53,6 @@ Chimera50Dir="Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV"
 ./chimera25-audiomap-2A "$1/$Chimera25Dir" "$2" "$3";
 ./chimera25-audiomap-4B "$1/$Chimera25Dir" "$2" "$3";
 ./chimera25-audiomap-16C "$1/$Chimera25Dir" "$2" "$3";
+
+# multiple
+./chimera25-multiple-audio "$1/$Chimera25Dir" "$2" "$3";

@@ -203,8 +203,8 @@
     <xs:simpleType name="AudioTrackLayoutDmAs11Type">
         <xs:restriction base="xs:string">
             <xs:enumeration value="EBU R 48: 2a"/>
-            <xs:enumeration value="EBU R 48: 4b"/>
-            <xs:enumeration value="EBU R 48: 4c"/>
+            <xs:enumeration value="EBU R 123: 4b"/>
+            <xs:enumeration value="EBU R 123: 4c"/>
             <xs:enumeration value="EBU R 123: 16c"/>
             <xs:enumeration value="EBU R 123: 16d"/>
             <xs:enumeration value="EBU R 123: 16f"/>

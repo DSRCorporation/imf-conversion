@@ -50,7 +50,9 @@ public enum DynamicContextParameters {
 
     HAS_VIDEO_ONLY("hasVideoOnly"),
 
-    OUTPUT_VALIDATION_FILE("outputValidationFile");
+    OUTPUT_VALIDATION_FILE("outputValidationFile"),
+
+    SINGLE_AUDIO("singleAudio");
 
     private final String name;
 

@@ -37,6 +37,9 @@ call .\chimera25-audiomap-2A "%~1\%Chimera25Dir%" %2 %3
 call .\chimera25-audiomap-4B "%~1\%Chimera25Dir%" %2 %3
 call .\chimera25-audiomap-16C "%~1\%Chimera25Dir%" %2 %3
 
+:: multiple
+call .\chimera25-multiple-audio "%~1\%Chimera25Dir%" %2 %3
+
 @echo off
 exit /b 0
 
