@@ -74,3 +74,4 @@ schema/
 schema/
 generated/
 install/
+/.nb-gradle/
