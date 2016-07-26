@@ -58,7 +58,7 @@ public class ConversionEngine {
             } else if (operation instanceof PipeType) {
                 new ConversionExecutorPipe(contextProvider, getExecuteStrategyFactory(), (PipeType) operation).execute();
             } else if (operation instanceof DynamicParameterType) {
-                contextProvider.getDynamicContext().addParameter((DynamicParameterType) operation, ContextInfo.EMPTY);
+                contextProvider.getDynamicContext().addParameter((DynamicParameterType) operation, ContextInfo.EMPTY, false);
             } else {
                 throw new ConversionException(String.format("Unknown Conversion Operation type: %s", operation.toString()));
             }

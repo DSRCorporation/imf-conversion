@@ -21,7 +21,9 @@ package com.netflix.imfutility.conversion;
 import com.netflix.imfutility.FakeFormat;
 import com.netflix.imfutility.config.ConfigXmlProvider;
 import com.netflix.imfutility.conversion.executor.strategy.AbstractExecuteStrategy;
+import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.util.ConversionUtils;
@@ -35,6 +37,7 @@ import org.junit.Test;
 import java.util.EnumSet;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertFalse;
 
 /**
@@ -274,5 +277,55 @@ public class ExecuteConversionOperationTest {
         assertFalse("There are more executed processes than expected!", executorLogger.hasNext());
     }
 
+    @Test
+    public void testSkipDynamicParams() throws Exception {
+        // create a tmp context provider
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ConversionUtils.getConversionXmlSkipDynamicParams(),
+                ConversionUtils.getConversionXmlSkipDynamicParamsPath(), new FakeFormat());
+        ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(),
+                ConfigUtils.getCorrectConfigXmlPath());
+        TemplateParameterContextProvider tmpContextProvider = new TemplateParameterContextProvider(configProvider, conversionProvider,
+                TemplateParameterContextCreator.getCurrentTmpDir());
+
+        // fill CPL context
+        TemplateParameterContextCreator.fillCPLContext(tmpContextProvider,
+                SEGMENT_COUNT,
+                SEQ_COUNT,
+                RESOURCE_COUNT,
+                REPEAT_COUNT,
+                EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO));
+
+        // run conversion (process dynamic parameters)
+        conversionEngine.convert(conversionProvider.getFormatConfigurationType("1"), tmpContextProvider);
+
+        // check that dynamic parameters were skipped correctly
+        DynamicTemplateParameterContext dynamicCtxt = tmpContextProvider.getDynamicContext();
+
+        assertDynamicParamPresent(dynamicCtxt, "nonSkippedDynamicParamSeqSegmName", "nonSkippedDynamicParamSeqSegmValue");
+        assertDynamicParamPresent(dynamicCtxt, "nonSkippedDynamicParamSeqSegmName", "nonSkippedDynamicParamSeqSegmValue");
+        assertDynamicParamPresent(dynamicCtxt, "nonSkippedDynamicParamSegmName", "nonSkippedDynamicParamSegmValue");
+        assertDynamicParamPresent(dynamicCtxt, "nonSkippedDynamicParamSegmSeqName", "nonSkippedDynamicParamSegmSeqValue");
+
+        assertDynamicParamAbsent(dynamicCtxt, "skippedDynamicParamSeqName");
+        assertDynamicParamAbsent(dynamicCtxt, "skippedDynamicParamSeqSegmName1");
+        assertDynamicParamAbsent(dynamicCtxt, "skippedDynamicParamSeqSegmName2");
+        assertDynamicParamAbsent(dynamicCtxt, "skippedDynamicParamSeqSegmName3");
+        assertDynamicParamAbsent(dynamicCtxt, "skippedDynamicParamSegmName");
+        assertDynamicParamAbsent(dynamicCtxt, "skippedDynamicParamSegmSeqName1");
+        assertDynamicParamAbsent(dynamicCtxt, "skippedDynamicParamSegmSeqName2");
+        assertDynamicParamAbsent(dynamicCtxt, "skippedDynamicParamSegmSeqName3");
+    }
+
+    private void assertDynamicParamPresent(DynamicTemplateParameterContext dynamicCtxt, String paramName, String paramValue) {
+        assertEquals(paramValue, dynamicCtxt.getParameterValueAsString(paramName));
+    }
+
+    private void assertDynamicParamAbsent(DynamicTemplateParameterContext dynamicCtxt, String paramName) {
+        try {
+            dynamicCtxt.getParameterValueAsString(paramName);
+            fail(String.format("Template parameter '%s' is present but expected to be absent", paramName));
+        } catch (TemplateParameterNotFoundException e) {
+        }
+    }
 
 }

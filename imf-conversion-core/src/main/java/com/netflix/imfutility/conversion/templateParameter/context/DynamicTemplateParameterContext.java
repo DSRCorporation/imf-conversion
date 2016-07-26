@@ -73,9 +73,13 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
      *
      * @param dynamicParameter a dynamic parameter defined in the conversion.xml.
      * @param contextInfo      a context info to resolved template parameters within the given parameter value.
+     * @param skip whether setting of the parameter is skipped in conversion.xml
      * @return this dynamic parameter context.
      */
-    public DynamicTemplateParameterContext addParameter(DynamicParameterType dynamicParameter, ContextInfo contextInfo) {
+    public DynamicTemplateParameterContext addParameter(DynamicParameterType dynamicParameter, ContextInfo contextInfo, boolean skip) {
+        if (skip) {
+            return this;
+        }
         return addParameter(
                 dynamicParameter.getName().trim(),
                 dynamicParameter.getValue().trim(),
@@ -93,9 +97,14 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
      *
      * @param dynamicParameter a dynamic parameter defined in the conversion.xml.
      * @param contextInfo      a context info to resolved template parameters within the given parameter value.
+     * @param skip whether setting of the parameter is skipped in conversion.xml
      * @return this dynamic parameter context.
      */
-    public DynamicTemplateParameterContext addParameter(DynamicParameterConcatType dynamicParameter, ContextInfo contextInfo) {
+    public DynamicTemplateParameterContext addParameter(DynamicParameterConcatType dynamicParameter,
+                                                        ContextInfo contextInfo, boolean skip) {
+        if (skip) {
+            return this;
+        }
         String paramName = dynamicParameter.getName().trim();
         String paramValue = dynamicParameter.getValue().trim();
         if (dynamicParameter.isConcat() != null && dynamicParameter.isConcat()) {

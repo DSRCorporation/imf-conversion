@@ -52,7 +52,7 @@ public enum CplNamespace {
     public static String getSupportedNamespaces() {
         return Arrays.stream(CplNamespace.values())
                 .map(CplNamespace::getName)
-                .collect(Collectors.joining(" ", "[", "]"));
+                .collect(Collectors.joining(", ", "[", "]"));
     }
 
 }
