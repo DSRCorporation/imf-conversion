@@ -60,7 +60,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     }
 
     @Override
-    protected void doBuildDynamicContext() {
+    protected void doBuildDynamicContextPreCpl() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         // fill vendorId parameter
         String vendorId = iTunesInputParameters.getCmdLineArgs().getVendorId();
@@ -68,6 +68,12 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         // fill output parameter to [vendor-id].itmsp
         String itmspName = vendorId + ".itmsp";
         dynamicContext.addParameter(DYNAMIC_PARAM_OUTPUT_ITMSP, itmspName, false);
+        setOSParameters();
+    }
+
+    @Override
+    protected void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException {
+        setVideoFormatDynamicContext();
     }
 
     @Override
@@ -75,19 +81,12 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         // 1. creating [vendor-id].itmsp output directory
         createItmspDir();
 
-        // 2. set video format
-        setVideoFormatDynamicContext();
-
-        //  3. set OS parameters
-        setOSParameters();
-
-        // 4. load, parse and validate metadata.xml
+        // 2. load, parse and validate metadata.xml
         loadMetadata();
     }
 
     @Override
     protected void postConvert() throws IOException, XmlParsingException {
-
     }
 
     @Override
