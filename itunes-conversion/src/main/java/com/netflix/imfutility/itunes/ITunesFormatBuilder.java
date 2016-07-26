@@ -25,8 +25,9 @@ import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
 import com.netflix.imfutility.itunes.videoformat.VideoFormat;
 import com.netflix.imfutility.itunes.videoformat.builder.ITunesVideoFormatBuilder;
-import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextHelper;
 import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextBuilder;
+import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextHelper;
+import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
@@ -46,6 +47,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     private final Logger logger = LoggerFactory.getLogger(ITunesFormatBuilder.class);
 
     private final ITunesInputParameters iTunesInputParameters;
+    private MetadataXmlProvider metadataXmlProvider;
 
     public ITunesFormatBuilder(ITunesInputParameters inputParameters) {
         super(new ITunesFormat(), inputParameters);
@@ -78,6 +80,9 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
         //  3. set OS parameters
         setOSParameters();
+
+        // 4. load, parse and validate metadata.xml
+        loadMetadata();
     }
 
     @Override
@@ -120,5 +125,13 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     private void setOSParameters() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         dynamicContext.addParameter("isOSX", Boolean.toString(SystemUtils.IS_OS_MAC_OSX));
+    }
+
+    private void loadMetadata() throws IOException, XmlParsingException {
+        File metadataFile = iTunesInputParameters.getMetadataFile();
+
+        metadataXmlProvider = metadataFile == null
+                ? new MetadataXmlProvider(inputParameters.getWorkingDirFile(), MetadataXmlProvider.generateSampleMetadata())
+                : new MetadataXmlProvider(inputParameters.getWorkingDirFile(), metadataFile);
     }
 }

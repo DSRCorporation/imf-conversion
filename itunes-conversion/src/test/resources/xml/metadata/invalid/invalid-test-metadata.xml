@@ -31,16 +31,12 @@
         <country>US</country>
         <original_spoken_locale>en-US</original_spoken_locale>
         <title>Forrest Gump</title>
-        <synopsis>"Stupid is as stupid does," says Forrest Gump (played by Tom
-            Hanks in an Oscar-winning performance) as he discusses his relative level of
-            intelligence with a stranger while waiting for a bus. Despite his sub-normal IQ,
-            Gump leads a truly charmed life, with a ringside seat for many of the most memorable
-            events of the second half of the 20th century. Featured alongside Tom Hanks are
-            Sally Field as Forrest's mother; Gary Sinise as his commanding officer in Vietnam;
-            Mykelti Williamson as his ill-fated Army buddy who is familiar with every recipe
-            that involves shrimp; and the special effects artists whose digital magic place
-            Forrest amidst a remarkable array of historical events and people.
-        </synopsis>
+
+
+        <!-- Invalid! -->
+        <!-- Synopsis required -->
+
+
         <production_company>Paramount Pictures</production_company>
         <copyright_cline>1994 Paramount Pictures</copyright_cline>
         <theatrical_release_date>2007-05-04</theatrical_release_date>
@@ -49,8 +45,7 @@
             <genre>Drama</genre>
         </genres>
         <ratings>
-            <rating system="mpaa" reason="Rated PG-13 for drug content, some
-                sensuality and war violence.">PG-13
+            <rating system="mpaa" reason="Rated PG-13 for drug content, some sensuality and war violence.">PG-13
             </rating>
         </ratings>
         <cast>
@@ -161,7 +156,7 @@
                 <cleared_for_vod>true</cleared_for_vod>
                 <vod_type>New Release</vod_type>
                 <available_for_vod_date>2012-11-12</available_for_vod_date>
-                <unavailable_for_vod_date>20138-11-12</unavailable_for_vod_date>
+                <unavailable_for_vod_date>2013-11-12</unavailable_for_vod_date>
                 <physical_release_date>2007-08-01</physical_release_date>
                 <cleared_for_hd_vod>false</cleared_for_hd_vod>
             </product>

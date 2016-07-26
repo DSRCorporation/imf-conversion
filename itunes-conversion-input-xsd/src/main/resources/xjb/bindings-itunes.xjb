@@ -7,16 +7,16 @@
         <globalBindings typesafeEnumMaxMembers="1024" />
     </bindings>
 
-     <bindings schemaLocation="../xsd/metadata/iso-3166-1.xsd">
-         <schemaBindings>
-             <package name="com.netflix.imfutility.generated.itunes.metadata" />
-         </schemaBindings>
-     </bindings>
+    <bindings schemaLocation="../xsd/metadata/iso-3166-1.xsd">
+        <schemaBindings>
+            <package name="com.netflix.imfutility.generated.itunes.metadata" />
+        </schemaBindings>
+    </bindings>
 
-     <bindings schemaLocation="../xsd/metadata/metadata.xsd">
-         <schemaBindings>
-             <package name="com.netflix.imfutility.generated.itunes.metadata" />
-         </schemaBindings>
-     </bindings>
+    <bindings schemaLocation="../xsd/metadata/itunes-strict-metadata.xsd">
+        <schemaBindings>
+            <package name="com.netflix.imfutility.generated.itunes.metadata" />
+        </schemaBindings>
+    </bindings>
 
 </bindings>

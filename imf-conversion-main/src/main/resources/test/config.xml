@@ -14,11 +14,11 @@
         <tool id="ffprobe">ffprobe</tool>
         <tool id="bmx">raw2bmx</tool>
         <tool id="mxf2raw">mxf2raw</tool>
-        <tool id="x264">x264-10b-r2694-3b70645</tool>
+        <tool id="x264">x264</tool>
         <tool id="as-02-unwrap">as-02-unwrap</tool>
         <!--<tool id="java">C:\Program Files\Java\jre1.8.0_77\bin\java.exe</tool>-->
         <!--<tool id="ttml-to-stl">D:\DSR\Project\_Netflix\git\imf-conversion\ttml-to-stl\build\libs\ttml-to-stl.jar</tool>-->
-        <!--<tool id="imf-validation">imfValidation path</tool>-->
+        <!--<tool id="imf-validation">imfValidation prefix</tool>-->
     </externalTools>
 
     <!--
@@ -37,6 +37,9 @@
             <bitsSample>yes</bitsSample>
         </audio>
     </conversionParameters>
+
+    <conversionConfig>C:\Projects\Netflix\Workspace\imf-conversion\dpp-conversion\src\main\resources\xml\conversion.xml
+    </conversionConfig>
 
     <cleanWorkingDir>true</cleanWorkingDir>
     <deleteTmpFilesOnExit>false</deleteTmpFilesOnExit>

@@ -70,7 +70,7 @@ public class ITunesInputParametersTest {
 
     @Test
     public void testMetadataFile() throws URISyntaxException {
-        testCmdLineFile("--metadata", TestUtils.getEmptyFile().getAbsolutePath(), parameters -> parameters.getMetadataFile());
+        testCmdLineFile("--metadata", TestUtils.getTestFile().getAbsolutePath(), parameters -> parameters.getMetadataFile());
     }
 
     private void validate(String[] args) {
@@ -87,7 +87,7 @@ public class ITunesInputParametersTest {
 
         validate(new String[]{"-m", "convert",
                 "--vendor-id", "abc12_",
-                "--metadata", TestUtils.getEmptyFile().getAbsolutePath()});
+                "--metadata", TestUtils.getTestFile().getAbsolutePath()});
     }
 
     @Test(expected = ArgumentValidationException.class)

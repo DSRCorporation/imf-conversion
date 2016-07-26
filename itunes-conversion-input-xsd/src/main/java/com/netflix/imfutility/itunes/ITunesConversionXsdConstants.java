@@ -19,18 +19,16 @@
 package com.netflix.imfutility.itunes;
 
 /**
- * CoreConstants related to iTunes format.
+ * Xsd constants related to iTunes format.
  */
-public final class ITunesConversionConstants {
-    private ITunesConversionConstants() {
+public final class ITunesConversionXsdConstants {
+
+    private ITunesConversionXsdConstants() {
     }
 
-/* 1. Conversion.xml */
-
-    // 1.1. conversion.xml location
-    public static final String CONVERSION_XML = "xml/conversion.xml";
-
-    // 1.2 dynamic parameters:
-    public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "output";
-    public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
+    // 1: metadata.xml
+    public static final String METADATA_XML_SCHEME = "xsd/metadata/itunes-metadata.xsd";
+    public static final String METADATA_XML_STRICT_SCHEME = "xsd/metadata/itunes-strict-metadata.xsd";
+    public static final String ISO_3166_1_XML_SCHEME = "xsd/metadata/iso-3166-1.xsd";
+    public static final String METADATA_PACKAGE = "com.netflix.imfutility.generated.itunes.metadata";
 }

@@ -16,20 +16,24 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.util;
-
-import java.io.File;
-import java.net.URISyntaxException;
+package com.netflix.imfutility.itunes;
 
 /**
- * Common test utility.
+ * CoreConstants related to iTunes format.
  */
-public class TestUtils {
-    private TestUtils() {
+public final class ITunesConversionConstants {
 
+    private ITunesConversionConstants() {
     }
 
-    public static File getTestFile() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-file").toURI());
-    }
+    /* 1. Conversion.xml */
+
+    // 1.1. conversion.xml location
+    public static final String CONVERSION_XML = "xml/conversion.xml";
+
+    // 1.2 dynamic parameters:
+    public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "output";
+    public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
+    public static final String DYNAMIC_PARAM_METADATA_XML = "metadata";
+
 }

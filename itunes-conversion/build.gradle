@@ -5,3 +5,7 @@ dependencies {
     compile project(':itunes-conversion-input-xsd')
     testCompile project(path: ':imf-conversion-core', configuration: 'testArtifacts')
 }
+
+dependencies {
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
+}

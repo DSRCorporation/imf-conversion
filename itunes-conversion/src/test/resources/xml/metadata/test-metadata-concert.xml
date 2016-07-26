@@ -39,9 +39,7 @@
             <genre>Concert Films</genre>
         </genres>
         <ratings>
-            <rating system="mpaa" reason="Content contains adult
-material.">Unrated
-            </rating>
+            <rating system="mpaa" reason="Content contains adult material.">UR</rating>
         </ratings>
         <artists>
             <artist>

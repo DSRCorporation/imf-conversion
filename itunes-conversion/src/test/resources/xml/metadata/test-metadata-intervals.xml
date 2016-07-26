@@ -47,8 +47,7 @@
             <genre>Drama</genre>
         </genres>
         <ratings>
-            <rating system="mpaa" reason="Rated PG-13 for drug content, some sensuality and war violence.">PG-13
-            </rating>
+            <rating system="mpaa" reason="Rated PG-13 for drug content, some sensuality and war violence.">PG-13</rating>
         </ratings>
         <cast>
             <cast_member billing="top">

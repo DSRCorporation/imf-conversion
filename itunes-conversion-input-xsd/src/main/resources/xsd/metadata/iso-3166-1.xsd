@@ -22,7 +22,6 @@
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             targetNamespace="http://iso3166.metadata.itunes.imfutility.netflix.com"
             xmlns="http://iso3166.metadata.itunes.imfutility.netflix.com">
-
     <xsd:simpleType name="ISO3166CountryCode">
         <xsd:annotation>
             <xsd:documentation>
@@ -276,5 +275,4 @@
             <xsd:enumeration value="ZW"/> <!-- ZIMBABWE -->
         </xsd:restriction>
     </xsd:simpleType>
-
 </xsd:schema>
