@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.itunes.xmlprovider;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.generated.itunes.metadata.AssetsType;
 import com.netflix.imfutility.generated.itunes.metadata.ChaptersType;
 import com.netflix.imfutility.generated.itunes.metadata.ObjectFactory;
@@ -83,7 +84,13 @@ public class MetadataXmlProvider {
     }
 
     public File saveMetadata(String path) {
-        File file = new File(workingDir, path + "/metadata.xml");
+        File relativeDir = new File(workingDir, path);
+        if (!relativeDir.exists()) {
+            if (!relativeDir.mkdir()) {
+                throw new ConversionException(String.format("Couldn't create %s directory for metadata!", relativeDir));
+            }
+        }
+        File file = new File(relativeDir, "metadata.xml");
         marshallMetadata(packageType, METADATA_XML_STRICT_SCHEME, file);
         return file;
     }
