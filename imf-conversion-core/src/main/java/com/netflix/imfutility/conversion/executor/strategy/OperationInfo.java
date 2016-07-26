@@ -72,6 +72,6 @@ public final class OperationInfo {
     @Override
     public String toString() {
         return String.format(
-                "%s [ %s ]", operationName, operation.replaceAll("\n", " ").trim());
+                "%s [ %s ]", operationName, operation.replaceAll("\\s+", " ").trim());
     }
 }

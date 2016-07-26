@@ -7,7 +7,7 @@ if [%4]==[] goto fourth-missing
 if [%5]==[] goto fifth-missing
 
 
-SET PROG=%5
+SET PROG=%6
 if [%6]==[] SET PROG="..\..\..\install\imf-conversion-utility\bin\imf-conversion-utility"
 
 @echo on

@@ -130,8 +130,8 @@
         </enum>
         <enum name="AudioTrackLayout">
             <item value="3">EBU R 48: 2a</item>
-            <item value="9">EBU R 48: 4b</item>
-            <item value="10">EBU R 48: 4c</item>
+            <item value="28">EBU R 123: 4b</item>
+            <item value="29">EBU R 123: 4c</item>
             <item value="49">EBU R 123: 16c</item>
             <item value="50">EBU R 123: 16d</item>
             <item value="52">EBU R 123: 16f</item>

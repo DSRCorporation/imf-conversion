@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AudioMap xmlns="http://audiomap.dpp.imfutility.netflix.com">
+    <EBUTrack>
+        <Number>1</Number>
+        <CPLVirtualTrackId>urn:uuid:850bd841-5c4a-4b02-b853-5ce1afbb3629</CPLVirtualTrackId>
+        <CPLVirtualTrackChannel>1</CPLVirtualTrackChannel>
+    </EBUTrack>
+    <EBUTrack>
+        <Number>2</Number>
+        <CPLVirtualTrackId>urn:uuid:850bd841-5c4a-4b02-b853-5ce1afbb3629</CPLVirtualTrackId>
+        <CPLVirtualTrackChannel>2</CPLVirtualTrackChannel>
+    </EBUTrack>
+    <EBUTrack>
+        <Number>3</Number>
+    </EBUTrack>
+    <EBUTrack>
+        <Number>4</Number>
+    </EBUTrack>
+</AudioMap>
