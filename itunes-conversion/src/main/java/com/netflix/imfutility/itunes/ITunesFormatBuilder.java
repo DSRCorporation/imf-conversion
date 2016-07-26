@@ -25,8 +25,9 @@ import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
 import com.netflix.imfutility.itunes.videoformat.VideoFormat;
 import com.netflix.imfutility.itunes.videoformat.builder.ITunesVideoFormatBuilder;
-import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextHelper;
 import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextBuilder;
+import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextHelper;
+import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
@@ -46,6 +47,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     private final Logger logger = LoggerFactory.getLogger(ITunesFormatBuilder.class);
 
     private final ITunesInputParameters iTunesInputParameters;
+    private MetadataXmlProvider metadataXmlProvider;
 
     public ITunesFormatBuilder(ITunesInputParameters inputParameters) {
         super(new ITunesFormat(), inputParameters);
@@ -58,7 +60,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     }
 
     @Override
-    protected void doBuildDynamicContext() {
+    protected void doBuildDynamicContextPreCpl() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         // fill vendorId parameter
         String vendorId = iTunesInputParameters.getCmdLineArgs().getVendorId();
@@ -66,6 +68,12 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         // fill output parameter to [vendor-id].itmsp
         String itmspName = vendorId + ".itmsp";
         dynamicContext.addParameter(DYNAMIC_PARAM_OUTPUT_ITMSP, itmspName, false);
+        setOSParameters();
+    }
+
+    @Override
+    protected void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException {
+        setVideoFormatDynamicContext();
     }
 
     @Override
@@ -73,16 +81,12 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         // 1. creating [vendor-id].itmsp output directory
         createItmspDir();
 
-        // 2. set video format
-        setVideoFormatDynamicContext();
-
-        //  3. set OS parameters
-        setOSParameters();
+        // 2. load, parse and validate metadata.xml
+        loadMetadata();
     }
 
     @Override
     protected void postConvert() throws IOException, XmlParsingException {
-
     }
 
     @Override
@@ -120,5 +124,13 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     private void setOSParameters() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         dynamicContext.addParameter("isOSX", Boolean.toString(SystemUtils.IS_OS_MAC_OSX));
+    }
+
+    private void loadMetadata() throws IOException, XmlParsingException {
+        File metadataFile = iTunesInputParameters.getMetadataFile();
+
+        metadataXmlProvider = metadataFile == null
+                ? new MetadataXmlProvider(inputParameters.getWorkingDirFile(), MetadataXmlProvider.generateSampleMetadata())
+                : new MetadataXmlProvider(inputParameters.getWorkingDirFile(), metadataFile);
     }
 }

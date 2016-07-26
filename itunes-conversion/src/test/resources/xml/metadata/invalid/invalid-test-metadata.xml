@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2016 Netflix, Inc.
+  ~
+  ~     This file is part of IMF Conversion Utility.
+  ~
+  ~     IMF Conversion Utility is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     IMF Conversion Utility is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<package xmlns="http://apple.com/itunes/importer" version="film5.0">
+    <provider>Paramount</provider>
+    <language>en-US</language>
+    <video>
+        <type>film</type>
+        <subtype>feature</subtype>
+        <vendor_offer_code>408CH98720X103</vendor_offer_code>
+        <vendor_id>09736156444</vendor_id>
+        <isan>0000-0000-03B6-0000-O-0000-0000-2</isan>
+        <upc>09736156444</upc>
+        <country>US</country>
+        <original_spoken_locale>en-US</original_spoken_locale>
+        <title>Forrest Gump</title>
+
+
+        <!-- Invalid! -->
+        <!-- Synopsis required -->
+
+
+        <production_company>Paramount Pictures</production_company>
+        <copyright_cline>1994 Paramount Pictures</copyright_cline>
+        <theatrical_release_date>2007-05-04</theatrical_release_date>
+        <genres>
+            <genre>Comedy</genre>
+            <genre>Drama</genre>
+        </genres>
+        <ratings>
+            <rating system="mpaa" reason="Rated PG-13 for drug content, some sensuality and war violence.">PG-13
+            </rating>
+        </ratings>
+        <cast>
+            <cast_member billing="top">
+                <display_name>Tom Hanks</display_name>
+                <character_name>Forrest Gump</character_name>
+            </cast_member>
+            <cast_member billing="top">
+                <display_name>Robin Wright Penn</display_name>
+                <character_name>Jenny Curran</character_name>
+            </cast_member>
+        </cast>
+        <crew>
+            <crew_member billing="top">
+                <display_name>Robert Zemeckis</display_name>
+                <roles>
+                    <role>Director</role>
+                </roles>
+            </crew_member>
+            <crew_member billing="top">
+                <display_name>Steve Starkey</display_name>
+                <roles>
+                    <role>Producer</role>
+                </roles>
+            </crew_member>
+        </crew>
+        <chapters>
+            <timecode_format>24/999 1000/nonDrop</timecode_format>
+            <chapter>
+                <start_time>00:00:00:00</start_time>
+                <title locale="en-US">Forrest's Story Begins</title>
+                <artwork_file>
+                    <file_name>chapter01.jpg</file_name>
+                    <size>6591649</size>
+                    <checksum type="md5">ed93d0f3224a353a4cc8d4175d645130
+                    </checksum>
+                </artwork_file>
+            </chapter>
+            <chapter>
+                <start_time>00:07:45:23</start_time>
+                <title locale="en-US">Football at Alabama</title>
+                <artwork_file>
+                    <file_name>chapter02.jpg</file_name>
+                    <size>6591649</size>
+                    <checksum type="md5">86bed7ef05c34c1e85345f40d11137a9
+                    </checksum>
+                </artwork_file>
+            </chapter>
+        </chapters>
+        <assets>
+            <asset type="full">
+                <data_file role="source">
+                    <locale name="en-US"/>
+                    <file_name>09736156444-source.mov</file_name>
+                    <size>2595225600</size>
+                    <checksum type="md5">2a793a8b46037fe8aa29dd739b49911a
+                    </checksum>
+                    <attribute name="crop.top">80</attribute>
+                    <attribute name="crop.bottom">80</attribute>
+                    <attribute name="crop.left">50</attribute>
+                    <attribute name="crop.right">50</attribute>
+                    <attribute name="image.textless_master">true</attribute>
+                </data_file>
+                <data_file role="captions">
+                    <file_name>09736156444-english.scc</file_name>
+                    <size>9511</size>
+                    <checksum type="md5">5a793a8b46037fe8aa2bdd739b49911a
+                    </checksum>
+                </data_file>
+            </asset>
+            <asset type="preview">
+                <territories>
+                    <territory>WW</territory>
+                </territories>
+                <data_file role="source">
+                    <locale name="en-US"/>
+                    <file_name>09736156444-US-preview.mov</file_name>
+                    <size>9987212</size>
+                    <checksum type="md5">739b43b793a8b46037fe8aa29dd9911e
+                    </checksum>
+                    <attribute name="crop.top">80</attribute>
+                    <attribute name="crop.bottom">80</attribute>
+                    <attribute name="crop.left">50</attribute>
+                    <attribute name="crop.right">50</attribute>
+                </data_file>
+            </asset>
+            <asset type="artwork">
+                <territories>
+                    <territory>WW</territory>
+                </territories>
+                <data_file>
+                    <file_name>09736156444.jpg</file_name>
+                    <size>6591649</size>
+                    <checksum type="md5">43e7dddfe4b8ab433ede429df86cabb2
+                    </checksum>
+                </data_file>
+            </asset>
+        </assets>
+        <products>
+            <product>
+                <territory>US</territory>
+                <cleared_for_sale>true</cleared_for_sale>
+                <cleared_for_hd_sale>true</cleared_for_hd_sale>
+                <wholesale_price_tier>3</wholesale_price_tier>
+                <hd_wholesale_price_tier>1</hd_wholesale_price_tier>
+                <preorder_sales_start_date>2011-02-10</preorder_sales_start_date>
+                <sales_start_date>2011-03-12</sales_start_date>
+                <cleared_for_vod>true</cleared_for_vod>
+                <vod_type>New Release</vod_type>
+                <available_for_vod_date>2012-11-12</available_for_vod_date>
+                <unavailable_for_vod_date>2013-11-12</unavailable_for_vod_date>
+                <physical_release_date>2007-08-01</physical_release_date>
+                <cleared_for_hd_vod>false</cleared_for_hd_vod>
+            </product>
+        </products>
+    </video>
+</package>

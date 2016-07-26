@@ -22,10 +22,11 @@ package com.netflix.imfutility.itunes;
  * CoreConstants related to iTunes format.
  */
 public final class ITunesConversionConstants {
+
     private ITunesConversionConstants() {
     }
 
-/* 1. Conversion.xml */
+    /* 1. Conversion.xml */
 
     // 1.1. conversion.xml location
     public static final String CONVERSION_XML = "xml/conversion.xml";
@@ -33,4 +34,6 @@ public final class ITunesConversionConstants {
     // 1.2 dynamic parameters:
     public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "output";
     public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
+    public static final String DYNAMIC_PARAM_METADATA_XML = "metadata";
+
 }

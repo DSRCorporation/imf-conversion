@@ -30,6 +30,26 @@ public class MetadataUtils {
     }
 
     public static File getCorrectMetadataXml() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-metadata.xml").toURI());
-}
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/test-metadata.xml").toURI());
+    }
+
+    public static File getCorrectMultipleLocaleMetadataXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/test-metadata-multiple-locale.xml").toURI());
+    }
+
+    public static File getCorrectConcertMetadataXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/test-metadata-concert.xml").toURI());
+    }
+
+    public static File getCorrectIntervalsMetadataXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/test-metadata-intervals.xml").toURI());
+    }
+
+    public static File getInvalidMetadataXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/invalid/invalid-test-metadata.xml").toURI());
+    }
+
+    public static File getBrokenMetadataXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/broken/broken-test-metadata.xml").toURI());
+    }
 }

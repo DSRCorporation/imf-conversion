@@ -16,20 +16,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.util;
-
-import java.io.File;
-import java.net.URISyntaxException;
+package com.netflix.imfutility.itunes;
 
 /**
- * Common test utility.
+ * Xsd constants related to iTunes format.
  */
-public class TestUtils {
-    private TestUtils() {
+public final class ITunesConversionXsdConstants {
 
+    private ITunesConversionXsdConstants() {
     }
 
-    public static File getTestFile() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-file").toURI());
-    }
+    // 1: metadata.xml
+    public static final String METADATA_XML_SCHEME = "xsd/metadata/itunes-metadata.xsd";
+    public static final String METADATA_XML_STRICT_SCHEME = "xsd/metadata/itunes-strict-metadata.xsd";
+    public static final String ISO_3166_1_XML_SCHEME = "xsd/metadata/iso-3166-1.xsd";
+    public static final String METADATA_PACKAGE = "com.netflix.imfutility.generated.itunes.metadata";
 }

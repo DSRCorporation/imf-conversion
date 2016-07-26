@@ -73,11 +73,11 @@ public class ITunesCmdLineArgumentsTest {
         assertEquals("output", cmdLineArgs.getOutput());
 
         assertNotNull(cmdLineArgs.getCc());
-        assertEquals(cmdLineArgs.getCc().size(), 4);
-        assertEquals(cmdLineArgs.getCc().get(0), "c0.ttml");
-        assertEquals(cmdLineArgs.getCc().get(1), "c1.ttml");
-        assertEquals(cmdLineArgs.getCc().get(2), "c2.ttml");
-        assertEquals(cmdLineArgs.getCc().get(3), "c3.ttml");
+        assertEquals(4, cmdLineArgs.getCc().size());
+        assertEquals("c0.ttml", cmdLineArgs.getCc().get(0));
+        assertEquals("c1.ttml", cmdLineArgs.getCc().get(1));
+        assertEquals("c2.ttml", cmdLineArgs.getCc().get(2));
+        assertEquals("c3.ttml", cmdLineArgs.getCc().get(3));
     }
 
     @Test(expected = ArgumentValidationException.class)

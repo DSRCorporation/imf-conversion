@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2016 Netflix, Inc.
+  ~
+  ~     This file is part of IMF Conversion Utility.
+  ~
+  ~     IMF Conversion Utility is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     IMF Conversion Utility is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<package xmlns="http://apple.com/itunes/importer" version="film5.0">
+    <provider>ColumbiaPictures</provider>
+    <language>de-DE</language>
+    <video>
+        <type>film</type>
+        <subtype>feature</subtype>
+        <vendor_id>0767802489</vendor_id>
+        <isan>0000-0000-129D-0000-M-0000-0000-8</isan>
+        <upc>0767802489</upc>
+        <country>DE</country>
+        <original_spoken_locale>de-DE</original_spoken_locale>
+        <title>Das Boot</title>
+        <synopsis>Das Boot ist einer der spannendsten und authentischsten
+            Kriegsfilme, die je gedreht wurden. Er basiert auf dem autobiografischen Roman von
+            Lothar-Günther Buchheim, der den Zweiten Weltkrieg als Kriegsberichterstatter
+            erlebte, und schildert das Leben eines unerschrockenen U-Boot-Kommandanten (Jürgen
+            Prochnow) und seiner unerfahrenen Crew während einer Patrouillenfahrt im Atlantik
+            und im Mittelmeer. Das U-Boot hat die Aufgabe, Frachtschiffe der Alliierten
+            aufzuspüren, und wird immer wieder vom Jäger zum Gejagten. Der Film hat nur wenig
+            Handlung und verdankt seine unglaubliche Intensität und Wirkung sowohl seinen
+            fesselnden, epischen Kampfszenen als auch der eindrucksvoll und atmosphärisch
+            geschilderten Langeweile an Bord, das endlose Warten auf Befehle und auf die erste
+            Berührung mit dem Feind. Der eigentliche Star des Films ist jedoch Kameramann Jost
+            Vacano, dem es gelingt, den Schmutz und die klaustrophobische Stimmung im U-Boot
+            eindringlich und realistisch zu vermitteln. Mit seiner Kamera verfolgt er die Crew
+            durch Luken, auf Leitern, in die Kojen und unter Leitungsrohre und überträgt durch
+            diese außergewöhnliche Kameraführung das Gefühl des Eingeschlossenseins direkt
+            auf den Zuschauer. Regisseur und Drehbuchautor Wolfgang Petersen produzierte
+            ursprünglich zwei Versionen von „Das Boot": eine zweieinhalbstündige Kinoversion
+            und eine sechsstündige deutsche TV-Mini-Serie. Im Jahr 1997 folgte eine überarbeitete
+            Fassung als Director's Cut, die fast neunzig Minuten zusätzliches Filmmaterial
+            enthielt und den Film noch spannender und beeindruckender machte.
+        </synopsis>
+        <locales>
+            <locale name="fr-FR">
+                <title>Le Bateau</title>
+                <synopsis>Le Bateau est l’un des films de guerre les plus réalistes
+                    et les plus captivants jamais réalisés. Basé sur l’œuvre autobiographique de
+                    Lothar-Günther Buchheim, photographe allemand de la 2e guerre mondiale, le film
+                    relate la vie d’un intrépide capitaine de sous-marin (Jürgen Prochnow) et de son
+                    jeune équipage tandis qu’ils parcourent l’Atlantique et la Méditerranée à la
+                    recherche de vaisseaux alliés. La puissance du film repose essentiellement sur ses
+                    scènes de batailles épiques et fascinantes et sur le récit des heures interminables
+                    passées à attendre les ordres ou le signe d’une présence ennemie. Le génie du film
+                    naît également du cinéaste Jost Vacano, qui donne vie à ce macabre huis-clos en
+                    suivant de sa caméra les membres d’équipage à travers d’interminables écoutilles,
+                    échelles, couchettes et conduits en tous genres, créant un sentiment insurmontable
+                    de claustrophobie et de mouvement perpétuel. Monté à l’origine par l’écrivain et
+                    réalisateur Wolfgang Petersen dans un format cinéma de 2 heures 30 et sous la
+                    forme d’une mini-série de 6 heures pour la télévision allemande, Le Bateau est
+                    sorti dans une nouvelle version restaurée en 1997 avec environ une heure de plans
+                    ajoutés pour un suspense encore plus insoutenable.
+                </synopsis>
+            </locale>
+            <locale name="en-US">
+                <title>Das Boot</title>
+                <synopsis>Das Boot is one of the most gripping and authentic war
+                    movies ever made. Based on an autobiographical novel by German World War II
+                    photographer Lothar-Guenther Buchheim, the film follows the lives of a fearless
+                    U-Boat captain (Jurgen Prochnow) and his inexperienced crew as they patrol the
+                    Atlantic and Mediterranean in search of Allied vessels, taking turns as hunter and
+                    prey. There's very little plot, so the movie's power comes from both its riveting,
+                    epic battle scenes and its details of the boring hours spent waiting for orders
+                    or signs of the enemy. The real star, however, is cinematographer Jost Vacano,
+                    who makes the sub's grimy, claustrophobic interior come to vivid life, as his camera
+                    follows the crew through hatches, up ladders, into bunks, and under pipes, creating
+                    a palpable sense of claustrophobia while injecting it with movement. Originally
+                    edited by writer/director Wolfgang Petersen as both a two-and-a-half hour theatrical
+                    release and a six-hour German miniseries, Das Boot was re-released in a restored
+                    version in 1997 with nearly one hour of added footage which made it even more
+                    suspenseful than before.
+                </synopsis>
+            </locale>
+        </locales>
+        <production_company>Bavaria Film</production_company>
+        <copyright_cline>1981 Bavaria Film</copyright_cline>
+        <theatrical_release_date>1981-09-17</theatrical_release_date>
+        <regions>
+            <region>
+                <territory>FR</territory>
+                <copyright_cline>1982 Warner-Columbia Film</copyright_cline>
+                <theatrical_release_date>1982-02-17</theatrical_release_date>
+            </region>
+            <region>
+                <territory>US</territory>
+                <copyright_cline>1982 Columbia Pictures</copyright_cline>
+                <theatrical_release_date>1982-02-10</theatrical_release_date>
+            </region>
+        </regions>
+        <genres>
+            <genre>Drama</genre>
+            <genre>War</genre>
+        </genres>
+        <ratings>
+            <rating system="mpaa">PG-13</rating>
+            <rating system="de-fsk">ab 12 Jahren</rating>
+            <rating system="fr-cnc">-12</rating>
+        </ratings>
+        <cast>
+            <cast_member billing="top">
+                <display_name>Jürgen Prochnow</display_name>
+                <character_name>The Captain</character_name>
+                <locales>
+                    <locale name="en-US">
+                        <display_name>Jürgen Prochnow</display_name>
+                        <character_name>The Captain</character_name>
+                    </locale>
+                    <locale name="fr-FR">
+                        <display_name>Jürgen Prochnow</display_name>
+                        <character_name>The Captain</character_name>
+                    </locale>
+                </locales>
+            </cast_member>
+            <cast_member billing="top">
+                <display_name>Herbert Gronemeye</display_name>
+                <character_name>Lt. Werner/Correspondent</character_name>
+                <locales>
+                    <locale name="en-US">
+                        <display_name>Herbert Gronemeye</display_name>
+                        <character_name>Lt. Werner/Correspondent</character_name>
+                    </locale>
+                    <locale name="fr-FR">
+                        <display_name>Herbert Gronemeye</display_name>
+                        <character_name>Lt. Werner/Correspondent</character_name>
+                    </locale>
+                </locales>
+            </cast_member>
+            <!-- Additional cast members here -->
+        </cast>
+        <crew>
+            <crew_member billing="top">
+                <display_name>Wolfgang Petersen</display_name>
+                <locales>
+                    <locale name="en-US">
+                        <display_name>Wolfgang Petersen</display_name>
+                    </locale>
+                    <locale name="fr-FR">
+                        <display_name>Wolfgang Petersen</display_name>
+                    </locale>
+                </locales>
+                <roles>
+                    <role>Director</role>
+                </roles>
+            </crew_member>
+            <crew_member billing="top">
+                <display_name>Mark Damon</display_name>
+                <locales>
+                    <locale name="en-US">
+                        <display_name>Mark Damon</display_name>
+                    </locale>
+                    <locale name="fr-FR">
+                        <display_name>Mark Damon</display_name>
+                    </locale>
+                </locales>
+                <roles>
+                    <role>Producer</role>
+                </roles>
+            </crew_member>
+            <!-- Additional crew members here -->
+        </crew>
+        <!-- German, French and English Inline Chaptering -->
+        <chapters>
+            <timecode_format>24/999 1000/nonDrop</timecode_format>
+            <chapter>
+                <start_time>00:00:00:00</start_time>
+                <titles>
+                    <title locale="de-DE">Feindkontakt</title>
+                    <title locale="fr-FR">Le second moteur à propulsion</title>
+                    <title locale="en-US">Second Propeller Sounds</title>
+                </titles>
+                <artwork_file>
+                    <file_name>chapter01.jpg</file_name>
+                    <size>754938</size>
+                    <checksum type="md5">ed93d0f3224a353a4cc8d4175d645130
+                    </checksum>
+                </artwork_file>
+            </chapter>
+            <chapter>
+                <start_time>00:04:54:23</start_time>
+                <titles>
+                    <title locale="de-DE">Kriegsneurosen</title>
+                    <title locale="fr-FR">En état de choc</title>
+                    <title locale="en-US">Shell Shocked</title>
+                </titles>
+                <artwork_file>
+                    <file_name>chapter02.jpg</file_name>
+                    <size>754938</size>
+                    <checksum type="md5">86bed7ef05c34c1e85345f40d11137a9
+                    </checksum>
+                </artwork_file>
+            </chapter>
+            <!-- Additional chapters here. -->
+        </chapters>
+        <assets>
+            <!-- Source Video -->
+            <asset type="full">
+                <data_file role="source">
+                    <locale name="de-DE"/>
+                    <file_name>0767802489-source.mov</file_name>
+                    <size>2595225600</size>
+                    <checksum type="md5">2a793a8b46037fe8aa29dd739b49911a
+                    </checksum>
+                    <attribute name="crop.top">80</attribute>
+                    <attribute name="crop.bottom">80</attribute>
+                    <attribute name="crop.left">50</attribute>
+                    <attribute name="crop.right">50</attribute>
+                    <attribute name="image.textless_master">true</attribute>
+                </data_file>
+            </asset>
+            <!-- Required. World Trailer. Will be used where a territory-specific trailer has
+            not been provided. -->
+            <asset type="preview">
+                <territories>
+                    <territory>WW</territory>
+                </territories>
+                <data_file role="source">
+                    <locale name="en-US"/>
+                    <file_name>0767802489-preview.mov</file_name>
+                    <size>9987212</size>
+                    <checksum type="md5">739b43b793a8b46037fe8aa29dd9911e
+                    </checksum>
+                    <attribute name="crop.top">80</attribute>
+                    <attribute name="crop.bottom">80</attribute>
+                    <attribute name="crop.left">50</attribute>
+                    <attribute name="crop.right">50</attribute>
+                </data_file>
+            </asset>
+            <!-- Optional. German Trailer. When supplied, this trailer will be used in Germany
+            instead of the World file.-->
+            <asset type="preview">
+                <territories>
+                    <territory>DE</territory>
+                </territories>
+                <data_file role="source">
+                    <locale name="de-DE"/>
+                    <file_name>0767802489-DE-preview.mov</file_name>
+                    <size>9986311</size>
+                    <checksum type="md5">a8b46039b43b793a29dd9911e37fe8a7
+                    </checksum>
+                    <attribute name="crop.top">80</attribute>
+                    <attribute name="crop.bottom">80</attribute>
+                    <attribute name="crop.left">50</attribute>
+                    <attribute name="crop.right">50</attribute>
+                </data_file>
+            </asset>
+            <!-- Optional. French Trailer. When supplied, this trailer will be used in France
+            instead of the World file. -->
+            <asset type="preview">
+                <territories>
+                    <territory>FR</territory>
+                </territories>
+                <data_file role="source">
+                    <locale name="fr-FR"/>
+                    <file_name>0767802489-FR-preview.mov</file_name>
+                    <size>9787655</size>
+                    <checksum type="md5">603b43b7fe739798aed991a3a8b429d1
+                    </checksum>
+                    <attribute name="crop.top">80</attribute>
+                    <attribute name="crop.bottom">80</attribute>
+                    <attribute name="crop.left">50</attribute>
+                    <attribute name="crop.right">50</attribute>
+                </data_file>
+            </asset>
+            <!-- Required. World Poster Art. Will be used where territory-specific poster art
+            has not been provided -->
+            <asset type="artwork">
+                <territories>
+                    <territory>WW</territory>
+                </territories>
+                <data_file>
+                    <file_name>0767802489.jpg</file_name>
+                    <size>6591649</size>
+                    <checksum type="md5">43e7dddfe4b8ab433ede429df86cabb2
+                    </checksum>
+                </data_file>
+            </asset>
+            <!-- Optional. German Poster Art. When supplied, this poster art will be used in
+            Germany instead of the World file. -->
+            <asset type="artwork">
+                <territories>
+                    <territory>DE</territory>
+                </territories>
+                <data_file>
+                    <file_name>0767802489_DE.jpg</file_name>
+                    <size>6591458</size>
+                    <checksum type="md5">a429df86ce7ddeddfe4b8abb433e43b2
+                    </checksum>
+                </data_file>
+            </asset>
+            <!-- Optional. French Poster Art. When supplied, this poster art will be used in
+            France instead of the World file. -->
+            <asset type="artwork">
+                <territories>
+                    <territory>FR</territory>
+                </territories>
+                <data_file>
+                    <file_name>0767802489_FR.jpg</file_name>
+                    <size>6491589</size>
+                    <checksum type="md5">b433e43e7ddeddfe4b8a429df86cabb2
+                    </checksum>
+                </data_file>
+            </asset>
+        </assets>
+        <products>
+            <product>
+                <territory>DE</territory>
+                <cleared_for_sale>true</cleared_for_sale>
+                <wholesale_price_tier>3</wholesale_price_tier>
+                <preorder_sales_start_date>2006-02-10</preorder_sales_start_date>
+                <sales_start_date>2006-03-12</sales_start_date>
+                <cleared_for_vod>true</cleared_for_vod>
+                <vod_type>New Release</vod_type>
+                <available_for_vod_date>2007-11-12</available_for_vod_date>
+                <unavailable_for_vod_date>2008-11-12</unavailable_for_vod_date>
+                <physical_release_date>1997-12-10</physical_release_date>
+            </product>
+            <product>
+                <territory>FR</territory>
+                <cleared_for_sale>true</cleared_for_sale>
+                <wholesale_price_tier>3</wholesale_price_tier>
+                <preorder_sales_start_date>2006-03-10</preorder_sales_start_date>
+                <sales_start_date>2006-04-12</sales_start_date>
+                <cleared_for_vod>true</cleared_for_vod>
+                <vod_type>New Release</vod_type>
+                <available_for_vod_date>2007-12-12</available_for_vod_date>
+                <unavailable_for_vod_date>2008-12-12</unavailable_for_vod_date>
+                <physical_release_date>1999-10-01</physical_release_date>
+            </product>
+            <product>
+                <territory>US</territory>
+                <cleared_for_sale>true</cleared_for_sale>
+                <wholesale_price_tier>3</wholesale_price_tier>
+                <preorder_sales_start_date>2006-03-10</preorder_sales_start_date>
+                <sales_start_date>2006-04-12</sales_start_date>
+                <cleared_for_vod>true</cleared_for_vod>
+                <vod_type>New Release</vod_type>
+                <available_for_vod_date>2007-12-12</available_for_vod_date>
+                <unavailable_for_vod_date>2008-12-12</unavailable_for_vod_date>
+                <physical_release_date>1999-10-01</physical_release_date>
+            </product>
+        </products>
+    </video>
+</package>
