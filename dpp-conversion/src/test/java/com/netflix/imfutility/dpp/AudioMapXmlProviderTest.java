@@ -130,7 +130,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         );
 
         String panParameter4B = new AudioMapXmlProvider(
-                AudioMapUtils.getCorrectAudiomapXml(), AudioTrackLayoutDmAs11Type.EBU_R_48_4_B, contextProvider)
+                AudioMapUtils.getCorrectAudiomapXml(), AudioTrackLayoutDmAs11Type.EBU_R_123_4_B, contextProvider)
                 .getPanParameter();
 
         assertEquals("4c|c0=c1|c1=c0|c2=c3|c3=0*c0", panParameter4B);

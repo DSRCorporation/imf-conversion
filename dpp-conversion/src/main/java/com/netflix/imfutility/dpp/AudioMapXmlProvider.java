@@ -327,8 +327,8 @@ public final class AudioMapXmlProvider {
         //How many channels we should provide for particular EBU option.
         switch (audioLayout) {
             case EBU_R_48_2_A:
-            case EBU_R_48_4_B:
-            case EBU_R_48_4_C:
+            case EBU_R_123_4_B:
+            case EBU_R_123_4_C:
                 return 4;
             case EBU_R_123_16_C:
             case EBU_R_123_16_D:

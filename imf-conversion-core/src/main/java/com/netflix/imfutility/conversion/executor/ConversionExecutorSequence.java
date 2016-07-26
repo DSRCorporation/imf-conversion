@@ -143,7 +143,10 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
                 .setSequenceUuid(currentSeqUuid)
                 .setSequenceType(seqType)
                 .build();
-        contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo);
+        contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo,
+                skipOperationResolver
+                        .setContextInfo(contextInfo)
+                        .isSkip(execEachSeq));
     }
 
     private OperationInfo getExecOnceOperation(ExecOnceType execOnce) {
@@ -201,7 +204,10 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
                 // dynamic parameter
                 if (execSegment.getDynamicParameter() != null) {
                     for (DynamicParameterConcatType dynamicParam : execSegment.getDynamicParameter()) {
-                        contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo);
+                        contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo,
+                                skipOperationResolver
+                                        .setContextInfo(contextInfo)
+                                        .isSkip(execSegment, execEachSeq));
                     }
                 }
             }
@@ -242,7 +248,10 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
                 // dynamic parameter
                 if (execSegment.getDynamicParameter() != null) {
                     for (DynamicParameterConcatType dynamicParam : execSegment.getDynamicParameter()) {
-                        contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo);
+                        contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo,
+                                skipOperationResolver
+                                        .setContextInfo(contextInfo)
+                                        .isSkip(execSegment, execEachSeq));
                     }
                 }
             }

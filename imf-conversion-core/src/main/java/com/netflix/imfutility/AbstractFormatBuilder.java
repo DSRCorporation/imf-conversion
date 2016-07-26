@@ -371,12 +371,16 @@ public abstract class AbstractFormatBuilder {
         boolean hasAudio = seqContext.getSequenceCount(SequenceType.AUDIO) > 0;
         boolean hasVideo = seqContext.getSequenceCount(SequenceType.VIDEO) > 0;
         boolean hasSubtitle = seqContext.getSequenceCount(SequenceType.SUBTITLE) > 0;
+        boolean singleAudio = seqContext.getSequenceCount(SequenceType.AUDIO) == 1;
+
         dynamicContext.addParameter(DynamicContextParameters.HAS_AUDIO, String.valueOf(hasAudio));
         dynamicContext.addParameter(DynamicContextParameters.HAS_VIDEO, String.valueOf(hasVideo));
         dynamicContext.addParameter(DynamicContextParameters.HAS_SUBTITLE, String.valueOf(hasSubtitle));
         dynamicContext.addParameter(DynamicContextParameters.HAS_AUDIO_AND_VIDEO, String.valueOf(hasAudio && hasVideo));
         dynamicContext.addParameter(DynamicContextParameters.HAS_AUDIO_ONLY, String.valueOf(hasAudio && !hasVideo));
         dynamicContext.addParameter(DynamicContextParameters.HAS_VIDEO_ONLY, String.valueOf(!hasAudio && hasVideo));
+
+        dynamicContext.addParameter(DynamicContextParameters.SINGLE_AUDIO, String.valueOf(singleAudio));
 
         // build format-specific dynamic parameters
         doBuildDynamicContextPostCpl();
