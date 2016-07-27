@@ -19,13 +19,19 @@
 package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.AbstractFormatBuilder;
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
+import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.dpp.MetadataXmlProvider.DMFramework;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParametersValidator;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
+import com.netflix.imfutility.util.ConversionHelper;
+import com.netflix.imfutility.util.CplHelper;
 import com.netflix.imfutility.xml.XmlParsingException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +56,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     private final Logger logger = LoggerFactory.getLogger(DppFormatBuilder.class);
 
     private final DppInputParameters dppInputParameters;
+    private MetadataXmlProvider metadataXmlProvider;
 
     public DppFormatBuilder(DppInputParameters dppInputParameters) {
         super(new DppFormat(), dppInputParameters);
@@ -87,7 +94,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
 
         // 1. load metadata.xml
-        MetadataXmlProvider metadataXmlProvider = new MetadataXmlProvider(dppInputParameters.getMetadataFile(),
+        metadataXmlProvider = new MetadataXmlProvider(dppInputParameters.getMetadataFile(),
                 contextProvider.getWorkingDir());
 
         // 2. load audiomap.xml
@@ -118,6 +125,49 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
 
     @Override
     protected void preConvert() throws IOException, XmlParsingException {
+        // check that total duration specified in Metadata.xml matches total duration of the output file!
+        // otherwise conversion will abort at the very last step (BMX). It may make the user unhappy after a long conversion.
+        checkTotalDuration();
+    }
+
+    /**
+     * Check that total duration specified in Metadata.xml matches total duration of the output file.
+     * Otherwise conversion will abort at the very last step (BMX). It may make the user unhappy after a long conversion.
+     */
+    private void checkTotalDuration() {
+        String metadataTotalDurationTc = metadataXmlProvider.getDpp().getTechnical().getTimecodes().getTotalProgrammeDuration().getValue();
+        if (StringUtils.isEmpty(metadataTotalDurationTc)) {
+            return;
+        }
+
+        long metadataTotalDurationMs = ConversionHelper.smpteTimecodeToMilliSeconds(
+                metadataTotalDurationTc, MetadataXmlProvider.DEST_FRAME_RATE);
+        long cplTotalDurationMs = getCplTotalDurationMs();
+
+        // BMX accepts any total duration if zero timecode is specified in metadata.xml
+        if (metadataTotalDurationMs == 0) {
+            return;
+        }
+
+        if (metadataTotalDurationMs != cplTotalDurationMs) {
+            throw new ConversionException(
+                    String.format("A total programme duration as specified in metadata.xml (%s) doesn't match a "
+                                    + "total duration of the output as defined by the CPL (%s) ",
+                            String.valueOf(metadataTotalDurationMs), String.valueOf(cplTotalDurationMs)));
+        }
+    }
+
+    private long getCplTotalDurationMs() {
+        // bmx uses the smallest video/audio duration as a total duration when it's not equal
+        long result = Long.MAX_VALUE;
+        SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
+        for (SequenceType seqType : sequenceContext.getSequenceTypes()) {
+            for (SequenceUUID seqUuid : sequenceContext.getUuids(seqType)) {
+                long trackDuration = CplHelper.getVirtualTrackDurationMS(contextProvider, seqType, seqUuid);
+                result = Math.min(result, trackDuration);
+            }
+        }
+        return result;
     }
 
     @Override
