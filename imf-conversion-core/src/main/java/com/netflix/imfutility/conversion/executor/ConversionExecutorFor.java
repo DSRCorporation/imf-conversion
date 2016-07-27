@@ -58,26 +58,17 @@ public class ConversionExecutorFor extends AbstractConversionExecutor {
     public void execute() throws IOException {
 
         String iterator = forElem.getIterator(); // current iterator
-        String resolvedFrom = parameterResolver.resolveTemplateParameter(
-                parameterResolver.resolveIteratorParameter(forElem.getFrom(), iterators), ContextInfo.EMPTY);
-        String resolvedTo = parameterResolver.resolveTemplateParameter(
-                parameterResolver.resolveIteratorParameter(forElem.getTo(), iterators), ContextInfo.EMPTY);
-        String resolvedCount = parameterResolver.resolveTemplateParameter(
-                parameterResolver.resolveIteratorParameter(forElem.getCount(), iterators), ContextInfo.EMPTY);
-        int from;
-        int to;
-        int count;
-        int internalCounter;
+        String resolvedFrom =
+                parameterResolver.resolveTemplateAndIteratorParameter(forElem.getFrom(), iterators, ContextInfo.EMPTY);
+        String resolvedTo =
+                parameterResolver.resolveTemplateAndIteratorParameter(forElem.getTo(), iterators, ContextInfo.EMPTY);
+        String resolvedCount =
+                parameterResolver.resolveTemplateAndIteratorParameter(forElem.getCount(), iterators, ContextInfo.EMPTY);
+        int from = toInt("from", resolvedFrom);
+        int to = toInt("to", resolvedTo);
+        int count = toInt("count", resolvedCount);
+        int internalCounter = (count != 0) ? count : to - from;
 
-        try {
-            from = Integer.parseInt(resolvedFrom);
-            to = Integer.parseInt(resolvedTo);
-            count = Integer.parseInt(resolvedCount);
-        } catch (NumberFormatException e) {
-            throw new ConversionException("Cannot parse 'for' attributes.", e);
-        }
-
-        internalCounter = (count != 0) ? count : to - from;
         if (internalCounter <= 0) {
             return;
         }
@@ -115,5 +106,14 @@ public class ConversionExecutorFor extends AbstractConversionExecutor {
         resolvedParameter.setValue(parameterResolver.resolveIteratorParameter(resolvedParameter.getValue(), iterators));
         resolvedParameter.setAdd(parameterResolver.resolveIteratorParameter(resolvedParameter.getAdd(), iterators));
         contextProvider.getDynamicContext().addParameter(resolvedParameter, ContextInfo.EMPTY, false);
+    }
+
+    private int toInt(String parameterName, String parameterStr) {
+        try {
+            return Integer.parseInt(parameterStr);
+        } catch (NumberFormatException e) {
+            throw new ConversionException(
+                    String.format("'for' attribute '%s' (%s) should be an integer.", parameterName, parameterStr), e);
+        }
     }
 }

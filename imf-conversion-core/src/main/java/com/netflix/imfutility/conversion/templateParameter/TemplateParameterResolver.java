@@ -88,6 +88,11 @@ public class TemplateParameterResolver {
         return parameterStr;
     }
 
+    public String resolveTemplateAndIteratorParameter(String parameterStr,
+            Map<String, Integer> iterators, ContextInfo contextInfo) {
+        return resolveTemplateParameter(resolveIteratorParameter(parameterStr, iterators), contextInfo);
+    }
+
     private String doResolveSubParameters(String parameterStr, ContextInfo contextInfo) {
         String resolvedParam = parameterStr;
 

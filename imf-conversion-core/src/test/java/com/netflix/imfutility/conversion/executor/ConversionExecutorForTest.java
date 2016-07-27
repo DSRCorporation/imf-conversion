@@ -18,12 +18,14 @@
  */
 package com.netflix.imfutility.conversion.executor;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.FakeFormat;
 import com.netflix.imfutility.config.ConfigXmlProvider;
 import com.netflix.imfutility.conversion.ConversionXmlProvider;
 import com.netflix.imfutility.conversion.executor.strategy.AbstractExecuteStrategy;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.resources.ResourceHelper;
+import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.util.conversion.executor.TestConversionEngine;
 import static org.junit.Assert.assertEquals;
@@ -47,6 +49,165 @@ public class ConversionExecutorForTest {
     public void setUp() {
         AbstractExecuteStrategy.resetCount();
         conversionEngine.getExecutorLogger().reset();
+    }
+
+    @Test
+    public void cycleWithFromAndToWorks() throws Exception {
+        /* INITIALIZATION */
+        String inputConversionXml = "xml/for-operation/test-for-operation-fromto.xml";
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(
+                ResourceHelper.getResourceInputStream(inputConversionXml),
+                inputConversionXml, new FakeFormat());
+        ConfigXmlProvider configProvider =
+                new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
+        TemplateParameterContextProvider contextProvider =
+                new TemplateParameterContextProvider(configProvider, conversionProvider,
+                TemplateParameterContextCreator.getCurrentTmpDir());
+
+        contextProvider.getDynamicContext().addParameter("fromI", "0");
+        contextProvider.getDynamicContext().addParameter("toI", "4");
+
+        /* PERFORMING */
+        conversionEngine.convert(conversionProvider.getFormatConfigurationType("test"), contextProvider);
+
+        /* VERIFICATION */
+        assertEquals("|0|1|2|3", contextProvider.getDynamicContext().getParameterValueAsString("output"));
+    }
+
+    @Test
+    public void cycleWithFromAndCountWorks() throws Exception {
+        /* INITIALIZATION */
+        String inputConversionXml = "xml/for-operation/test-for-operation-fromcount.xml";
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(
+                ResourceHelper.getResourceInputStream(inputConversionXml),
+                inputConversionXml, new FakeFormat());
+        ConfigXmlProvider configProvider =
+                new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
+        TemplateParameterContextProvider contextProvider =
+                new TemplateParameterContextProvider(configProvider, conversionProvider,
+                TemplateParameterContextCreator.getCurrentTmpDir());
+
+        contextProvider.getDynamicContext().addParameter("fromI", "3");
+        contextProvider.getDynamicContext().addParameter("countI", "4");
+
+        /* PERFORMING */
+        conversionEngine.convert(conversionProvider.getFormatConfigurationType("test"), contextProvider);
+
+        /* VERIFICATION */
+        assertEquals("|3|4|5|6", contextProvider.getDynamicContext().getParameterValueAsString("output"));
+    }
+
+    @Test
+    public void cycleWithFromAndToAndCountWorks() throws Exception {
+        /* INITIALIZATION */
+        String inputConversionXml = "xml/for-operation/test-for-operation-fromtocount.xml";
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(
+                ResourceHelper.getResourceInputStream(inputConversionXml),
+                inputConversionXml, new FakeFormat());
+        ConfigXmlProvider configProvider =
+                new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
+        TemplateParameterContextProvider contextProvider =
+                new TemplateParameterContextProvider(configProvider, conversionProvider,
+                TemplateParameterContextCreator.getCurrentTmpDir());
+
+        contextProvider.getDynamicContext().addParameter("fromI", "3");
+        contextProvider.getDynamicContext().addParameter("toI", "4");
+        contextProvider.getDynamicContext().addParameter("countI", "4");
+
+        /* PERFORMING */
+        conversionEngine.convert(conversionProvider.getFormatConfigurationType("test"), contextProvider);
+
+        /* VERIFICATION */
+        assertEquals("|3|4|5|6", contextProvider.getDynamicContext().getParameterValueAsString("output"));
+    }
+
+    @Test
+    public void cycleWithFromAndToAndCountWithoutParameters() throws Exception {
+        /* INITIALIZATION */
+        String inputConversionXml = "xml/for-operation/test-for-operation-fromtocountwop.xml";
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(
+                ResourceHelper.getResourceInputStream(inputConversionXml),
+                inputConversionXml, new FakeFormat());
+        ConfigXmlProvider configProvider =
+                new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
+        TemplateParameterContextProvider contextProvider =
+                new TemplateParameterContextProvider(configProvider, conversionProvider,
+                TemplateParameterContextCreator.getCurrentTmpDir());
+
+        /* PERFORMING */
+        conversionEngine.convert(conversionProvider.getFormatConfigurationType("test"), contextProvider);
+
+        /* VERIFICATION */
+        assertEquals("|2|3|4|5", contextProvider.getDynamicContext().getParameterValueAsString("output"));
+    }
+
+    @Test(expected = ConversionException.class)
+    public void cycleWithNonIntegerFromFails() throws Exception {
+        /* INITIALIZATION */
+        String inputConversionXml = "xml/for-operation/test-for-operation-fromtocount.xml";
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(
+                ResourceHelper.getResourceInputStream(inputConversionXml),
+                inputConversionXml, new FakeFormat());
+        ConfigXmlProvider configProvider =
+                new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
+        TemplateParameterContextProvider contextProvider =
+                new TemplateParameterContextProvider(configProvider, conversionProvider,
+                TemplateParameterContextCreator.getCurrentTmpDir());
+
+        contextProvider.getDynamicContext().addParameter("fromI", "test");
+        contextProvider.getDynamicContext().addParameter("toI", "4");
+        contextProvider.getDynamicContext().addParameter("countI", "4");
+
+        /* PERFORMING */
+        conversionEngine.convert(conversionProvider.getFormatConfigurationType("test"), contextProvider);
+
+        /* VERIFICATION */
+    }
+
+    @Test(expected = ConversionException.class)
+    public void cycleWithNonIntegerToFails() throws Exception {
+        /* INITIALIZATION */
+        String inputConversionXml = "xml/for-operation/test-for-operation-fromtocount.xml";
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(
+                ResourceHelper.getResourceInputStream(inputConversionXml),
+                inputConversionXml, new FakeFormat());
+        ConfigXmlProvider configProvider =
+                new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
+        TemplateParameterContextProvider contextProvider =
+                new TemplateParameterContextProvider(configProvider, conversionProvider,
+                TemplateParameterContextCreator.getCurrentTmpDir());
+
+        contextProvider.getDynamicContext().addParameter("fromI", "2");
+        contextProvider.getDynamicContext().addParameter("toI", "test");
+        contextProvider.getDynamicContext().addParameter("countI", "4");
+
+        /* PERFORMING */
+        conversionEngine.convert(conversionProvider.getFormatConfigurationType("test"), contextProvider);
+
+        /* VERIFICATION */
+    }
+
+    @Test(expected = ConversionException.class)
+    public void cycleWithNonIntegerCountFails() throws Exception {
+        /* INITIALIZATION */
+        String inputConversionXml = "xml/for-operation/test-for-operation-fromtocount.xml";
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(
+                ResourceHelper.getResourceInputStream(inputConversionXml),
+                inputConversionXml, new FakeFormat());
+        ConfigXmlProvider configProvider =
+                new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
+        TemplateParameterContextProvider contextProvider =
+                new TemplateParameterContextProvider(configProvider, conversionProvider,
+                TemplateParameterContextCreator.getCurrentTmpDir());
+
+        contextProvider.getDynamicContext().addParameter("fromI", "3");
+        contextProvider.getDynamicContext().addParameter("toI", "4");
+        contextProvider.getDynamicContext().addParameter("countI", "test");
+
+        /* PERFORMING */
+        conversionEngine.convert(conversionProvider.getFormatConfigurationType("test"), contextProvider);
+
+        /* VERIFICATION */
     }
 
     /**
@@ -82,4 +243,5 @@ public class ConversionExecutorForTest {
                 contextProvider.getDynamicContext().getParameterValueAsString("output"));
         assertEquals("6", contextProvider.getDynamicContext().getParameterValueAsString("fromJ"));
     }
+
 }

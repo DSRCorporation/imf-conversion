@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.conversion.templateParameter;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SegmentContextParameters;
@@ -345,6 +346,76 @@ public class TemplateParameterInitializationTest {
         assertTrue(contextProvider.getDynamicContext().getParameterValue("addDynamicSimple1").isDeleteOnExit());
         assertTrue(contextProvider.getDynamicContext().getParameterValue("appendDynamicSimple3").isDeleteOnExit());
         assertFalse(contextProvider.getDynamicContext().getParameterValue("appendDynamicSimple3_ws").isDeleteOnExit());
+    }
+
+    @Test
+    public void dynamicParameterAddOperationCanAddition() throws Exception {
+        DynamicParameterConcatType param = new DynamicParameterConcatType();
+        param.setName("param");
+        param.setValue("10");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
+
+        contextProvider.getDynamicContext().addParameter(param, ContextInfo.EMPTY, false);
+
+        param.setAdd("10");
+        contextProvider.getDynamicContext().addParameter(param, ContextInfo.EMPTY, false);
+
+        assertEquals("20", contextProvider.getDynamicContext().getParameterValueAsString(param.getName()));
+    }
+
+    @Test
+    public void dynamicParameterAddOperationCanAdditionWhenParameterIsAbsent() throws Exception {
+        DynamicParameterConcatType param = new DynamicParameterConcatType();
+        param.setName("param");
+        param.setValue("10");
+        param.setAdd("10");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
+
+        contextProvider.getDynamicContext().addParameter(param, ContextInfo.EMPTY, false);
+
+        assertEquals("10", contextProvider.getDynamicContext().getParameterValueAsString(param.getName()));
+    }
+
+    @Test
+    public void dynamicParameterAddOperationCanAdditionWhenAddIsParameter() throws Exception {
+        DynamicParameterConcatType param = new DynamicParameterConcatType();
+        param.setName("param");
+        param.setValue("10");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
+
+        contextProvider.getDynamicContext().addParameter(param, ContextInfo.EMPTY, false);
+        contextProvider.getDynamicContext().addParameter("add", "3");
+
+        param.setAdd("%{dynamic.add}");
+        contextProvider.getDynamicContext().addParameter(param, ContextInfo.EMPTY, false);
+
+        assertEquals("13", contextProvider.getDynamicContext().getParameterValueAsString(param.getName()));
+    }
+
+    @Test(expected = ConversionException.class)
+    public void dynamicParameterAddOperationFailsWhenParamValueIsNotInt() throws Exception {
+        DynamicParameterConcatType param = new DynamicParameterConcatType();
+        param.setName("param");
+        param.setValue("test");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
+
+        contextProvider.getDynamicContext().addParameter(param, ContextInfo.EMPTY, false);
+
+        param.setAdd("10");
+        contextProvider.getDynamicContext().addParameter(param, ContextInfo.EMPTY, false);
+    }
+
+    @Test(expected = ConversionException.class)
+    public void dynamicParameterAddOperationFailsWhenAdditionValueIsNotInt() throws Exception {
+        DynamicParameterConcatType param = new DynamicParameterConcatType();
+        param.setName("param");
+        param.setValue("10");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
+
+        contextProvider.getDynamicContext().addParameter(param, ContextInfo.EMPTY, false);
+
+        param.setAdd("test");
+        contextProvider.getDynamicContext().addParameter(param, ContextInfo.EMPTY, false);
     }
 
     @Test

@@ -503,7 +503,7 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
 
         paramValue = (!params.containsKey(paramName)) ? "0" : params.get(paramName).getValue();
         try {
-            paramValue = "" + (Integer.parseInt(paramValue) + Integer.parseInt(addedValueStr));
+            paramValue = String.valueOf(Integer.parseInt(paramValue) + Integer.parseInt(addedValueStr));
         } catch (NumberFormatException e) {
             throw new ConversionException("Parameter to increment should be an integer type.", e);
         }

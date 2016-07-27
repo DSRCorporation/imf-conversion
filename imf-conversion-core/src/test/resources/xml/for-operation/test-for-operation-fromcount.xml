@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<conversion xmlns="http://conversion.imfutility.netflix.com">
+
+    <imfValidation>%{dynamic.validateTool} -i %{dynamic.imp} -c %{dynamic.cpl} -d %{dynamic.workingDir} -f %{dynamic.outputValidationFile}
+    </imfValidation>
+
+    <formats>
+        <!--
+            specific configuration for each format
+        -->
+        <format name="fakeFormat">
+            <tmpContext />
+            <mediaInfoCommandVideo />
+            <mediaInfoCommandAudio />
+            <mediaInfoCommandSubtitle />
+
+            <formatConfigurations>
+                <formatConfiguration name="test">
+
+                    <!--
+                        Destination parameters for conversion
+                     -->
+                    <conversionParameters>
+                    </conversionParameters>
+
+                    <for iterator="i" from="%{dynamic.fromI}" count="%{dynamic.countI}">
+                        <dynamicParameter name="output" concat="true" concatWhitespace="false">
+                            |%{i}
+                        </dynamicParameter>
+                    </for>
+
+                </formatConfiguration>
+            </formatConfigurations>
+
+        </format>
+    </formats>
+</conversion>
+
