@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.conversion.templateParameter.context;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.CoreConstants;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameter;
@@ -26,7 +27,6 @@ import com.netflix.imfutility.conversion.templateParameter.TemplateParameterReso
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
 import com.netflix.imfutility.generated.conversion.DynamicParameterConcatType;
-import com.netflix.imfutility.generated.conversion.DynamicParameterType;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -65,25 +65,6 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
     }
 
     /**
-     * Adds a dynamic parameter defined in conversion.xml.
-     * <ul>
-     * <li>All template parameters within the parameter value and name are resolved.</li>
-     * <li>The parameter value replaces the previous parameter value.</li>
-     * </ul>
-     *
-     * @param dynamicParameter a dynamic parameter defined in the conversion.xml.
-     * @param contextInfo      a context info to resolved template parameters within the given parameter value.
-     * @return this dynamic parameter context.
-     */
-    public DynamicTemplateParameterContext addParameter(DynamicParameterType dynamicParameter, ContextInfo contextInfo) {
-        return addParameter(
-                dynamicParameter.getName().trim(),
-                dynamicParameter.getValue().trim(),
-                dynamicParameter.isDeleteOnExit(),
-                contextInfo);
-    }
-
-    /**
      * Adds a dynamic parameter defined in conversion.xml, that supports concatenation.
      * <ul>
      * <li>All template parameters within the parameter value and name are resolved.</li>
@@ -93,13 +74,20 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
      *
      * @param dynamicParameter a dynamic parameter defined in the conversion.xml.
      * @param contextInfo      a context info to resolved template parameters within the given parameter value.
+     * @param skip whether setting of the parameter is skipped in conversion.xml
      * @return this dynamic parameter context.
      */
-    public DynamicTemplateParameterContext addParameter(DynamicParameterConcatType dynamicParameter, ContextInfo contextInfo) {
+    public DynamicTemplateParameterContext addParameter(DynamicParameterConcatType dynamicParameter,
+                                                        ContextInfo contextInfo, boolean skip) {
+        if (skip) {
+            return this;
+        }
         String paramName = dynamicParameter.getName().trim();
         String paramValue = dynamicParameter.getValue().trim();
         if (dynamicParameter.isConcat() != null && dynamicParameter.isConcat()) {
             appendParameter(paramName, paramValue, dynamicParameter.isDeleteOnExit(), dynamicParameter.isConcatWhitespace(), contextInfo);
+        } else if (dynamicParameter.getAdd() != null) {
+            incrementParameter(paramName, dynamicParameter.getAdd(), contextInfo);
         } else {
             addParameter(paramName, paramValue, dynamicParameter.isDeleteOnExit(), contextInfo);
         }
@@ -481,4 +469,45 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         return params.values();
     }
 
+    /**
+     * Clones dynamic parameter.
+     *
+     * @param parameter original parameter
+     * @return clone of parameter
+     */
+    public DynamicParameterConcatType cloneParameter(DynamicParameterConcatType parameter) {
+        DynamicParameterConcatType clonedParameter = new DynamicParameterConcatType();
+
+        clonedParameter.setAdd(parameter.getAdd());
+        clonedParameter.setConcat(parameter.isConcat());
+        clonedParameter.setConcatWhitespace(parameter.isConcatWhitespace());
+        clonedParameter.setDeleteOnExit(parameter.isDeleteOnExit());
+        clonedParameter.setName(parameter.getName());
+        clonedParameter.setValue(parameter.getValue());
+
+        return clonedParameter;
+    }
+
+    /**
+     * Increments parameter value assumes that parameter value is integer.
+     *
+     * @param paramName parameter name
+     * @param addedValueStr added value as string
+     * @param contextInfo a context info to resolved template parameters within the given parameter value
+     */
+    private void incrementParameter(String paramName, String addedValueStr, ContextInfo contextInfo) {
+        String paramValue;
+
+        paramName = parameterResolver.resolveTemplateParameter(paramName, contextInfo);
+        addedValueStr = parameterResolver.resolveTemplateParameter(addedValueStr, contextInfo);
+
+        paramValue = (!params.containsKey(paramName)) ? "0" : params.get(paramName).getValue();
+        try {
+            paramValue = String.valueOf(Integer.parseInt(paramValue) + Integer.parseInt(addedValueStr));
+        } catch (NumberFormatException e) {
+            throw new ConversionException("Parameter to increment should be an integer type.", e);
+        }
+
+        params.put(paramName, new CustomParameterValue(paramValue));
+    }
 }

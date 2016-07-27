@@ -38,8 +38,9 @@
             <xs:element type="externalToolsType" name="externalTools" maxOccurs="1" minOccurs="1"/>
             <xs:element type="conversionParametersType" name="conversionParameters" maxOccurs="1" minOccurs="0"/>
 
-            <xs:element type="xs:string" name="conversionConfig" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="xs:normalizedString" name="conversionConfig" maxOccurs="1" minOccurs="0"/>
 
+            <xs:element type="xs:boolean" name="validateImf" maxOccurs="1" minOccurs="0"/>
             <xs:element type="xs:boolean" name="cleanWorkingDir" maxOccurs="1" minOccurs="0"/>
             <xs:element type="xs:boolean" name="deleteTmpFilesOnExit" maxOccurs="1" minOccurs="0"/>
             <xs:element type="xs:boolean" name="deleteTmpFilesOnFail" maxOccurs="1" minOccurs="0"/>

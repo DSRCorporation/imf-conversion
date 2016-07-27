@@ -75,3 +75,5 @@ schema/
 generated/
 install/
 /.nb-gradle/
+imf-conversion-core/nbproject/
+imf-conversion-core/private/

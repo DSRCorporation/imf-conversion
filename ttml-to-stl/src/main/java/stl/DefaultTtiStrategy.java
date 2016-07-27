@@ -20,6 +20,7 @@ package stl;
 
 import ttml.Caption;
 import ttml.Style;
+import ttml.Time;
 import ttml.TimedTextObject;
 
 import java.io.ByteArrayOutputStream;
@@ -33,12 +34,14 @@ import java.util.List;
 public class DefaultTtiStrategy implements ITtiStrategy {
 
     private List<Caption> captions;
+    private List<StlSubtitle> stlSubtitles;
 
     @Override
     public byte[] build(TimedTextObject tto) throws IOException {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
 
         this.captions = new ArrayList<>(tto.captions.values());
+        this.stlSubtitles = new ArrayList<>();
 
         int sn = 0;
         for (int captionNum = 0; captionNum < captions.size(); captionNum++) {
@@ -55,9 +58,16 @@ public class DefaultTtiStrategy implements ITtiStrategy {
 
             // 4. create a subtitle object
             StlSubtitle stlSubtitle = new StlSubtitle(captions, caption, captionNum, lines.length, extensionBlocks);
+            this.stlSubtitles.add(stlSubtitle);
+        }
 
+        //call it when this.stlSubtitles initially populated.
+        defineTimesLinesAndCumulativeSubtitlesLines();
+
+        // build result STL
+        for (StlSubtitle stlSubtitle : this.stlSubtitles) {
             // 5. create a TTI block for each EB
-            for (int ebn = 0; ebn < extensionBlocks.length; ebn++) {
+            for (int ebn = 0; ebn < stlSubtitle.getExtensionBlocks().length; ebn++) {
                 byte[] ttiBlock = doBuildTtiBlock(stlSubtitle, sn, ebn);
                 result.write(ttiBlock);
                 sn++;
@@ -65,6 +75,82 @@ public class DefaultTtiStrategy implements ITtiStrategy {
         }
 
         return result.toByteArray();
+    }
+
+
+    private void defineTimesLinesAndCumulativeSubtitlesLines() {
+        // Define start/end cumulative subtitles taking into account the there should not be more line than MNR
+        int mnr = GsiAttribute.MNR.getIntValue();
+        Time previousEndCSTime = null;
+        for (int i = 0; i < this.stlSubtitles.size() - 1; i++) {
+            StlSubtitle stlSubtitle = this.stlSubtitles.get(i);
+
+            Time endCSTime = stlSubtitle.getEnd();// end time of whole cumulative set.
+            int totalCsLines = stlSubtitle.getLinesCount(); // total lines of cumulative set.
+            int lastCSindex = i; // the last index of cumulative set.
+            for (int j = i + 1; j < this.stlSubtitles.size(); j++) {
+                StlSubtitle stlCummulativeSubtitle = this.stlSubtitles.get(j);
+                // Check whether it is a cumulative subtitle or not.
+                if (endCSTime.getMseconds() > stlCummulativeSubtitle.getStart().getMseconds()) {
+                    // check that we fit acceptable number of lines.
+                    if (totalCsLines + stlCummulativeSubtitle.getLinesCount() > mnr) {
+                        // TODO: add a test when single subtitle has more than mnr lines
+                        // TODO: add a test when several subtitles has more than mnr lines in total
+
+                        //set previous CS as the last
+                        this.stlSubtitles.get(j - 1).setCumulativeEndFlag(true);
+                        //next iteration must start from Start always.
+                        //i must point to the last element in the CS
+                        lastCSindex = j - 1;
+                        break;
+                    }
+                    stlCummulativeSubtitle.setCumulative(true);
+                    totalCsLines += stlCummulativeSubtitle.getLinesCount();
+                    //check what end time is bigger.
+                    endCSTime = stlCummulativeSubtitle.getEnd().getMseconds() > endCSTime.getMseconds() ? stlCummulativeSubtitle.getEnd() : endCSTime;
+
+                    if (j == this.stlSubtitles.size() - 1) {
+                        //i must point to the last element in the CS
+                        lastCSindex = j;
+                        break;
+                    }
+
+                } else {
+                    //i must point to the last element in the CS
+                    lastCSindex = j - 1;
+                    break;
+                }
+            }
+
+            if (lastCSindex != i) {
+                //Set start flag
+                stlSubtitle.setCumulativeStartFlag(true);
+                stlSubtitle.setCumulative(true);
+                //Set the end flag
+                this.stlSubtitles.get(lastCSindex).setCumulativeEndFlag(true);
+                this.stlSubtitles.get(lastCSindex).setCumulative(true);
+            }
+
+            //set start and endTime for all CSs
+            //set linenumber for each subtitle.
+            int startTTLine = StlSubtitle.BOTTOM_TELETEXT_LINE_TO_USE + StlSubtitle.TELETEXT_LINE_STEP - (totalCsLines * StlSubtitle.TELETEXT_LINE_STEP) ;
+            startTTLine = startTTLine < 0 ? 0 : startTTLine;
+            for (int e = i; e <= lastCSindex; e++) {
+                StlSubtitle csSubtitle = this.stlSubtitles.get(e);
+                csSubtitle.setEnd(endCSTime);
+                //set Start not less than previous CSs end time
+                if (previousEndCSTime != null
+                        && previousEndCSTime.getMseconds() > csSubtitle.getStart().getMseconds()) {
+                    // TODO: add a test when we brake up CSs and got start time of next CS set less than end time of the CSs
+                    csSubtitle.setStart(previousEndCSTime);
+                }
+                csSubtitle.setLineNum(startTTLine);
+                startTTLine += csSubtitle.getLinesCount() * StlSubtitle.TELETEXT_LINE_STEP;
+            }
+
+            i = lastCSindex;
+            previousEndCSTime = endCSTime;
+        }
     }
 
     private String[] splitAndCleanText(Caption caption) throws IOException {
@@ -209,7 +295,9 @@ public class DefaultTtiStrategy implements ITtiStrategy {
 
     protected byte[] getTci(StlSubtitle stlSubtitle) {
         byte[] result = new byte[4];
-        String[] timeCode = stlSubtitle.getCaption().start.getTime("h:m:s:f/25").split(":");
+        //FIXME: f/25 is OK for BBC, but there may be case for:
+        // *In the STL30.01 format, the range is 00..29 frames (00h..1Dh).
+        String[] timeCode = stlSubtitle.getStart().getTime("h:m:s:f/25").split(":");
         result[0] = Byte.parseByte(timeCode[0]);
         result[1] = Byte.parseByte(timeCode[1]);
         result[2] = Byte.parseByte(timeCode[2]);
@@ -219,7 +307,9 @@ public class DefaultTtiStrategy implements ITtiStrategy {
 
     protected byte[] getTco(StlSubtitle stlSubtitle) {
         byte[] result = new byte[4];
-        String[] timeCode = stlSubtitle.getCaption().end.getTime("h:m:s:f/25").split(":");
+        //FIXME: f/25 is OK for BBC, but there may be case for:
+        // *In the STL30.01 format, the range is 00..29 frames (00h..1Dh).
+        String[] timeCode = stlSubtitle.getEnd().getTime("h:m:s:f/25").split(":");
         result[0] = Byte.parseByte(timeCode[0]);
         result[1] = Byte.parseByte(timeCode[1]);
         result[2] = Byte.parseByte(timeCode[2]);
@@ -228,54 +318,32 @@ public class DefaultTtiStrategy implements ITtiStrategy {
     }
 
     protected byte getCs(StlSubtitle stlSubtitle) {
-        Integer prevEndTimeMs = null;
-        if (stlSubtitle.getCaptionNum() - 1 >= 0) {
-            Caption prev = stlSubtitle.getCaptions().get(stlSubtitle.getCaptionNum() - 1);
-            prevEndTimeMs = prev.end.getMseconds();
-        }
 
-        Integer nextEndTimeMs = null;
-        if (stlSubtitle.getCaptionNum() + 1 < stlSubtitle.getCaptions().size()) {
-            Caption next = stlSubtitle.getCaptions().get(stlSubtitle.getCaptionNum() + 1);
-            nextEndTimeMs = next.end.getMseconds();
-        }
-
-
-
-
-        Integer currentEndTimeMs = stlSubtitle.getCaption().end.getMseconds();
-         if ((prevEndTimeMs != null) && (nextEndTimeMs != null)
-                && prevEndTimeMs.equals(currentEndTimeMs) && nextEndTimeMs.equals(currentEndTimeMs)) {
-            return (byte) 0x02; // intermediate
-        } else if ((nextEndTimeMs != null) && nextEndTimeMs.equals(currentEndTimeMs)) {
+        if (stlSubtitle.getCumulativeStartFlag()) {
             return (byte) 0x01; // first
-        } else if ((prevEndTimeMs != null) && prevEndTimeMs.equals(currentEndTimeMs)) {
+        } else if (stlSubtitle.getCumulativeEndFlag()) {
             return (byte) 0x03; // last
+        } else if (stlSubtitle.getCumulative()) {
+            return (byte) 0x02; // intermediate
         }
 
         return (byte) 0x00; // no cumulative
     }
 
     protected byte getVP(StlSubtitle stlSubtitle) {
-        int mnr = GsiAttribute.MNR.getIntValue();
-        int vp = mnr / 2;
-        if (stlSubtitle.getLinesCount() > (mnr - vp)) {
-            vp -= stlSubtitle.getLinesCount() - (mnr - vp);
-            vp = Math.max(0, vp);
-        }
-        return (byte) vp;
+        return (byte) stlSubtitle.getLineNum();
     }
 
     protected byte getJc(StlSubtitle stlSubtitle) {
-        if (stlSubtitle.getCaption().style == null) {
+        if (stlSubtitle.getCaptionStyle() == null) {
             return (byte) 0x02; // center
         }
 
-        if (stlSubtitle.getCaption().style.textAlign.contains("left")) {
+        if (stlSubtitle.getCaptionStyle().textAlign.contains("left")) {
             return (byte) 0x01;
         }
 
-        if (stlSubtitle.getCaption().style.textAlign.contains("right")) {
+        if (stlSubtitle.getCaptionStyle().textAlign.contains("right")) {
             return (byte) 0x03;
         }
 
@@ -285,6 +353,5 @@ public class DefaultTtiStrategy implements ITtiStrategy {
     protected byte getCf(StlSubtitle stlSubtitle) {
         return (byte) 0x00;
     }
-
 
 }

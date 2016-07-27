@@ -21,6 +21,8 @@ package com.netflix.imfutility.conversion.templateParameter;
 import com.netflix.imfutility.conversion.templateParameter.context.ITemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterContextException;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,6 +70,27 @@ public class TemplateParameterResolver {
             resolvedParam = doResolveSubParameters(unresolvedParam, contextInfo);
         }
         return resolvedParam;
+    }
+
+    public String resolveIteratorParameter(String parameterStr, Map<String, Integer> iterators) {
+        if (parameterStr == null) {
+            return null;
+        }
+        if (iterators == null) {
+            return null;
+        }
+
+        // resolve against all iterators
+        for (Entry<String, Integer> e : iterators.entrySet()) {
+            parameterStr = parameterStr.replaceAll("%\\{" + e.getKey() + "\\}", e.getValue().toString());
+        }
+
+        return parameterStr;
+    }
+
+    public String resolveTemplateAndIteratorParameter(String parameterStr,
+            Map<String, Integer> iterators, ContextInfo contextInfo) {
+        return resolveTemplateParameter(resolveIteratorParameter(parameterStr, iterators), contextInfo);
     }
 
     private String doResolveSubParameters(String parameterStr, ContextInfo contextInfo) {

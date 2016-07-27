@@ -29,7 +29,7 @@ public class TestUtils {
 
     }
 
-    public static File getEmptyFile() throws URISyntaxException {
+    public static File getTestFile() throws URISyntaxException {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-file").toURI());
     }
 }

@@ -31,11 +31,10 @@ import com.netflix.imflibrary.RESTfulInterfaces.PayloadRecord;
 import com.netflix.imflibrary.RESTfulInterfaces.PayloadRecord.PayloadAssetType;
 import com.netflix.imflibrary.exceptions.IMFException;
 import com.netflix.imflibrary.exceptions.MXFException;
-import com.netflix.imflibrary.imp_validation.IMFMasterPackage;
 import com.netflix.imflibrary.st0377.HeaderPartition;
 import com.netflix.imflibrary.st0429_8.PackingList;
 import com.netflix.imflibrary.st0429_9.AssetMap;
-import com.netflix.imflibrary.st2067_2.CompositionPlaylist;
+import com.netflix.imflibrary.st2067_2.Composition;
 import com.netflix.imflibrary.utils.ByteArrayByteRangeProvider;
 import com.netflix.imflibrary.utils.ByteArrayDataProvider;
 import com.netflix.imflibrary.utils.ErrorLogger.ErrorObject;
@@ -177,7 +176,7 @@ public class ImfValidator {
         return doValidate(ErrorCodes.IMF_CPL_ERROR,
                 imfErrorLogger -> {
                     PayloadRecord payloadRecord = createPayloadRecord(cpl, PayloadAssetType.CompositionPlaylist);
-                    new CompositionPlaylist(new ByteArrayByteRangeProvider(payloadRecord.getPayload()), imfErrorLogger);
+                    new Composition(new ByteArrayByteRangeProvider(payloadRecord.getPayload()), imfErrorLogger);
                     return imfErrorLogger.getErrors();
                 });
     }
@@ -203,16 +202,12 @@ public class ImfValidator {
     private List<ErrorObject> validatePklAndAssetMap(File assetMap, List<File> pkls) {
         return doValidate(ErrorCodes.IMF_MASTER_PACKAGE_ERROR,
                 imfErrorLogger -> {
-                    List<ResourceByteRangeProvider> resourceByteRangeProviders = new ArrayList<>();
-                    resourceByteRangeProviders.add(new ByteArrayByteRangeProvider(
-                            createPayloadRecord(assetMap, PayloadAssetType.AssetMap).getPayload()));
+                    PayloadRecord assetMapPayload = createPayloadRecord(assetMap, PayloadAssetType.AssetMap);
+                    List<PayloadRecord> pklPayloads = new ArrayList<>();
                     for (File pkl : pkls) {
-                        resourceByteRangeProviders.add(new ByteArrayByteRangeProvider(
-                                createPayloadRecord(pkl, PayloadAssetType.PackingList).getPayload()));
+                        pklPayloads.add(createPayloadRecord(pkl, PayloadAssetType.PackingList));
                     }
-
-                    new IMFMasterPackage(resourceByteRangeProviders, imfErrorLogger);
-                    return imfErrorLogger.getErrors();
+                    return IMPValidator.validatePKLAndAssetMap(assetMapPayload, pklPayloads);
                 });
     }
 
@@ -253,7 +248,7 @@ public class ImfValidator {
 
                     PayloadRecord cplPayloadRecord = createPayloadRecord(cpl, PayloadAssetType.CompositionPlaylist);
 
-                    return IMPValidator.isCPLConformed(cplPayloadRecord, headerPayloadRecords);
+                    return IMPValidator.areAllVirtualTracksInCPLConformed(cplPayloadRecord, headerPayloadRecords);
                 });
     }
 
@@ -301,9 +296,12 @@ public class ImfValidator {
     private boolean shouldCheckCplConformance(File cpl) {
         // check for conformance only if the CPL has EssenceDescriptorList
         try {
-            return new CompositionPlaylist(cpl, new IMFErrorLoggerImpl())
-                    .getCompositionPlaylistType().getEssenceDescriptorList() != null;
+            new Composition(cpl, new IMFErrorLoggerImpl()).getEssenceDescriptorListMap();
+            // if there ae no essence descriptor list, then the method below throws a NullPointerException...
+            return true;
         } catch (IOException | JAXBException | URISyntaxException | SAXException | IMFException | MXFException e) {
+            return false;
+        } catch (NullPointerException e) {
             return false;
         }
     }

@@ -55,6 +55,14 @@ public class SkipOperationResolver {
         return Arrays.asList(parentExecTypes).stream().anyMatch((execComplexType) -> isSkip(execComplexType)) || isSkip(execType);
     }
 
+    public boolean isSkip(ExecComplexType execType, ExecComplexType... parentExecTypes) {
+        if (parentExecTypes == null || parentExecTypes.length == 0) {
+            return isSkip(execType);
+        }
+
+        return Arrays.asList(parentExecTypes).stream().anyMatch((execComplexType) -> isSkip(execComplexType)) || isSkip(execType);
+    }
+
     public boolean isSkip(ExecSimpleType execType) {
         return isSkip(execType.getIf(), execType.getUnless());
     }

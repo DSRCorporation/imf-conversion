@@ -19,6 +19,8 @@
 package stl;
 
 import ttml.Caption;
+import ttml.Style;
+import ttml.Time;
 
 import java.util.List;
 
@@ -27,11 +29,29 @@ import java.util.List;
  */
 public class StlSubtitle {
 
+    //Teletext usually - 25 lines (top is 0).
+    //STL says it uses for teletext:  1-23 decimal (01h-17h)
+    //BBS spec says: The normally accepted position for subtitles is towards the bottom of the screen
+    //(Teletext lines 20 and 22. Line 18 is used if three subtitle lines are required).
+    public static final int BOTTOM_TELETEXT_LINE_TO_USE = 22;
+    //BBC probably use only 11 lines with step 2. In samples I didn't see any odd line number.
+    public static final int TELETEXT_LINE_STEP = 2;
+
+
     private final List<Caption> captions;
     private final int captionNum;
     private final Caption caption;
     private final int linesCount;
     private final byte[][] extensionBlocks;
+
+    private Time start;
+    private Time end;
+    private int lineNum;
+
+    private Boolean isCumulative = false;
+    private Boolean cumulativeStartFlag = false;
+    private Boolean cumulativeEndFlag = false;
+
 
     public StlSubtitle(List<Caption> captions, Caption caption, int captionNum, int linesCount, byte[][] extensionBlocks) {
         this.captions = captions;
@@ -39,25 +59,69 @@ public class StlSubtitle {
         this.captionNum = captionNum;
         this.linesCount = linesCount;
         this.extensionBlocks = extensionBlocks;
+        this.start = caption.start;
+        this.end = caption.end;
+        this.lineNum = BOTTOM_TELETEXT_LINE_TO_USE; //default Teletext line num for BBC recommendation.
     }
 
     public byte[][] getExtensionBlocks() {
         return extensionBlocks;
     }
 
-    public Caption getCaption() {
-        return caption;
+    public Style getCaptionStyle() {
+        return caption.style;
     }
 
     public int getLinesCount() {
         return linesCount;
     }
 
-    public List<Caption> getCaptions() {
-        return captions;
+    public Time getStart() {
+        return start;
     }
 
-    public int getCaptionNum() {
-        return captionNum;
+    public void setStart(Time start) {
+        this.start = start;
     }
+
+    public Time getEnd() {
+        return end;
+    }
+
+    public void setEnd(Time end) {
+        this.end = end;
+    }
+
+    public int getLineNum() {
+        return lineNum;
+    }
+
+    public void setLineNum(int lineNum) {
+        this.lineNum = lineNum;
+    }
+
+    public Boolean getCumulative() {
+        return isCumulative;
+    }
+
+    public void setCumulative(Boolean cumulative) {
+        isCumulative = cumulative;
+    }
+
+    public void setCumulativeStartFlag(boolean cumulativeStartFlag) {
+        this.cumulativeStartFlag = cumulativeStartFlag;
+    }
+
+    public void setCumulativeEndFlag(boolean cumulativeEndFlag) {
+        this.cumulativeEndFlag = cumulativeEndFlag;
+    }
+
+    public Boolean getCumulativeStartFlag() {
+        return cumulativeStartFlag;
+    }
+
+    public Boolean getCumulativeEndFlag() {
+        return cumulativeEndFlag;
+    }
+
 }

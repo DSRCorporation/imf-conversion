@@ -19,6 +19,7 @@
 package com.netflix.imfutility.conversion;
 
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.conversion.executor.ConversionExecutorFor;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorOnce;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorPipe;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorSegment;
@@ -26,10 +27,11 @@ import com.netflix.imfutility.conversion.executor.ConversionExecutorSequence;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.generated.conversion.DynamicParameterType;
+import com.netflix.imfutility.generated.conversion.DynamicParameterConcatType;
 import com.netflix.imfutility.generated.conversion.ExecEachSegmentSequenceType;
 import com.netflix.imfutility.generated.conversion.ExecEachSequenceSegmentType;
 import com.netflix.imfutility.generated.conversion.ExecOnceType;
+import com.netflix.imfutility.generated.conversion.ForType;
 import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
 import com.netflix.imfutility.generated.conversion.PipeType;
 
@@ -57,8 +59,11 @@ public class ConversionEngine {
                         (ExecEachSequenceSegmentType) operation).execute();
             } else if (operation instanceof PipeType) {
                 new ConversionExecutorPipe(contextProvider, getExecuteStrategyFactory(), (PipeType) operation).execute();
-            } else if (operation instanceof DynamicParameterType) {
-                contextProvider.getDynamicContext().addParameter((DynamicParameterType) operation, ContextInfo.EMPTY);
+            } else if (operation instanceof DynamicParameterConcatType) {
+                contextProvider.getDynamicContext()
+                        .addParameter((DynamicParameterConcatType) operation, ContextInfo.EMPTY, false);
+            } else if (operation instanceof ForType) {
+                new ConversionExecutorFor(contextProvider, getExecuteStrategyFactory(), (ForType) operation).execute();
             } else {
                 throw new ConversionException(String.format("Unknown Conversion Operation type: %s", operation.toString()));
             }

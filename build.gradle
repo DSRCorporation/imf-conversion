@@ -29,6 +29,7 @@ project.ext {
     // Java subprojects that generates Java clases from xsd (with jaxb plugin)
     xsdJavaSubprojectList = subprojects.findAll {
         it.name == 'dpp-conversion-input-xsd' ||
+                it.name == 'itunes-conversion-input-xsd' ||
                 it.name == 'imf-conversion-core' ||
                 it.name == 'imf-validation'
     }
@@ -37,6 +38,7 @@ project.ext {
     // to create dependencies between tests in subprojects
     testArtifactsJavaSubprojectList = subprojects.findAll {
         it.name == 'dpp-conversion' ||
+                it.name == 'itunes-conversion' ||
                 it.name == 'imf-conversion-core'
     }
 

@@ -50,18 +50,24 @@ public final class CoreConstants {
     public static final String MEDIAINFO_XSD = "xsd/media-info.xsd";
     public static final String MEDIAINFO_PACKAGE = "com.netflix.imfutility.generated.mediainfo";
 
-    // 3.5 IMF 2013 cpl.xml
+    // 3.5 IMF 2016 cpl.xml
+    public static final String CPL_2016_XSD = "xsd/imf/2016/imf-cpl.xsd";
+    public static final String CORE_CONSTRAINTS_2016_XSD = "xsd/imf/2016/imf-core-constraints.xsd";
+    public static final String CPL_2016_PACKAGE = "com.netflix.imfutility.generated.imf._2016";
+
+    // 3.6 IMF 2013 cpl.xml
     public static final String CPL_2013_XSD = "xsd/imf/2013/imf-cpl.xsd";
     public static final String CORE_CONSTRAINTS_2013_XSD = "xsd/imf/2013/imf-core-constraints.xsd";
     public static final String CPL_2013_PACKAGE = "com.netflix.imfutility.generated.imf._2013";
 
-    // 3.6 IMF common
+    // 3.7 IMF common
     public static final String DCML_TYPES_XSD = "xsd/imf/dcmlTypes.xsd";
     public static final String PACKING_LIST_XSD = "xsd/imf/packing-list.xsd";
     public static final String XMLDSIG_CORE_SCHEMA_XSD = "xsd/imf/xmldsig-core-schema.xsd";
 
 /* 4. Command line args*/
 
+    public static final boolean DEFAULT_VALIDATE_IMF = true;
     public static final boolean DEFAULT_DELETE_TMP_FILES_ON_EXIT = true;
     public static final boolean DEFAULT_DELETE_TMP_FILES_ON_FAIL = false;
     public static final boolean DEFAULT_CLEAN_WORKING_DIR = false;
