@@ -25,7 +25,6 @@ import com.netflix.imfutility.conversion.templateParameter.context.parameters.Se
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.DynamicParameterConcatType;
-import com.netflix.imfutility.generated.conversion.DynamicParameterType;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import org.junit.Test;
 
@@ -266,12 +265,12 @@ public class TemplateParameterInitializationTest {
     public void testAddDynamicParameterFromConversionXml() throws Exception {
         TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
 
-        DynamicParameterType dynamicParameter1 = new DynamicParameterType();
+        DynamicParameterConcatType dynamicParameter1 = new DynamicParameterConcatType();
         dynamicParameter1.setName("addDynamicSimple1");
         dynamicParameter1.setValue("addDynamicValue1");
         dynamicParameter1.setDeleteOnExit(false);
 
-        DynamicParameterType dynamicParameter2 = new DynamicParameterType();
+        DynamicParameterConcatType dynamicParameter2 = new DynamicParameterConcatType();
         dynamicParameter2.setName("addDynamicSimple2");
         dynamicParameter2.setValue("addDynamicValue2");
         dynamicParameter2.setDeleteOnExit(true);
