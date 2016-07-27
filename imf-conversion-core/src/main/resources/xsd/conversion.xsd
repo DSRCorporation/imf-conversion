@@ -176,7 +176,8 @@
                 <xs:element type="execEachSegmentSequenceType" name="execEachSegment"/>
                 <xs:element type="execEachSequenceSegmentType" name="execEachSequence"/>
                 <xs:element type="pipeType" name="pipe"/>
-                <xs:element type="dynamicParameterType" name="dynamicParameter"/>
+                <xs:element type="dynamicParameterConcatType" name="dynamicParameter"/>
+                <xs:element type="forType" name="for"/>
             </xs:choice>
         </xs:sequence>
         <xs:attribute type="xs:string" name="name" use="required"/>
@@ -337,15 +338,6 @@
         </xs:choice>
     </xs:complexType>
 
-    <xs:complexType name="dynamicParameterType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="name" use="required"/>
-                <xs:attribute type="xs:boolean" name="deleteOnExit" default="false"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-
     <xs:complexType name="dynamicParameterConcatType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -353,6 +345,7 @@
                 <xs:attribute type="xs:boolean" name="concat" use="optional"/>
                 <xs:attribute type="xs:boolean" name="deleteOnExit" default="false"/>
                 <xs:attribute type="xs:boolean" name="concatWhitespace" default="false"/>
+                <xs:attribute type="xs:string" name="add"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -368,6 +361,25 @@
             <xs:enumeration value="video"/>
             <xs:enumeration value="audio"/>
             <xs:enumeration value="subtitle"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="forType">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded" minOccurs="1">
+                <xs:element type="dynamicParameterConcatType" name="dynamicParameter" />
+                <xs:element type="forType" name="for" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="iterator" type="NotEmptyString" use="required" />
+        <xs:attribute name="from" type="xs:string" use="optional" default="0" />
+        <xs:attribute name="to" type="xs:string"  use="optional" default="0" />
+        <xs:attribute name="count" type="xs:string" use="optional" default="0" />
+    </xs:complexType>
+
+    <xs:simpleType name="NotEmptyString">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
         </xs:restriction>
     </xs:simpleType>
 
