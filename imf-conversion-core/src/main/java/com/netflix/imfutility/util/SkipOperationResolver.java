@@ -21,14 +21,14 @@ package com.netflix.imfutility.util;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.exception.TemplateParameterNotFoundException;
-import com.netflix.imfutility.generated.conversion.ExecComplexType;
-import com.netflix.imfutility.generated.conversion.ExecSimpleType;
+import com.netflix.imfutility.generated.conversion.ConditionalComplexType;
+import com.netflix.imfutility.generated.conversion.ConditionalSimpleType;
 
 import java.util.Arrays;
 
 /**
  * Defines if and unless parameters of executions.
- * (see {@link ExecSimpleType} {@link ExecComplexType}).
+ * (see {@link ConditionalSimpleType} {@link ConditionalComplexType}).
  */
 public class SkipOperationResolver {
     private final TemplateParameterResolver parameterResolver;
@@ -47,7 +47,7 @@ public class SkipOperationResolver {
         return this;
     }
 
-    public boolean isSkip(ExecSimpleType execType, ExecComplexType... parentExecTypes) {
+    public boolean isSkip(ConditionalSimpleType execType, ConditionalComplexType... parentExecTypes) {
         if (parentExecTypes == null || parentExecTypes.length == 0) {
             return isSkip(execType);
         }
@@ -55,19 +55,11 @@ public class SkipOperationResolver {
         return Arrays.asList(parentExecTypes).stream().anyMatch((execComplexType) -> isSkip(execComplexType)) || isSkip(execType);
     }
 
-    public boolean isSkip(ExecComplexType execType, ExecComplexType... parentExecTypes) {
-        if (parentExecTypes == null || parentExecTypes.length == 0) {
-            return isSkip(execType);
-        }
-
-        return Arrays.asList(parentExecTypes).stream().anyMatch((execComplexType) -> isSkip(execComplexType)) || isSkip(execType);
-    }
-
-    public boolean isSkip(ExecSimpleType execType) {
+    public boolean isSkip(ConditionalSimpleType execType) {
         return isSkip(execType.getIf(), execType.getUnless());
     }
 
-    public boolean isSkip(ExecComplexType execType) {
+    public boolean isSkip(ConditionalComplexType execType) {
         return isSkip(execType.getIf(), execType.getUnless());
     }
 

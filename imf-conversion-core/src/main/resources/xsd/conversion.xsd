@@ -183,7 +183,7 @@
         <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:complexType>
 
-    <xs:complexType name="execSimpleType">
+    <xs:complexType name="conditionalSimpleType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="name" use="required"/>
@@ -193,7 +193,7 @@
         </xs:simpleContent>
     </xs:complexType>
 
-    <xs:complexType name="execComplexType">
+    <xs:complexType name="conditionalComplexType">
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="if" default="true"/>
         <xs:attribute type="xs:string" name="unless" default="false"/>
@@ -203,7 +203,7 @@
     -->
     <xs:complexType name="execOnceType">
         <xs:simpleContent>
-            <xs:extension base="execSimpleType">
+            <xs:extension base="conditionalSimpleType">
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -212,7 +212,7 @@
     -->
     <xs:complexType name="execEachSegmentSequenceType">
         <xs:complexContent>
-            <xs:extension base="execComplexType">
+            <xs:extension base="conditionalComplexType">
                 <xs:choice maxOccurs="unbounded" minOccurs="1">
                     <xs:element type="pipeSegmentType" name="pipe"/>
                     <xs:element type="execOnceType" name="execOnce"/>
@@ -228,7 +228,7 @@
     -->
     <xs:complexType name="execEachSequenceType">
         <xs:complexContent>
-            <xs:extension base="execComplexType">
+            <xs:extension base="conditionalComplexType">
                 <xs:sequence>
                     <xs:choice maxOccurs="1" minOccurs="1">
                         <xs:element type="subPipeType" name="pipe"/>
@@ -268,7 +268,7 @@
     -->
     <xs:complexType name="execEachSequenceSegmentType">
         <xs:complexContent>
-            <xs:extension base="execComplexType">
+            <xs:extension base="conditionalComplexType">
                 <xs:choice maxOccurs="unbounded" minOccurs="1">
                     <xs:element type="pipeSequenceType" name="pipe"/>
                     <xs:element type="execOnceType" name="execOnce"/>
@@ -285,7 +285,7 @@
     -->
     <xs:complexType name="execEachSegmentType">
         <xs:complexContent>
-            <xs:extension base="execComplexType">
+            <xs:extension base="conditionalComplexType">
                 <xs:sequence>
                     <xs:choice maxOccurs="1" minOccurs="1">
                         <xs:element type="subPipeType" name="pipe"/>
@@ -340,8 +340,7 @@
 
     <xs:complexType name="dynamicParameterConcatType">
         <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="name" use="required"/>
+            <xs:extension base="conditionalSimpleType">
                 <xs:attribute type="xs:boolean" name="concat" use="optional"/>
                 <xs:attribute type="xs:boolean" name="deleteOnExit" default="false"/>
                 <xs:attribute type="xs:boolean" name="concatWhitespace" default="false"/>

@@ -148,10 +148,9 @@
                     </execEachSequence>
 
                     <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
-                    <execEachSequence name="concatSingleAudio" type="audio" if="%{dynamic.singleAudio}">
-                        <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false">[%{seq.num}:a]
-                        </dynamicParameter>
-                    </execEachSequence>
+                    <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false"
+                                      if="%{dynamic.singleAudio}">[0:a]
+                    </dynamicParameter>
 
                     <!--
                         4. Remap audio in accordance with AudioMap.xml
