@@ -19,14 +19,67 @@
             <mediaInfoCommandSubtitle>mediaInfoCommandSubtitle %{dynamic.mediaInfoInput}</mediaInfoCommandSubtitle>
 
             <formatConfigurations>
-                <formatConfiguration name="1">
+                <formatConfiguration name="skippedSimpleIf">
 
-                    <conversionParameters>
-                    </conversionParameters>
+                    <conversionParameters></conversionParameters>
+
+                    <!-- skipped simple if -->
+                    <dynamicParameter name="skippedIfName" if="false">skippedIfValue
+                    </dynamicParameter>
+
+                    <!-- non-skipped if-->
+                    <dynamicParameter name="nonSkippedIfName" if="true">nonSkippedIfValue
+                    </dynamicParameter>
+
+                </formatConfiguration>
+
+                <formatConfiguration name="skippedSimpleUnless">
+
+                    <conversionParameters></conversionParameters>
+
+                    <!-- skipped simple unless -->
+                    <dynamicParameter name="skippedUnlessName" unless="true">skippedUnlessValue
+                    </dynamicParameter>
+
+                    <!-- non-skipped unless -->
+                    <dynamicParameter name="nonSkippedUnlessName" unless="false">
+                        nonSkippedUnlessValue
+                    </dynamicParameter>
+
+                </formatConfiguration>
+
+
+                <formatConfiguration name="skippedParam">
+                    <conversionParameters></conversionParameters>
+
+                    <!-- skipped simple with dynamic param in if -->
+                    <dynamicParameter name="skippedIfParamName" if="%{dynamic.skipped}">
+                        skippedIfParamValue
+                    </dynamicParameter>
+
+                    <!-- non-skipped simple with dynamic param in if -->
+                    <dynamicParameter name="nonSkippedIfParamName" if="%{dynamic.notSkipped}">
+                        nonSkippedIfParamValue
+                    </dynamicParameter>
+
+                    <!-- skipped simple with dynamic param in unless -->
+                    <dynamicParameter name="skippedUnlessParamName" unless="%{dynamic.notSkipped}">
+                        skippedUnlessParamValue
+                    </dynamicParameter>
+
+                    <!-- non-skipped simple with dynamic param in unless -->
+                    <dynamicParameter name="nonSkippedUnlessParamName" unless="%{dynamic.skipped}">
+                        nonSkippedUnlessParamValue
+                    </dynamicParameter>
+
+                </formatConfiguration>
+
+                <formatConfiguration name="skippedEachSeq">
+                    <conversionParameters></conversionParameters>
 
                     <!-- skipped within skipped execSeq -->
                     <execEachSequence name="skippedExecEachSeq1" type="audio" if="false">
-                        <dynamicParameter name="skippedDynamicParamSeqName">skippedDynamicParamSeqValue
+                        <dynamicParameter name="skippedSeqName1">skippedSeqValue1
                         </dynamicParameter>
                     </execEachSequence>
 
@@ -34,7 +87,7 @@
                     <execEachSequence name="skippedExecEachSeq2" type="audio" if="false">
                         <execEachSegment name="skippedExecEachSeqSegm1" if="false">
                             <execOnce name="exec">exec</execOnce>
-                            <dynamicParameter name="skippedDynamicParamSeqSegmName1">skippedDynamicParamSeqSegmValue1
+                            <dynamicParameter name="skippedSeqSegmName1">skippedSeqSegmValue1
                             </dynamicParameter>
                         </execEachSegment>
                     </execEachSequence>
@@ -43,7 +96,7 @@
                     <execEachSequence name="skippedExecEachSeq3" type="audio" if="false">
                         <execEachSegment name="skippedExecEachSeqSegm2" if="true">
                             <execOnce name="exec">exec</execOnce>
-                            <dynamicParameter name="skippedDynamicParamSeqSegmName2">skippedDynamicParamSeqSegmValue2
+                            <dynamicParameter name="skippedSeqSegmName2">skippedSeqSegmValue2
                             </dynamicParameter>
                         </execEachSegment>
                     </execEachSequence>
@@ -52,15 +105,34 @@
                     <execEachSequence name="skippedExecEachSeq4" type="audio" if="true">
                         <execEachSegment name="skippedExecEachSeqSegm3" if="false">
                             <execOnce name="exec">exec</execOnce>
-                            <dynamicParameter name="skippedDynamicParamSeqSegmName3">skippedDynamicParamSeqSegmValue3
+                            <dynamicParameter name="skippedSeqSegmName3">skippedSeqSegmValue3
                             </dynamicParameter>
                         </execEachSegment>
                     </execEachSequence>
 
+                    <!-- skipped param within non-skipped execSeq -->
+                    <execEachSequence name="skippedExecEachSeq5" type="audio" if="true">
+                        <dynamicParameter name="skippedSeqName2" if="false">skippedSeqValue2
+                        </dynamicParameter>
+                    </execEachSequence>
+
+                    <!-- skipped param within non-skipped execSeq and non-skipped execSegm-->
+                    <execEachSequence name="skippedExecEachSeq6" type="audio" if="true">
+                        <execEachSegment name="skippedExecEachSeqSegm4" if="true">
+                            <execOnce name="exec">exec</execOnce>
+                            <dynamicParameter name="skippedSeqSegmName4" if="false">
+                                skippedSeqSegmValue4
+                            </dynamicParameter>
+                        </execEachSegment>
+                    </execEachSequence>
+                </formatConfiguration>
+
+                <formatConfiguration name="skippedEachSegm">
+                    <conversionParameters></conversionParameters>
 
                     <!-- skipped within skipped execSegm -->
                     <execEachSegment name="skippedExecEachSegm1" if="false">
-                        <dynamicParameter name="skippedDynamicParamSegmName">skippedDynamicParamSegmValue
+                        <dynamicParameter name="skippedSegmName1">skippedSegmValue1
                         </dynamicParameter>
                     </execEachSegment>
 
@@ -68,7 +140,7 @@
                     <execEachSegment name="skippedExecEachSegm2" if="false">
                         <execEachSequence name="skippedExecEachSegmSeq1" type="audio" if="false">
                             <execOnce name="exec">exec</execOnce>
-                            <dynamicParameter name="skippedDynamicParamSegmSeqName1">skippedDynamicParamSegmSeqValue1
+                            <dynamicParameter name="skippedSegmSeqName1">skippedSegmSeqValue1
                             </dynamicParameter>
                         </execEachSequence>
                     </execEachSegment>
@@ -77,7 +149,7 @@
                     <execEachSegment name="skippedExecEachSegm3" if="false">
                         <execEachSequence name="skippedExecEachSegmSeq2" type="audio" if="true">
                             <execOnce name="exec">exec</execOnce>
-                            <dynamicParameter name="skippedDynamicParamSegmSeqName2">skippedDynamicParamSegmSeqValue2
+                            <dynamicParameter name="skippedSegmSeqName2">skippedSegmSeqValue2
                             </dynamicParameter>
                         </execEachSequence>
                     </execEachSegment>
@@ -86,40 +158,65 @@
                     <execEachSegment name="skippedExecEachSegm4" if="false">
                         <execEachSequence name="skippedExecEachSegmSeq3" type="audio" if="true">
                             <execOnce name="exec">exec</execOnce>
-                            <dynamicParameter name="skippedDynamicParamSegmSeqName3">skippedDynamicParamSegmSeqValue3
+                            <dynamicParameter name="skippedSegmSeqName3">skippedSegmSeqValue3
                             </dynamicParameter>
                         </execEachSequence>
                     </execEachSegment>
 
+                    <!-- skipped param within non-skipped execSegm -->
+                    <execEachSegment name="skippedExecEachSegm5" if="true">
+                        <dynamicParameter name="skippedSegmName2" if="false">skippedSegmValue2
+                        </dynamicParameter>
+                    </execEachSegment>
+
+                    <!-- skipped param within non-skipped execSegm and non-skipped execSeq -->
+                    <execEachSegment name="skippedExecEachSegm6" if="true">
+                        <execEachSequence name="skippedExecEachSegmSeq4" type="audio" if="true">
+                            <execOnce name="exec">exec</execOnce>
+                            <dynamicParameter name="skippedSegmSeqName4" if="false">
+                                skippedSegmSeqValue4
+                            </dynamicParameter>
+                        </execEachSequence>
+                    </execEachSegment>
+
+                </formatConfiguration>
+
+                <formatConfiguration name="nonSkippedEachSeq">
+                    <conversionParameters></conversionParameters>
 
                     <!-- non-skipped within non-skipped execSeq -->
-                    <execEachSequence name="nonSkippedExecEachSeq" type="audio" if="true">
-                        <dynamicParameter name="nonSkippedDynamicParamSeqName">nonSkippedDynamicParamSeqValue
+                    <execEachSequence name="nonSkippedExecEachSeq1" type="audio" if="true">
+                        <dynamicParameter name="nonSkippedSeqName">nonSkippedSeqValue
                         </dynamicParameter>
                     </execEachSequence>
 
                     <!-- non-skipped within non-skipped execSeq and noin-skipped execSegm -->
-                    <execEachSequence name="nonSkippedExecEachSeq" type="audio" if="true">
+                    <execEachSequence name="nonSkippedExecEachSeq2" type="audio" if="true">
                         <execEachSegment name="nonSkippedExecEachSeqSegm" if="true">
                             <execOnce name="exec">exec</execOnce>
-                            <dynamicParameter name="nonSkippedDynamicParamSeqSegmName">
-                                nonSkippedDynamicParamSeqSegmValue
+                            <dynamicParameter name="nonSkippedSeqSegmName" if="true">
+                                nonSkippedSeqSegmValue
                             </dynamicParameter>
                         </execEachSegment>
                     </execEachSequence>
+                </formatConfiguration>
+
+                <formatConfiguration name="nonSkippedEachSegm">
+                    <conversionParameters></conversionParameters>
 
                     <!-- non-skipped within non-skipped execSegm -->
-                    <execEachSegment name="nonSkippedExecEachSegm" if="true">
-                        <dynamicParameter name="nonSkippedDynamicParamSegmName">nonSkippedDynamicParamSegmValue
+                    <execEachSegment name="nonSkippedExecEachSegm1" if="true">
+                        <dynamicParameter name="nonSkippedSegmName" if="true">
+                            nonSkippedSegmValue
                         </dynamicParameter>
                     </execEachSegment>
 
                     <!-- non-skipped within non-skipped execSegm and non-skipped execSeq -->
-                    <execEachSegment name="nonSkippedExecEachSegm" if="true">
+                    <execEachSegment name="nonSkippedExecEachSegm2" if="true">
                         <execEachSequence name="nonSkippedExecEachSegmSeq" if="true" type="audio">
                             <execOnce name="exec">exec</execOnce>
-                            <dynamicParameter name="nonSkippedDynamicParamSegmSeqName">
-                                nonSkippedDynamicParamSegmSeqValue
+                            <dynamicParameter name="nonSkippedSegmSeqName">
+                                nonSkippedSegmSeqValue
                             </dynamicParameter>
                         </execEachSequence>
                     </execEachSegment>
