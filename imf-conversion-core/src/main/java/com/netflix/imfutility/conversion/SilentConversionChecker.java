@@ -30,10 +30,12 @@ import com.netflix.imfutility.generated.config.ConfigType;
 import com.netflix.imfutility.generated.config.ConversionParameterNameType;
 import com.netflix.imfutility.generated.config.ConversionParameterType;
 import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xsd.config.ConversionParametersTypeMap;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
+import java.util.function.BiPredicate;
 
 /**
  * Checks whether it's allowed (in config.xml) to silently convert source parameters to destination ones if they don't match.
@@ -108,7 +110,8 @@ public class SilentConversionChecker {
 
         ContextInfo contextInfo = new ContextInfoBuilder().setSequenceUuid(seqUuid).setSequenceType(SequenceType.VIDEO).build();
         if (!allowFrameRate) {
-            checkParameter(SequenceContextParameters.FRAME_RATE, ConversionParameterNameType.FRAME_RATE, contextInfo);
+            //  make check regardless to frame rate format (50 1 and 50/1 both allowed)
+            checkFrameRate(SequenceContextParameters.FRAME_RATE, ConversionParameterNameType.FRAME_RATE, contextInfo);
         }
         if (!allowBitDepth) {
             checkParameter(SequenceContextParameters.BIT_DEPTH, ConversionParameterNameType.BIT_DEPTH, contextInfo);
@@ -125,13 +128,25 @@ public class SilentConversionChecker {
 
     private void checkParameter(SequenceContextParameters param, ConversionParameterNameType conversionParam, ContextInfo contextInfo)
             throws ConversionNotAllowedException {
+        checkParameter(param, conversionParam, contextInfo, Objects::equals);
+    }
+
+    private void checkFrameRate(SequenceContextParameters param, ConversionParameterNameType conversionParam, ContextInfo contextInfo)
+            throws ConversionNotAllowedException {
+        checkParameter(param, conversionParam, contextInfo,
+                (f1, f2) -> Objects.equals(ConversionHelper.safeParseEditRate(f1), ConversionHelper.safeParseEditRate(f2)));
+    }
+
+    private void checkParameter(SequenceContextParameters param, ConversionParameterNameType conversionParam, ContextInfo contextInfo,
+                                BiPredicate<String, String> equality)
+            throws ConversionNotAllowedException {
         String destinationParamValue = getDestinationValue(conversionParam, param);
         if (destinationParamValue == null || destinationParamValue.isEmpty()) {
             return;
         }
 
         String paramValue = sequenceContext.getParameterValue(param, contextInfo);
-        if (!Objects.equals(paramValue, destinationParamValue)) {
+        if (!equality.test(paramValue, destinationParamValue)) {
             throw new ConversionNotAllowedException(param.getName(), paramValue, destinationParamValue, contextInfo.getSequenceUuid());
         }
     }

@@ -26,7 +26,7 @@
         Conversion is allowed by default (if not specified here explicitly)
      -->
     <conversionParameters>
-        <param name="size">no</param>
+        <param name="size">yes</param>
         <param name="frameRate">yes</param>
         <param name="pixelFormat">yes</param>
         <param name="bitDepth">yes</param>
