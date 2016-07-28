@@ -14,15 +14,14 @@
             <tmpContext>
             </tmpContext>
 
+            <defaultDestContext name="1"/>
+
             <mediaInfoCommandVideo>mediaInfoCommandVideo %{dynamic.mediaInfoInput}</mediaInfoCommandVideo>
             <mediaInfoCommandAudio>mediaInfoCommandAudio %{dynamic.mediaInfoInput}</mediaInfoCommandAudio>
             <mediaInfoCommandSubtitle>mediaInfoCommandSubtitle %{dynamic.mediaInfoInput}</mediaInfoCommandSubtitle>
 
             <formatConfigurations>
                 <formatConfiguration name="1">
-
-                    <conversionParameters>
-                    </conversionParameters>
 
                     <!-- skipped within skipped execSeq -->
                     <execEachSequence name="skippedExecEachSeq1" type="audio" if="false">
