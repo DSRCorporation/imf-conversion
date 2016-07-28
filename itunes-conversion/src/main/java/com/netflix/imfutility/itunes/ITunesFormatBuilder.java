@@ -21,14 +21,15 @@ package com.netflix.imfutility.itunes;
 import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
+import com.netflix.imfutility.itunes.destcontext.DestContextResolveStrategy;
+import com.netflix.imfutility.itunes.destcontext.InputDestContextResolveStrategy;
+import com.netflix.imfutility.itunes.destcontext.NameDestContextResolveStrategy;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
-import com.netflix.imfutility.itunes.videoformat.VideoFormat;
-import com.netflix.imfutility.itunes.videoformat.builder.ITunesVideoFormatBuilder;
-import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextBuilder;
-import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextHelper;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.xml.XmlParsingException;
+import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
+import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +74,6 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
     @Override
     protected void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException {
-        setVideoFormatDynamicContext();
     }
 
     @Override
@@ -94,6 +94,16 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         return conversionProvider.getConvertConfiguration().get(0);
     }
 
+    @Override
+    protected DestContextTypeMap getDestContextMap(DestContextsTypeMap destContexts) {
+        String format = iTunesInputParameters.getCmdLineArgs().getFormat();
+
+        DestContextResolveStrategy resolveStrategy = format != null
+                ? new NameDestContextResolveStrategy(format)
+                : new InputDestContextResolveStrategy(contextProvider);
+        return resolveStrategy.resolveContext(destContexts);
+    }
+
     private void createItmspDir() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         String itmspName = dynamicContext.getParameterValueAsString(DYNAMIC_PARAM_OUTPUT_ITMSP);
@@ -108,17 +118,6 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         }
 
         logger.info("Created {} output directory: OK\n", itmspName);
-    }
-
-    private void setVideoFormatDynamicContext() {
-        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
-
-        VideoFormat videoFormat = iTunesInputParameters.getCmdLineArgs().getVideoFormat();
-        if (videoFormat == null) {
-            videoFormat = new VideoFormatContextBuilder(contextProvider, new ITunesVideoFormatBuilder()).build();
-        }
-
-        new VideoFormatContextHelper(dynamicContext).setVideoFormat(videoFormat);
     }
 
     private void setOSParameters() {

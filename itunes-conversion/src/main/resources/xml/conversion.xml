@@ -39,6 +39,223 @@
                 <param id="audioEncoded" deleteOnExit="true">output.pcm</param>
             </tmpContext>
 
+            <destContexts>
+                <!-- HD -->
+
+                <!-- 1920x1080 -->
+                <destContext name="hd1080p30">
+                    <param name="width">1920</param>
+                    <param name="height">1080</param>
+                    <param name="frameRate">30</param>
+                </destContext>
+                <destContext name="hd1080i2997">
+                    <param name="width">1920</param>
+                    <param name="height">1080</param>
+                    <param name="frameRate">30000/1001</param>
+                    <param name="interlaced">true</param>
+                </destContext>
+                <destContext name="hd1080p2997">
+                    <param name="width">1920</param>
+                    <param name="height">1080</param>
+                    <param name="frameRate">30000/1001</param>
+                </destContext>
+                <destContext name="hd1080p25">
+                    <param name="width">1920</param>
+                    <param name="height">1080</param>
+                    <param name="frameRate">25/1</param>
+                </destContext>
+                <destContext name="hd1080p24">
+                    <param name="width">1920</param>
+                    <param name="height">1080</param>
+                    <param name="frameRate">24/1</param>
+                </destContext>
+                <destContext name="hd1080i23976">
+                    <param name="width">1920</param>
+                    <param name="height">1080</param>
+                    <param name="frameRate">24000/1001</param>
+                    <param name="interlaced">true</param>
+                </destContext>
+                <destContext name="hd1080p23976">
+                    <param name="width">1920</param>
+                    <param name="height">1080</param>
+                    <param name="frameRate">24000/1001</param>
+                </destContext>
+                <!-- 1280x720 -->
+                <destContext name="hd720p30">
+                    <param name="width">1280</param>
+                    <param name="height">720</param>
+                    <param name="frameRate">30</param>
+                </destContext>
+                <destContext name="hd720i2997">
+                    <param name="width">1280</param>
+                    <param name="height">720</param>
+                    <param name="frameRate">30000/1001</param>
+                    <param name="interlaced">true</param>
+                </destContext>
+                <destContext name="hd720p2997">
+                    <param name="width">1280</param>
+                    <param name="height">720</param>
+                    <param name="frameRate">30000/1001</param>
+                </destContext>
+                <destContext name="hd720p25">
+                    <param name="width">1280</param>
+                    <param name="height">720</param>
+                    <param name="frameRate">25/1</param>
+                </destContext>
+                <destContext name="hd720p24">
+                    <param name="width">1280</param>
+                    <param name="height">720</param>
+                    <param name="frameRate">24/1</param>
+                </destContext>
+                <destContext name="hd720i23976">
+                    <param name="width">1280</param>
+                    <param name="height">720</param>
+                    <param name="frameRate">24000/1001</param>
+                    <param name="interlaced">true</param>
+                </destContext>
+                <destContext name="hd720p23976">
+                    <param name="width">1280</param>
+                    <param name="height">720</param>
+                    <param name="frameRate">24000/1001</param>
+                </destContext>
+
+                <!-- SD TV -->
+
+                <!-- NTSC -->
+                <destContext name="sdtvntsc480i2997">
+                    <param name="width">640</param>
+                    <param name="height">480</param>
+                    <param name="frameRate">30000/1001</param>
+                    <param name="interlaced">true</param>
+                </destContext>
+                <destContext name="sdtvntsc480p2997">
+                    <param name="width">640</param>
+                    <param name="height">480</param>
+                    <param name="frameRate">30000/1001</param>
+                </destContext>
+                <destContext name="sdtvntsc480p24">
+                    <param name="width">640</param>
+                    <param name="height">480</param>
+                    <param name="frameRate">24/1</param>
+                </destContext>
+                <destContext name="sdtvntsc480p23976">
+                    <param name="width">640</param>
+                    <param name="height">480</param>
+                    <param name="frameRate">24000/1001</param>
+                </destContext>
+                <!-- PAL -->
+                <destContext name="sdtvpal576p25">
+                    <param name="width">720</param>
+                    <param name="height">576</param>
+                    <param name="frameRate">25/1</param>
+                </destContext>
+                <destContext name="sdtvpal576p24">
+                    <param name="width">720</param>
+                    <param name="height">576</param>
+                    <param name="frameRate">24/1</param>
+                </destContext>
+                <destContext name="sdtvpal576p23976">
+                    <param name="width">720</param>
+                    <param name="height">576</param>
+                    <param name="frameRate">24000/1001</param>
+                </destContext>
+
+                <!-- SD Film -->
+
+                <!-- NTSC -->
+                <!-- 16:9 -->
+                <destContext name="sdfilmntsc480i2997_16_9">
+                    <param name="width">720</param>
+                    <param name="height">480</param>
+                    <param name="frameRate">30000/1001</param>
+                    <param name="interlaced">true</param>
+                    <param name="aspectRatio">16/9</param>
+                </destContext>
+                <destContext name="sdfilmntsc480p2997_16_9">
+                    <param name="width">720</param>
+                    <param name="height">480</param>
+                    <param name="frameRate">30000/1001</param>
+                    <param name="aspectRatio">16/9</param>
+                </destContext>
+                <destContext name="sdfilmntsc480p24_16_9">
+                    <param name="width">720</param>
+                    <param name="height">480</param>
+                    <param name="frameRate">24/1</param>
+                    <param name="aspectRatio">16/9</param>
+                </destContext>
+                <destContext name="sdfilmntsc480p23976_16_9">
+                    <param name="width">720</param>
+                    <param name="height">480</param>
+                    <param name="frameRate">24000/1001</param>
+                    <param name="aspectRatio">16/9</param>
+                </destContext>
+                <!-- 4:3 -->
+                <destContext name="sdfilmntsc480i2997_4_3">
+                    <param name="width">720</param>
+                    <param name="height">480</param>
+                    <param name="frameRate">30000/1001</param>
+                    <param name="interlaced">true</param>
+                    <param name="aspectRatio">4/3</param>
+                </destContext>
+                <destContext name="sdfilmntsc480p2997_4_3">
+                    <param name="width">720</param>
+                    <param name="height">480</param>
+                    <param name="frameRate">30000/1001</param>
+                    <param name="aspectRatio">4/3</param>
+                </destContext>
+                <destContext name="sdfilmntsc480p24_4_3">
+                    <param name="width">720</param>
+                    <param name="height">480</param>
+                    <param name="frameRate">24/1</param>
+                    <param name="aspectRatio">4/3</param>
+                </destContext>
+                <destContext name="sdfilmntsc480p23976_4_3">
+                    <param name="width">720</param>
+                    <param name="height">480</param>
+                    <param name="frameRate">24000/1001</param>
+                    <param name="aspectRatio">4/3</param>
+                </destContext>
+                <!-- PAL -->
+                <!-- 16:9 -->
+                <destContext name="sdfilmpal576p25_16_9">
+                    <param name="width">720</param>
+                    <param name="height">576</param>
+                    <param name="frameRate">25/1</param>
+                    <param name="aspectRatio">16/9</param>
+                </destContext>
+                <destContext name="sdfilmpal576p24_16_9">
+                    <param name="width">720</param>
+                    <param name="height">576</param>
+                    <param name="frameRate">24/1</param>
+                    <param name="aspectRatio">16/9</param>
+                </destContext>
+                <destContext name="sdfilmpal576p23976_16_9">
+                    <param name="width">720</param>
+                    <param name="height">576</param>
+                    <param name="frameRate">24000/1001</param>
+                    <param name="aspectRatio">16/9</param>
+                </destContext>
+                <!-- 4:3 -->
+                <destContext name="sdfilmpal576p25_4_3">
+                    <param name="width">720</param>
+                    <param name="height">576</param>
+                    <param name="frameRate">25/1</param>
+                    <param name="aspectRatio">4/3</param>
+                </destContext>
+                <destContext name="sdfilmpal576p24_4_3">
+                    <param name="width">720</param>
+                    <param name="height">576</param>
+                    <param name="frameRate">24/1</param>
+                    <param name="aspectRatio">4/3</param>
+                </destContext>
+                <destContext name="sdfilmpal576p23976_4_3">
+                    <param name="width">720</param>
+                    <param name="height">576</param>
+                    <param name="frameRate">24000/1001</param>
+                    <param name="aspectRatio">4/3</param>
+                </destContext>
+            </destContexts>
+
             <mediaInfoCommandVideo>%{tool.ffprobe} -select_streams v:0 -show_streams -noprivate -print_format xml=x=1
                 %{dynamic.mediaInfoInput}
             </mediaInfoCommandVideo>
@@ -51,16 +268,6 @@
 
             <formatConfigurations>
                 <formatConfiguration name="main">
-                    <conversionParameters>
-                        <video>
-                            <pixelFormat>yuv422p10le</pixelFormat>
-                            <bitDepth>10</bitDepth>
-                        </video>
-                        <audio>
-                            <sampleRate>48000</sampleRate>
-                            <bitsSample>24</bitsSample>
-                        </audio>
-                    </conversionParameters>
 
                     <!--
                         1. decode each video segment and redirect output to encode's input
@@ -74,7 +281,7 @@
                                     <execOnce name="decode_video">
                                         %{tool.ffmpeg} -y -i %{resource.essence} -map 0:0 -ss %{resource.startTimeTC}
                                         -t %{resource.durationTC} -an
-                                        -vf scale=%{dynamic.fw}:%{dynamic.fh},fps=%{dynamic.fps}
+                                        -vf scale=%{dest.width}:%{dest.height},fps=%{dest.frame_rate},setdar=%{ .aspect_ratio}
                                         -pix_fmt yuv422p10le -f rawvideo -
                                     </execOnce>
                                 </execEachSegment>
