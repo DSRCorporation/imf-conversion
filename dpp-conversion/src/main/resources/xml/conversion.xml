@@ -37,6 +37,7 @@
                 <param id="videoEncoded" deleteOnExit="true">output.x264</param>
                 <param id="audioEncoded" deleteOnExit="true">output.pcm</param>
                 <param id="mediaInfoOutput" deleteOnExit="true">mediaInfo.xml</param>
+                <param id="outputStartTime" deleteOnExit="true">09:59:30:00</param>
             </tmpContext>
 
             <mediaInfoCommandVideo>%{tool.ffprobe} -select_streams v:0 -show_streams -noprivate -print_format xml=x=1
@@ -168,6 +169,7 @@
                     -->
                     <execOnce name="muxing_mxf_audio_video" if="%{dynamic.hasAudioAndVideo}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
+                        -y %{tmp.outputStartTime}
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
@@ -177,6 +179,7 @@
                     </execOnce>
                     <execOnce name="muxing_mxf_audio_only" if="%{dynamic.hasAudioOnly}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
+                        -y %{tmp.outputStartTime}
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
@@ -185,6 +188,7 @@
                     </execOnce>
                     <execOnce name="muxing_mxf_video_only" if="%{dynamic.hasVideoOnly}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
+                        -y %{tmp.outputStartTime}
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
