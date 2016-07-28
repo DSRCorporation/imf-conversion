@@ -19,13 +19,13 @@
 package com.netflix.imfutility.conversion;
 
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.conversion.executor.ConversionExecutorDynamicParameter;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorFor;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorOnce;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorPipe;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorSegment;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorSequence;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
-import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.generated.conversion.DynamicParameterConcatType;
 import com.netflix.imfutility.generated.conversion.ExecEachSegmentSequenceType;
@@ -60,8 +60,8 @@ public class ConversionEngine {
             } else if (operation instanceof PipeType) {
                 new ConversionExecutorPipe(contextProvider, getExecuteStrategyFactory(), (PipeType) operation).execute();
             } else if (operation instanceof DynamicParameterConcatType) {
-                contextProvider.getDynamicContext()
-                        .addParameter((DynamicParameterConcatType) operation, ContextInfo.EMPTY, false);
+                new ConversionExecutorDynamicParameter(contextProvider, getExecuteStrategyFactory(),
+                        (DynamicParameterConcatType) operation).execute();
             } else if (operation instanceof ForType) {
                 new ConversionExecutorFor(contextProvider, getExecuteStrategyFactory(), (ForType) operation).execute();
             } else {
