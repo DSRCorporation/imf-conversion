@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -142,5 +142,18 @@ public class ConversionHelperTest {
     public void parseIncorrectEditRateNotNumber() {
         ConversionHelper.parseEditRate("aaaaa");
     }
+    @Test
+    public void safeParseCorrectEditRate() {
+        assertEquals(new BigFraction(30000, 1001), ConversionHelper.safeParseEditRate("30000 1001"));
+        assertEquals(new BigFraction(50, 1), ConversionHelper.safeParseEditRate("50"));
+        assertEquals(new BigFraction(30000, 1001), ConversionHelper.safeParseEditRate("30000/1001"));
+        assertEquals(new BigFraction(50, 1), ConversionHelper.safeParseEditRate("50 1"));
+    }
 
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void safeParseIncorrectEditRate() {
+        ConversionHelper.safeParseEditRate("30000 1001 1");
+        ConversionHelper.safeParseEditRate("");
+        ConversionHelper.safeParseEditRate("aaaaa");
+    }
 }
