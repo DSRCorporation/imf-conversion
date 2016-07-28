@@ -16,6 +16,12 @@
              </jaxb:schemaBindings>
          </jaxb:bindings>
 
+        <jaxb:bindings node="//xs:element[@name='conversionParameters']">
+            <jaxb:property>
+                <jaxb:baseType name="com.netflix.imfutility.xsd.config.ConversionParametersTypeMap" />
+            </jaxb:property>
+        </jaxb:bindings>
+
     </jaxb:bindings>
 
 </jaxb:bindings>

@@ -23,11 +23,29 @@
             </jaxb:property>
         </jaxb:bindings>
 
-         <jaxb:bindings schemaLocation="../xsd/conversion.xsd">
-             <jaxb:schemaBindings>
-                 <jaxb:package name="com.netflix.imfutility.generated.conversion" />
-             </jaxb:schemaBindings>
-         </jaxb:bindings>
+        <jaxb:bindings node="//xs:element[@name='destContexts']">
+            <jaxb:property>
+                <jaxb:baseType name="com.netflix.imfutility.xsd.conversion.DestContextsTypeMap" />
+            </jaxb:property>
+        </jaxb:bindings>
+
+        <jaxb:bindings node="//xs:element[@name='destContext']">
+            <jaxb:property>
+                <jaxb:baseType name="com.netflix.imfutility.xsd.conversion.DestContextTypeMap" />
+            </jaxb:property>
+        </jaxb:bindings>
+
+        <jaxb:bindings node="//xs:element[@name='defaultDestContext']">
+            <jaxb:property>
+                <jaxb:baseType name="com.netflix.imfutility.xsd.conversion.DestContextTypeMap" />
+            </jaxb:property>
+        </jaxb:bindings>
+
+        <jaxb:bindings schemaLocation="../xsd/conversion.xsd">
+            <jaxb:schemaBindings>
+                <jaxb:package name="com.netflix.imfutility.generated.conversion" />
+            </jaxb:schemaBindings>
+        </jaxb:bindings>
 
     </jaxb:bindings>
 

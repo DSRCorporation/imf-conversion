@@ -26,16 +26,12 @@
         Conversion is allowed by default (if not specified here explicitly)
      -->
     <conversionParameters>
-        <video>
-            <size>yes</size>
-            <frameRate>yes</frameRate>
-            <pixelFormat>yes</pixelFormat>
-            <bitDepth>yes</bitDepth>
-        </video>
-        <audio>
-            <sampleRate>yes</sampleRate>
-            <bitsSample>yes</bitsSample>
-        </audio>
+        <param name="size">yes</param>
+        <param name="frameRate">yes</param>
+        <param name="pixelFormat">yes</param>
+        <param name="bitDepth">yes</param>
+        <param name="sampleRate">yes</param>
+        <param name="bitsSample">yes</param>
     </conversionParameters>
 
     <conversionConfig>C:\Projects\Netflix\Workspace\imf-conversion\itunes-conversion\src\main\resources\xml\conversion.xml

@@ -35,8 +35,8 @@
             <AudioComments></AudioComments>
         </Audio>
         <Timecodes>
-            <LineUpStart>00:00:00:00</LineUpStart>
-            <IdentClockStart>00:00:00:00</IdentClockStart>
+            <LineUpStart>09:59:30:00</LineUpStart>
+            <IdentClockStart>09:59:30:00</IdentClockStart>
             <Parts>
                 <Part>
                     <PartNumber>1</PartNumber>

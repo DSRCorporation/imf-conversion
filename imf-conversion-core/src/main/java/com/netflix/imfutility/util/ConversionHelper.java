@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -127,6 +127,7 @@ public final class ConversionHelper {
 
     /**
      * Converts the edit untis to milliseconds according to the given edit rate.
+     *
      * @param eu         edit units number
      * @param unitsInSec edit rate
      * @return milliseconds
@@ -134,6 +135,18 @@ public final class ConversionHelper {
     public static long editUnitToMilliSeconds(BigInteger eu, BigFraction unitsInSec) {
         BigFraction editUnits = new BigFraction(eu);
         return editUnits.divide(unitsInSec).multiply(1000).longValue();
+    }
+
+    /**
+     * Converts the edit untis to seconds according to the given edit rate.
+     *
+     * @param eu         edit units number
+     * @param unitsInSec edit rate
+     * @return seconds
+     */
+    public static long toSeconds(BigInteger eu, BigFraction unitsInSec) {
+        BigFraction editUnits = new BigFraction(eu);
+        return editUnits.divide(unitsInSec).longValue();
     }
 
     /**
@@ -178,6 +191,17 @@ public final class ConversionHelper {
             throw new ConversionException("Incorrect edit rate! Edit rate must consist of two numbers.", e);
         }
         throw new ConversionException("Incorrect edit rate! Edit rate must consist of two values.");
+    }
+
+    /**
+     * Returns a fraction corresponding to the given edit rate string.
+     *
+     * @param editRate input in both forms "50 1" and "50/1"
+     * @return a fraction object representing the edit rate.
+     */
+    public static BigFraction safeParseEditRate(String editRate) {
+        editRate = editRate.contains("/") ? rFrameRateToEditRate(editRate) : editRate;
+        return parseEditRate(editRate);
     }
 
     /**

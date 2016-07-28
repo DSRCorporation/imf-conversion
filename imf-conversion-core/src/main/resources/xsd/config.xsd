@@ -69,10 +69,10 @@
       Allows/disallows silent conversion to format destination parameters if the input doesn't match.
       Conversion is allowed by default (if not specified here explicitly)
     -->
+
     <xs:complexType name="conversionParametersType">
         <xs:sequence>
-            <xs:element type="videoConversionParametersType" name="video" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="audioConversionParametersType" name="audio" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="conversionParameterType" name="param" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -83,21 +83,24 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="videoConversionParametersType">
-        <xs:sequence>
-            <xs:element type="allowDisallow" name="size" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="allowDisallow" name="frameRate" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="allowDisallow" name="pixelFormat" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="allowDisallow" name="bitDepth" maxOccurs="1" minOccurs="0"/>
-        </xs:sequence>
+    <xs:complexType name="conversionParameterType">
+        <xs:simpleContent>
+            <xs:extension base="allowDisallow">
+                <xs:attribute name="name" type="conversionParameterNameType" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
     </xs:complexType>
 
-    <xs:complexType name="audioConversionParametersType">
-        <xs:sequence>
-            <xs:element type="allowDisallow" name="sampleRate" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="allowDisallow" name="bitsSample" maxOccurs="1" minOccurs="0"/>
-        </xs:sequence>
-    </xs:complexType>
+    <xs:simpleType name="conversionParameterNameType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="size"/>
+            <xs:enumeration value="frameRate"/>
+            <xs:enumeration value="pixelFormat"/>
+            <xs:enumeration value="bitDepth"/>
+            <xs:enumeration value="sampleRate"/>
+            <xs:enumeration value="bitsSample"/>
+        </xs:restriction>
+    </xs:simpleType>
 
 
 </xs:schema>

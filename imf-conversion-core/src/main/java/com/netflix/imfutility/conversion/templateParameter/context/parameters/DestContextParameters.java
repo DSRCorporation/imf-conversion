@@ -16,33 +16,25 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.conversion.templateParameter;
+package com.netflix.imfutility.conversion.templateParameter.context.parameters;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * All supported template parameter contexts.
+ * Pre-defined dest context parameter names (it's possible to define another ones).
  */
-public enum TemplateParameterContext {
-
-    TMP("tmp"),
-
-    DYNAMIC("dynamic"),
-
-    TOOL("tool"),
-
-    SEGMENT("segm"),
-
-    SEQUENCE("seq"),
-
-    RESOURCE("resource"),
-
-    DEST("dest");
+public enum DestContextParameters {
+    WIDTH("width"),
+    HEIGHT("height"),
+    FRAME_RATE("frameRate"),
+    INTERLACED("interlaced"),
+    ASPECT_RATIO("aspectRatio"),
+    DURATION("duration");
 
     private final String name;
 
-    TemplateParameterContext(String name) {
+    DestContextParameters(String name) {
         this.name = name;
     }
 
@@ -50,8 +42,8 @@ public enum TemplateParameterContext {
         return name;
     }
 
-    public static TemplateParameterContext fromName(String name) {
-        for (TemplateParameterContext e : values()) {
+    public static DestContextParameters fromName(String name) {
+        for (DestContextParameters e : values()) {
             if (e.getName().equals(name)) {
                 return e;
             }
@@ -59,10 +51,11 @@ public enum TemplateParameterContext {
         return null;
     }
 
-    public static String getSupportedContexts() {
-        return Arrays.stream(TemplateParameterContext.values())
-                .map(TemplateParameterContext::getName)
+    public static String getSupportedContextParameters() {
+        return Arrays.stream(DestContextParameters.values())
+                .map(DestContextParameters::getName)
                 .collect(Collectors.joining(" ", "[", "]"));
     }
 
 }
+
