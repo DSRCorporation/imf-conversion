@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -31,6 +31,8 @@ import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.util.CplHelper;
 import com.netflix.imfutility.xml.XmlParsingException;
+import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
+import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,6 +89,12 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     @Override
     protected String getConversionConfiguration() {
         return conversionProvider.getConvertConfiguration().get(0);
+    }
+
+    @Override
+    protected DestContextTypeMap getDestContextMap(DestContextsTypeMap destContexts) {
+        // no multiple dest contexts allowed
+        return null;
     }
 
     @Override

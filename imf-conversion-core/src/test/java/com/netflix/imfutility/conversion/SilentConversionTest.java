@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -22,16 +22,14 @@ import com.netflix.imfutility.conversion.templateParameter.context.TemplateParam
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.config.AllowDisallow;
-import com.netflix.imfutility.generated.config.AudioConversionParametersType;
 import com.netflix.imfutility.generated.config.ConfigType;
-import com.netflix.imfutility.generated.config.ConversionParametersType;
-import com.netflix.imfutility.generated.config.VideoConversionParametersType;
-import com.netflix.imfutility.generated.conversion.DestinationAudioConversionParametersType;
-import com.netflix.imfutility.generated.conversion.DestinationConversionParametersType;
-import com.netflix.imfutility.generated.conversion.DestinationVideoConversionParametersType;
-import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
+import com.netflix.imfutility.generated.config.ConversionParameterNameType;
+import com.netflix.imfutility.generated.config.ConversionParameterType;
+import com.netflix.imfutility.generated.conversion.DestContextParamType;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
+import com.netflix.imfutility.xsd.config.ConversionParametersTypeMap;
+import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import org.junit.Test;
 
 /**
@@ -42,17 +40,18 @@ public class SilentConversionTest {
 
     @Test
     public void okConversionNotSpecifiedInBoth() throws Exception {
-        // 1. create format with no conversion parameters specified
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder().build();
+        // 1. create context with no conversion parameters specified
+        DestContextTypeMap destContextMap = new DestContextMapBuilder().build();
 
         // 2. create config with no conversion parameters specified
         ConfigType config = new ConfigBuilder().build();
 
         // 3. create context
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator
+                .createDefaultContextProviderWithDestContext(destContextMap);
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -60,8 +59,8 @@ public class SilentConversionTest {
 
     @Test
     public void okConversionNotSpecifiedInConfigXml() throws Exception {
-        // 1. create format with all parameters specified
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with all parameters specified
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setBitsSample("24").setSampleRate("48000")
                 .setBitDepth("10").setFrameRate("25").setHeight("1920").setWidth("1080").setPixelFmt("yuv422p10le")
                 .build();
@@ -70,14 +69,15 @@ public class SilentConversionTest {
         ConfigType config = new ConfigBuilder().build();
 
         // 3. create context with mismatched parameters
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator
+                .createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
                 SequenceContextParameters.BITS_PER_SAMPLE, "16");
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
                 SequenceContextParameters.SAMPLE_RATE, "96000");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -85,8 +85,8 @@ public class SilentConversionTest {
 
     @Test
     public void okConversionNotSpecifiedInDestinationParams() throws Exception {
-        // 1. create format with no conversion parameters specified
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder().build();
+        // 1. create context with no conversion parameters specified
+        DestContextTypeMap destContextMap = new DestContextMapBuilder().build();
 
         // 2. create config with disallow mismatched for all
         ConfigType config = new ConfigBuilder()
@@ -95,10 +95,11 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator
+                .createDefaultContextProviderWithDestContext(destContextMap);
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -106,8 +107,8 @@ public class SilentConversionTest {
 
     @Test
     public void okContextEmpty() throws Exception {
-        // 1. create format with all parameters specified
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with all parameters specified
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setBitsSample("24").setSampleRate("48000")
                 .setBitDepth("10").setFrameRate("25").setHeight("1920").setWidth("1080").setPixelFmt("yuv422p10le")
                 .build();
@@ -119,10 +120,10 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create empty context
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -130,8 +131,8 @@ public class SilentConversionTest {
 
     @Test
     public void okAudioNotSpecifiedInConfigXml() throws Exception {
-        // 1. create format with all parameters specified
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with all parameters specified
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setBitsSample("24").setSampleRate("48000")
                 .setBitDepth("10").setFrameRate("25").setHeight("1920").setWidth("1080").setPixelFmt("yuv422p10le")
                 .build();
@@ -143,14 +144,14 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with audio specified and mismatched
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
                 SequenceContextParameters.BITS_PER_SAMPLE, "20");
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
                 SequenceContextParameters.SAMPLE_RATE, "96000");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -158,8 +159,8 @@ public class SilentConversionTest {
 
     @Test
     public void okVideoNotSpecifiedInConfigXml() throws Exception {
-        // 1. create format with all parameters specified
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with all parameters specified
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setBitsSample("24").setSampleRate("48000")
                 .setBitDepth("10").setFrameRate("25").setHeight("1920").setWidth("1080").setPixelFmt("yuv422p10le")
                 .build();
@@ -171,14 +172,14 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with video specified and mismatched
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
                 SequenceContextParameters.FRAME_RATE, "30");
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
                 SequenceContextParameters.BIT_DEPTH, "8");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -186,8 +187,8 @@ public class SilentConversionTest {
 
     @Test
     public void okAudioNotSpecifiedInDestinationParams() throws Exception {
-        // 1. create format with all parameters except audio specified
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with all parameters except audio specified
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setBitDepth("10").setFrameRate("25").setHeight("1920").setWidth("1080").setPixelFmt("yuv422p10le")
                 .setNonNullAudio(false)
                 .build();
@@ -199,14 +200,14 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with audio specified
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
                 SequenceContextParameters.BITS_PER_SAMPLE, "16");
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
                 SequenceContextParameters.SAMPLE_RATE, "96000");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -214,8 +215,8 @@ public class SilentConversionTest {
 
     @Test
     public void okVideoNotSpecifiedInDestinationParams() throws Exception {
-        // 1. create format with all parameters except video specified
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with all parameters except video specified
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setBitsSample("24").setSampleRate("48000")
                 .setNonNullVideo(false)
                 .build();
@@ -227,14 +228,14 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with video specified
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
                 SequenceContextParameters.BIT_DEPTH, "8");
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
                 SequenceContextParameters.FRAME_RATE, "50");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -242,8 +243,8 @@ public class SilentConversionTest {
 
     @Test
     public void okAudioParameterNotSpecifiedInDestinationParams() throws Exception {
-        // 1. create format with sample rate not specified
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with sample rate not specified
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setSampleRate(null)
                 .setNonNullAudio(true)
                 .setNonNullVideo(true)
@@ -255,12 +256,12 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with sample rate specified
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
                 SequenceContextParameters.SAMPLE_RATE, "96000");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -268,8 +269,8 @@ public class SilentConversionTest {
 
     @Test
     public void okAudioParameterEmptyInDestinationParams() throws Exception {
-        // 1. create format with sample rate is empty
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with sample rate is empty
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setSampleRate("")
                 .setNonNullAudio(true)
                 .setNonNullVideo(true)
@@ -283,12 +284,12 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with sample rate specified
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
                 SequenceContextParameters.SAMPLE_RATE, "96000");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -296,8 +297,8 @@ public class SilentConversionTest {
 
     @Test
     public void okVideoParameterNotSpecifiedInDestinationParams() throws Exception {
-        // 1. create format with bit depth not specified
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with bit depth not specified
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setBitDepth(null)
                 .setNonNullAudio(true)
                 .setNonNullVideo(true)
@@ -311,12 +312,12 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with bit depth specified
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
                 SequenceContextParameters.BIT_DEPTH, "8");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -324,8 +325,8 @@ public class SilentConversionTest {
 
     @Test
     public void okVideoParameterEmptyInDestinationParams() throws Exception {
-        // 1. create format with bit depth is empty
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with bit depth is empty
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setBitDepth("")
                 .setNonNullAudio(true)
                 .setNonNullVideo(true)
@@ -339,12 +340,12 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with bit depth specified
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
                 SequenceContextParameters.BIT_DEPTH, "8");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -352,8 +353,8 @@ public class SilentConversionTest {
 
     @Test
     public void okAudioParameterNotSpecifiedInConfigXml() throws Exception {
-        // 1. create format with sample rate specified and mismatched
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with sample rate specified and mismatched
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setSampleRate("48000")
                 .setNonNullAudio(true)
                 .setNonNullVideo(true)
@@ -367,12 +368,12 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with mismatched sample rate
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
                 SequenceContextParameters.SAMPLE_RATE, "96000");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -380,8 +381,8 @@ public class SilentConversionTest {
 
     @Test
     public void okVideoParameterNotSpecifiedInConfigXml() throws Exception {
-        // 1. create format with bit depth specified and mismatched
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with bit depth specified and mismatched
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setBitDepth("10")
                 .setNonNullAudio(true)
                 .setNonNullVideo(true)
@@ -395,12 +396,12 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with mismatched bit depth
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
                 SequenceContextParameters.BIT_DEPTH, "8");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -408,8 +409,8 @@ public class SilentConversionTest {
 
     @Test(expected = ConversionNotAllowedException.class)
     public void exceptionDisallowMismatchedAndMismatch() throws Exception {
-        // 1. create format with all parameters specified and mismatched
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with all parameters specified and mismatched
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setBitsSample("24").setSampleRate("48000")
                 .setBitDepth("10").setFrameRate("25").setHeight("1920").setWidth("1080").setPixelFmt("yuv422p10le")
                 .build();
@@ -421,7 +422,7 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with mismacthed parameters
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
                 SequenceContextParameters.BITS_PER_SAMPLE, "32");
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
@@ -438,7 +439,7 @@ public class SilentConversionTest {
                 SequenceContextParameters.PIXEL_FORMAT, "yuv420p10le");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -446,8 +447,8 @@ public class SilentConversionTest {
 
     @Test
     public void okAllowMismatchedAndMismatch() throws Exception {
-        // 1. create format with all parameters specified and mismatched
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with all parameters specified and mismatched
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setBitsSample("24").setSampleRate("48000")
                 .setBitDepth("10").setFrameRate("25").setHeight("1920").setWidth("1080").setPixelFmt("yuv422p10le")
                 .build();
@@ -459,7 +460,7 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with mismatched parameters
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
                 SequenceContextParameters.BITS_PER_SAMPLE, "32");
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
@@ -476,7 +477,7 @@ public class SilentConversionTest {
                 SequenceContextParameters.PIXEL_FORMAT, "yuv420p10le");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
@@ -484,8 +485,8 @@ public class SilentConversionTest {
 
     @Test
     public void okDisallowMismatchedAndMatch() throws Exception {
-        // 1. create format with all parameters specified and matched
-        FormatConfigurationType formatConfiguration = new FormatConfigurationBuilder()
+        // 1. create context with all parameters specified and matched
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
                 .setBitsSample("24").setSampleRate("48000")
                 .setBitDepth("10").setFrameRate("25").setHeight("1920").setWidth("1080").setPixelFmt("yuv422p10le")
                 .build();
@@ -497,7 +498,8 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with matched parameters
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator
+                .createDefaultContextProviderWithDestContext(destContextMap);
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
                 SequenceContextParameters.BITS_PER_SAMPLE, "24");
         contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
@@ -514,13 +516,13 @@ public class SilentConversionTest {
                 SequenceContextParameters.PIXEL_FORMAT, "yuv422p10le");
 
         // 4. init checker
-        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, formatConfiguration, config);
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
 
         // 5. check. no exception expected
         checker.check();
     }
 
-    private static class FormatConfigurationBuilder {
+    private static class DestContextMapBuilder {
 
         private String sampleRate;
         private String bitsSample;
@@ -535,96 +537,107 @@ public class SilentConversionTest {
         private boolean nonNullAudio = false;
         private boolean nonNullVideo = false;
 
-        public FormatConfigurationBuilder setSampleRate(String sampleRate) {
+        public DestContextMapBuilder setSampleRate(String sampleRate) {
             this.sampleRate = sampleRate;
             nonNullConversionParams = true;
             nonNullAudio = true;
             return this;
         }
 
-        public FormatConfigurationBuilder setBitsSample(String bitsSample) {
+        public DestContextMapBuilder setBitsSample(String bitsSample) {
             this.bitsSample = bitsSample;
             nonNullConversionParams = true;
             nonNullAudio = true;
             return this;
         }
 
-        public FormatConfigurationBuilder setWidth(String width) {
+        public DestContextMapBuilder setWidth(String width) {
             this.width = width;
             nonNullConversionParams = true;
             nonNullVideo = true;
             return this;
         }
 
-        public FormatConfigurationBuilder setHeight(String height) {
+        public DestContextMapBuilder setHeight(String height) {
             this.height = height;
             nonNullConversionParams = true;
             nonNullVideo = true;
             return this;
         }
 
-        public FormatConfigurationBuilder setFrameRate(String frameRate) {
+        public DestContextMapBuilder setFrameRate(String frameRate) {
             this.frameRate = frameRate;
             nonNullConversionParams = true;
             nonNullVideo = true;
             return this;
         }
 
-        public FormatConfigurationBuilder setPixelFmt(String pixelFmt) {
+        public DestContextMapBuilder setPixelFmt(String pixelFmt) {
             this.pixelFmt = pixelFmt;
             nonNullConversionParams = true;
             nonNullVideo = true;
             return this;
         }
 
-        public FormatConfigurationBuilder setBitDepth(String bitDepth) {
+        public DestContextMapBuilder setBitDepth(String bitDepth) {
             this.bitDepth = bitDepth;
             nonNullConversionParams = true;
             nonNullVideo = true;
             return this;
         }
 
-        public FormatConfigurationBuilder setNonNullConversionParams(Boolean nonNullConversionParams) {
+        public DestContextMapBuilder setNonNullConversionParams(Boolean nonNullConversionParams) {
             this.nonNullConversionParams = nonNullConversionParams;
             return this;
         }
 
-        public FormatConfigurationBuilder setNonNullAudio(Boolean nonNullAudio) {
+        public DestContextMapBuilder setNonNullAudio(Boolean nonNullAudio) {
             this.nonNullAudio = nonNullAudio;
             nonNullConversionParams = true;
             return this;
         }
 
-        public FormatConfigurationBuilder setNonNullVideo(Boolean nonNullVideo) {
+        public DestContextMapBuilder setNonNullVideo(Boolean nonNullVideo) {
             this.nonNullVideo = nonNullVideo;
             nonNullConversionParams = true;
             return this;
         }
 
-        public FormatConfigurationType build() {
-            FormatConfigurationType formatConfiguration = new FormatConfigurationType();
+        public DestContextTypeMap build() {
+            DestContextTypeMap map = new DestContextTypeMap();
+
             if (!nonNullConversionParams) {
-                return formatConfiguration;
+                return map;
             }
-            DestinationConversionParametersType conversionParameters = new DestinationConversionParametersType();
             if (nonNullAudio) {
-                DestinationAudioConversionParametersType audioConversionParameters = new DestinationAudioConversionParametersType();
-                audioConversionParameters.setBitsSample(bitsSample);
-                audioConversionParameters.setSampleRate(sampleRate);
-                conversionParameters.setAudio(audioConversionParameters);
+                setContextValue(ConversionParameterNameType.BITS_SAMPLE, bitsSample, map);
+                setContextValue(ConversionParameterNameType.SAMPLE_RATE, sampleRate, map);
             }
             if (nonNullVideo) {
-                DestinationVideoConversionParametersType videoConversionParameters = new DestinationVideoConversionParametersType();
-                videoConversionParameters.setWidth(width);
-                videoConversionParameters.setHeight(height);
-                videoConversionParameters.setBitDepth(bitDepth);
-                videoConversionParameters.setFrameRate(frameRate);
-                videoConversionParameters.setPixelFormat(pixelFmt);
-                conversionParameters.setVideo(videoConversionParameters);
+                setContextValue(SequenceContextParameters.WIDTH, width, map);
+                setContextValue(SequenceContextParameters.HEIGHT, height, map);
+                setContextValue(ConversionParameterNameType.BIT_DEPTH, bitDepth, map);
+                setContextValue(ConversionParameterNameType.FRAME_RATE, frameRate, map);
+                setContextValue(ConversionParameterNameType.PIXEL_FORMAT, pixelFmt, map);
             }
-            formatConfiguration.setConversionParameters(conversionParameters);
 
-            return formatConfiguration;
+            return map;
+        }
+
+        private void setContextValue(SequenceContextParameters seqParam, String value, DestContextTypeMap map) {
+            setContextValue(seqParam.getName(), value, map);
+        }
+
+        private void setContextValue(ConversionParameterNameType convParam, String value, DestContextTypeMap map) {
+            setContextValue(convParam.value(), value, map);
+        }
+
+        private void setContextValue(String paramName, String value, DestContextTypeMap map) {
+            DestContextParamType param = new DestContextParamType();
+            param.setName(paramName);
+            param.setValue(value);
+
+            map.getMap().put(paramName, param);
         }
     }
 
@@ -716,24 +729,29 @@ public class SilentConversionTest {
             if (!nonNullConversionParams) {
                 return config;
             }
-            ConversionParametersType conversionParameters = new ConversionParametersType();
+            ConversionParametersTypeMap conversionParameters = new ConversionParametersTypeMap();
             if (nonNullAudio) {
-                AudioConversionParametersType audioConversionParameters = new AudioConversionParametersType();
-                audioConversionParameters.setBitsSample(fromBoolean(bitsSample));
-                audioConversionParameters.setSampleRate(fromBoolean(sampleRate));
-                conversionParameters.setAudio(audioConversionParameters);
+                setParameterValue(ConversionParameterNameType.BITS_SAMPLE, bitsSample, conversionParameters);
+                setParameterValue(ConversionParameterNameType.SAMPLE_RATE, sampleRate, conversionParameters);
             }
             if (nonNullVideo) {
-                VideoConversionParametersType videoConversionParameters = new VideoConversionParametersType();
-                videoConversionParameters.setSize(fromBoolean(size));
-                videoConversionParameters.setBitDepth(fromBoolean(bitDepth));
-                videoConversionParameters.setFrameRate(fromBoolean(frameRate));
-                videoConversionParameters.setPixelFormat(fromBoolean(pixelFmt));
-                conversionParameters.setVideo(videoConversionParameters);
+                setParameterValue(ConversionParameterNameType.SIZE, size, conversionParameters);
+                setParameterValue(ConversionParameterNameType.BIT_DEPTH, bitDepth, conversionParameters);
+                setParameterValue(ConversionParameterNameType.FRAME_RATE, frameRate, conversionParameters);
+                setParameterValue(ConversionParameterNameType.PIXEL_FORMAT, pixelFmt, conversionParameters);
             }
+
             config.setConversionParameters(conversionParameters);
 
             return config;
+        }
+
+        private void setParameterValue(ConversionParameterNameType paramName, Boolean value, ConversionParametersTypeMap map) {
+            ConversionParameterType param = new ConversionParameterType();
+            param.setName(paramName);
+            param.setValue(fromBoolean(value));
+
+            map.getMap().put(paramName, param);
         }
     }
 

@@ -146,7 +146,7 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
         contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo,
                 skipOperationResolver
                         .setContextInfo(contextInfo)
-                        .isSkip(execEachSeq));
+                        .isSkip(dynamicParam, execEachSeq));
     }
 
     private OperationInfo getExecOnceOperation(ExecOnceType execOnce) {
@@ -207,7 +207,7 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
                         contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo,
                                 skipOperationResolver
                                         .setContextInfo(contextInfo)
-                                        .isSkip(execSegment, execEachSeq));
+                                        .isSkip(dynamicParam, execSegment, execEachSeq));
                     }
                 }
             }
@@ -251,7 +251,7 @@ public class ConversionExecutorSequence extends AbstractConversionExecutor {
                         contextProvider.getDynamicContext().addParameter(dynamicParam, contextInfo,
                                 skipOperationResolver
                                         .setContextInfo(contextInfo)
-                                        .isSkip(execSegment, execEachSeq));
+                                        .isSkip(dynamicParam, execSegment, execEachSeq));
                     }
                 }
             }

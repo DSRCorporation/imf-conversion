@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.conversion.templateParameter;
 
+import com.netflix.imfutility.conversion.templateParameter.context.DestTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
@@ -27,6 +28,7 @@ import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemp
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterNameException;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,6 +40,7 @@ import static com.netflix.imfutility.util.TemplateParameterContextCreator.fillCP
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.getResourceUuid;
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.getSegmentUuid;
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.getSequenceUuid;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.putDestContextValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -63,6 +66,7 @@ public class TemplateParameterResolverTest {
     public static void setUpAll() throws Exception {
         contextProvider = createDefaultContextProvider();
         fillDynamic(contextProvider);
+        fillDest(contextProvider);
         fillCPLContext(contextProvider,
                 SEGMENT_COUNT,
                 SEQ_COUNT,
@@ -77,6 +81,16 @@ public class TemplateParameterResolverTest {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         dynamicContext.addParameter("dynamic1", "dynamicValue1", ContextInfo.EMPTY);
         dynamicContext.addParameter("dynamic2", "dynamicValue2", ContextInfo.EMPTY);
+    }
+
+    private static void fillDest(TemplateParameterContextProvider contextProvider) {
+        DestContextTypeMap map = new DestContextTypeMap();
+        map.setName("test");
+        putDestContextValue("dest1", "destValue1", map);
+        putDestContextValue("dest2", "destValue2", map);
+
+        DestTemplateParameterContext dest = contextProvider.getDestContext();
+        dest.setDestContextMap(map);
     }
 
     @Test
@@ -124,6 +138,17 @@ public class TemplateParameterResolverTest {
         assertEquals("dynamicValue1", resolved1);
         assertNotNull(resolved2);
         assertEquals("dynamicValue2", resolved2);
+    }
+
+    @Test
+    public void resolvesCorrectDestContext() {
+        String resolved1 = resolver.resolveTemplateParameter("%{dest.dest1}", ContextInfo.EMPTY);
+        String resolved2 = resolver.resolveTemplateParameter("%{dest.dest2}", ContextInfo.EMPTY);
+
+        assertNotNull(resolved1);
+        assertEquals("destValue1", resolved1);
+        assertNotNull(resolved2);
+        assertEquals("destValue2", resolved2);
     }
 
     @Test
@@ -283,6 +308,11 @@ public class TemplateParameterResolverTest {
     @Test(expected = TemplateParameterNotFoundException.class)
     public void exceptionOnIncorrectDynamicParameterName() {
         resolver.resolveTemplateParameter("%{dynamic.xxxx}", ContextInfo.EMPTY);
+    }
+
+    @Test(expected = TemplateParameterNotFoundException.class)
+    public void exceptionOnIncorrectDestParameterName() {
+        resolver.resolveTemplateParameter("%{dest.xxxx}", ContextInfo.EMPTY);
     }
 
     @Test(expected = UnknownTemplateParameterNameException.class)

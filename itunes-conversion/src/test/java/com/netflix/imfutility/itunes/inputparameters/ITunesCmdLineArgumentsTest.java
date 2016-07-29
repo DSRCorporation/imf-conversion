@@ -21,7 +21,6 @@ package com.netflix.imfutility.itunes.inputparameters;
 import com.lexicalscope.jewel.cli.ArgumentValidationException;
 import com.lexicalscope.jewel.cli.CliFactory;
 import com.netflix.imfutility.itunes.ITunesMode;
-import com.netflix.imfutility.itunes.videoformat.ITunesVideoFormat;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -42,7 +41,7 @@ public class ITunesCmdLineArgumentsTest {
         ITunesCmdLineArgs cmdLineArgs = CliFactory.parseArguments(ITunesCmdLineArgs.class, args);
 
         assertEquals(ITunesMode.audiomap, cmdLineArgs.getMode());
-        assertEquals(ITunesVideoFormat.hd1080p30, cmdLineArgs.getVideoFormat());
+        assertEquals("hd1080p30", cmdLineArgs.getFormat());
         assertEquals("output", cmdLineArgs.getOutput());
     }
 
@@ -63,7 +62,7 @@ public class ITunesCmdLineArgumentsTest {
         ITunesCmdLineArgs cmdLineArgs = CliFactory.parseArguments(ITunesCmdLineArgs.class, args);
 
         assertEquals(ITunesMode.convert, cmdLineArgs.getMode());
-        assertEquals(ITunesVideoFormat.hd1080p30, cmdLineArgs.getVideoFormat());
+        assertEquals("hd1080p30", cmdLineArgs.getFormat());
         assertEquals("metadata.xml", cmdLineArgs.getMetadata());
         assertEquals("audiomap.xml", cmdLineArgs.getAudioMap());
         assertEquals("trailer.mov", cmdLineArgs.getTrailer());

@@ -16,25 +16,27 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.videoformat;
+package com.netflix.imfutility.itunes.destcontext;
 
-import com.netflix.imfutility.itunes.videoformat.profile.SourceProfile;
+import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
+import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 
 /**
- * Video format.
+ * Resolve dest context by name.
  */
-public interface VideoFormat {
-    String getName();
+public class NameDestContextResolveStrategy implements DestContextResolveStrategy {
+    private final String name;
 
-    SourceProfile getSourceProfile();
+    public NameDestContextResolveStrategy(String name) {
+        this.name = name;
+    }
 
-    int getFrameWidth();
-
-    int getFrameHeight();
-
-    double getFps();
-
-    ScanType getScanType();
-
-    Long getMaxDuration();
+    @Override
+    public DestContextTypeMap resolveContext(DestContextsTypeMap destContexts) throws ConversionException {
+        if (!destContexts.getMap().containsKey(name)) {
+            throw new ConversionException(String.format("Format %s can't be defined.", name));
+        }
+        return destContexts.getMap().get(name);
+    }
 }

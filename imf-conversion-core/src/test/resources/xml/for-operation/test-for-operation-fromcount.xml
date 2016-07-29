@@ -11,18 +11,14 @@
         -->
         <format name="fakeFormat">
             <tmpContext />
+            <defaultDestContext name="1"/>
+
             <mediaInfoCommandVideo />
             <mediaInfoCommandAudio />
             <mediaInfoCommandSubtitle />
 
             <formatConfigurations>
                 <formatConfiguration name="test">
-
-                    <!--
-                        Destination parameters for conversion
-                     -->
-                    <conversionParameters>
-                    </conversionParameters>
 
                     <for iterator="i" from="%{dynamic.fromI}" count="%{dynamic.countI}">
                         <dynamicParameter name="output" concat="true" concatWhitespace="false">

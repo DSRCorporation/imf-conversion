@@ -484,6 +484,8 @@ public class DynamicTemplateParameterContext implements ITemplateParameterContex
         clonedParameter.setDeleteOnExit(parameter.isDeleteOnExit());
         clonedParameter.setName(parameter.getName());
         clonedParameter.setValue(parameter.getValue());
+        clonedParameter.setIf(parameter.getIf());
+        clonedParameter.setUnless(parameter.getUnless());
 
         return clonedParameter;
     }

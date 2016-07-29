@@ -16,11 +16,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.videoformat.profile;
+package com.netflix.imfutility.itunes.destcontext;
+
+import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
+import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 
 /**
- * Source profile for multimedia format.
+ * Strategy to resolve appreciate dest context.
  */
-public interface SourceProfile {
-    String getName();
+public interface DestContextResolveStrategy {
+    DestContextTypeMap resolveContext(DestContextsTypeMap destContexts) throws ConversionException;
 }

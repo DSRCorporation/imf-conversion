@@ -21,7 +21,6 @@ package com.netflix.imfutility.itunes.inputparameters;
 import com.lexicalscope.jewel.cli.Option;
 import com.netflix.imfutility.inputparameters.ImfUtilityCmdLineArgs;
 import com.netflix.imfutility.itunes.ITunesMode;
-import com.netflix.imfutility.itunes.videoformat.ITunesVideoFormat;
 
 import java.util.List;
 
@@ -80,7 +79,7 @@ public interface ITunesCmdLineArgs extends ImfUtilityCmdLineArgs {
             longName = {"format"},
             defaultToNull = true
     )
-    ITunesVideoFormat getVideoFormat();
+    String getFormat();
 
     @Option(
             description = "a path to trailer. "

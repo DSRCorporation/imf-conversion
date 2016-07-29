@@ -26,11 +26,11 @@ import com.netflix.imfutility.conversion.templateParameter.exception.TemplatePar
 import com.netflix.imfutility.conversion.templateParameter.exception.UnknownTemplateParameterContextException;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.generated.conversion.ExecComplexType;
+import com.netflix.imfutility.generated.conversion.ConditionalComplexType;
+import com.netflix.imfutility.generated.conversion.ConditionalSimpleType;
 import com.netflix.imfutility.generated.conversion.ExecEachSegmentSequenceType;
 import com.netflix.imfutility.generated.conversion.ExecEachSequenceType;
 import com.netflix.imfutility.generated.conversion.ExecOnceType;
-import com.netflix.imfutility.generated.conversion.ExecSimpleType;
 import com.netflix.imfutility.util.SkipOperationResolver;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.junit.BeforeClass;
@@ -58,16 +58,16 @@ public class SkipOperationResolverTest {
     public void testOperationSkipped() {
         SkipOperationResolver resolver = new SkipOperationResolver(new TemplateParameterResolver(contextProvider));
 
-        ExecSimpleType falseExec = new ExecOnceType();
+        ConditionalSimpleType falseExec = new ExecOnceType();
         falseExec.setIf("false");
 
-        ExecSimpleType ifParamExec = new ExecOnceType();
+        ConditionalSimpleType ifParamExec = new ExecOnceType();
         ifParamExec.setIf("%{dynamic.falseParam}");
 
-        ExecComplexType unlessParamExec = new ExecEachSequenceType();
+        ConditionalComplexType unlessParamExec = new ExecEachSequenceType();
         unlessParamExec.setUnless("%{dynamic.trueParam}");
 
-        ExecComplexType ifUnlessParamExec = new ExecEachSegmentSequenceType();
+        ConditionalComplexType ifUnlessParamExec = new ExecEachSegmentSequenceType();
         ifUnlessParamExec.setIf("%{dynamic.trueParam}");        // not skipped
         ifUnlessParamExec.setUnless("%{dynamic.trueParam}");    // skipped
 
@@ -81,16 +81,16 @@ public class SkipOperationResolverTest {
     public void testOperationNotSkipped() {
         SkipOperationResolver resolver = new SkipOperationResolver(new TemplateParameterResolver(contextProvider));
 
-        ExecSimpleType trueExec = new ExecOnceType();
+        ConditionalSimpleType trueExec = new ExecOnceType();
         trueExec.setUnless("false");
 
-        ExecSimpleType ifParamExec = new ExecOnceType();
+        ConditionalSimpleType ifParamExec = new ExecOnceType();
         ifParamExec.setIf("%{dynamic.trueParam}");
 
-        ExecComplexType unlessParamExec = new ExecEachSequenceType();
+        ConditionalComplexType unlessParamExec = new ExecEachSequenceType();
         unlessParamExec.setUnless("%{dynamic.falseParam}");
 
-        ExecComplexType ifUnlessParamExec = new ExecEachSegmentSequenceType();
+        ConditionalComplexType ifUnlessParamExec = new ExecEachSegmentSequenceType();
         ifUnlessParamExec.setIf("%{dynamic.trueParam}");
         ifUnlessParamExec.setUnless("%{dynamic.falseParam}");
 
@@ -104,13 +104,13 @@ public class SkipOperationResolverTest {
     public void testFewOperationsSkipped() {
         SkipOperationResolver resolver = new SkipOperationResolver(new TemplateParameterResolver(contextProvider));
 
-        ExecSimpleType trueExec1 = new ExecOnceType();
+        ConditionalSimpleType trueExec1 = new ExecOnceType();
         trueExec1.setUnless("false");
 
-        ExecComplexType trueExec2 = new ExecComplexType();
+        ConditionalComplexType trueExec2 = new ConditionalComplexType();
         trueExec2.setIf("true");
 
-        ExecComplexType falseExec = new ExecComplexType();
+        ConditionalComplexType falseExec = new ConditionalComplexType();
         falseExec.setIf("false");
 
         assertTrue(resolver.setContextInfo(ContextInfo.EMPTY).isSkip(trueExec1, trueExec2, falseExec));

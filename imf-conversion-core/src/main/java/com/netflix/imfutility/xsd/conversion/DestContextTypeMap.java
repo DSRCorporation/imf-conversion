@@ -16,43 +16,31 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.videoformat.context;
+package com.netflix.imfutility.xsd.conversion;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import com.netflix.imfutility.generated.conversion.DestContextParamType;
+
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * All supported video format template parameter names.
+ * Custom map for generated {@link com.netflix.imfutility.generated.conversion.DestContextType}.
  */
-public enum VideoFormatContextParameters {
-    FW("fw"),
-    FH("fh"),
-    FPS("fps"),
-    SCAN("scan");
-
-    private final String name;
-
-    VideoFormatContextParameters(String name) {
-        this.name = name;
-    }
+@XmlJavaTypeAdapter(DestContextTypeMapAdapter.class)
+public class DestContextTypeMap {
+    private final Map<String, DestContextParamType> map = new HashMap<>();
+    private String name;
 
     public String getName() {
         return name;
     }
 
-    public static VideoFormatContextParameters fromName(String name) {
-        for (VideoFormatContextParameters e : values()) {
-            if (e.getName().equals(name)) {
-                return e;
-            }
-        }
-        return null;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public static String getSupportedContextParameters() {
-        return Arrays.stream(VideoFormatContextParameters.values())
-                .map(VideoFormatContextParameters::getName)
-                .collect(Collectors.joining(" ", "[", "]"));
+    public Map<String, DestContextParamType> getMap() {
+        return map;
     }
-
 }

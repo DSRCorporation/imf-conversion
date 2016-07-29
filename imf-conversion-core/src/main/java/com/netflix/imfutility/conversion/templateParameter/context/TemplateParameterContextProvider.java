@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -79,6 +79,10 @@ public class TemplateParameterContextProvider {
         return (ResourceTemplateParameterContext) contexts.get(TemplateParameterContext.RESOURCE);
     }
 
+    public DestTemplateParameterContext getDestContext() {
+        return (DestTemplateParameterContext) contexts.get(TemplateParameterContext.DEST);
+    }
+
     /**
      * Gets the working directory where the output file as well as all tmp files are created.
      *
@@ -130,6 +134,8 @@ public class TemplateParameterContextProvider {
                 return new SequenceTemplateParameterContext();
             case RESOURCE:
                 return new ResourceTemplateParameterContext();
+            case DEST:
+                return new DestTemplateParameterContext();
             default: /// nothing
         }
         return null;
