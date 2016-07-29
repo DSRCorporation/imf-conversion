@@ -39,6 +39,7 @@ import java.io.IOException;
 
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_OUTPUT_ITMSP;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_VENDOR_ID;
+import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider;
 
 /**
  * iTunes format builder (see {@link AbstractFormatBuilder}). It's used for conversion to iTunes format ('convert' iTunes mode).
@@ -74,6 +75,14 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
     @Override
     protected void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException {
+        // compile audio parameters
+        AudioMapXmlProvider audioMapXmlProvider =
+                new AudioMapXmlProvider(iTunesInputParameters.getAudiomapFile(), contextProvider);
+
+        // add pan parameters
+        audioMapXmlProvider.getPanParameters().entrySet().stream().forEach((e) -> {
+            contextProvider.getDynamicContext().addParameter(e.getKey(), e.getValue());
+        });
     }
 
     @Override

@@ -19,7 +19,7 @@
         along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" version="1.1"
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
     targetNamespace="http://netflix.com/imf/itunes/audiomap"
     xmlns="http://netflix.com/imf/itunes/audiomap"
     xmlns:am="http://netflix.com/imf/itunes/audiomap"
@@ -31,13 +31,7 @@
 
     <!-- root element -->
 
-    <xs:element name="audiomap">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="mainAudio" type="MainAudioType" />
-                <xs:element name="alternativeAudio" type="AlternativeAudioType" minOccurs="0" maxOccurs="unbounded" />
-            </xs:sequence>
-        </xs:complexType>
+    <xs:element name="audiomap" type="AudioMapType">
         <xs:unique name="AlternativeAudioLangUniqe">
             <xs:selector xpath="am:alternativeAudio" />
             <xs:field xpath="@locale" />
@@ -69,6 +63,12 @@
     <!--
         types
     -->
+    <xs:complexType name="AudioMapType">
+        <xs:sequence>
+            <xs:element name="mainAudio" type="MainAudioType" />
+            <xs:element name="alternativeAudio" type="AlternativeAudioType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:complexType name="MainAudioType">
         <xs:choice>
@@ -128,7 +128,6 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:assert test="am:Track1 and am:Track2 and am:Track3 or .[not(am:Track1) and not(am:Track2) and not(am:Track3)]" />
     </xs:complexType>
 
     <xs:complexType name="Option1bType">
@@ -162,7 +161,6 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:assert test="am:Track1 and am:Track2 and am:Track3 or .[not(am:Track1) and not(am:Track2) and not(am:Track3)]" />
     </xs:complexType>
 
     <xs:complexType name="Option1cType">
@@ -196,7 +194,6 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:assert test="am:Track1 and am:Track2 and am:Track3 or .[not(am:Track1) and not(am:Track2) and not(am:Track3)]" />
     </xs:complexType>
 
     <xs:complexType name="Option1dType">
@@ -230,7 +227,6 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:assert test="am:Track1 and am:Track2 and am:Track3 or .[not(am:Track1) and not(am:Track2) and not(am:Track3)]" />
     </xs:complexType>
 
     <xs:complexType name="Option2Type">
@@ -299,8 +295,6 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:assert test="am:Track1 and am:Track2 and am:Track3 and am:Track4 and am:Track5 and am:Track6 and am:Track7 and am:Track8
-            or .[not(am:Track1) and not(am:Track2) and not(am:Track3) and not(am:Track4) and not(am:Track5) and not(am:Track6) and not(am:Track7) and not(am:Track8)]" />
     </xs:complexType>
 
     <xs:complexType name="Option3Type">
@@ -327,7 +321,6 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:assert test="am:Track1 and am:Track2 or .[not(am:Track1) and not(am:Track2)]" />
     </xs:complexType>
 
     <xs:complexType name="Option4Type">
@@ -389,8 +382,6 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:assert test="am:Track1 and am:Track2 and am:Track3 and am:Track4 and am:Track5 and am:Track6 and am:Track7
-            or .[not(am:Track1) and not(am:Track2) and not(am:Track3) and not(am:Track4) and not(am:Track5) and not(am:Track6) and not(am:Track7)]" />
     </xs:complexType>
 
     <xs:complexType name="Option5Type">
@@ -411,7 +402,6 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:assert test="am:Track1 and am:Track2 or .[not(am:Track1) and not(am:Track2)]" />
     </xs:complexType>
 
     <xs:complexType name="Option6Type">

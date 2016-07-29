@@ -19,4 +19,9 @@
         </schemaBindings>
     </bindings>
 
+    <bindings schemaLocation="../xsd/audiomap/audiomap.xsd">
+        <schemaBindings>
+            <package name="com.netflix.imfutility.generated.itunes.audiomap" />
+        </schemaBindings>
+    </bindings>
 </bindings>
