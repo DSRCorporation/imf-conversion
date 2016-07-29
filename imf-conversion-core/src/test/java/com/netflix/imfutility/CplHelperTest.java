@@ -20,11 +20,8 @@ package com.netflix.imfutility;
 
 import com.netflix.imfutility.asset.AssetMap;
 import com.netflix.imfutility.asset.AssetMapParser;
-import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.cpl.CplContextBuilder;
-import com.netflix.imfutility.cpl.uuid.ResourceUUID;
-import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.util.CplHelper;
@@ -49,47 +46,6 @@ public class CplHelperTest {
         contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
         new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCorrectCpl());
-    }
-
-
-    @Test
-    public void resourceDurationEU() {
-        assertEquals(BigInteger.valueOf(144000), CplHelper.getResourceDurationEU(contextProvider,
-                // the values as specified in CPL.xml
-                new ContextInfoBuilder()
-                        .setSequenceType(SequenceType.AUDIO)
-                        .setSequenceUuid(SequenceUUID.create("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712"))
-                        .setSegmentUuid(SegmentUUID.create("urn:uuid:20544b5c-be3c-4274-8633-249ee8a5ad16"))
-                        .setResourceUuid(ResourceUUID.create("urn:uuid:895820ef-e379-4021-a69e-8a898b0a9096", 0))
-                        .build()));
-        assertEquals(BigInteger.valueOf(150), CplHelper.getResourceDurationEU(contextProvider,
-                // the values as specified in CPL.xml
-                new ContextInfoBuilder()
-                        .setSequenceType(SequenceType.VIDEO)
-                        .setSequenceUuid(SequenceUUID.create("urn:uuid:a4f226e7-adac-45a4-adbf-83335cf02d0d"))
-                        .setSegmentUuid(SegmentUUID.create("urn:uuid:20544b5c-be3c-4274-8633-249ee8a5ad16"))
-                        .setResourceUuid(ResourceUUID.create("urn:uuid:2404d06b-4d65-4511-9cac-42d41196a1ec", 2))
-                        .build()));
-    }
-
-    @Test
-    public void resourceDurationMS() {
-        assertEquals(3000L, CplHelper.getResourceDurationMS(contextProvider,
-                // the values as specified in CPL.xml
-                new ContextInfoBuilder()
-                        .setSequenceType(SequenceType.AUDIO)
-                        .setSequenceUuid(SequenceUUID.create("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712"))
-                        .setSegmentUuid(SegmentUUID.create("urn:uuid:20544b5c-be3c-4274-8633-249ee8a5ad16"))
-                        .setResourceUuid(ResourceUUID.create("urn:uuid:895820ef-e379-4021-a69e-8a898b0a9096", 0))
-                        .build()));
-        assertEquals(3000L, CplHelper.getResourceDurationMS(contextProvider,
-                // the values as specified in CPL.xml
-                new ContextInfoBuilder()
-                        .setSequenceType(SequenceType.VIDEO)
-                        .setSequenceUuid(SequenceUUID.create("urn:uuid:a4f226e7-adac-45a4-adbf-83335cf02d0d"))
-                        .setSegmentUuid(SegmentUUID.create("urn:uuid:20544b5c-be3c-4274-8633-249ee8a5ad16"))
-                        .setResourceUuid(ResourceUUID.create("urn:uuid:2404d06b-4d65-4511-9cac-42d41196a1ec", 2))
-                        .build()));
     }
 
     @Test

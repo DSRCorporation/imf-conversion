@@ -37,13 +37,14 @@
                 <param id="videoEncoded" deleteOnExit="true">output.x264</param>
                 <param id="audioEncoded" deleteOnExit="true">output.pcm</param>
                 <param id="mediaInfoOutput" deleteOnExit="true">mediaInfo.xml</param>
-                <param id="outputStartTime" deleteOnExit="true">09:59:30:00</param>
             </tmpContext>
 
             <!--
                 Destination parameters for conversion
              -->
             <defaultDestContext name="main">
+                <!-- Common -->
+                <param name="startTime">09:59:30:00</param>
                 <!-- Video -->
                 <param name="width">1920</param>
                 <param name="height">1080</param>
@@ -166,7 +167,7 @@
                     -->
                     <execOnce name="muxing_mxf_audio_video" if="%{dynamic.hasAudioAndVideo}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
-                        -y %{tmp.outputStartTime}
+                        -y %{dest.startTime}
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
@@ -176,7 +177,7 @@
                     </execOnce>
                     <execOnce name="muxing_mxf_audio_only" if="%{dynamic.hasAudioOnly}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
-                        -y %{tmp.outputStartTime}
+                        -y %{dest.startTime}
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
@@ -185,7 +186,7 @@
                     </execOnce>
                     <execOnce name="muxing_mxf_video_only" if="%{dynamic.hasVideoOnly}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
-                        -y %{tmp.outputStartTime}
+                        -y %{dest.startTime}
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
@@ -209,8 +210,8 @@
 
                             <dynamicParameter name="concatTTML" concat="true" concatWhitespace="true">
                                 --ttml
-                                %{seq.num}-%{segm.num}-%{resource.num}.xml %{resource.offsetTC} %{resource.startTimeTC}
-                                %{resource.endTimeTC}
+                                %{seq.num}-%{segm.num}-%{resource.num}.xml %{resource.offsetMS} %{resource.startTimeMS}
+                                %{resource.endTimeMS}
                             </dynamicParameter>
 
                         </execEachSegment>

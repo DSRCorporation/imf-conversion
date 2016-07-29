@@ -134,7 +134,7 @@ public class SilentConversionChecker {
     private void checkFrameRate(SequenceContextParameters param, ConversionParameterNameType conversionParam, ContextInfo contextInfo)
             throws ConversionNotAllowedException {
         checkParameter(param, conversionParam, contextInfo,
-                (f1, f2) -> Objects.equals(ConversionHelper.safeParseEditRate(f1), ConversionHelper.safeParseEditRate(f2)));
+                (f1, f2) -> Objects.equals(ConversionHelper.parseEditRate(f1), ConversionHelper.parseEditRate(f2)));
     }
 
     private void checkParameter(SequenceContextParameters param, ConversionParameterNameType conversionParam, ContextInfo contextInfo,

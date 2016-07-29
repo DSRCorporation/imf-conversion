@@ -135,23 +135,23 @@ public abstract class AbstractFormatBuilder {
             // 11. perform validation of the input IMP and CPL (after dynamic context is filled).
             validateImpAndCpl();
 
-            // 12. build IMF CPL contexts
-            buildCplContext();
-
-            // 13. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
-            buildMediaInfoContext();
-
-            // 14. fill dynamic context post CPL
-            buildDynamicContextPostCpl();
-
-            // 15. select a conversion config within format.
-            selectConversionConfig();
-
-            // 16. select a dest context within conversion config.
+            // 12. select a dest context within conversion config.
             selectDestContext();
 
-            // 17. fill destination context
+            // 13. fill destination context (before CPL context!)
             buildDestContext();
+
+            // 14. build IMF CPL contexts
+            buildCplContext();
+
+            // 15. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
+            buildMediaInfoContext();
+
+            // 16. fill dynamic context post CPL
+            buildDynamicContextPostCpl();
+
+            // 17. select a conversion config within format.
+            selectConversionConfig();
 
             // 18. check whether we can silently convert to destination parameters
             checkForSilentConversion();
