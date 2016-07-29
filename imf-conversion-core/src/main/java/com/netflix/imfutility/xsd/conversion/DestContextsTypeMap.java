@@ -16,26 +16,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.videoformat.profile;
+package com.netflix.imfutility.xsd.conversion;
+
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Source profile specified for iTunes.
+ * Custom map for generated {@link com.netflix.imfutility.generated.conversion.DestContextsType}.
  */
-public enum ITunesSourceProfile implements SourceProfile {
-    HD("HD"),
-    SD_TV_NTSC("SD TV NTSC"),
-    SD_TV_PAL("SD TV PAL"),
-    SD_FILM_NTSC("SD Film NTSC"),
-    SD_FILM_PAL("SD Film PAL");
+@XmlJavaTypeAdapter(DestContextsTypeMapAdapter.class)
+public class DestContextsTypeMap {
+    private final Map<String, DestContextTypeMap> map = new HashMap<>();
 
-    private String name;
-
-    ITunesSourceProfile(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+    public Map<String, DestContextTypeMap> getMap() {
+        return map;
     }
 }

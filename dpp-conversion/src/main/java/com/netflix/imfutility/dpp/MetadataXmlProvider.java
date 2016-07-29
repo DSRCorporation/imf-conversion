@@ -86,6 +86,12 @@ import static com.netflix.imfutility.dpp.DppConversionXsdConstants.TYPES_XML_SCH
  */
 public class MetadataXmlProvider {
 
+    public static final String DEST_FRAME_RATE = "25 1";
+
+    private static final String LINE_UP_START = "09:59:30:00";
+    private static final String IDENT_CLOCK_START = "09:59:30:00";
+    private static final String FIRST_PART_SOM = "09:59:30:00";
+
     /**
      * MXF frameworks enumeration.
      */
@@ -159,12 +165,14 @@ public class MetadataXmlProvider {
 
             //Timecodes
             TimecodesType timecodes = new TimecodesType();
-            TimecodeType zeroTimecode = new TimecodeType();
-            zeroTimecode.setValue("00:00:00:00");
+            TimecodeType lineUpStart = new TimecodeType();
+            lineUpStart.setValue(LINE_UP_START);
+            TimecodeType identClockStart = new TimecodeType();
+            identClockStart.setValue(IDENT_CLOCK_START);
             DurationType zeroDuration = new DurationType();
             zeroDuration.setValue("00:00:00:00");
-            timecodes.setLineUpStart(zeroTimecode);
-            timecodes.setIdentClockStart(zeroTimecode);
+            timecodes.setLineUpStart(lineUpStart);
+            timecodes.setIdentClockStart(identClockStart);
             timecodes.setTotalNumberOfParts(1);
             timecodes.setTotalProgrammeDuration(zeroDuration);
 
@@ -173,7 +181,9 @@ public class MetadataXmlProvider {
             SegmentType segment = new SegmentType();
             segment.setPartNumber(1);
             segment.setPartTotal(1);
-            segment.setPartSOM(zeroTimecode);
+            TimecodeType firstPartSOM = new TimecodeType();
+            firstPartSOM.setValue(FIRST_PART_SOM);
+            segment.setPartSOM(firstPartSOM);
             segment.setPartDuration(zeroDuration);
             segmentation.getPart().add(segment);
             timecodes.setParts(segmentation);

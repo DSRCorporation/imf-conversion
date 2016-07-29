@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -30,6 +30,47 @@ import java.util.List;
 public final class ConversionHelper {
 
     private ConversionHelper() {
+    }
+
+    /**
+     * Transforms a timecode string (hh:mm:ss:ff) to milliseconds according to the given edit rate (frame rate).
+     * <p>
+     *     Currently works with non-drop timecodes only.
+     * </p>
+     * @param tc an SMPTE timecode (hh:mm:ss:ff)
+     * @param unitsInSecStr edit unit rate in a form "25 1"
+     * @return a number of milliseconds
+     */
+    public static long smpteTimecodeToMilliSeconds(String tc, String unitsInSecStr) {
+        BigFraction unitsInSec = parseEditRate(unitsInSecStr);
+        String[] parts = tc.split("[:;\\.]");
+        if (parts.length != 4) {
+            throw new ConversionException(
+                    String.format("Incorrect SMPTE timecode '%s'. Expected in a form 'HH[:;.]MM[:;.]SS[:;.]FF'", tc));
+        }
+
+        int hours;
+        int mins;
+        int secs;
+        int frames;
+        try {
+            hours = Integer.parseInt(parts[0]);
+            mins = Integer.parseInt(parts[1]);
+            secs = Integer.parseInt(parts[2]);
+            frames = Integer.parseInt(parts[3]);
+        } catch (NumberFormatException e) {
+            throw new ConversionException(
+                    String.format("Incorrect SMPTE timecode '%s'! Expected in a form 'HH[:;.]MM[:;.]SS[:;.]FF'"
+                            + " where HH,MM,SS and FF are non-negative integers", tc),
+                    e);
+        }
+
+        long total = 0L;
+        total += hours * 60 * 60 * 1000L;
+        total += mins * 60 * 1000L;
+        total += secs * 1000L;
+        total += new BigFraction(frames).divide(unitsInSec).multiply(1000).longValue();
+        return total;
     }
 
     /**
@@ -86,13 +127,26 @@ public final class ConversionHelper {
 
     /**
      * Converts the edit untis to milliseconds according to the given edit rate.
+     *
      * @param eu         edit units number
      * @param unitsInSec edit rate
      * @return milliseconds
      */
-    public static long toMilliSeconds(BigInteger eu, BigFraction unitsInSec) {
+    public static long editUnitToMilliSeconds(BigInteger eu, BigFraction unitsInSec) {
         BigFraction editUnits = new BigFraction(eu);
         return editUnits.divide(unitsInSec).multiply(1000).longValue();
+    }
+
+    /**
+     * Converts the edit untis to seconds according to the given edit rate.
+     *
+     * @param eu         edit units number
+     * @param unitsInSec edit rate
+     * @return seconds
+     */
+    public static long toSeconds(BigInteger eu, BigFraction unitsInSec) {
+        BigFraction editUnits = new BigFraction(eu);
+        return editUnits.divide(unitsInSec).longValue();
     }
 
     /**
@@ -137,6 +191,17 @@ public final class ConversionHelper {
             throw new ConversionException("Incorrect edit rate! Edit rate must consist of two numbers.", e);
         }
         throw new ConversionException("Incorrect edit rate! Edit rate must consist of two values.");
+    }
+
+    /**
+     * Returns a fraction corresponding to the given edit rate string.
+     *
+     * @param editRate input in both forms "50 1" and "50/1"
+     * @return a fraction object representing the edit rate.
+     */
+    public static BigFraction safeParseEditRate(String editRate) {
+        editRate = editRate.contains("/") ? rFrameRateToEditRate(editRate) : editRate;
+        return parseEditRate(editRate);
     }
 
     /**

@@ -16,11 +16,24 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.videoformat;
+package com.netflix.imfutility.xsd.config;
+
+import com.netflix.imfutility.generated.config.ConversionParameterNameType;
+import com.netflix.imfutility.generated.config.ConversionParameterType;
+
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Video scanning type.
+ * Custom map for generated {@link com.netflix.imfutility.generated.config.ConversionParametersType}.
  */
-public enum ScanType {
-    INTERLACED, PROGRESSIVE;
+@XmlJavaTypeAdapter(ConversionParametersTypeMapAdapter.class)
+public class ConversionParametersTypeMap {
+
+    private final Map<ConversionParameterNameType, ConversionParameterType> map = new HashMap<>();
+
+    public Map<ConversionParameterNameType, ConversionParameterType> getMap() {
+        return map;
+    }
 }

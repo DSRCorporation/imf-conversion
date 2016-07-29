@@ -37,7 +37,23 @@
                 <param id="videoEncoded" deleteOnExit="true">output.x264</param>
                 <param id="audioEncoded" deleteOnExit="true">output.pcm</param>
                 <param id="mediaInfoOutput" deleteOnExit="true">mediaInfo.xml</param>
+                <param id="outputStartTime" deleteOnExit="true">09:59:30:00</param>
             </tmpContext>
+
+            <!--
+                Destination parameters for conversion
+             -->
+            <defaultDestContext name="main">
+                <!-- Video -->
+                <param name="width">1920</param>
+                <param name="height">1080</param>
+                <param name="frameRate">25 1</param>
+                <param name="pixelFormat">yuv422p10le</param>
+                <param name="bitDepth">10</param>
+                <!-- Audio -->
+                <param name="sampleRate">48000</param>
+                <param name="bitsSample">24</param>
+            </defaultDestContext>
 
             <mediaInfoCommandVideo>%{tool.ffprobe} -select_streams v:0 -show_streams -noprivate -print_format xml=x=1
                 "%{dynamic.mediaInfoInput}"
@@ -52,23 +68,6 @@
 
             <formatConfigurations>
                 <formatConfiguration name="main">
-
-                    <!--
-                        Destination parameters for conversion
-                     -->
-                    <conversionParameters>
-                        <video>
-                            <width>1920</width>
-                            <height>1080</height>
-                            <frameRate>25 1</frameRate>
-                            <pixelFormat>yuv422p10le</pixelFormat>
-                            <bitDepth>10</bitDepth>
-                        </video>
-                        <audio>
-                            <sampleRate>48000</sampleRate>
-                            <bitsSample>24</bitsSample>
-                        </audio>
-                    </conversionParameters>
 
                     <!--
                         1. decode each video segment and redirect output to encode's input
@@ -149,10 +148,9 @@
                     </execEachSequence>
 
                     <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
-                    <execEachSequence name="concatSingleAudio" type="audio" if="%{dynamic.singleAudio}">
-                        <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false">[%{seq.num}:a]
-                        </dynamicParameter>
-                    </execEachSequence>
+                    <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false"
+                                      if="%{dynamic.singleAudio}">[0:a]
+                    </dynamicParameter>
 
                     <!--
                         4. Remap audio in accordance with AudioMap.xml
@@ -168,6 +166,7 @@
                     -->
                     <execOnce name="muxing_mxf_audio_video" if="%{dynamic.hasAudioAndVideo}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
+                        -y %{tmp.outputStartTime}
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
@@ -177,6 +176,7 @@
                     </execOnce>
                     <execOnce name="muxing_mxf_audio_only" if="%{dynamic.hasAudioOnly}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
+                        -y %{tmp.outputStartTime}
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
@@ -185,6 +185,7 @@
                     </execOnce>
                     <execOnce name="muxing_mxf_video_only" if="%{dynamic.hasVideoOnly}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
+                        -y %{tmp.outputStartTime}
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"

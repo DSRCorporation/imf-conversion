@@ -16,31 +16,33 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.videoformat;
+package com.netflix.imfutility.itunes.destcontext;
 
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
-import com.netflix.imfutility.itunes.util.FakeVideoFormatBuilder;
-import com.netflix.imfutility.itunes.videoformat.context.VideoFormatContextBuilder;
+import com.netflix.imfutility.itunes.util.FakeVideoDestContextResolveStrategy;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
+import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
+import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.EnumSet;
 
-import static org.junit.Assert.assertEquals;
+import static junit.framework.TestCase.assertEquals;
 
 /**
- * Tests that video format context builds correctly.
+ * Tests that dest context for input contexts resolves correctly.
  */
-public class VideoFormatContextBuilderTest {
+public class InputDestContextResolveStrategyTest {
 
     private static final int SEGMENT_COUNT = 2;
     private static final int SEQ_COUNT = 2;
@@ -106,17 +108,17 @@ public class VideoFormatContextBuilderTest {
     @Test
     public void testBuildCorrectVideoFormat() throws Exception {
 
-        VideoFormatContextBuilder contextBuilder = new VideoFormatContextBuilder(contextProvider,
-                new FakeVideoFormatBuilder());
+        InputDestContextResolveStrategy strategy = new InputDestContextResolveStrategy(contextProvider,
+                new FakeVideoDestContextResolveStrategy());
 
-        VideoFormat videoFormat = contextBuilder.build();
+        DestContextTypeMap map = strategy.resolveContext(new DestContextsTypeMap());
 
-        assertEquals(4096, videoFormat.getFrameWidth());
-        assertEquals(2160, videoFormat.getFrameHeight());
-        assertEquals(50, videoFormat.getFps(), 0.);
-        //assume video scan type is progressive (according to IMF application #2E)
-        assertEquals(ScanType.PROGRESSIVE, videoFormat.getScanType());
-        //  max duration must be equals 2(segm)*2(res)*2(repeat)*(100(durationEU)/50(unitsInSec))*1000(millisInSec)
-        assertEquals(16000L, videoFormat.getMaxDuration().longValue());
+        assertEquals("4096", map.getMap().get(DestContextParameters.WIDTH.getName()).getValue());
+        assertEquals("2160", map.getMap().get(DestContextParameters.HEIGHT.getName()).getValue());
+        assertEquals("50 1", map.getMap().get(DestContextParameters.FRAME_RATE.getName()).getValue());
+        // assume video scan type is progressive (according to IMF application #2E)
+        assertEquals("false", map.getMap().get(DestContextParameters.INTERLACED.getName()).getValue());
+        // max duration must be equals 2(segm)*2(res)*2(repeat)*(100(durationEU)/50(unitsInSec))
+        assertEquals("16", map.getMap().get(DestContextParameters.DURATION.getName()).getValue());
     }
 }

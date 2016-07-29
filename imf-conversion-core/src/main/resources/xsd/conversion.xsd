@@ -61,6 +61,10 @@
     <xs:complexType name="formatType">
         <xs:sequence>
             <xs:element type="tmpContextType" name="tmpContext"/>
+            <xs:choice>
+                <xs:element type="destContextsType" name="destContexts"/>
+                <xs:element type="destContextType" name="defaultDestContext"/>
+            </xs:choice>
             <xs:element type="mediaInfoCommandVideoType" name="mediaInfoCommandVideo"/>
             <xs:element type="mediaInfoCommandAudioType" name="mediaInfoCommandAudio"/>
             <xs:element type="mediaInfoCommandSubtitleType" name="mediaInfoCommandSubtitle"/>
@@ -88,8 +92,8 @@
     </xs:complexType>
 
     <!--
-    A command to gather media info parameters (such as channels num, fps, etc.).
--->
+        A command to gather media info parameters (such as channels num, fps, etc.).
+    -->
     <xs:complexType name="mediaInfoCommandType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -108,8 +112,8 @@
     </xs:complexType>
 
     <!--
-    A command to gather media info parameters (such as channels num, fps, etc.) for audio tracks.
--->
+        A command to gather media info parameters (such as channels num, fps, etc.) for audio tracks.
+    -->
     <xs:complexType name="mediaInfoCommandAudioType">
         <xs:simpleContent>
             <xs:extension base="mediaInfoCommandType">
@@ -118,8 +122,8 @@
     </xs:complexType>
 
     <!--
-    A command to gather media info parameters (such as channels num, fps, etc.) for subtitle tracks.
--->
+        A command to gather media info parameters (such as channels num, fps, etc.) for subtitle tracks.
+    -->
     <xs:complexType name="mediaInfoCommandSubtitleType">
         <xs:simpleContent>
             <xs:extension base="mediaInfoCommandType">
@@ -129,31 +133,29 @@
 
 
     <!--
-      defines destination format video/audio parameters for conversion.
+      defines destination context(s)
     -->
-    <xs:complexType name="destinationConversionParametersType">
+    <xs:complexType name="destContextsType">
         <xs:sequence>
-            <xs:element type="destinationVideoConversionParametersType" name="video" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="destinationAudioConversionParametersType" name="audio" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="destContextType" name="destContext" maxOccurs="unbounded" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="destinationVideoConversionParametersType">
+    <xs:complexType name="destContextType">
         <xs:sequence>
-            <xs:element type="xs:string" name="width" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="xs:string" name="height" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="xs:string" name="frameRate" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="xs:string" name="pixelFormat" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="xs:string" name="bitDepth" maxOccurs="1" minOccurs="0"/>
+            <xs:element type="destContextParamType" name="param" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
+        <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:complexType>
 
-    <xs:complexType name="destinationAudioConversionParametersType">
-        <xs:sequence>
-            <xs:element type="xs:string" name="sampleRate" maxOccurs="1" minOccurs="0"/>
-            <xs:element type="xs:string" name="bitsSample" maxOccurs="1" minOccurs="0"/>
-        </xs:sequence>
+    <xs:complexType name="destContextParamType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
     </xs:complexType>
+
 
     <!--
       - each format may have several configurations;
@@ -169,8 +171,6 @@
 
     <xs:complexType name="formatConfigurationType">
         <xs:sequence>
-            <xs:element type="destinationConversionParametersType" name="conversionParameters"/>
-
             <xs:choice maxOccurs="unbounded" minOccurs="1">
                 <xs:element type="execOnceType" name="execOnce"/>
                 <xs:element type="execEachSegmentSequenceType" name="execEachSegment"/>
@@ -183,7 +183,7 @@
         <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:complexType>
 
-    <xs:complexType name="execSimpleType">
+    <xs:complexType name="conditionalSimpleType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="name" use="required"/>
@@ -193,7 +193,7 @@
         </xs:simpleContent>
     </xs:complexType>
 
-    <xs:complexType name="execComplexType">
+    <xs:complexType name="conditionalComplexType">
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="if" default="true"/>
         <xs:attribute type="xs:string" name="unless" default="false"/>
@@ -203,7 +203,7 @@
     -->
     <xs:complexType name="execOnceType">
         <xs:simpleContent>
-            <xs:extension base="execSimpleType">
+            <xs:extension base="conditionalSimpleType">
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -212,7 +212,7 @@
     -->
     <xs:complexType name="execEachSegmentSequenceType">
         <xs:complexContent>
-            <xs:extension base="execComplexType">
+            <xs:extension base="conditionalComplexType">
                 <xs:choice maxOccurs="unbounded" minOccurs="1">
                     <xs:element type="pipeSegmentType" name="pipe"/>
                     <xs:element type="execOnceType" name="execOnce"/>
@@ -228,7 +228,7 @@
     -->
     <xs:complexType name="execEachSequenceType">
         <xs:complexContent>
-            <xs:extension base="execComplexType">
+            <xs:extension base="conditionalComplexType">
                 <xs:sequence>
                     <xs:choice maxOccurs="1" minOccurs="1">
                         <xs:element type="subPipeType" name="pipe"/>
@@ -268,7 +268,7 @@
     -->
     <xs:complexType name="execEachSequenceSegmentType">
         <xs:complexContent>
-            <xs:extension base="execComplexType">
+            <xs:extension base="conditionalComplexType">
                 <xs:choice maxOccurs="unbounded" minOccurs="1">
                     <xs:element type="pipeSequenceType" name="pipe"/>
                     <xs:element type="execOnceType" name="execOnce"/>
@@ -285,7 +285,7 @@
     -->
     <xs:complexType name="execEachSegmentType">
         <xs:complexContent>
-            <xs:extension base="execComplexType">
+            <xs:extension base="conditionalComplexType">
                 <xs:sequence>
                     <xs:choice maxOccurs="1" minOccurs="1">
                         <xs:element type="subPipeType" name="pipe"/>
@@ -340,8 +340,7 @@
 
     <xs:complexType name="dynamicParameterConcatType">
         <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="name" use="required"/>
+            <xs:extension base="conditionalSimpleType">
                 <xs:attribute type="xs:boolean" name="concat" use="optional"/>
                 <xs:attribute type="xs:boolean" name="deleteOnExit" default="false"/>
                 <xs:attribute type="xs:boolean" name="concatWhitespace" default="false"/>

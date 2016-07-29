@@ -10,19 +10,15 @@
             specific configuration for each format
         -->
         <format name="fakeFormat">
-            <tmpContext />
-            <mediaInfoCommandVideo />
-            <mediaInfoCommandAudio />
-            <mediaInfoCommandSubtitle />
+            <tmpContext/>
+            <defaultDestContext name="1"/>
+
+            <mediaInfoCommandVideo/>
+            <mediaInfoCommandAudio/>
+            <mediaInfoCommandSubtitle/>
 
             <formatConfigurations>
                 <formatConfiguration name="test">
-
-                    <!--
-                        Destination parameters for conversion
-                     -->
-                    <conversionParameters>
-                    </conversionParameters>
 
                     <for iterator="i" from="2" to="5" count="4">
                         <dynamicParameter name="output" concat="true" concatWhitespace="false">

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -26,6 +26,7 @@ import com.netflix.imfutility.conversion.ConversionNotAllowedException;
 import com.netflix.imfutility.conversion.ConversionXmlProvider;
 import com.netflix.imfutility.conversion.SilentConversionChecker;
 import com.netflix.imfutility.conversion.templateParameter.context.CustomParameterValue;
+import com.netflix.imfutility.conversion.templateParameter.context.DestTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
@@ -40,6 +41,8 @@ import com.netflix.imfutility.mediainfo.MediaInfoException;
 import com.netflix.imfutility.validate.ImfValidationException;
 import com.netflix.imfutility.validate.ImfValidator;
 import com.netflix.imfutility.xml.XmlParsingException;
+import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
+import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -81,6 +84,7 @@ public abstract class AbstractFormatBuilder {
     protected ConfigXmlProvider configProvider;
     protected ConversionXmlProvider conversionProvider;
     protected FormatConfigurationType formatConfigurationType;
+    protected DestContextTypeMap destContextMap;
     protected TemplateParameterContextProvider contextProvider;
     protected AssetMap assetMap;
 
@@ -143,13 +147,19 @@ public abstract class AbstractFormatBuilder {
             // 15. select a conversion config within format.
             selectConversionConfig();
 
-            // 16. check whether we can silently convert to destination parameters
+            // 16. select a dest context within conversion config.
+            selectDestContext();
+
+            // 17. fill destination context
+            buildDestContext();
+
+            // 18. check whether we can silently convert to destination parameters
             checkForSilentConversion();
 
-            // 17. convert
+            // 19. convert
             doConvert();
 
-            // 18. delete tmp files.
+            // 20. delete tmp files.
             deleteTmpFilesOnExit();
 
             logger.info("Conversion to '{}' format: OK\n", format.getName());
@@ -390,15 +400,31 @@ public abstract class AbstractFormatBuilder {
 
     protected abstract void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException;
 
+    private void buildDestContext() throws IOException, XmlParsingException {
+        logger.info("Building Dest context...");
+
+        DestTemplateParameterContext destContext = contextProvider.getDestContext();
+        destContext.setDestContextMap(destContextMap);
+
+        logger.info("Built Dest context: OK\n");
+    }
+
     private void selectConversionConfig() {
         String conversionConfig = getConversionConfiguration();
         logger.info("Conversion config: {}\n", conversionConfig);
         this.formatConfigurationType = conversionProvider.getFormatConfigurationType(conversionConfig);
     }
 
+    private void selectDestContext() {
+        DestContextTypeMap destContextMap = conversionProvider.getFormat().getDefaultDestContext();
+        this.destContextMap = destContextMap != null
+                ? destContextMap
+                : getDestContextMap(conversionProvider.getFormat().getDestContexts());
+    }
+
     private void checkForSilentConversion() throws ConversionNotAllowedException {
         logger.info("Checking whether it's allowed by config.xml to silently convert to destination parameters if they don't match...");
-        new SilentConversionChecker(contextProvider, formatConfigurationType, configProvider.getConfig()).check();
+        new SilentConversionChecker(contextProvider, configProvider.getConfig()).check();
         logger.info("Checked: silent conversion is either allowed or not needed.\n");
     }
 
@@ -416,6 +442,8 @@ public abstract class AbstractFormatBuilder {
 
 
     protected abstract String getConversionConfiguration();
+
+    protected abstract DestContextTypeMap getDestContextMap(DestContextsTypeMap destContexts);
 
     private void deleteTmpFilesOnExit() {
         logger.info("Deleting tmp files created during conversion...");

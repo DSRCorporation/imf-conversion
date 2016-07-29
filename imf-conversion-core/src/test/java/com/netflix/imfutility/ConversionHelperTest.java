@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -65,12 +65,104 @@ public class ConversionHelperTest {
         assertEquals(new BigFraction(50, 1), ConversionHelper.parseEditRate("50"));
     }
 
+    @Test
+    public void editUnitsToMilliseconds() {
+        assertEquals(4000L, ConversionHelper.editUnitToMilliSeconds(BigInteger.valueOf(100), new BigFraction(25)));
+        assertEquals(500L, ConversionHelper.editUnitToMilliSeconds(BigInteger.valueOf(25), new BigFraction(50)));
+        assertEquals(3336L, ConversionHelper.editUnitToMilliSeconds(BigInteger.valueOf(100), new BigFraction(30000, 1001)));
+    }
+
+    @Test
+    public void smpteTimecodeToMilliseconds() {
+        assertEquals(4000L, ConversionHelper.smpteTimecodeToMilliSeconds("00:00:04:00", "25"));
+        assertEquals(4000L, ConversionHelper.smpteTimecodeToMilliSeconds("00:00:04:00", "25 1"));
+
+        assertEquals(0L, ConversionHelper.smpteTimecodeToMilliSeconds("00:00:00:00", "25"));
+
+        assertEquals(4000L, ConversionHelper.smpteTimecodeToMilliSeconds("00;00;04;00", "25"));
+        assertEquals(4000L, ConversionHelper.smpteTimecodeToMilliSeconds("00.00.04.00", "25"));
+        assertEquals(4000L, ConversionHelper.smpteTimecodeToMilliSeconds("00:00:04;00", "25"));
+        assertEquals(4000L, ConversionHelper.smpteTimecodeToMilliSeconds("00:00:04.00", "25"));
+        assertEquals(4000L, ConversionHelper.smpteTimecodeToMilliSeconds("0:0:4.0", "25"));
+        assertEquals(4000L, ConversionHelper.smpteTimecodeToMilliSeconds("0:0:4:00", "25"));
+
+        assertEquals(960L, ConversionHelper.smpteTimecodeToMilliSeconds("00:00:00:24", "25"));
+        assertEquals(500L, ConversionHelper.smpteTimecodeToMilliSeconds("00:00:00:25", "50"));
+        assertEquals(200L, ConversionHelper.smpteTimecodeToMilliSeconds("00:00:00:10", "50"));
+
+        assertEquals(18243000L, ConversionHelper.smpteTimecodeToMilliSeconds("05:04:03:00", "25"));
+        assertEquals(18243960L, ConversionHelper.smpteTimecodeToMilliSeconds("05:04:03:24", "25"));
+        assertEquals(18243500L, ConversionHelper.smpteTimecodeToMilliSeconds("05:04:03:25", "50"));
+        assertEquals(18243200L, ConversionHelper.smpteTimecodeToMilliSeconds("05:04:03:10", "50"));
+        assertEquals(243200L, ConversionHelper.smpteTimecodeToMilliSeconds("00:4:3:10", "50"));
+    }
+
     @Test(expected = com.netflix.imfutility.ConversionException.class)
-    public void parseIncorrectEditRate() {
+    public void incorrectSmpteTimecodeToMillisecondsIncorrectEditRateNonNumber() {
+        ConversionHelper.smpteTimecodeToMilliSeconds("00:00:04:00", "aaa");
+
+    }
+
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void incorrectSmpteTimecodeToMillisecondsIncorrectEditRateMoreArguments() {
+        ConversionHelper.smpteTimecodeToMilliSeconds("00:00:04:00", "30000 1001 1");
+    }
+
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void incorrectSmpteTimecodeToMillisecondsIncorrectEditRateEmpty() {
+        ConversionHelper.smpteTimecodeToMilliSeconds("00:00:04:00", "");
+    }
+
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void incorrectSmpteTimecodeToMillisecondsEmptyFrames() {
+        ConversionHelper.smpteTimecodeToMilliSeconds("00:00:04:", "25");
+    }
+
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void incorrectSmpteTimecodeToMillisecondsNoFrame() {
+        ConversionHelper.smpteTimecodeToMilliSeconds("00:00:04", "25");
+    }
+
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void incorrectSmpteTimecodeToMillisecondsNotNumbers() {
+        ConversionHelper.smpteTimecodeToMilliSeconds("00:00:04:nn", "25");
+    }
+
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void parseIncorrectEditRateMoreArguments() {
         ConversionHelper.parseEditRate("30000 1001 1");
+    }
+
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void parseIncorrectEditRateEmpty() {
         ConversionHelper.parseEditRate("");
+    }
+
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void parseIncorrectEditRateNotNumber() {
         ConversionHelper.parseEditRate("aaaaa");
     }
 
+    @Test
+    public void safeParseCorrectEditRate() {
+        assertEquals(new BigFraction(30000, 1001), ConversionHelper.safeParseEditRate("30000 1001"));
+        assertEquals(new BigFraction(50, 1), ConversionHelper.safeParseEditRate("50"));
+        assertEquals(new BigFraction(30000, 1001), ConversionHelper.safeParseEditRate("30000/1001"));
+        assertEquals(new BigFraction(50, 1), ConversionHelper.safeParseEditRate("50 1"));
+    }
 
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void safeParseIncorrectEditRateMoreArguments() {
+        ConversionHelper.safeParseEditRate("30000 1001 1");
+    }
+
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void safeParseIncorrectEditRateEmpty() {
+        ConversionHelper.safeParseEditRate("");
+    }
+
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void safeParseIncorrectEditRateNotNumber() {
+        ConversionHelper.safeParseEditRate("aaaaa");
+    }
 }

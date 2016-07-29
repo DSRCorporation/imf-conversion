@@ -29,6 +29,13 @@
                 <param id="tmpParam6">"tmpParam6 Value"</param>
             </tmpContext>
 
+
+            <!--
+                Destination parameters for conversion
+             -->
+            <defaultDestContext name="1">
+            </defaultDestContext>
+
             <mediaInfoCommandVideo>mediaInfoCommandVideo %{dynamic.mediaInfoInput}</mediaInfoCommandVideo>
             <mediaInfoCommandAudio>mediaInfoCommandAudio %{dynamic.mediaInfoInput}</mediaInfoCommandAudio>
             <mediaInfoCommandSubtitle>mediaInfoCommandSubtitle %{dynamic.mediaInfoInput}</mediaInfoCommandSubtitle>
@@ -36,12 +43,6 @@
 
             <formatConfigurations>
                 <formatConfiguration name="1">
-
-                    <!--
-                        Destination parameters for conversion
-                     -->
-                    <conversionParameters>
-                    </conversionParameters>
 
                     <execOnce name="execOnce1">
                         execOnce1Exec - param

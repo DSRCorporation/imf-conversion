@@ -105,7 +105,8 @@ public class ConversionExecutorFor extends AbstractConversionExecutor {
         resolvedParameter.setName(parameterResolver.resolveIteratorParameter(resolvedParameter.getName(), iterators));
         resolvedParameter.setValue(parameterResolver.resolveIteratorParameter(resolvedParameter.getValue(), iterators));
         resolvedParameter.setAdd(parameterResolver.resolveIteratorParameter(resolvedParameter.getAdd(), iterators));
-        contextProvider.getDynamicContext().addParameter(resolvedParameter, ContextInfo.EMPTY, false);
+        contextProvider.getDynamicContext().addParameter(resolvedParameter, ContextInfo.EMPTY,
+                skipOperationResolver.isSkip(dynParam));
     }
 
     private int toInt(String parameterName, String parameterStr) {

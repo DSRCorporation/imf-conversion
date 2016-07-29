@@ -16,8 +16,9 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.videoformat.context;
+package com.netflix.imfutility.itunes.destcontext;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
@@ -29,10 +30,9 @@ import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
-import com.netflix.imfutility.itunes.videoformat.ScanType;
-import com.netflix.imfutility.itunes.videoformat.VideoFormat;
-import com.netflix.imfutility.itunes.videoformat.builder.VideoFormatBuilder;
 import com.netflix.imfutility.util.ConversionHelper;
+import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
+import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.math.BigInteger;
@@ -46,17 +46,41 @@ import static com.netflix.imfutility.conversion.templateParameter.context.parame
 
 
 /**
- * Build video format depends on input video characteristics.
- * width, height extracted from {@link SequenceTemplateParameterContext}
- * duration extracted from {@link ResourceTemplateParameterContext}
+ * Resolve dest context by input video parameters defined in contexts.
+ * Width, height, fps extracted from {@link SequenceTemplateParameterContext}.
+ * Duration extracted from {@link ResourceTemplateParameterContext}.
  */
-public class VideoFormatContextBuilder {
+public class InputDestContextResolveStrategy implements DestContextResolveStrategy {
     private final TemplateParameterContextProvider contextProvider;
-    private final VideoFormatBuilder videoFormatBuilder;
+    private final VideoDestContextResolveStrategy resolveStrategy;
 
-    public VideoFormatContextBuilder(TemplateParameterContextProvider contextProvider, VideoFormatBuilder videoFormatBuilder) {
+    public InputDestContextResolveStrategy(TemplateParameterContextProvider contextProvider) {
+        this(contextProvider, new VideoDestContextResolveStrategy());
+    }
+
+    public InputDestContextResolveStrategy(TemplateParameterContextProvider contextProvider,
+                                           VideoDestContextResolveStrategy resolveStrategy) {
         this.contextProvider = contextProvider;
-        this.videoFormatBuilder = videoFormatBuilder;
+        this.resolveStrategy = resolveStrategy;
+    }
+
+    @Override
+    public DestContextTypeMap resolveContext(
+            DestContextsTypeMap destContexts)
+            throws ConversionException {
+        Integer width = Integer.parseInt(getSequenceParameterValue(WIDTH));
+        Integer height = Integer.parseInt(getSequenceParameterValue(HEIGHT));
+        BigFraction frameRate = ConversionHelper.safeParseEditRate(getSequenceParameterValue(FRAME_RATE));
+        Long duration = getSequenceDuration();
+
+        return resolveStrategy
+                .setWidth(width)
+                .setHeight(height)
+                .setFrameRate(frameRate)
+                // assume video scan type is progressive (according to IMF application #2E)
+                .setInterlaced(false)
+                .setDuration(duration)
+                .resolveContext(destContexts);
     }
 
     private String getSequenceParameterValue(SequenceContextParameters parameter) {
@@ -65,22 +89,6 @@ public class VideoFormatContextBuilder {
                 .setSequenceType(SequenceType.VIDEO)
                 .setSequenceUuid(getSequenceUUID())
                 .build());
-    }
-
-    public VideoFormat build() {
-        int width = Integer.parseInt(getSequenceParameterValue(WIDTH));
-        int height = Integer.parseInt(getSequenceParameterValue(HEIGHT));
-        BigFraction fps = ConversionHelper.parseEditRate(getSequenceParameterValue(FRAME_RATE));
-        Long duration = getSequenceDuration();
-
-        return videoFormatBuilder
-                .setFrameWidth(width)
-                .setFrameHeight(height)
-                .setFps(fps.doubleValue())
-                //assume video scan type is progressive (according to IMF application #2E)
-                .setScanType(ScanType.PROGRESSIVE)
-                .setDuration(duration)
-                .build();
     }
 
     private SequenceUUID getSequenceUUID() {
@@ -117,8 +125,8 @@ public class VideoFormatContextBuilder {
         BigInteger durationEU = new BigInteger(resourceContext
                 .getParameterValue(DURATION_EDIT_UNIT, contextInfo));
 
-        //  to get time in millis
-        return ConversionHelper.toMilliSeconds(durationEU, editRate);
+        //  to get time in seconds
+        return ConversionHelper.toSeconds(durationEU, editRate);
     }
 
 }
