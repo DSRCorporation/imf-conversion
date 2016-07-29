@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ttml;
+package com.netflix.imfutility.ttmltostl.ttml;
 
 import java.io.IOException;
 import java.io.InputStream;

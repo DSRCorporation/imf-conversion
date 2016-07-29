@@ -16,28 +16,28 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package stl.bbc;
+package com.netflix.imfutility.ttmltostl.stl;
 
 import com.netflix.imfutility.dpp.DppConversionXsdConstants;
 import com.netflix.imfutility.generated.dpp.metadata.DppType;
 import com.netflix.imfutility.generated.dpp.metadata.TimecodeType;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import stl.DefaultGsiStrategy;
-import ttml.TimedTextObject;
+import com.netflix.imfutility.ttmltostl.stl.DefaultGsiStrategy;
+import com.netflix.imfutility.ttmltostl.ttml.TimedTextObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
 import static com.netflix.imfutility.dpp.DppConversionXsdConstants.ISO_639_2_CODES_XML_SCHEME;
 import static com.netflix.imfutility.dpp.DppConversionXsdConstants.TYPES_XML_SCHEME;
-import static stl.GsiAttribute.ECD;
-import static stl.GsiAttribute.EN;
-import static stl.GsiAttribute.OET;
-import static stl.GsiAttribute.OPT;
-import static stl.GsiAttribute.PUB;
-import static stl.GsiAttribute.TCF;
-import static stl.GsiAttribute.TCP;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.ECD;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.EN;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.OET;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.OPT;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.PUB;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.TCF;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.TCP;
 
 /**
  * BBC-specific implementation of EBU STL GSI block building. Some fields are build based on the input metadata.xml.
@@ -56,8 +56,8 @@ public final class BbcGsiStrategy extends DefaultGsiStrategy {
     }
 
     @Override
-    public void fillAttributes(TimedTextObject tto, byte[] ttiBlocks) {
-        super.fillAttributes(tto, ttiBlocks);
+    public void fillAttributes(TimedTextObject tto) {
+        super.fillAttributes(tto);
 
         // OPT
         if (metadata.getEditorial().getProgrammeTitle() != null) {

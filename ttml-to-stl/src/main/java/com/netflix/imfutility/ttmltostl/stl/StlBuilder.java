@@ -16,35 +16,39 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package stl;
+package com.netflix.imfutility.ttmltostl.stl;
 
-import ttml.TimedTextObject;
+import com.netflix.imfutility.ttmltostl.ttml.TimedTextObject;
 
 import java.io.IOException;
 
 /**
- * Created by Alexander on 6/23/2016.
+ * Builds STL caption. Returns GSI and TTI blocks as an array of bytes.
  */
 public class StlBuilder {
 
-    public byte[] build(TimedTextObject tto, IGsiStrategy gsiStrategy, ITtiStrategy ttiStrategy) throws IOException {
-        //first we check if the TimedTextObject had been built, otherwise...
+    public byte[][] build(TimedTextObject tto, IGsiStrategy gsiStrategy, ITtiStrategy ttiStrategy) throws IOException {
+        // 1. first we check if the TimedTextObject had been built, otherwise...
         if (!tto.built) {
             return null;
         }
 
-        // build tti
+        // 2. fill custom GSI attributes
+        gsiStrategy.fillAttributes(tto);
+
+        // 3. build TTI
         byte[] tti = ttiStrategy.build(tto);
 
-        // build gsi
-        gsiStrategy.fillAttributes(tto, tti);
+        // 4. fill TTI-based GSI attributes
+        gsiStrategy.fillTtiAttributes(tti);
+
+        // 5. build GSI
         byte[] gsi = gsiStrategy.build(tto);
 
-
-        // build result
-        byte[] result = new byte[gsi.length + tti.length];
-        System.arraycopy(gsi, 0, result, 0, gsi.length);
-        System.arraycopy(tti, 0, result, gsi.length, tti.length);
+        // 6. prepaer result
+        byte[][] result = new byte[2][];
+        result[0] = gsi;
+        result[1] = tti;
         return result;
     }
 

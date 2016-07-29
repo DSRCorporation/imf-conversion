@@ -16,16 +16,16 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package stl;
+package com.netflix.imfutility.ttmltostl.stl;
 
-import ttml.Caption;
-import ttml.Style;
-import ttml.Time;
+import com.netflix.imfutility.ttmltostl.ttml.Caption;
+import com.netflix.imfutility.ttmltostl.ttml.Style;
+import com.netflix.imfutility.ttmltostl.ttml.Time;
 
 import java.util.List;
 
 /**
- * Created by Alexander on 6/24/2016.
+ * An STL subtitle essence.
  */
 public class StlSubtitle {
 
@@ -51,7 +51,6 @@ public class StlSubtitle {
     private Boolean isCumulative = false;
     private Boolean cumulativeStartFlag = false;
     private Boolean cumulativeEndFlag = false;
-
 
     public StlSubtitle(List<Caption> captions, Caption caption, int captionNum, int linesCount, byte[][] extensionBlocks) {
         this.captions = captions;

@@ -16,12 +16,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package stl;
+package com.netflix.imfutility.ttmltostl.stl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
- * Created by Alexander on 6/23/2016.
+ * Lists all attributes to be present in GSI block.
+ * <ul>
+ *     <li>Provides a required size for each attribute.</li>
+ *     <li>Provides default values for some attributes.</li>
+ *     <li>The values of all attributes can be changed in the GSI strategy ({@link IGsiStrategy}).</li>
+ *     <li>Some attributes are required to be set/changed by the strategy.</li>
+ *     <li>The final method to be called to get the attribute value when building the result GSI header - {@link #getValue(String)}.
+ *     It gets correctly encoded value (charset depends on CPN and CCT values). The value has the correct size matching {@link #getBytesAllocated()}.
+ *     </li>
+ * </ul>
  */
 public enum GsiAttribute {
 
@@ -43,7 +53,7 @@ public enum GsiAttribute {
     CD(6, false), // must be set by a strategy!
     RD(6, false), // must be set by a strategy!
 
-    RN(2, "00"), // revision number
+    RN(2, "01"), // revision number
 
     TNB(5, false), // must be set by a strategy!
     TNS(5, false), // must be set by a strategy!
@@ -69,28 +79,23 @@ public enum GsiAttribute {
 
 
     private int bytesAllocated;
-    private byte[] value = new byte[0];
+    private byte[] value = null;
     private int intValue;
     private String stringValue;
 
-    private GsiAttribute(int bytesAllocated, boolean fillEmpty) {
+    GsiAttribute(int bytesAllocated, boolean fillEmpty) {
         this.bytesAllocated = bytesAllocated;
         if (fillEmpty) {
             fillEmptyValue();
         }
     }
 
-    private GsiAttribute(int bytesAllocated, byte[] value) {
+    GsiAttribute(int bytesAllocated, String value) {
         this.bytesAllocated = bytesAllocated;
         setValue(value);
     }
 
-    private GsiAttribute(int bytesAllocated, String value) {
-        this.bytesAllocated = bytesAllocated;
-        setValue(value);
-    }
-
-    private GsiAttribute(int bytesAllocated, int value) {
+    GsiAttribute(int bytesAllocated, int value) {
         this.bytesAllocated = bytesAllocated;
         setValue(value);
     }
@@ -99,8 +104,17 @@ public enum GsiAttribute {
         return bytesAllocated;
     }
 
-    public byte[] getValue() {
-        return value;
+    public byte[] getValue(String charset) throws UnsupportedEncodingException {
+        if (this.value != null) {
+            return Arrays.copyOf(value, value.length);
+        }
+        if (this.stringValue != null) {
+            byte[] result = getEmptyValue();
+            byte[] strBytes = stringValue.getBytes(charset);
+            System.arraycopy(strBytes, 0, result, 0, strBytes.length);
+            return result;
+        }
+        throw new RuntimeException("GSI attribute not set: " + name());
     }
 
     public int getIntValue() {
@@ -111,7 +125,7 @@ public enum GsiAttribute {
         return stringValue;
     }
 
-    public void fillEmptyValue() {
+    void fillEmptyValue() {
         this.value = getEmptyValue();
     }
 
@@ -121,24 +135,18 @@ public enum GsiAttribute {
         return v;
     }
 
-    public void setValue(byte[] value) {
-        byte[] v = getEmptyValue();
-        System.arraycopy(value, 0, v, 0, value.length);
-        this.value = v;
-    }
-
-    public void setValue(String value) {
+    void setValue(String value) {
         this.stringValue = value;
-        setValue(value.getBytes());
     }
 
-    public void setValue(int value) {
+    void setValue(int value) {
         this.intValue = value;
         String strValue = String.valueOf(value);
-        while (strValue.length() < getBytesAllocated()) {
-            strValue = "0" + strValue;
+        StringBuilder sb = new StringBuilder(strValue);
+        while (sb.length() < getBytesAllocated()) {
+            sb.insert(0, "0");
         }
-        setValue(strValue);
+        setValue(sb.toString());
     }
 
 

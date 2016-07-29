@@ -16,20 +16,21 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ttml;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+package com.netflix.imfutility.ttmltostl.ttml;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 /**
@@ -212,13 +213,11 @@ public class FormatTTML implements TimedTextFileFormat {
                     tto.captions.put(key, caption);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            //this could be a fatal error...
+        } catch (SAXException | ParserConfigurationException e) {
             throw new FatalParsingException("Error during parsing: " + e.getMessage());
         }
 
-        parsedFileCount++;
+        //parsedFileCount++;
 
         tto.built = true;
         return tto;
@@ -326,8 +325,7 @@ public class FormatTTML implements TimedTextFileFormat {
             } else if (node.getNodeName().equals("br")) {
                 caption.content = "\n";
             }
-        }
-        else {
+        } else {
             for (int j = 0; j < textN.getLength(); j++) {
                 Node childNode = textN.item(j);
                 caption.nodes[j] = fillCaptionAttributes(childNode);
@@ -505,11 +503,11 @@ public class FormatTTML implements TimedTextFileFormat {
         String value = "";
         String[] values;
         if (color.startsWith("#")) {
-            if (color.length() == 7)
+            if (color.length() == 7) {
                 value = color.substring(1) + "ff";
-            else if (color.length() == 9)
+            } else if (color.length() == 9) {
                 value = color.substring(1);
-            else {
+            } else {
                 //unrecognized format
                 value = "ffffffff";
                 tto.warnings += "Unrecoginzed format: " + color + "\n\n";
@@ -520,7 +518,7 @@ public class FormatTTML implements TimedTextFileFormat {
             if (color.startsWith("rgba"))
                 alpha = true;
             try {
-                values = color.split("(")[1].split(",");
+                values = color.split("[(]")[1].split("[,]");
                 int r, g, b, a = 255;
                 r = Integer.parseInt(values[0]);
                 g = Integer.parseInt(values[1]);
@@ -532,14 +530,17 @@ public class FormatTTML implements TimedTextFileFormat {
                 values[2] = Integer.toHexString(b);
                 if (alpha) values[2] = Integer.toHexString(a);
 
+                StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < values.length; i++) {
                     if (values[i].length() < 2)
                         values[i] = "0" + values[i];
-                    value += values[i];
+                    sb.append(values[i]);
                 }
 
-                if (!alpha)
-                    value += "ff";
+                if (!alpha) {
+                    sb.append("ff");
+                }
+                value = sb.toString();
 
             } catch (Exception e) {
                 value = "ffffffff";

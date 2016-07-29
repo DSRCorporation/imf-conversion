@@ -16,14 +16,16 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ttml;
+package com.netflix.imfutility.ttmltostl.ttml;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * These objects can (should) only be created through the implementations of parseFile() in the {@link ttml.TimedTextFileFormat} interface
+ * These objects can (should) only be created through the implementations of parseFile() in the {@link com.netflix.imfutility.ttmltostl.ttml.TimedTextFileFormat} interface
  * They are an object representation of a subtitle file and contain all the captions and associated styles.
  * <br><br>
  * Copyright (c) 2012 J. David Requejo <br>
@@ -44,90 +46,75 @@ import java.util.TreeMap;
  * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- * 
+ *
  * @author J. David Requejo
  *
  */
 public class TimedTextObject {
+
+    /*
+     * Attributes
+     *
+     */
+    //meta info
+    public String title = "";
+    public String description = "";
+    public String copyrigth = "";
+    public String author = "";
+    public String fileName = "";
+    public String language = "";
+
+    //list of styles (id, reference)
+    public Map<String, Style> styling = new HashMap<>();
+
+    //list of captions (begin time, reference)
+    //represented by a tree map to maintain order
+    public TreeMap<Integer, Caption> captions = new TreeMap<>();
+
+    //to store non fatal errors produced during parsing
+    public String warnings;
+
+    //to know if a parsing method has been applied
+    public boolean built = false;
+
+
+    /**
+     * Protected constructor so it can't be created from outside
+     */
+    protected TimedTextObject() {
+        warnings = "List of non fatal errors produced during parsing:\n\n";
+    }
+
 	
 	/*
-	 * Attributes
+     * PROTECTED METHODS
 	 * 
 	 */
-	//meta info
-	public String title = "";
-	public String description = "";
-	public String copyrigth = "";
-	public String author = "";
-	public String fileName = "";
-	public String language = "";
-	
-	//list of styles (id, reference)
-	public Hashtable<String, Style> styling;
-	
-	//list of layouts (id, reference)
-	public Hashtable<String, Region> layout;
-	
-	//list of captions (begin time, reference)
-	//represented by a tree map to maintain order
-	public TreeMap<Integer, Caption> captions;
-	
-	//to store non fatal errors produced during parsing
-	public String warnings;
-	
-	//**** OPTIONS *****
-	//to know whether file should be saved as .ASS or .SSA
-	public boolean useASSInsteadOfSSA = true;
-	//to delay or advance the subtitles, parsed into +/- milliseconds
-	public int offset = 0;
-	
-	//to know if a parsing method has been applied
-	public boolean built = false;
-	
-	
-	/**
-	 * Protected constructor so it can't be created from outside
-	 */
-	protected TimedTextObject(){
-		
-		styling = new Hashtable<>();
-		layout = new Hashtable<>();
-		captions = new TreeMap<>(); 
-		
-		warnings = "List of non fatal errors produced during parsing:\n\n";
-		
-	}
-	
-	
-	/*
-	 * PROTECTED METHODS 
-	 * 
-	 */
-	
-	/**
-	 * This method simply checks the style list and eliminate any style not referenced by any caption
-	 * This might come useful when default styles get created and cover too much.
-	 * It require a unique iteration through all captions.
-	 * 
-	 */
-	protected void cleanUnusedStyles(){
-		//here all used styles will be stored
-		Hashtable<String, Style> usedStyles = new Hashtable<>();
-		//we iterate over the captions
-		Iterator<Caption> itrC = captions.values().iterator();
-		while(itrC.hasNext()){
-			//new caption
-	    	Caption current = itrC.next();
-	    	//if it has a style
-	    	if(current.style != null){
-	    		String iD = current.style.iD;
-	    		//if we haven't saved it yet
-	    		if(!usedStyles.containsKey(iD))
-	    			usedStyles.put(iD, current.style);
-	    	}
-		}
-		//we saved the used styles
-		this.styling = usedStyles;
-	}
+
+    /**
+     * This method simply checks the style list and eliminate any style not referenced by any caption
+     * This might come useful when default styles get created and cover too much.
+     * It require a unique iteration through all captions.
+     *
+     */
+    protected void cleanUnusedStyles() {
+        //here all used styles will be stored
+        Hashtable<String, Style> usedStyles = new Hashtable<>();
+        //we iterate over the captions
+        Iterator<Caption> itrC = captions.values().iterator();
+        while (itrC.hasNext()) {
+            //new caption
+            Caption current = itrC.next();
+            //if it has a style
+            if (current.style != null) {
+                String iD = current.style.iD;
+                //if we haven't saved it yet
+                if (!usedStyles.containsKey(iD))
+                    usedStyles.put(iD, current.style);
+            }
+        }
+        //we saved the used styles
+        this.styling = usedStyles;
+    }
 
 }

@@ -17,6 +17,7 @@
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
 import com.netflix.imfutility.dpp.MetadataXmlProvider;
+import com.netflix.imfutility.ttmltostl.Convert;
 import org.junit.Test;
 
 import java.io.File;

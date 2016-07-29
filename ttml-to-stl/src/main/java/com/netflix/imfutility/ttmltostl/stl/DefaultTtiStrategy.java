@@ -16,17 +16,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package stl;
+package com.netflix.imfutility.ttmltostl.stl;
 
-import ttml.Caption;
-import ttml.Style;
-import ttml.Time;
-import ttml.TimedTextObject;
+import com.netflix.imfutility.ttmltostl.ttml.Caption;
+import com.netflix.imfutility.ttmltostl.ttml.Style;
+import com.netflix.imfutility.ttmltostl.ttml.Time;
+import com.netflix.imfutility.ttmltostl.ttml.TimedTextObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.CCT;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.CPN;
 
 /**
  * Default implementation of EBU STL TTI block building.
@@ -37,6 +40,22 @@ public class DefaultTtiStrategy implements ITtiStrategy {
     private List<StlSubtitle> stlSubtitles;
 
     @Override
+    public String getCharset() {
+        if ("00".equals(CCT.getStringValue())) { // Latin
+            return "ISO-6937"; // provided by a 'fr.noop':'charset' project
+        } else if ("01".equals(CPN.getStringValue())) { // Latin/Cyrillic
+            return "ISO8859_5";
+        } else if ("02".equals(CPN.getStringValue())) { // Latin/Arabic
+            return "ISO8859_6";
+        } else if ("03".equals(CPN.getStringValue())) { // Latin/Greek
+            return "ISO8859_7";
+        } else if ("04".equals(CPN.getStringValue())) { // Latin/Hebrew
+            return "ISO8859_8";
+        }
+        throw new RuntimeException("Can not get TTI block charset. Unknown CPN value: " + CPN.getStringValue());
+    }
+
+    @Override
     public byte[] build(TimedTextObject tto) throws IOException {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
 
@@ -44,29 +63,30 @@ public class DefaultTtiStrategy implements ITtiStrategy {
         this.stlSubtitles = new ArrayList<>();
 
         int sn = 0;
+        // 1. prepare caption objects
         for (int captionNum = 0; captionNum < captions.size(); captionNum++) {
             Caption caption = captions.get(captionNum);
 
-            // 1. split to lines
+            // 1.1 split to lines
             String[] lines = splitAndCleanText(caption);
 
-            // 2. apply styles
+            // 1.2 apply styles
             byte[] text = applyStyles(caption, lines);
 
-            // 3. split to extension blocks
+            // 1.3 split to extension blocks
             byte[][] extensionBlocks = splitToExtensionBlocks(text);
 
-            // 4. create a subtitle object
+            // 1.4 create a subtitle object
             StlSubtitle stlSubtitle = new StlSubtitle(captions, caption, captionNum, lines.length, extensionBlocks);
             this.stlSubtitles.add(stlSubtitle);
         }
 
-        //call it when this.stlSubtitles initially populated.
+        // 2. call it when this.stlSubtitles initially populated.
         defineTimesLinesAndCumulativeSubtitlesLines();
 
-        // build result STL
+        // 3. build result STL
         for (StlSubtitle stlSubtitle : this.stlSubtitles) {
-            // 5. create a TTI block for each EB
+            // create a TTI block for each EB
             for (int ebn = 0; ebn < stlSubtitle.getExtensionBlocks().length; ebn++) {
                 byte[] ttiBlock = doBuildTtiBlock(stlSubtitle, sn, ebn);
                 result.write(ttiBlock);
@@ -133,7 +153,7 @@ public class DefaultTtiStrategy implements ITtiStrategy {
 
             //set start and endTime for all CSs
             //set linenumber for each subtitle.
-            int startTTLine = StlSubtitle.BOTTOM_TELETEXT_LINE_TO_USE + StlSubtitle.TELETEXT_LINE_STEP - (totalCsLines * StlSubtitle.TELETEXT_LINE_STEP) ;
+            int startTTLine = StlSubtitle.BOTTOM_TELETEXT_LINE_TO_USE + StlSubtitle.TELETEXT_LINE_STEP - (totalCsLines * StlSubtitle.TELETEXT_LINE_STEP);
             startTTLine = startTTLine < 0 ? 0 : startTTLine;
             for (int e = i; e <= lastCSindex; e++) {
                 StlSubtitle csSubtitle = this.stlSubtitles.get(e);
@@ -154,11 +174,7 @@ public class DefaultTtiStrategy implements ITtiStrategy {
     }
 
     private String[] splitAndCleanText(Caption caption) throws IOException {
-        ByteArrayOutputStream allText = new ByteArrayOutputStream();
-
-        String[] lines = caption.content.split("\n");
-
-        return lines;
+        return caption.content.split("\n");
     }
 
     private byte[] applyStyles(Caption caption, String[] lines) throws IOException {
@@ -199,11 +215,8 @@ public class DefaultTtiStrategy implements ITtiStrategy {
         }
 
         for (int i = 0; i < lines.length; i++) {
-            for (char ch : lines[i].toCharArray()) {
-                //check it is a supported char, else it is ignored
-                if ((ch >= 0x20) && (ch <= 0x7f)) {
-                    allText.write((byte) ch);
-                }
+            for (byte ch : lines[i].getBytes(getCharset())) {
+                allText.write(ch);
             }
             if (i < lines.length - 1) {
                 allText.write((byte) 0x8A); // end of lines

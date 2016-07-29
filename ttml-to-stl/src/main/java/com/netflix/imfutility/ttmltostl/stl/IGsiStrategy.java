@@ -16,47 +16,25 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.netflix.imfutility.ttmltostl.stl;
+
+import com.netflix.imfutility.ttmltostl.ttml.TimedTextObject;
+
+import java.io.IOException;
+
 /**
- * Created by Alexandr on 5/27/2016.
+ * A strategy defining how GSI block is built.
  */
-public class TtmlInDescriptor {
+public interface IGsiStrategy {
 
-    private String file = null;
-    private String startTC = null;
-    private String endTC = null;
-    private String offsetTC = null;
+    int GSI_BLOCK_SIZE = 1024;
 
+    void fillAttributes(TimedTextObject tto);
 
-    public String getFile() {
-        return file;
-    }
+    void fillTtiAttributes(byte[] ttiBlocks);
 
-    public void setFile(String file) {
-        this.file = file;
-    }
+    byte[] build(TimedTextObject tto) throws IOException;
 
-    public String getStartTC() {
-        return startTC;
-    }
-
-    public void setStartTC(String startTC) {
-        this.startTC = startTC;
-    }
-
-    public String getEndTC() {
-        return endTC;
-    }
-
-    public void setEndTC(String endTC) {
-        this.endTC = endTC;
-    }
-
-    public String getOffsetTC() {
-        return offsetTC;
-    }
-
-    public void setOffsetTC(String offsetTC) {
-        this.offsetTC = offsetTC;
-    }
+    String getCharset();
 
 }

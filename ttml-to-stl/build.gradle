@@ -9,6 +9,7 @@ dependencies {
 
 dependencies {
     compile group: 'commons-cli', name: 'commons-cli', version: '1.3'
+    compile group: 'fr.noop', name: 'charset', version: '1.0.1'
 }
 
 
@@ -17,14 +18,10 @@ jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest {
         attributes 'Implementation-Title': 'TTML to STL converter', 'Implementation-Version': version
-        attributes 'Main-Class': 'Convert'
+        attributes 'Main-Class': 'com.netflix.imfutility.ttmltostl.Convert'
     }
 }
 
-
-findbugs {
-    sourceSets = []
-}
 
 checkstyle {
     sourceSets = []

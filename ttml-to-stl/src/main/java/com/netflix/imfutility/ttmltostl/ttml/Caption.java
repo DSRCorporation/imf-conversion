@@ -16,20 +16,29 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package stl;
+package com.netflix.imfutility.ttmltostl.ttml;
 
-import ttml.TimedTextObject;
+public class Caption {
 
-import java.io.IOException;
+    public Style style;
+    public String region;
 
-/**
- * Created by Alexander on 6/24/2016.
- */
-public interface ITtiStrategy {
+    public Time start;
+    public Time end;
 
-    public static final int TTI_BLOCK_SIZE = 128;
-    public static final int TTI_TEXT_SIZE = 112;
+    public Caption nodes[];
+    public Style styles[];
 
-    byte[] build(TimedTextObject tto) throws IOException;
+    /**
+     * Cleaned-up subtitle content.
+     */
+    public String content = "";
 
+    @Override
+    public String toString() {
+        return "Caption{" +
+                start + ".." + end +
+                ", " + (style != null ? style.iD : null) + ", " + region + ": " + content +
+                '}';
+    }
 }

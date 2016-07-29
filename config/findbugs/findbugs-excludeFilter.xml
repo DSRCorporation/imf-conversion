@@ -1,0 +1,14 @@
+<FindBugsFilter>
+
+    <!-- Returning a reference to a mutable object. -->
+    <Match>
+        <Package name="com.netflix.imfutility.ttmltostl.stl" />
+        <Bug pattern="EI_EXPOSE_REP" />
+    </Match>
+
+    <Match>
+        <Package name="com.netflix.imfutility.ttmltostl.stl" />
+        <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
+
+</FindBugsFilter>

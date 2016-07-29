@@ -16,8 +16,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ttml;
+package com.netflix.imfutility.ttmltostl.stl;
 
-public class Region {
+import com.netflix.imfutility.ttmltostl.ttml.TimedTextObject;
+
+import java.io.IOException;
+
+/**
+ * A strategy defining how TTI block is built.
+ */
+public interface ITtiStrategy {
+
+    int TTI_BLOCK_SIZE = 128;
+    int TTI_TEXT_SIZE = 112;
+
+    byte[] build(TimedTextObject tto) throws IOException;
+
+    String getCharset();
 
 }

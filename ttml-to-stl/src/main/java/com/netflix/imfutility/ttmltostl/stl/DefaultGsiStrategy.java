@@ -16,17 +16,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package stl;
+package com.netflix.imfutility.ttmltostl.stl;
 
-import ttml.TimedTextObject;
+import com.netflix.imfutility.ttmltostl.ttml.TimedTextObject;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static stl.GsiAttribute.CD;
-import static stl.GsiAttribute.RD;
-import static stl.GsiAttribute.TNB;
-import static stl.GsiAttribute.TNS;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.CD;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.CPN;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.RD;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.TNB;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.TNS;
 
 /**
  * Default implementation of EBU STL GSI block building.
@@ -34,18 +36,37 @@ import static stl.GsiAttribute.TNS;
 public class DefaultGsiStrategy implements IGsiStrategy {
 
     @Override
-    public void fillAttributes(TimedTextObject tto, byte[] ttiBlocks) {
+    public String getCharset() {
+        if ("850".equals(CPN.getStringValue())) {
+            return "Cp850";
+        } else if ("437".equals(CPN.getStringValue())) {
+            return "Cp437";
+        } else if ("860".equals(CPN.getStringValue())) {
+            return "Cp860";
+        } else if ("863".equals(CPN.getStringValue())) {
+            return "Cp863";
+        } else if ("865".equals(CPN.getStringValue())) {
+            return "Cp865";
+        }
+        throw new RuntimeException("Can not get GSI block charset. Unknown CPN value: " + CPN.getStringValue());
+    }
+
+    @Override
+    public void fillAttributes(TimedTextObject tto) {
         // CD and RD
         String currentDate = getCurrentDate();
         CD.setValue(currentDate);
         RD.setValue(currentDate);
 
+        // TNS
+        TNS.setValue(tto.captions.size());
+    }
+
+    @Override
+    public void fillTtiAttributes(byte[] ttiBlocks) {
         // TNB
         int ttiBlocksCount = ttiBlocks.length / ITtiStrategy.TTI_BLOCK_SIZE;
         TNB.setValue(ttiBlocksCount);
-
-        // TNS
-        TNS.setValue(tto.captions.size());
     }
 
     private String getCurrentDate() {
@@ -53,21 +74,19 @@ public class DefaultGsiStrategy implements IGsiStrategy {
     }
 
     @Override
-    public byte[] build(TimedTextObject tto) {
+    public byte[] build(TimedTextObject tto) throws IOException {
         byte[] result = new byte[GSI_BLOCK_SIZE];
         int lastPos = 0;
         for (GsiAttribute gsiAttribute : GsiAttribute.values()) {
-            if (gsiAttribute.getValue() == null) {
-                throw new RuntimeException("GSI attribute not set: " + gsiAttribute.name());
-            }
-            if (gsiAttribute.getValue().length != gsiAttribute.getBytesAllocated()) {
+            byte[] value = gsiAttribute.getValue(getCharset());
+            if (value.length != gsiAttribute.getBytesAllocated()) {
                 throw new RuntimeException(
                         String.format("GSI attribute %s length (%d) is not equal to the expected one (%d)",
-                                gsiAttribute.name(), gsiAttribute.getValue().length, gsiAttribute.getBytesAllocated()));
+                                gsiAttribute.name(), value.length, gsiAttribute.getBytesAllocated()));
             }
 
-            System.arraycopy(gsiAttribute.getValue(), 0, result, lastPos, gsiAttribute.getValue().length);
-            lastPos += gsiAttribute.getValue().length;
+            System.arraycopy(value, 0, result, lastPos, value.length);
+            lastPos += value.length;
         }
 
         return result;

@@ -16,34 +16,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ttml;
+package com.netflix.imfutility.ttmltostl.ttml;
 
-public class Caption {
-	
-	public Style style;
-	public String region;
-	
-	public Time start;
-	public Time end;
+public class Region {
 
-
-    public Caption nodes[];
-    public Style styles[];
-
-    /**
-     * Raw content, before cleaning up templates and markup.
-     */
-	public String rawContent="";
-    /**
-     * Cleaned-up subtitle content.
-     */
-	public String content="";
-
-    @Override
-    public String toString() {
-        return "Caption{" +
-                start + ".." + end +
-                ", " + (style != null ? style.iD : null) + ", " + region + ": " + content +
-                '}';
-    }
 }
