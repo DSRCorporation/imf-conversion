@@ -14,15 +14,14 @@
             <tmpContext>
             </tmpContext>
 
+            <defaultDestContext name="1"/>
+
             <mediaInfoCommandVideo>mediaInfoCommandVideo %{dynamic.mediaInfoInput}</mediaInfoCommandVideo>
             <mediaInfoCommandAudio>mediaInfoCommandAudio %{dynamic.mediaInfoInput}</mediaInfoCommandAudio>
             <mediaInfoCommandSubtitle>mediaInfoCommandSubtitle %{dynamic.mediaInfoInput}</mediaInfoCommandSubtitle>
 
             <formatConfigurations>
                 <formatConfiguration name="skippedSimpleIf">
-
-                    <conversionParameters></conversionParameters>
-
                     <!-- skipped simple if -->
                     <dynamicParameter name="skippedIfName" if="false">skippedIfValue
                     </dynamicParameter>
@@ -34,8 +33,6 @@
                 </formatConfiguration>
 
                 <formatConfiguration name="skippedSimpleUnless">
-
-                    <conversionParameters></conversionParameters>
 
                     <!-- skipped simple unless -->
                     <dynamicParameter name="skippedUnlessName" unless="true">skippedUnlessValue
@@ -50,7 +47,6 @@
 
 
                 <formatConfiguration name="skippedParam">
-                    <conversionParameters></conversionParameters>
 
                     <!-- skipped simple with dynamic param in if -->
                     <dynamicParameter name="skippedIfParamName" if="%{dynamic.skipped}">
@@ -75,7 +71,6 @@
                 </formatConfiguration>
 
                 <formatConfiguration name="skippedEachSeq">
-                    <conversionParameters></conversionParameters>
 
                     <!-- skipped within skipped execSeq -->
                     <execEachSequence name="skippedExecEachSeq1" type="audio" if="false">
@@ -128,7 +123,6 @@
                 </formatConfiguration>
 
                 <formatConfiguration name="skippedEachSegm">
-                    <conversionParameters></conversionParameters>
 
                     <!-- skipped within skipped execSegm -->
                     <execEachSegment name="skippedExecEachSegm1" if="false">
@@ -182,7 +176,6 @@
                 </formatConfiguration>
 
                 <formatConfiguration name="nonSkippedEachSeq">
-                    <conversionParameters></conversionParameters>
 
                     <!-- non-skipped within non-skipped execSeq -->
                     <execEachSequence name="nonSkippedExecEachSeq1" type="audio" if="true">
@@ -202,7 +195,6 @@
                 </formatConfiguration>
 
                 <formatConfiguration name="nonSkippedEachSegm">
-                    <conversionParameters></conversionParameters>
 
                     <!-- non-skipped within non-skipped execSegm -->
                     <execEachSegment name="nonSkippedExecEachSegm1" if="true">
@@ -227,4 +219,3 @@
         </format>
     </formats>
 </conversion>
-
