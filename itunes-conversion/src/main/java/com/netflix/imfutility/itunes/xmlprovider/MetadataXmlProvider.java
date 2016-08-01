@@ -19,10 +19,18 @@
 package com.netflix.imfutility.itunes.xmlprovider;
 
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.generated.itunes.metadata.ArtWorkFileType;
+import com.netflix.imfutility.generated.itunes.metadata.AssetType;
+import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.AssetsType;
+import com.netflix.imfutility.generated.itunes.metadata.ChapterType;
 import com.netflix.imfutility.generated.itunes.metadata.ChaptersType;
+import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
+import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
 import com.netflix.imfutility.generated.itunes.metadata.ObjectFactory;
 import com.netflix.imfutility.generated.itunes.metadata.PackageType;
+import com.netflix.imfutility.generated.itunes.metadata.TerritoriesType;
+import com.netflix.imfutility.generated.itunes.metadata.TitleType;
 import com.netflix.imfutility.itunes.xmlprovider.builder.MetadataXmlSampleBuilder;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -67,22 +75,78 @@ public class MetadataXmlProvider {
         return XmlParser.parse(metadataFile, new String[]{METADATA_XML_SCHEME}, METADATA_PACKAGE, PackageType.class);
     }
 
+    /**
+     * Get root metadata element.
+     *
+     * @return root package tag
+     */
     public PackageType getPackageType() {
         return packageType;
     }
 
-    private void ensureAssetsCreated() {
-        if (packageType.getVideo().getAssets() == null) {
-            packageType.getVideo().setAssets(new AssetsType());
-        }
+    /**
+     * Get default locale based on language tag content.
+     *
+     * @return default locale
+     */
+    public LocaleType getDefaultLocale() {
+        LocaleType locale = new LocaleType();
+        locale.setName(packageType.getLanguage());
+        return locale;
     }
 
-    private void ensureChaptersCreated() {
+    //  Chapters processing
+
+    private ChaptersType ensureChaptersCreated() {
         if (packageType.getVideo().getChapters() == null) {
             packageType.getVideo().setChapters(new ChaptersType());
         }
+        return packageType.getVideo().getChapters();
     }
 
+    public void appendChaptersTimeCode(String timeCode) {
+        ensureChaptersCreated().setTimecodeFormat(timeCode);
+    }
+
+    public void appendChapter(ArtWorkFileType artWorkFile, TitleType title, String startTime) {
+        ChapterType chapter = new ChapterType();
+        chapter.setTitle(title);
+        chapter.setStartTime(startTime);
+        chapter.setArtworkFile(artWorkFile);
+
+        ensureChaptersCreated().getChapter().add(chapter);
+    }
+
+    //   Asset processing
+
+    private AssetsType ensureAssetsCreated() {
+        if (packageType.getVideo().getAssets() == null) {
+            packageType.getVideo().setAssets(new AssetsType());
+        }
+        return packageType.getVideo().getAssets();
+    }
+
+    public void appendAsset(DataFileType dataFile, AssetTypeType assetType) {
+        //  set WW territory by default
+        TerritoriesType territories = new TerritoriesType();
+        territories.getTerritory().add("WW");
+
+        AssetType asset = new AssetType();
+        asset.setType(assetType);
+        asset.setTerritories(territories);
+        asset.getDataFile().add(dataFile);
+
+        ensureAssetsCreated().getAsset().add(asset);
+    }
+
+    /**
+     * Save managed metadata to file.
+     * Within marshalling metadata will be validated by strict schema.
+     * Assets and chapters full info is required.
+     *
+     * @param path a path to destination dir relative to working dir
+     * @return metadata.xml file
+     */
     public File saveMetadata(String path) {
         File relativeDir = new File(workingDir, path);
         if (!relativeDir.exists()) {

@@ -16,27 +16,28 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes;
+package com.netflix.imfutility.itunes.util;
+
+import java.io.File;
+import java.net.URISyntaxException;
 
 /**
- * CoreConstants related to iTunes format.
+ * Test utility for image tests.
  */
-public final class ITunesConversionConstants {
+public final class ImageUtils {
 
-    private ITunesConversionConstants() {
+    private ImageUtils() {
     }
 
-    /* 1. Conversion.xml */
+    public static File getTestImageJpgFile() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/image/test-image-1920-1080.jpg").toURI());
+    }
 
-    // 1.1. conversion.xml location
-    public static final String CONVERSION_XML = "xml/conversion.xml";
+    public static File getTestImagePngFile() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/image/test-image-1280-720.png").toURI());
+    }
 
-    // 1.2 dynamic parameters:
-    public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "output";
-    public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
-    public static final String DYNAMIC_PARAM_METADATA_XML = "metadata";
-    public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT = "trailerMediaInfoInput";
-    public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT = "trailerMediaInfoOutput";
-
-
+    public static File getTestImageJpgCmykFile() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/image/test-image-1280-720-cmyk.jpg").toURI());
+    }
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2016 Netflix, Inc.
+  ~
+  ~     This file is part of IMF Conversion Utility.
+  ~
+  ~     IMF Conversion Utility is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     IMF Conversion Utility is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<chapters basedir="." xmlns="http://netflix.com/imf/itunes/chapters">
+    <timecode_format>24/999 1000/nonDrop</timecode_format>
+    <chapter>
+        <start_time>00:00:00:00</start_time>
+        <title locale="en-US">Forrest's Story Begins</title>
+        <file_name>chapter01.xxx</file_name>
+    </chapter>
+    <chapter>
+        <start_time>00:07:45:23</start_time>
+        <title locale="en-US">Football at Alabama</title>
+        <file_name>chapter02.xxx</file_name>
+    </chapter>
+</chapters>

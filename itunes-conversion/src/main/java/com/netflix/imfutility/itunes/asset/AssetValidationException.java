@@ -16,27 +16,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes;
+package com.netflix.imfutility.itunes.asset;
+
+import com.netflix.imfutility.ConversionException;
 
 /**
- * CoreConstants related to iTunes format.
+ * Exception to throw when asset validation failed.
  */
-public final class ITunesConversionConstants {
+public class AssetValidationException extends ConversionException {
 
-    private ITunesConversionConstants() {
+    public AssetValidationException(String message) {
+        super(message);
     }
 
-    /* 1. Conversion.xml */
-
-    // 1.1. conversion.xml location
-    public static final String CONVERSION_XML = "xml/conversion.xml";
-
-    // 1.2 dynamic parameters:
-    public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "output";
-    public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
-    public static final String DYNAMIC_PARAM_METADATA_XML = "metadata";
-    public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT = "trailerMediaInfoInput";
-    public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT = "trailerMediaInfoOutput";
-
-
+    public AssetValidationException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

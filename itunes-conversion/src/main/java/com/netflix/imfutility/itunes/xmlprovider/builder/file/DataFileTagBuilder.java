@@ -16,45 +16,50 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.xmlprovider.builder;
+package com.netflix.imfutility.itunes.xmlprovider.builder.file;
 
-import com.netflix.imfutility.generated.itunes.metadata.AssetType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
 import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
-import com.netflix.imfutility.generated.itunes.metadata.TerritoriesType;
 
 import java.io.File;
 import java.math.BigInteger;
 
 /**
- * Builder for creating iTunes Asset metadata info for input file.
+ * Builder for creating iTunes data_file metadata info for asset file.
  * Also generates MD5 hash for input.
  * (see {@link DataFileType}).
  */
-public class MetadataXmlAssetBuilder extends MetadataXmlCheckSumBuilder {
+public class DataFileTagBuilder extends FileTagBuilder<DataFileType> {
 
-    public MetadataXmlAssetBuilder(File assetFile) {
-        super(assetFile);
+    private final CheckSumTagBuilder checkSumBuilder;
+
+    private DataFileRoleType role;
+    private LocaleType locale;
+
+    public DataFileTagBuilder(File assetFile, String fileName) {
+        super(assetFile, fileName);
+        this.checkSumBuilder = new CheckSumTagBuilder(assetFile);
     }
 
-    public AssetType buildAsset(TerritoriesType territories) {
-        AssetType asset = new AssetType();
-        asset.setTerritories(territories);
-        return asset;
+    public DataFileTagBuilder setRole(DataFileRoleType role) {
+        this.role = role;
+        return this;
     }
 
-    public DataFileType buildDataFile(DataFileRoleType role, LocaleType locale) {
+    public DataFileTagBuilder setLocale(LocaleType locale) {
+        this.locale = locale;
+        return this;
+    }
+
+    @Override
+    public DataFileType build() {
         DataFileType dataFile = new DataFileType();
         dataFile.setRole(role);
-        if (locale != null) {
-            dataFile.setLocale(locale);
-        }
-        dataFile.setFileName(assetFile.getName());
+        dataFile.setLocale(locale);
+        dataFile.setFileName(fileName);
         dataFile.setSize(BigInteger.valueOf(assetFile.length()));
-        dataFile.setChecksum(buildCheckSum());
+        dataFile.setChecksum(checkSumBuilder.build());
         return dataFile;
     }
-
-
 }

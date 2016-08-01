@@ -16,27 +16,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes;
+package com.netflix.imfutility.itunes.xmlprovider.builder;
 
 /**
- * CoreConstants related to iTunes format.
+ * Common interface for all builders to construct metadata tags.
+ *
+ * @param <T> tag class
  */
-public final class ITunesConversionConstants {
-
-    private ITunesConversionConstants() {
-    }
-
-    /* 1. Conversion.xml */
-
-    // 1.1. conversion.xml location
-    public static final String CONVERSION_XML = "xml/conversion.xml";
-
-    // 1.2 dynamic parameters:
-    public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "output";
-    public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
-    public static final String DYNAMIC_PARAM_METADATA_XML = "metadata";
-    public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT = "trailerMediaInfoInput";
-    public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT = "trailerMediaInfoOutput";
-
-
+public interface MetadataXmlTagBuilder<T> {
+    T build();
 }

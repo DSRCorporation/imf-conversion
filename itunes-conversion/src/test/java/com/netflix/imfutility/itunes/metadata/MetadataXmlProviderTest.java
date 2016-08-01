@@ -37,7 +37,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertNull;
 
 /**
- * Tests parsing metadata.xml.
+ * Tests parsing and processing metadata.xml.
  * (see {@link MetadataXmlProvider).
  */
 public class MetadataXmlProviderTest {
@@ -50,7 +50,6 @@ public class MetadataXmlProviderTest {
         if (!workingDir.mkdir()) {
             throw new RuntimeException("Could not create a working dir within tmp folder");
         }
-        new File(workingDir, "config.xml");
     }
 
     @AfterClass
@@ -131,6 +130,14 @@ public class MetadataXmlProviderTest {
     }
 
     @Test
+    public void testGenerateSampleMetadata() {
+        File metadataFile = new File(TemplateParameterContextCreator.getWorkingDir(), "sample_metadata.xml");
+        MetadataXmlProvider.generateSampleXml(metadataFile);
+
+        assertEquals(new File(TemplateParameterContextCreator.getWorkingDir(), "sample_metadata.xml"), metadataFile);
+    }
+
+    @Test
     public void testSaveCorrectMetadata() throws Exception {
         MetadataXmlProvider provider = createMetadataXmlProvider(MetadataUtils.getCorrectMetadataXml());
 
@@ -142,10 +149,11 @@ public class MetadataXmlProviderTest {
     @Test(expected = RuntimeException.class)
     public void testSaveIncorrectMetadata() throws Exception {
         MetadataXmlProvider provider = new MetadataXmlProvider(TemplateParameterContextCreator.getWorkingDir(),
-                MetadataXmlSampleBuilder.buildPackage()); // sample package will fail strict validation
+                MetadataXmlSampleBuilder.buildPackage());
 
         new File(TemplateParameterContextCreator.getWorkingDir(), "vendor_id").mkdir();
 
+        // sample package will fail strict validation
         provider.saveMetadata("vendor_id");
     }
 }

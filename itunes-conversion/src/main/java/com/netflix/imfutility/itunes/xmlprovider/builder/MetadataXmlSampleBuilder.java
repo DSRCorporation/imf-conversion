@@ -25,7 +25,9 @@ import com.netflix.imfutility.generated.itunes.metadata.AssetsType;
 import com.netflix.imfutility.generated.itunes.metadata.BillingType;
 import com.netflix.imfutility.generated.itunes.metadata.CastMemberType;
 import com.netflix.imfutility.generated.itunes.metadata.CastType;
+import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
 import com.netflix.imfutility.generated.itunes.metadata.ChapterType;
+import com.netflix.imfutility.generated.itunes.metadata.ChaptersInputType;
 import com.netflix.imfutility.generated.itunes.metadata.ChaptersType;
 import com.netflix.imfutility.generated.itunes.metadata.CheckSumType;
 import com.netflix.imfutility.generated.itunes.metadata.CrewMemberType;
@@ -191,6 +193,22 @@ public final class MetadataXmlSampleBuilder {
         artWorkFile.setSize(new BigInteger("1"));
         artWorkFile.setChecksum(buildCheckSum());
         return artWorkFile;
+    }
+
+    public static ChaptersInputType buildInputChapters() {
+        ChaptersInputType chapters = new ChaptersInputType();
+        chapters.setBasedir(".");
+        chapters.setTimecodeFormat("qt_text");
+        chapters.getChapter().add(buildInputChapter());
+        return chapters;
+    }
+
+    public static ChapterInputType buildInputChapter() {
+        ChapterInputType chapter = new ChapterInputType();
+        chapter.setStartTime("00:00:00");
+        chapter.setTitle(buildTitle());
+        chapter.setFileName("chapter01.jpg");
+        return chapter;
     }
 
     // Assets

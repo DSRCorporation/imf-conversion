@@ -208,7 +208,7 @@
     <xs:complexType name="ChaptersType">
         <xs:sequence>
             <xs:element name="timecode_format" type="TimecodeFormatType" minOccurs="0"/>
-            <xs:element name="chapter" type="ChapterType" maxOccurs="unbounded" minOccurs="1"/>
+            <xs:element name="chapter" type="ChapterType" maxOccurs="99" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -217,11 +217,12 @@
             <xs:element name="start_time" type="TimecodeFormat"/>
             <xs:choice>
                 <xs:element name="title" type="TitleType"/>
-                <xs:element name="titles" type="TitlesType" minOccurs="0"/>
+                <xs:element name="titles" type="TitlesType"/>
             </xs:choice>
             <xs:element name="artwork_file" type="ArtWorkFileType"/>
         </xs:sequence>
     </xs:complexType>
+
 
     <xs:complexType name="TitlesType">
         <xs:sequence>
@@ -521,7 +522,7 @@
 
     <xs:simpleType name="TimecodeFormat">
         <xs:restriction base="xs:string">
-            <xs:pattern value="[0-9]{2}:[0-9]{2}:[0-9]{2}((:|;)[0-9]{2})?"/>
+            <xs:pattern value="[0-9]{2}:[0-9]{2}:[0-9]{2}((:|;)[0-5][0-9])?"/>
         </xs:restriction>
     </xs:simpleType>
 

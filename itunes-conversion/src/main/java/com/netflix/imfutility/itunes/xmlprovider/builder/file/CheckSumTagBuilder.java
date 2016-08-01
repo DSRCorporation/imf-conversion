@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.xmlprovider.builder;
+package com.netflix.imfutility.itunes.xmlprovider.builder.file;
 
 import com.netflix.imfutility.generated.itunes.metadata.CheckSumType;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -26,19 +26,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
- * Builder for creating CheckSum metadata info for input file.
+ * Builder for creating CheckSum metadata info for asset file.
  * Generates MD5 hash for input.
  * (see {@link CheckSumType}).
  */
-public class MetadataXmlCheckSumBuilder {
+public class CheckSumTagBuilder extends FileTagBuilder<CheckSumType> {
 
-    protected File assetFile;
-
-    public MetadataXmlCheckSumBuilder(File assetFile) {
-        this.assetFile = assetFile;
+    public CheckSumTagBuilder(File assetFile) {
+        super(assetFile);
     }
 
-    public CheckSumType buildCheckSum() {
+    @Override
+    public CheckSumType build() {
         CheckSumType checkSum = new CheckSumType();
         checkSum.setType("md5");
         checkSum.setValue(md5(assetFile));
@@ -52,5 +51,4 @@ public class MetadataXmlCheckSumBuilder {
             throw new RuntimeException(e);
         }
     }
-
 }

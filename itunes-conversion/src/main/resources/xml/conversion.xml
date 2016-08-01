@@ -47,76 +47,90 @@
                     <param name="width">1920</param>
                     <param name="height">1080</param>
                     <param name="frameRate">30</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd1080i2997">
                     <param name="width">1920</param>
                     <param name="height">1080</param>
                     <param name="frameRate">30000/1001</param>
                     <param name="interlaced">true</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd1080p2997">
                     <param name="width">1920</param>
                     <param name="height">1080</param>
                     <param name="frameRate">30000/1001</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd1080p25">
                     <param name="width">1920</param>
                     <param name="height">1080</param>
                     <param name="frameRate">25/1</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd1080p24">
                     <param name="width">1920</param>
                     <param name="height">1080</param>
                     <param name="frameRate">24/1</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd1080i23976">
                     <param name="width">1920</param>
                     <param name="height">1080</param>
                     <param name="frameRate">24000/1001</param>
                     <param name="interlaced">true</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd1080p23976">
                     <param name="width">1920</param>
                     <param name="height">1080</param>
                     <param name="frameRate">24000/1001</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
                 <!-- 1280x720 -->
                 <destContext name="hd720p30">
                     <param name="width">1280</param>
                     <param name="height">720</param>
                     <param name="frameRate">30</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd720i2997">
                     <param name="width">1280</param>
                     <param name="height">720</param>
                     <param name="frameRate">30000/1001</param>
                     <param name="interlaced">true</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd720p2997">
                     <param name="width">1280</param>
                     <param name="height">720</param>
                     <param name="frameRate">30000/1001</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd720p25">
                     <param name="width">1280</param>
                     <param name="height">720</param>
                     <param name="frameRate">25/1</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd720p24">
                     <param name="width">1280</param>
                     <param name="height">720</param>
                     <param name="frameRate">24/1</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd720i23976">
                     <param name="width">1280</param>
                     <param name="height">720</param>
                     <param name="frameRate">24000/1001</param>
                     <param name="interlaced">true</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd720p23976">
                     <param name="width">1280</param>
                     <param name="height">720</param>
                     <param name="frameRate">24000/1001</param>
+                    <param name="aspectRatio">16/9</param>
                 </destContext>
 
                 <!-- SD TV -->
@@ -265,6 +279,12 @@
             <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams s:0 -show_streams -noprivate -print_format xml=x=1
                 %{dynamic.mediaInfoInput}
             </mediaInfoCommandSubtitle>
+
+            <mediaInfoCommandOthers>
+                <mediaInfoCommand name="trailer">
+                    %{tool.ffprobe} -show_format -noprivate -print_format xml=x=1 %{dynamic.trailerMediaInfoInput}
+                </mediaInfoCommand>
+            </mediaInfoCommandOthers>
 
             <formatConfigurations>
                 <formatConfiguration name="main">
