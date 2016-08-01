@@ -219,8 +219,12 @@
 
                         </execEachSegment>
 
+                        <dynamicParameter name="stlName">%{dynamic.output}</dynamicParameter>
+                        <dynamicParameter name="stlName" unless="%{dynamic.singleSubtitle}" concat="true">-%{seq.num}</dynamicParameter>
+                        <dynamicParameter name="stlName" concat="true">.stl</dynamicParameter>
+
                         <execOnce name="convert_ttml_to_stl">
-                            %{dynamic.ttml-to-stl} %{dynamic.concatTTML} --outputSTL %{seq.num}-%{dynamic.output}.stl
+                            %{dynamic.ttml-to-stl} %{dynamic.concatTTML} --outputSTL %{dynamic.stlName}
                             --metadata "%{dynamic.metadataXml}"
                         </execOnce>
                     </execEachSequence>
