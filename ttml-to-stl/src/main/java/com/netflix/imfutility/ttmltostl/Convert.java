@@ -70,8 +70,8 @@ public class Convert {
                 System.out.println("Processing input TTML: " + ttmlInDescriptor.getFile());
                 File file = new File(ttmlInDescriptor.getFile());
                 try (InputStream is = new FileInputStream(file)) {
-                    tto = ttff.parseFile(file.getName(), is, ttmlInDescriptor.getStartTC(),
-                            ttmlInDescriptor.getEndTC(), ttmlInDescriptor.getOffsetTC());
+                    tto = ttff.parseFile(file.getName(), is, ttmlInDescriptor.getStartMS(),
+                            ttmlInDescriptor.getEndMS(), ttmlInDescriptor.getOffsetMS());
                 }
             }
 

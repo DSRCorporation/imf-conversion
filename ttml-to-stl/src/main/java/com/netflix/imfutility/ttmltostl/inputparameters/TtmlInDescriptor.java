@@ -26,9 +26,9 @@ package com.netflix.imfutility.ttmltostl.inputparameters;
 public class TtmlInDescriptor {
 
     private String file = null;
-    private String startTC = null;
-    private String endTC = null;
-    private String offsetTC = null;
+    private int startMS = 0;
+    private int endMS = 0;
+    private int offsetMS = 0;
 
     public String getFile() {
         return file;
@@ -38,28 +38,28 @@ public class TtmlInDescriptor {
         this.file = file;
     }
 
-    public String getStartTC() {
-        return startTC;
+    public int getStartMS() {
+        return startMS;
     }
 
-    public void setStartTC(String startTC) {
-        this.startTC = startTC;
+    public void setStartMS(int startMS) {
+        this.startMS = startMS;
     }
 
-    public String getEndTC() {
-        return endTC;
+    public int getEndMS() {
+        return endMS;
     }
 
-    public void setEndTC(String endTC) {
-        this.endTC = endTC;
+    public void setEndMS(int endMS) {
+        this.endMS = endMS;
     }
 
-    public String getOffsetTC() {
-        return offsetTC;
+    public int getOffsetMS() {
+        return offsetMS;
     }
 
-    public void setOffsetTC(String offsetTC) {
-        this.offsetTC = offsetTC;
+    public void setOffsetMS(int offsetMS) {
+        this.offsetMS = offsetMS;
     }
 
 }

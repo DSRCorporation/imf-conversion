@@ -61,16 +61,16 @@ public class FormatTTML implements TimedTextFileFormat {
 
     private TimedTextObject tto = new TimedTextObject();
     private Integer parsedFileCount = 0;
-    private String startTC = null;
-    private String endTC = null;
-    private String offsetTC = null;
+    private int startMS = 0;
+    private int endMS = 0;
+    private int offsetMS = 0;
     private Document doc = null;
 
-    public TimedTextObject parseFile(String fileName, InputStream is, String startTC, String endTC, String offsetTC) throws IOException, FatalParsingException {
+    public TimedTextObject parseFile(String fileName, InputStream is, int startMS, int endMS, int offsetMS) throws IOException, FatalParsingException {
         tto.fileName = fileName;
-        this.startTC = startTC;
-        this.endTC = endTC;
-        this.offsetTC = offsetTC;
+        this.startMS = startMS;
+        this.endMS = endMS;
+        this.offsetMS = offsetMS;
         this.doc = null;
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -350,9 +350,9 @@ public class FormatTTML implements TimedTextFileFormat {
     }
 
     private Boolean fitAndCheckCaptionTimecodeRange(Caption caption) {
-        int startTCMilliseconds = startTC != null ? parseTimeExpression(startTC) : 0;
-        int endTCMilliseconds = endTC != null ? parseTimeExpression(endTC) : Integer.MAX_VALUE;
-        int offsetTCMilliseconds = offsetTC != null ? parseTimeExpression(offsetTC) : 0;
+        int startTCMilliseconds = startMS > 0 ? startMS : 0;
+        int endTCMilliseconds = endMS > 0 ? endMS : Integer.MAX_VALUE;
+        int offsetTCMilliseconds = offsetMS > 0 ? offsetMS : 0;
 
         if (startTCMilliseconds > caption.end.mseconds
                 || endTCMilliseconds < caption.start.mseconds) {

@@ -57,9 +57,9 @@ public class CmdLineParametersParser {
                 .longOpt("ttml")
                 .desc("Input TTML file parameters:"
                         + "\n<file> - The TTML file path."
-                        + "\n<offsetTC> - Offset timecode to shift captions of the TTML file."
-                        + "\n<startTC> - Start timecode to get captions of the TTML file."
-                        + "\n<endTC> - End timecode to get captions of the TTML file.")
+                        + "\n<offsetMS> - Offset in milliseconds to shift captions of the TTML file."
+                        + "\n<startMS> - Start time in milliseconds to get captions of the TTML file."
+                        + "\n<endMS> - End time in milliseconds to get captions of the TTML file.")
                 .numberOfArgs(4)
                 .optionalArg(true)
                 .argName("<file> <offsetTC> <startTC> <endTC>")
@@ -120,9 +120,9 @@ public class CmdLineParametersParser {
                 TtmlInDescriptor ttmlInDescriptor = new TtmlInDescriptor();
                 try {
                     ttmlInDescriptor.setFile(option.getValue(0));
-                    ttmlInDescriptor.setOffsetTC(option.getValue(1));
-                    ttmlInDescriptor.setStartTC(option.getValue(2));
-                    ttmlInDescriptor.setEndTC(option.getValue(3));
+                    ttmlInDescriptor.setOffsetMS(parseTtmlParameter(option, 1, "offsetMS"));
+                    ttmlInDescriptor.setStartMS(parseTtmlParameter(option, 2, "startMS"));
+                    ttmlInDescriptor.setEndMS(parseTtmlParameter(option, 3, "endMS"));
                 } catch (IndexOutOfBoundsException e) {
                     //It is error only if don't have file name
                     //For required file it may not be thrown. We will check it later.
@@ -162,5 +162,13 @@ public class CmdLineParametersParser {
         }
 
         return result;
+    }
+
+    private int parseTtmlParameter(Option option, int optionIndex, String parameterName) throws ParseException {
+        try {
+            return Integer.parseInt(option.getValue(optionIndex));
+        } catch (NumberFormatException e) {
+            throw new ParseException(parameterName + " in --ttml must be an integer");
+        }
     }
 }
