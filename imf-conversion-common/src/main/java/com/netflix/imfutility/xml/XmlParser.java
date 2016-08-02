@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -19,6 +19,7 @@
 package com.netflix.imfutility.xml;
 
 import com.netflix.imfutility.resources.ResourceHelper;
+import com.netflix.imfutility.resources.ResourceResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -42,7 +43,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A base .xml parser.
@@ -162,13 +166,15 @@ public final class XmlParser {
         }
     }
 
-    private static Schema getSchema(String[] xsds) throws SAXException {
+    public static Schema getSchema(String[] xsds) throws SAXException {
         List<StreamSource> xsdSchemas = new ArrayList<>();
         for (String xsd : xsds) {
             InputStream xsdSchema = ResourceHelper.getResourceInputStream(xsd);
             xsdSchemas.add(new StreamSource(xsdSchema));
         }
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        ResourceResolver resolver = new ResourceResolver(getXsdsPaths(xsds));
+        sf.setResourceResolver(resolver);
         return sf.newSchema(xsdSchemas.toArray(new StreamSource[]{}));
     }
 
@@ -180,6 +186,10 @@ public final class XmlParser {
         }
         SAXParser sp = spf.newSAXParser();
         return sp.getXMLReader();
+    }
+
+    private static Collection<String> getXsdsPaths(String[] xsds) {
+        return Arrays.stream(xsds).map(xsd -> xsd.substring(0, xsd.lastIndexOf("/"))).collect(Collectors.toList());
     }
 
     private XmlParser() {
