@@ -25,7 +25,7 @@ import java.io.InputStream;
  */
 public final class ResourceHelper {
 
-    public static InputStream getResourceInputStream(String resource) {
+    static InputStream getResourceInputStreamImpl(String resource) {
         // 1. try Thread Context Class Loader.
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader != null) {
@@ -54,13 +54,15 @@ public final class ResourceHelper {
         }
 
         // 4. try the resource from the classpath
-        InputStream resourceInputStream = ClassLoader.getSystemResourceAsStream(resource);
+        return ClassLoader.getSystemResourceAsStream(resource);
+    }
+
+    public static InputStream getResourceInputStream(String resource) {
+        InputStream resourceInputStream = getResourceInputStreamImpl(resource);
         if (resourceInputStream == null) {
             throw new RuntimeException(String.format("Can not load resource '%s'", resource));
         }
         return resourceInputStream;
-
-
     }
 
     private ResourceHelper() {
