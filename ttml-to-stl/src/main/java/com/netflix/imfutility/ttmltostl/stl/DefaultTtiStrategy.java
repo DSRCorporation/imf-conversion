@@ -110,7 +110,7 @@ public class DefaultTtiStrategy implements ITtiStrategy {
         for (int i = 0; i < this.stlSubtitles.size() - 1; i++) {
             StlSubtitle stlSubtitle = this.stlSubtitles.get(i);
 
-            Time endCSTime = stlSubtitle.getEnd();// end time of whole cumulative set.
+            Time endCSTime = stlSubtitle.getEnd(); // end time of whole cumulative set.
             int totalCsLines = stlSubtitle.getLinesCount(); // total lines of cumulative set.
             int lastCSindex = i; // the last index of cumulative set.
             for (int j = i + 1; j < this.stlSubtitles.size(); j++) {
@@ -132,7 +132,8 @@ public class DefaultTtiStrategy implements ITtiStrategy {
                     stlCummulativeSubtitle.setCumulative(true);
                     totalCsLines += stlCummulativeSubtitle.getLinesCount();
                     //check what end time is bigger.
-                    endCSTime = stlCummulativeSubtitle.getEnd().getMseconds() > endCSTime.getMseconds() ? stlCummulativeSubtitle.getEnd() : endCSTime;
+                    endCSTime = stlCummulativeSubtitle.getEnd().getMseconds() > endCSTime.getMseconds()
+                            ? stlCummulativeSubtitle.getEnd() : endCSTime;
 
                     if (j == this.stlSubtitles.size() - 1) {
                         //i must point to the last element in the CS
@@ -158,7 +159,8 @@ public class DefaultTtiStrategy implements ITtiStrategy {
 
             //set start and endTime for all CSs
             //set linenumber for each subtitle.
-            int startTTLine = StlSubtitle.BOTTOM_TELETEXT_LINE_TO_USE + StlSubtitle.TELETEXT_LINE_STEP - (totalCsLines * StlSubtitle.TELETEXT_LINE_STEP);
+            int startTTLine = StlSubtitle.BOTTOM_TELETEXT_LINE_TO_USE + StlSubtitle.TELETEXT_LINE_STEP
+                    - (totalCsLines * StlSubtitle.TELETEXT_LINE_STEP);
             startTTLine = startTTLine < 0 ? 0 : startTTLine;
             for (int e = i; e <= lastCSindex; e++) {
                 StlSubtitle csSubtitle = this.stlSubtitles.get(e);

@@ -18,6 +18,9 @@
  */
 package com.netflix.imfutility.ttmltostl.ttml;
 
+/**
+ * A general tree-like entity representing a caption. It includes styles, regions, start TC, end TC, and the text content.
+ */
 public class Caption {
 
     public Style style;

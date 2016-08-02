@@ -29,7 +29,8 @@ import java.util.Arrays;
  *     <li>The values of all attributes can be changed in the GSI strategy ({@link IGsiStrategy}).</li>
  *     <li>Some attributes are required to be set/changed by the strategy.</li>
  *     <li>The final method to be called to get the attribute value when building the result GSI header - {@link #getValue(String)}.
- *     It gets correctly encoded value (charset depends on CPN and CCT values). The value has the correct size matching {@link #getBytesAllocated()}.
+ *     It gets correctly encoded value (charset depends on CPN and CCT values).
+ *     The value has the correct size matching {@link #getBytesAllocated()}.
  *     </li>
  * </ul>
  */
@@ -105,14 +106,14 @@ public enum GsiAttribute {
     }
 
     public byte[] getValue(String charset) throws UnsupportedEncodingException {
-        if (this.value != null) {
-            return Arrays.copyOf(value, value.length);
-        }
         if (this.stringValue != null) {
             byte[] result = getEmptyValue();
             byte[] strBytes = stringValue.getBytes(charset);
             System.arraycopy(strBytes, 0, result, 0, strBytes.length);
             return result;
+        }
+        if (this.value != null) {
+            return Arrays.copyOf(value, value.length);
         }
         throw new RuntimeException("GSI attribute not set: " + name());
     }

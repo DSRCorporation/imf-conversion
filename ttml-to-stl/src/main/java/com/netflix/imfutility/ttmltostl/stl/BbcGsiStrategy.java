@@ -21,10 +21,9 @@ package com.netflix.imfutility.ttmltostl.stl;
 import com.netflix.imfutility.dpp.DppConversionXsdConstants;
 import com.netflix.imfutility.generated.dpp.metadata.DppType;
 import com.netflix.imfutility.generated.dpp.metadata.TimecodeType;
+import com.netflix.imfutility.ttmltostl.ttml.TimedTextObject;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import com.netflix.imfutility.ttmltostl.stl.DefaultGsiStrategy;
-import com.netflix.imfutility.ttmltostl.ttml.TimedTextObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;

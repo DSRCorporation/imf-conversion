@@ -52,7 +52,7 @@ public class Convert {
      * @return conversion result
      */
 
-    public static boolean convertTTML(String[] args) {
+    public boolean convertTTML(String[] args) {
 
         try {
             // 1. Parse input parameters
@@ -105,10 +105,10 @@ public class Convert {
     /**
      * Entry point.
      *
-     * @param args
+     * @param args cmd line args
      */
     public static void main(String[] args) throws IOException, URISyntaxException {
-        if (!convertTTML(args)) {
+        if (!new Convert().convertTTML(args)) {
             System.exit(1);
         }
     }

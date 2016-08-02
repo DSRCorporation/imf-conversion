@@ -77,7 +77,7 @@ public class CmdLineParameters {
      * <ul>
      *     <li>file - The TTML file path;</li>
      *     <li>offsetTC - Offset timecode to shift captions of the TTML file;</li>
-     *     <li>startTC - The TTML file path;</li>;</li>
+     *     <li>startTC - The TTML file path;</li>
      *     <li>endTC - End timecode to get captions of the TTML file.</li>
      * </ul>
      *

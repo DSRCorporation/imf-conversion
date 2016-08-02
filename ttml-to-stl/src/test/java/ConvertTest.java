@@ -62,7 +62,7 @@ public class ConvertTest {
                 tempSTL.getPath() //"testoutput.stl"
         };
 
-        Boolean result = Convert.convertTTML(args);
+        Boolean result = new Convert().convertTTML(args);
 
         assertTrue("Convert.convertTTML returned failure.", result);
         assertTrue("Generated TTML is zero size.", tempXML.length() > 0);
@@ -100,7 +100,7 @@ public class ConvertTest {
                 tempSTL.getPath() //"testoutput.stl"
         };
 
-        Boolean result = Convert.convertTTML(args);
+        Boolean result = new Convert().convertTTML(args);
 
         assertTrue("Convert.convertTTML returned failure.", result);
         assertTrue("Generated TTML is zero size.", tempXML.length() > 0);
@@ -153,7 +153,7 @@ public class ConvertTest {
                 tempSTL.getPath() //"testoutput.stl"
         };
 
-        Boolean result = Convert.convertTTML(args);
+        Boolean result = new Convert().convertTTML(args);
 
         assertTrue("Convert.convertTTML returned failure.", result);
         assertTrue("Generated TTML is zero size.", tempXML.length() > 0);
@@ -171,7 +171,7 @@ public class ConvertTest {
                 "--ttml",
         };
 
-        Boolean result = Convert.convertTTML(args);
+        Boolean result = new Convert().convertTTML(args);
         assertTrue("Convert.convertTTML didn't fail.", !result);
     }
 
