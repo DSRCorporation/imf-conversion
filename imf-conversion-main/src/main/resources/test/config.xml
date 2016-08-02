@@ -34,7 +34,7 @@
         <param name="bitsSample">yes</param>
     </conversionParameters>
 
-    <conversionConfig>C:\Projects\Netflix\Workspace\imf-conversion\dpp-conversion\src\main\resources\xml\conversion.xml
+    <conversionConfig>..\itunes-conversion\src\main\resources\xml\conversion.xml
     </conversionConfig>
 
     <cleanWorkingDir>true</cleanWorkingDir>

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+function usage {
+    echo "Convert all default test packages to DPP Format."
+    echo "1st argument - a path to the directory containing all default test packages."
+    echo "2d argument - a path to the directory containing the output for all test packages."
+    echo "3d argument - a path to imf-conversion-utility (if not set a default one will be used assuming that we're in the source root folder)."
+}
+
+if [ -z "$1" ]; then
+    echo "Missing argument: a path to the directory containing all default test packages."
+    usage
+    exit 1
+fi
+
+if [ -z "$2" ]; then
+    echo "Missing argument: a path to the directory containing the output for all test packages."
+    usage
+    exit 1
+fi
+
+cd "${BASH_SOURCE%/*}"
+
+Chimera25Dir="Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV"
+
+# short versions
+./chimera25-short             "$1/$Chimera25Dir" "$2" "$3";
+./chimera25-short-metadata    "$1/$Chimera25Dir" "$2" "$3";
+./chimera25-short-add-assets  "$1/$Chimera25Dir" "$2" "$3";
