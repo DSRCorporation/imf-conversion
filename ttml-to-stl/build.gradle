@@ -9,7 +9,7 @@ dependencies {
 
 dependencies {
     compile group: 'commons-cli', name: 'commons-cli', version: '1.3'
-    compile group: 'fr.noop', name: 'charset', version: '1.0.1'
+    compile files('lib/charset-1.0.2.jar')
 }
 
 

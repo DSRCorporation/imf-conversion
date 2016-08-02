@@ -36,13 +36,15 @@ import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.CPN;
  */
 public class DefaultTtiStrategy implements ITtiStrategy {
 
+    private static final String ISO6937 = "ISO-6937";
+
     private List<Caption> captions;
     private List<StlSubtitle> stlSubtitles;
 
     @Override
     public String getCharset() {
         if ("00".equals(CCT.getStringValue())) { // Latin
-            return "ISO-6937"; // provided by a 'fr.noop':'charset' project
+            return ISO6937; // provided by a 'fr.noop':'charset' project
         } else if ("01".equals(CPN.getStringValue())) { // Latin/Cyrillic
             return "ISO8859_5";
         } else if ("02".equals(CPN.getStringValue())) { // Latin/Arabic
@@ -71,12 +73,15 @@ public class DefaultTtiStrategy implements ITtiStrategy {
             String[] lines = splitAndCleanText(caption);
 
             // 1.2 apply styles
-            byte[] text = applyStyles(caption, lines);
+            byte[] styles = applyStyles(caption);
 
-            // 1.3 split to extension blocks
+            // 1.3 encode strings using required charset.
+            byte[] text = encode(styles, lines);
+
+            // 1.4 split to extension blocks
             byte[][] extensionBlocks = splitToExtensionBlocks(text);
 
-            // 1.4 create a subtitle object
+            // 1.5 create a subtitle object
             StlSubtitle stlSubtitle = new StlSubtitle(captions, caption, captionNum, lines.length, extensionBlocks);
             this.stlSubtitles.add(stlSubtitle);
         }
@@ -177,7 +182,7 @@ public class DefaultTtiStrategy implements ITtiStrategy {
         return caption.content.split("\n");
     }
 
-    private byte[] applyStyles(Caption caption, String[] lines) throws IOException {
+    private byte[] applyStyles(Caption caption) throws IOException {
         ByteArrayOutputStream allText = new ByteArrayOutputStream();
 
         if (caption.style != null) {
@@ -214,10 +219,32 @@ public class DefaultTtiStrategy implements ITtiStrategy {
             }
         }
 
+        return allText.toByteArray();
+    }
+
+    private byte[] encode(byte[] styles, String[] lines) throws IOException {
+        ByteArrayOutputStream allText = new ByteArrayOutputStream();
+        allText.write(styles);
+
+        Iso6937Helper iso6937Helper = null;
+        if (ISO6937.equals(getCharset())) {
+            iso6937Helper = new Iso6937Helper();
+        }
+
         for (int i = 0; i < lines.length; i++) {
             for (byte ch : lines[i].getBytes(getCharset())) {
+                // fix ISO6937 (the fr.noop.charset implementation is not full and doesn't match $ sign correctly).
+                if (iso6937Helper != null) {
+                    Byte fixedCh = iso6937Helper.fixIso6937(ch);
+                    if (fixedCh == null) {
+                        continue;
+                    } else {
+                        ch = fixedCh;
+                    }
+                }
                 allText.write(ch);
             }
+
             if (i < lines.length - 1) {
                 allText.write((byte) 0x8A); // end of lines
             }
