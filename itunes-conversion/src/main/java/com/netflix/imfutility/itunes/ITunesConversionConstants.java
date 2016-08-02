@@ -26,14 +26,27 @@ public final class ITunesConversionConstants {
     private ITunesConversionConstants() {
     }
 
-    /* 1. Conversion.xml */
+    /* Conversion.xml */
 
-    // 1.1. conversion.xml location
+    // conversion.xml location
     public static final String CONVERSION_XML = "xml/conversion.xml";
 
-    // 1.2 dynamic parameters:
+    // common dynamic parameters:
     public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "output";
     public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
     public static final String DYNAMIC_PARAM_METADATA_XML = "metadata";
 
+    // AudioMap constants
+    public static final String GEN_MAIN_SEQ_UUID = "urn:uuid:38d52c00-68d3-4056-8858-28eeaf3238d3";
+    public static final String GEN_ADDITIONAL_SEQ_UUID = "urn:uuid:38d52c00-68d3-4056-8858-28eeaf3238d4";
+
+    public static final String DEFAULT_AUDIO_MAP_FILE = "audiomap.xml";
+
+    public static final String DYNAMIC_AUDIOMAP_FILE = "itunesAudioMap";
+    public static final String DYNAMIC_PAN_PARAMETER_PREFIX = "panParameter";
+    public static final String DYNAMIC_ADDITIONAL_AUDIO_TRACKS_PREFIX = "additionalAudioTracks";
+    public static final String DYNAMIC_ADDITIONAL_AUDIO_PREFIX = "additionalAudio";
+    public static final String DYNAMIC_MAIN_AUDIO = "mainAudio";
+    public static final String DYNAMIC_MAIN_AUDIO_TRACKS = "mainAudioTracks";
+    public static final String DYNAMIC_ADDITIONAL_AUDIO_COUNT = "additionalAudioCount";
 }

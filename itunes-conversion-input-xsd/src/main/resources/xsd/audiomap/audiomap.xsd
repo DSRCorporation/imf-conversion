@@ -42,9 +42,9 @@
     <!-- simple elements and attribute definitions -->
 
     <xs:element name="Option1a" type="Option1aType" />
-    <xs:element name="Option1b" type="Option1bType" />
+<!--    <xs:element name="Option1b" type="Option1bType" />
     <xs:element name="Option1c" type="Option1cType" />
-    <xs:element name="Option1d" type="Option1dType" />
+    <xs:element name="Option1d" type="Option1dType" />-->
     <xs:element name="Option2"  type="Option2Type" />
     <xs:element name="Option3"  type="Option3Type" />
     <xs:element name="Option4"  type="Option4Type" />
@@ -73,9 +73,9 @@
     <xs:complexType name="MainAudioType">
         <xs:choice>
             <xs:element ref="Option1a" />
-            <xs:element ref="Option1b" />
+<!--            <xs:element ref="Option1b" />
             <xs:element ref="Option1c" />
-            <xs:element ref="Option1d" />
+            <xs:element ref="Option1d" />-->
             <xs:element ref="Option2" />
             <xs:element ref="Option3" />
             <xs:element ref="Option4" />
@@ -130,7 +130,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="Option1bType">
+<!--    <xs:complexType name="Option1bType">
         <xs:sequence>
             <xs:element name="Track1" minOccurs="0">
                 <xs:complexType>
@@ -227,7 +227,7 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-    </xs:complexType>
+    </xs:complexType>-->
 
     <xs:complexType name="Option2Type">
         <xs:sequence>
@@ -420,7 +420,7 @@
     <xs:complexType name="ChannelType">
         <xs:sequence>
             <xs:element name="CPLVirtualTrackId" type="CPLVirtualTrackIdType" />
-            <xs:element name="CPLVirtualTrackChannel" type="xs:positiveInteger" />
+            <xs:element name="CPLVirtualTrackChannel" type="CPLVirtualTrackChannelType" />
         </xs:sequence>
     </xs:complexType>
 
@@ -442,6 +442,13 @@
         <xs:restriction base="xs:string">
             <!-- urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711 -->
             <xs:pattern value="urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="CPLVirtualTrackChannelType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="256"/>
         </xs:restriction>
     </xs:simpleType>
 
