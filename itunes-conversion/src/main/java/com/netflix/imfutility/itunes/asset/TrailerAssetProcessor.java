@@ -28,6 +28,8 @@ import com.netflix.imfutility.itunes.xmlprovider.builder.file.DataFileTagBuilder
 
 import java.io.File;
 
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.MOV_FORMAT;
+
 /**
  * Asset processor specified for trailer managing.
  */
@@ -66,7 +68,7 @@ public class TrailerAssetProcessor extends AssetProcessor<DataFileType> {
 
     @Override
     protected void validate(File assetFile) throws AssetValidationException {
-        if (!format.getFormatLongName().equals("QuickTime / MOV")) {
+        if (!format.getFormatLongName().equals(MOV_FORMAT)) {
             throw new AssetValidationException("Trailer must be an MOV container");
         }
     }

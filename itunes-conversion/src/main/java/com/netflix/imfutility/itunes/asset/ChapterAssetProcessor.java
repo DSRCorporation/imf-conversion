@@ -27,6 +27,13 @@ import org.apache.commons.math3.fraction.BigFraction;
 
 import java.io.File;
 
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.CHAPTER_MAX_INDEX;
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.CHAPTER_MIN_INDEX;
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.CHAPTER_MIN_WIDTH;
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.CHAPTER_TYPE;
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.JPG_CONTENT_TYPE;
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.JPG_FORMAT_NAME;
+
 /**
  * Asset processor specified for chapter image managing.
  */
@@ -59,17 +66,18 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
     protected boolean checkInput(File assetFile) {
         return super.checkInput(assetFile)
                 && chapterIndex != null
-                && (chapterIndex > 0 && chapterIndex < 100)
+                && !(chapterIndex < CHAPTER_MIN_INDEX || chapterIndex > CHAPTER_MAX_INDEX)
                 && aspectRatio != null
                 && inputChapter != null;
     }
 
     @Override
     protected void validate(File assetFile) throws AssetValidationException {
-        ImageValidator validator = new ImageValidator(assetFile, "Chapter");
-        validator.validateSize(640, 640);
+        ImageValidator validator = new ImageValidator(assetFile, CHAPTER_TYPE);
+        //  validate only chapter width
+        validator.validateSize(CHAPTER_MIN_WIDTH, null);
         validator.validateAspectRatio(aspectRatio);
-        validator.validateContentType("image/jpeg", "JPEG");
+        validator.validateContentType(JPG_CONTENT_TYPE, JPG_FORMAT_NAME);
         validator.validateRGBColorSpace();
     }
 

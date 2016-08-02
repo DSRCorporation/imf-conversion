@@ -23,7 +23,7 @@ import com.netflix.imfutility.itunes.image.ImageValidationException;
 import com.netflix.imfutility.itunes.util.AssetUtils;
 import com.netflix.imfutility.itunes.util.TestUtils;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
-import com.netflix.imfutility.itunes.xmlprovider.builder.MetadataXmlSampleBuilder;
+import com.netflix.imfutility.itunes.xmlprovider.builder.ChaptersXmlSampleBuilder;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -68,7 +68,7 @@ public class ChapterAssetProcessorTest {
         MetadataXmlProvider metadataXmlProvider = createMetadataXmlProvider();
         ChapterAssetProcessor processor = new ChapterAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setInputChapter(MetadataXmlSampleBuilder.buildInputChapter())
+        processor.setInputChapter(ChaptersXmlSampleBuilder.buildInputChapter())
                 .setAspectRatio(new BigFraction(16).divide(9))
                 .setChapterIndex(1)
                 .process(AssetUtils.getTestCorrectChapterFile());
@@ -88,7 +88,7 @@ public class ChapterAssetProcessorTest {
         ChapterAssetProcessor processor = new ChapterAssetProcessor(createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setInputChapter(MetadataXmlSampleBuilder.buildInputChapter())
+        processor.setInputChapter(ChaptersXmlSampleBuilder.buildInputChapter())
                 //  aspect ratio of image 16:9
                 .setAspectRatio(new BigFraction(4).divide(3))
                 .setChapterIndex(1)
@@ -100,7 +100,7 @@ public class ChapterAssetProcessorTest {
         ChapterAssetProcessor processor = new ChapterAssetProcessor(createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setInputChapter(MetadataXmlSampleBuilder.buildInputChapter())
+        processor.setInputChapter(ChaptersXmlSampleBuilder.buildInputChapter())
                 .setAspectRatio(new BigFraction(16).divide(9))
                 .setChapterIndex(1)
                 .process(TestUtils.getTestFile());
@@ -111,7 +111,7 @@ public class ChapterAssetProcessorTest {
         ChapterAssetProcessor processor = new ChapterAssetProcessor(createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setInputChapter(MetadataXmlSampleBuilder.buildInputChapter())
+        processor.setInputChapter(ChaptersXmlSampleBuilder.buildInputChapter())
                 .setAspectRatio(new BigFraction(16).divide(9))
                 .setChapterIndex(1)
                 .process(new File("invalid_path"));
@@ -130,7 +130,7 @@ public class ChapterAssetProcessorTest {
         ChapterAssetProcessor processor = new ChapterAssetProcessor(createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setInputChapter(MetadataXmlSampleBuilder.buildInputChapter())
+        processor.setInputChapter(ChaptersXmlSampleBuilder.buildInputChapter())
                 .setAspectRatio(new BigFraction(16).divide(9))
                 //  chapter index must be from 1 to 99
                 .setChapterIndex(100)

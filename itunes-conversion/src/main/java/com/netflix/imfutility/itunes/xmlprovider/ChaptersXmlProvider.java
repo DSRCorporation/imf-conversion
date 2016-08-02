@@ -22,7 +22,7 @@ import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
 import com.netflix.imfutility.generated.itunes.metadata.ChaptersInputType;
 import com.netflix.imfutility.generated.itunes.metadata.ObjectFactory;
-import com.netflix.imfutility.itunes.xmlprovider.builder.MetadataXmlSampleBuilder;
+import com.netflix.imfutility.itunes.xmlprovider.builder.ChaptersXmlSampleBuilder;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.xml.sax.SAXException;
@@ -105,7 +105,7 @@ public final class ChaptersXmlProvider {
      * @param file metadata.xml file
      */
     public static void generateSampleXml(File file) {
-        marshallChapters(MetadataXmlSampleBuilder.buildInputChapters(), CHAPTERS_XML_SCHEME, file);
+        marshallChapters(ChaptersXmlSampleBuilder.buildInputChapters(), CHAPTERS_XML_SCHEME, file);
     }
 
     /**

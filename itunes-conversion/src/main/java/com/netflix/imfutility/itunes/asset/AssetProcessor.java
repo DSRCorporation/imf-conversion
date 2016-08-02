@@ -60,18 +60,18 @@ public abstract class AssetProcessor<T> {
         return assetFile.exists() && assetFile.isFile();
     }
 
-    protected abstract void validate(File assetFile) throws AssetValidationException;
-
-    protected abstract T buildMetadata(File assetFile);
-
-    protected abstract void appendMetadata(T tag);
-
     protected void distribute(File assetFile) throws IOException {
         File destFile = new File(destDir, getFileName());
         try (OutputStream destOut = new FileOutputStream(destFile)) {
             Files.copy(assetFile.toPath(), destOut);
         }
     }
+
+    protected abstract void validate(File assetFile) throws AssetValidationException;
+
+    protected abstract T buildMetadata(File assetFile);
+
+    protected abstract void appendMetadata(T tag);
 
     protected abstract String getFileName();
 }

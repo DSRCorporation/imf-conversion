@@ -60,7 +60,7 @@ public class ImageValidator {
     }
 
     public void validateSize(Integer width, Integer height) throws ImageValidationException {
-        if (image.getWidth() < width || image.getHeight() < height) {
+        if ((width != null && image.getWidth() < width) || (height != null && image.getHeight() < height)) {
             throw new ImageValidationException(String.format(
                     "%s image must be at least %4d x%4d", imageType, width, height));
         }

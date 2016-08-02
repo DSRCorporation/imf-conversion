@@ -189,17 +189,6 @@ public class MetadataXmlProvider {
     }
 
     /**
-     * Generates a sample strict metadata structure.
-     */
-    public static PackageType generateSampleStrictMetadata() {
-        try {
-            return MetadataXmlSampleBuilder.buildStrictPackage();
-        } catch (DatatypeConfigurationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
      * Create marshaller based on schema for iTunes specific metadata format.
      *
      * @param jaxbContext context

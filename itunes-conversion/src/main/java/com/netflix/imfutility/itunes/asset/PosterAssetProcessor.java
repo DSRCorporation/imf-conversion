@@ -28,6 +28,14 @@ import org.apache.commons.math3.fraction.BigFraction;
 
 import java.io.File;
 
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.JPG_CONTENT_TYPE;
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.JPG_FORMAT_NAME;
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.POSTER_AR_DENOMINATOR;
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.POSTER_AR_NUMERATOR;
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.POSTER_MIN_HEIGHT;
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.POSTER_MIN_WIDTH;
+import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.POSTER_TYPE;
+
 /**
  * Asset processor specified for poster managing.
  */
@@ -51,10 +59,10 @@ public class PosterAssetProcessor extends AssetProcessor<DataFileType> {
 
     @Override
     protected void validate(File assetFile) throws ImageValidationException {
-        ImageValidator validator = new ImageValidator(assetFile, "Poster");
-        validator.validateSize(1400, 2100);
-        validator.validateAspectRatio(new BigFraction(2).divide(3));
-        validator.validateContentType("image/jpeg", "JPEG");
+        ImageValidator validator = new ImageValidator(assetFile, POSTER_TYPE);
+        validator.validateSize(POSTER_MIN_WIDTH, POSTER_MIN_HEIGHT);
+        validator.validateAspectRatio(new BigFraction(POSTER_AR_NUMERATOR).divide(POSTER_AR_DENOMINATOR));
+        validator.validateContentType(JPG_CONTENT_TYPE, JPG_FORMAT_NAME);
         validator.validateRGBColorSpace();
     }
 

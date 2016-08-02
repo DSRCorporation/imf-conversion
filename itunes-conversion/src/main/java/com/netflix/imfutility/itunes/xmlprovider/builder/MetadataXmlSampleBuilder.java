@@ -18,24 +18,13 @@
  */
 package com.netflix.imfutility.itunes.xmlprovider.builder;
 
-import com.netflix.imfutility.generated.itunes.metadata.ArtWorkFileType;
-import com.netflix.imfutility.generated.itunes.metadata.AssetType;
-import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
-import com.netflix.imfutility.generated.itunes.metadata.AssetsType;
 import com.netflix.imfutility.generated.itunes.metadata.BillingType;
 import com.netflix.imfutility.generated.itunes.metadata.CastMemberType;
 import com.netflix.imfutility.generated.itunes.metadata.CastType;
-import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
-import com.netflix.imfutility.generated.itunes.metadata.ChapterType;
-import com.netflix.imfutility.generated.itunes.metadata.ChaptersInputType;
-import com.netflix.imfutility.generated.itunes.metadata.ChaptersType;
-import com.netflix.imfutility.generated.itunes.metadata.CheckSumType;
 import com.netflix.imfutility.generated.itunes.metadata.CrewMemberType;
 import com.netflix.imfutility.generated.itunes.metadata.CrewRoleType;
 import com.netflix.imfutility.generated.itunes.metadata.CrewRolesType;
 import com.netflix.imfutility.generated.itunes.metadata.CrewType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
 import com.netflix.imfutility.generated.itunes.metadata.GenreType;
 import com.netflix.imfutility.generated.itunes.metadata.GenresType;
 import com.netflix.imfutility.generated.itunes.metadata.ISO3166CountryCode;
@@ -55,7 +44,6 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -77,13 +65,6 @@ public final class MetadataXmlSampleBuilder {
         packageType.setLanguage("en-US");
         packageType.setProvider("Required company");
         packageType.setVideo(buildVideo());
-        return packageType;
-    }
-
-    public static PackageType buildStrictPackage() throws DatatypeConfigurationException {
-        PackageType packageType = buildPackage();
-        packageType.getVideo().setChapters(buildChapters());
-        packageType.getVideo().setAssets(buildAssets());
         return packageType;
     }
 
@@ -170,73 +151,6 @@ public final class MetadataXmlSampleBuilder {
         return crewRoles;
     }
 
-    // Chapters
-
-    public static ChaptersType buildChapters() {
-        ChaptersType chapters = new ChaptersType();
-        chapters.setTimecodeFormat("qt_text");
-        chapters.getChapter().add(buildChapter());
-        return chapters;
-    }
-
-    public static ChapterType buildChapter() {
-        ChapterType chapter = new ChapterType();
-        chapter.setStartTime("00:00:00");
-        chapter.setTitle(buildTitle());
-        chapter.setArtworkFile(buildArtWorkFile());
-        return chapter;
-    }
-
-    public static ArtWorkFileType buildArtWorkFile() {
-        ArtWorkFileType artWorkFile = new ArtWorkFileType();
-        artWorkFile.setFileName("chapter01.jpg");
-        artWorkFile.setSize(new BigInteger("1"));
-        artWorkFile.setChecksum(buildCheckSum());
-        return artWorkFile;
-    }
-
-    public static ChaptersInputType buildInputChapters() {
-        ChaptersInputType chapters = new ChaptersInputType();
-        chapters.setBasedir(".");
-        chapters.setTimecodeFormat("qt_text");
-        chapters.getChapter().add(buildInputChapter());
-        return chapters;
-    }
-
-    public static ChapterInputType buildInputChapter() {
-        ChapterInputType chapter = new ChapterInputType();
-        chapter.setStartTime("00:00:00");
-        chapter.setTitle(buildTitle());
-        chapter.setFileName("chapter01.jpg");
-        return chapter;
-    }
-
-    // Assets
-
-    public static AssetsType buildAssets() {
-        AssetsType assets = new AssetsType();
-        assets.getAsset().add(buildAsset());
-        return assets;
-    }
-
-    public static AssetType buildAsset() {
-        AssetType asset = new AssetType();
-        asset.setType(AssetTypeType.FULL);
-        asset.getDataFile().add(buildDataFile());
-        return asset;
-    }
-
-    // DataFiles
-
-    public static DataFileType buildDataFile() {
-        DataFileType dataFile = new DataFileType();
-        dataFile.setRole(DataFileRoleType.SOURCE);
-        dataFile.setFileName("000000000000-source.mov");
-        dataFile.setSize(new BigInteger("1"));
-        dataFile.setChecksum(buildCheckSum());
-        return dataFile;
-    }
-
     // Products
 
     public static ProductsType buildProducts() {
@@ -250,15 +164,6 @@ public final class MetadataXmlSampleBuilder {
         product.setTerritory(WWType.WW.value());
         product.setClearedForSale(true);
         return product;
-    }
-
-    //  ChekSum
-
-    public static CheckSumType buildCheckSum() {
-        CheckSumType checkSum = new CheckSumType();
-        checkSum.setType("md5");
-        checkSum.setValue(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15});
-        return checkSum;
     }
 
     // Title
