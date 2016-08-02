@@ -27,8 +27,10 @@ public final class ITunesConversionXsdConstants {
     }
 
     // 1: metadata.xml
+    public static final String ISO_3166_1_XML_SCHEME = "xsd/metadata/iso-3166-1.xsd";
     public static final String METADATA_XML_SCHEME = "xsd/metadata/itunes-metadata.xsd";
     public static final String METADATA_XML_STRICT_SCHEME = "xsd/metadata/itunes-strict-metadata.xsd";
-    public static final String ISO_3166_1_XML_SCHEME = "xsd/metadata/iso-3166-1.xsd";
     public static final String METADATA_PACKAGE = "com.netflix.imfutility.generated.itunes.metadata";
+    public static final String CHAPTERS_XML_SCHEME = "xsd/chapters/chapters.xsd";
+    public static final String CHAPTERS_PACKAGE = "com.netflix.imfutility.generated.itunes.metadata";
 }

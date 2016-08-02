@@ -19,4 +19,10 @@
         </schemaBindings>
     </bindings>
 
+    <bindings schemaLocation="../xsd/chapters/chapters.xsd">
+        <schemaBindings>
+            <package name="com.netflix.imfutility.generated.itunes.metadata" />
+        </schemaBindings>
+    </bindings>
+
 </bindings>

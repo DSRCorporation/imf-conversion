@@ -18,18 +18,29 @@
  */
 package com.netflix.imfutility.itunes.util;
 
+import com.netflix.imfutility.resources.ResourceHelper;
+
 import java.io.File;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 
 /**
- * Common test utility.
+ * Test utility for testing {@link com.netflix.imfutility.itunes.mediainfo.SimpleMediaInfoBuilder}.
  */
-public class TestUtils {
-
-    private TestUtils() {
+public final class SimpleMediaInfoUtils {
+    private SimpleMediaInfoUtils() {
     }
 
-    public static File getTestFile() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-file").toURI());
+    public static String getConversionXmlPath() throws URISyntaxException {
+        return "xml/mediainfo/test-media-info-conversion.xml";
     }
+
+    public static InputStream getConversionXmlStream() throws URISyntaxException {
+        return ResourceHelper.getResourceInputStream(getConversionXmlPath());
+    }
+
+    public static File getMediaInfoFile() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/mediainfo/test-media-info.xml").toURI());
+    }
+
 }

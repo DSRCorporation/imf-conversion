@@ -16,27 +16,28 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes;
+package com.netflix.imfutility.itunes.util;
+
+import java.io.File;
+import java.net.URISyntaxException;
 
 /**
- * CoreConstants related to iTunes format.
+ * Test utility for chapters.xml.
  */
-public final class ITunesConversionConstants {
+public final class ChaptersUtils {
 
-    private ITunesConversionConstants() {
+    private ChaptersUtils() {
     }
 
-    /* 1. Conversion.xml */
+    public static File getCorrectChaptersXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/chapters/test-chapters.xml").toURI());
+    }
 
-    // 1.1. conversion.xml location
-    public static final String CONVERSION_XML = "xml/conversion.xml";
+    public static File getInvalidChaptersXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/chapters/invalid/invalid-test-chapters.xml").toURI());
+    }
 
-    // 1.2 dynamic parameters:
-    public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "output";
-    public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
-    public static final String DYNAMIC_PARAM_METADATA_XML = "metadata";
-    public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT = "trailerMediaInfoInput";
-    public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT = "trailerMediaInfoOutput";
-
-
+    public static File getBrokenChaptersXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/chapters/broken/broken-test-chapters.xml").toURI());
+    }
 }
