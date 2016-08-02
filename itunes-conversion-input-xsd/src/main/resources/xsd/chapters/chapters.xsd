@@ -46,7 +46,7 @@
                 <xs:element name="title" type="i:TitleType"/>
                 <xs:element name="titles" type="i:TitlesType"/>
             </xs:choice>
-            <xs:element name="file_name" type="i:FileNameType"/>
+            <xs:element name="file_name" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

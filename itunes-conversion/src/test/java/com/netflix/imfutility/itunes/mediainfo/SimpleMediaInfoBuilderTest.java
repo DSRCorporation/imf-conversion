@@ -93,7 +93,7 @@ public class SimpleMediaInfoBuilderTest {
         new TestMediaInfoBuilder(contextProvider, testExecutorLogger, SimpleMediaInfoUtils.getMediaInfoFile())
                 .setCommandName("other1")
                 .setInputDynamicParam("mediaInfoInput1")
-                .setOutputDynamycParam("mediaInfoOutput1")
+                .setOutputDynamicParam("mediaInfoOutput1")
                 .build(TestUtils.getTestFile());
 
         assertEquals(
@@ -115,7 +115,7 @@ public class SimpleMediaInfoBuilderTest {
         new TestMediaInfoBuilder(contextProvider, testExecutorLogger, SimpleMediaInfoUtils.getMediaInfoFile())
                 .setCommandName("other1")
                 .setInputDynamicParam("mediaInfoInput1")
-                .setOutputDynamycParam("mediaInfoOutput1")
+                .setOutputDynamicParam("mediaInfoOutput1")
                 .build(TestUtils.getTestFile());
 
         assertEquals(
@@ -137,7 +137,7 @@ public class SimpleMediaInfoBuilderTest {
         new TestMediaInfoBuilder(contextProvider, testExecutorLogger, SimpleMediaInfoUtils.getMediaInfoFile())
                 .setCommandName("other1")
                 .setInputDynamicParam("mediaInfoInput1")
-                .setOutputDynamycParam("mediaInfoOutput1")
+                .setOutputDynamicParam("mediaInfoOutput1")
                 .build(TestUtils.getTestFile());
 
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
@@ -151,7 +151,7 @@ public class SimpleMediaInfoBuilderTest {
     }
 
     @Test(expected = FileNotFoundException.class)
-    public void testOutputFileNotFound() throws Exception {
+    public void testInputFileNotFound() throws Exception {
         TemplateParameterContextProvider contextProvider = createContextProvider();
 
         // build media info
@@ -159,7 +159,7 @@ public class SimpleMediaInfoBuilderTest {
         new TestMediaInfoBuilder(contextProvider, testExecutorLogger, SimpleMediaInfoUtils.getMediaInfoFile())
                 .setCommandName("other1")
                 .setInputDynamicParam("mediaInfoInput1")
-                .setOutputDynamycParam("mediaInfoOutput1")
+                .setOutputDynamicParam("mediaInfoOutput1")
                 .build(new File("invalid-path"));
     }
 
@@ -172,7 +172,7 @@ public class SimpleMediaInfoBuilderTest {
         new TestMediaInfoBuilder(contextProvider, testExecutorLogger, SimpleMediaInfoUtils.getMediaInfoFile())
                 .setCommandName("other3") // no such command
                 .setInputDynamicParam("mediaInfoInput1")
-                .setOutputDynamycParam("mediaInfoOutput1")
+                .setOutputDynamicParam("mediaInfoOutput1")
                 .build(TestUtils.getTestFile());
     }
 

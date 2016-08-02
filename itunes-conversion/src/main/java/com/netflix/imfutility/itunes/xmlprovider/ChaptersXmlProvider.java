@@ -52,7 +52,6 @@ public final class ChaptersXmlProvider {
 
     public ChaptersXmlProvider(File chaptersFile) throws FileNotFoundException, XmlParsingException {
         this.chaptersType = loadChapters(chaptersFile);
-        //  TODO: check search for chapters in dirs
         this.baseDir = new File(chaptersType.getBasedir());
 
         mapChaptersAssets();

@@ -23,14 +23,13 @@ import com.netflix.imfutility.generated.itunes.metadata.ArtWorkFileType;
 import com.netflix.imfutility.generated.itunes.metadata.AssetType;
 import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.AssetsType;
+import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
 import com.netflix.imfutility.generated.itunes.metadata.ChapterType;
 import com.netflix.imfutility.generated.itunes.metadata.ChaptersType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
-import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
 import com.netflix.imfutility.generated.itunes.metadata.ObjectFactory;
 import com.netflix.imfutility.generated.itunes.metadata.PackageType;
 import com.netflix.imfutility.generated.itunes.metadata.TerritoriesType;
-import com.netflix.imfutility.generated.itunes.metadata.TitleType;
 import com.netflix.imfutility.itunes.xmlprovider.builder.MetadataXmlSampleBuilder;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -85,14 +84,12 @@ public class MetadataXmlProvider {
     }
 
     /**
-     * Get default locale based on language tag content.
+     * Get basic language specified in metadata.
      *
-     * @return default locale
+     * @return basic language
      */
-    public LocaleType getDefaultLocale() {
-        LocaleType locale = new LocaleType();
-        locale.setName(packageType.getLanguage());
-        return locale;
+    public String getLanguage() {
+        return packageType.getLanguage();
     }
 
     //  Chapters processing
@@ -108,10 +105,13 @@ public class MetadataXmlProvider {
         ensureChaptersCreated().setTimecodeFormat(timeCode);
     }
 
-    public void appendChapter(ArtWorkFileType artWorkFile, TitleType title, String startTime) {
+    public void appendChapter(ArtWorkFileType artWorkFile, ChapterInputType chapterInput) {
         ChapterType chapter = new ChapterType();
-        chapter.setTitle(title);
-        chapter.setStartTime(startTime);
+        chapter.setTitle(chapterInput.getTitle());
+        if (chapterInput.getTitles() != null) {
+            chapter.setTitles(chapterInput.getTitles());
+        }
+        chapter.setStartTime(chapterInput.getStartTime());
         chapter.setArtworkFile(artWorkFile);
 
         ensureChaptersCreated().getChapter().add(chapter);

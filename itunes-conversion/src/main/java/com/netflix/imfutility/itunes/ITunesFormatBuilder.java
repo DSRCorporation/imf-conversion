@@ -24,6 +24,7 @@ import com.netflix.imfutility.conversion.ConversionEngine;
 import com.netflix.imfutility.conversion.templateParameter.context.DestTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
+import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
 import com.netflix.imfutility.generated.mediainfo.FfprobeType;
 import com.netflix.imfutility.itunes.asset.ChapterAssetProcessor;
 import com.netflix.imfutility.itunes.asset.PosterAssetProcessor;
@@ -155,8 +156,8 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
     private void processAdditionalAssets() throws XmlParsingException, IOException {
         processPoster();
-        processChapters();
         processTrailer();
+        processChapters();
     }
 
     private void processPoster() throws IOException {
@@ -170,10 +171,8 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
                 .process(poster);
     }
 
-    //  TODO: move implementation to provider
     private void processChapters() throws XmlParsingException, IOException {
         File chaptersFile = iTunesInputParameters.getChaptersFile();
-
         if (chaptersFile == null) {
             return;
         }
@@ -203,7 +202,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         new TrailerAssetProcessor(metadataXmlProvider, itmspDir)
                 .setVendorId(iTunesInputParameters.getCmdLineArgs().getVendorId())
                 .setFormat(getTrailerMediaInfo(trailer).getFormat())
-                .setLocale(metadataXmlProvider.getDefaultLocale())
+                .setLocale(getDefaultLocale())
                 .process(trailer);
     }
 
@@ -212,7 +211,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
             return new SimpleMediaInfoBuilder(contextProvider, new ConversionEngine().getExecuteStrategyFactory())
                     .setCommandName("trailer")
                     .setInputDynamicParam(DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT)
-                    .setOutputDynamycParam(DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT)
+                    .setOutputDynamicParam(DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT)
                     .build(trailer);
         } catch (MediaInfoException e) {
             throw new ConversionException("Conversion aborted cause of MediaInfo failures", e);
@@ -222,6 +221,14 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     private BigFraction getDestAspectRatio() {
         DestTemplateParameterContext destContext = contextProvider.getDestContext();
         return ConversionHelper.parseAspectRatio(destContext.getParameterValue(ASPECT_RATIO));
+    }
+
+    private LocaleType getDefaultLocale() {
+        LocaleType locale = new LocaleType();
+        locale.setName(iTunesInputParameters.getCmdLineArgs().getFallbackLocale() != null
+                ? iTunesInputParameters.getCmdLineArgs().getFallbackLocale()
+                : metadataXmlProvider.getLanguage());
+        return locale;
     }
 
 }

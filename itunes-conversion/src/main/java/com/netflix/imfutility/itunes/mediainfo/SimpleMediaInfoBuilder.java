@@ -46,7 +46,7 @@ public class SimpleMediaInfoBuilder {
 
     private String commandName;
     private String inputDynamicParam;
-    private String outputDynamycParam;
+    private String outputDynamicParam;
 
     public SimpleMediaInfoBuilder(TemplateParameterContextProvider contextProvider, ExecuteStrategyFactory executeStrategyFactory) {
         this.contextProvider = contextProvider;
@@ -63,15 +63,15 @@ public class SimpleMediaInfoBuilder {
         return this;
     }
 
-    public SimpleMediaInfoBuilder setOutputDynamycParam(String outputDynamycParam) {
-        this.outputDynamycParam = outputDynamycParam;
+    public SimpleMediaInfoBuilder setOutputDynamicParam(String outputDynamicParam) {
+        this.outputDynamicParam = outputDynamicParam;
         return this;
     }
 
     private void initDynamicContext(File inputFile, File outputFile) {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         dynamicContext.addParameter(inputDynamicParam, inputFile.getAbsolutePath());
-        dynamicContext.addParameter(outputDynamycParam, outputFile.getAbsolutePath(), true);
+        dynamicContext.addParameter(outputDynamicParam, outputFile.getAbsolutePath(), true);
     }
 
     private MediaInfoCommandType getMediaInfoCommand() throws MediaInfoException {
@@ -99,7 +99,7 @@ public class SimpleMediaInfoBuilder {
     }
 
     protected File getOutputFile() {
-        return new File(contextProvider.getWorkingDir(), outputDynamycParam + ".xml");
+        return new File(contextProvider.getWorkingDir(), outputDynamicParam + ".xml");
     }
 
     private void executeMediaInfoCommand(MediaInfoCommandType mediaInfoCommand, File inputFile, File outputFile) throws IOException {

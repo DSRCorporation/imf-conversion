@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.itunes.chapters;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.itunes.util.ChaptersUtils;
 import com.netflix.imfutility.itunes.xmlprovider.ChaptersXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
@@ -48,11 +49,20 @@ public class ChaptersXmlProviderTest {
         if (!workingDir.mkdir()) {
             throw new RuntimeException("Could not create a working dir within tmp folder");
         }
+
+        createChapterFile("chapter01.jpg");
+        createChapterFile("chapter02.jpg");
     }
 
     @AfterClass
     public static void teardownAll() throws IOException {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
+    }
+
+    private static void createChapterFile(String chapterName) throws IOException {
+        File file = new File(chapterName);
+        file.createNewFile();
+        file.deleteOnExit();
     }
 
     @Test
@@ -65,6 +75,7 @@ public class ChaptersXmlProviderTest {
         assertEquals(".", provider.getChapters().getBasedir());
 
         assertEquals("chapter01.jpg", provider.getChapters().getChapter().get(0).getFileName());
+        assertEquals("chapter02.jpg", provider.getChapters().getChapter().get(1).getFileName());
     }
 
     @Test(expected = XmlParsingException.class)
@@ -80,6 +91,13 @@ public class ChaptersXmlProviderTest {
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
         new ChaptersXmlProvider(new File("invalid-path"));
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testChapterFileNotFound() throws Exception {
+        new File("chapter02.jpg").delete();
+
+        new ChaptersXmlProvider(ChaptersUtils.getCorrectChaptersXml());
     }
 
     @Test

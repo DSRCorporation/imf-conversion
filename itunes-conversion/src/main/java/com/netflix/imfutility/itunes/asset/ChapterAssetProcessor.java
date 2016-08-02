@@ -80,7 +80,7 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
 
     @Override
     protected void appendMetadata(ArtWorkFileType tag) {
-        metadataXmlProvider.appendChapter(tag, inputChapter.getTitle(), inputChapter.getStartTime());
+        metadataXmlProvider.appendChapter(tag, inputChapter);
     }
 
     @Override
