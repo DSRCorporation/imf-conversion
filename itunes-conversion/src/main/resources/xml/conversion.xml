@@ -141,37 +141,44 @@
                     <param name="height">480</param>
                     <param name="frameRate">30000/1001</param>
                     <param name="interlaced">true</param>
+                    <param name="aspectRatio">4/3</param>
                 </destContext>
                 <destContext name="sdtvntsc480p2997">
                     <param name="width">640</param>
                     <param name="height">480</param>
                     <param name="frameRate">30000/1001</param>
+                    <param name="aspectRatio">4/3</param>
                 </destContext>
                 <destContext name="sdtvntsc480p24">
                     <param name="width">640</param>
                     <param name="height">480</param>
                     <param name="frameRate">24/1</param>
+                    <param name="aspectRatio">4/3</param>
                 </destContext>
                 <destContext name="sdtvntsc480p23976">
                     <param name="width">640</param>
                     <param name="height">480</param>
                     <param name="frameRate">24000/1001</param>
+                    <param name="aspectRatio">4/3</param>
                 </destContext>
                 <!-- PAL -->
                 <destContext name="sdtvpal576p25">
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">25/1</param>
+                    <param name="aspectRatio">4/3</param>
                 </destContext>
                 <destContext name="sdtvpal576p24">
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">24/1</param>
+                    <param name="aspectRatio">4/3</param>
                 </destContext>
                 <destContext name="sdtvpal576p23976">
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">24000/1001</param>
+                    <param name="aspectRatio">4/3</param>
                 </destContext>
 
                 <!-- SD Film -->
