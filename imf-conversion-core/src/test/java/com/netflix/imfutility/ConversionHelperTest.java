@@ -165,4 +165,25 @@ public class ConversionHelperTest {
     public void safeParseIncorrectEditRateNotNumber() {
         ConversionHelper.safeParseEditRate("aaaaa");
     }
+
+    @Test
+    public void safeParseCorrectAspectRatio() {
+        assertEquals(new BigFraction(16, 9), ConversionHelper.parseAspectRatio("16/9"));
+        assertEquals(new BigFraction(2), ConversionHelper.parseAspectRatio("2"));
+    }
+
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void safeParseIncorrectAspectRatioMoreArguments() {
+        ConversionHelper.parseAspectRatio("30000 1001 1");
+    }
+
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void safeParseIncorrectAspectRatioEmpty() {
+        ConversionHelper.parseAspectRatio("");
+    }
+
+    @Test(expected = com.netflix.imfutility.ConversionException.class)
+    public void safeParseIncorrectAspectRatioNotNumber() {
+        ConversionHelper.parseAspectRatio("aaaaa");
+    }
 }

@@ -68,6 +68,7 @@
             <xs:element type="mediaInfoCommandVideoType" name="mediaInfoCommandVideo"/>
             <xs:element type="mediaInfoCommandAudioType" name="mediaInfoCommandAudio"/>
             <xs:element type="mediaInfoCommandSubtitleType" name="mediaInfoCommandSubtitle"/>
+            <xs:element type="mediaInfoCommandOthersType" name="mediaInfoCommandOthers" minOccurs="0"/>
             <xs:element type="formatConfigurationTypes" name="formatConfigurations" maxOccurs="1" minOccurs="1"/>
         </xs:sequence>
         <xs:attribute type="xs:string" name="name" use="required"/>
@@ -131,6 +132,25 @@
         </xs:simpleContent>
     </xs:complexType>
 
+    <!--
+        A command to gather media info parameters (such as channels num, fps, etc.) for other asset.
+    -->
+    <xs:complexType name="mediaInfoCommandOtherType">
+        <xs:simpleContent>
+            <xs:extension base="mediaInfoCommandType">
+                <xs:attribute name="name" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <!--
+        A container for other media info commands.
+    -->
+    <xs:complexType name="mediaInfoCommandOthersType">
+        <xs:sequence>
+            <xs:element name="mediaInfoCommand" type="mediaInfoCommandOtherType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
 
     <!--
       defines destination context(s)
@@ -366,19 +386,19 @@
     <xs:complexType name="forType">
         <xs:sequence>
             <xs:choice maxOccurs="unbounded" minOccurs="1">
-                <xs:element type="dynamicParameterConcatType" name="dynamicParameter" />
-                <xs:element type="forType" name="for" />
+                <xs:element type="dynamicParameterConcatType" name="dynamicParameter"/>
+                <xs:element type="forType" name="for"/>
             </xs:choice>
         </xs:sequence>
-        <xs:attribute name="iterator" type="NotEmptyString" use="required" />
-        <xs:attribute name="from" type="xs:string" use="optional" default="0" />
-        <xs:attribute name="to" type="xs:string"  use="optional" default="0" />
-        <xs:attribute name="count" type="xs:string" use="optional" default="0" />
+        <xs:attribute name="iterator" type="NotEmptyString" use="required"/>
+        <xs:attribute name="from" type="xs:string" use="optional" default="0"/>
+        <xs:attribute name="to" type="xs:string" use="optional" default="0"/>
+        <xs:attribute name="count" type="xs:string" use="optional" default="0"/>
     </xs:complexType>
 
     <xs:simpleType name="NotEmptyString">
         <xs:restriction base="xs:string">
-            <xs:minLength value="1" />
+            <xs:minLength value="1"/>
         </xs:restriction>
     </xs:simpleType>
 
