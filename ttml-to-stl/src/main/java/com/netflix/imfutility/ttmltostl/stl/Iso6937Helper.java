@@ -79,7 +79,7 @@ public class Iso6937Helper {
             ch = (byte) chInt;
         }
 
-        if (emptyMapping.contains(ch)) {
+        if (emptyMapping.contains(chInt)) {
             return null;
         }
 
