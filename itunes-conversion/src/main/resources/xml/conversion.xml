@@ -166,19 +166,19 @@
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">25/1</param>
-                    <param name="aspectRatio">4/3</param>
+                    <param name="aspectRatio">5/4</param>
                 </destContext>
                 <destContext name="sdtvpal576p24">
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">24/1</param>
-                    <param name="aspectRatio">4/3</param>
+                    <param name="aspectRatio">5/4</param>
                 </destContext>
                 <destContext name="sdtvpal576p23976">
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">24000/1001</param>
-                    <param name="aspectRatio">4/3</param>
+                    <param name="aspectRatio">5/4</param>
                 </destContext>
 
                 <!-- SD Film -->
@@ -191,24 +191,28 @@
                     <param name="frameRate">30000/1001</param>
                     <param name="interlaced">true</param>
                     <param name="aspectRatio">16/9</param>
+                    <param name="dar">16/9</param>
                 </destContext>
                 <destContext name="sdfilmntsc480p2997_16_9">
                     <param name="width">720</param>
                     <param name="height">480</param>
                     <param name="frameRate">30000/1001</param>
                     <param name="aspectRatio">16/9</param>
+                    <param name="dar">16/9</param>
                 </destContext>
                 <destContext name="sdfilmntsc480p24_16_9">
                     <param name="width">720</param>
                     <param name="height">480</param>
                     <param name="frameRate">24/1</param>
                     <param name="aspectRatio">16/9</param>
+                    <param name="dar">16/9</param>
                 </destContext>
                 <destContext name="sdfilmntsc480p23976_16_9">
                     <param name="width">720</param>
                     <param name="height">480</param>
                     <param name="frameRate">24000/1001</param>
                     <param name="aspectRatio">16/9</param>
+                    <param name="dar">16/9</param>
                 </destContext>
                 <!-- 4:3 -->
                 <destContext name="sdfilmntsc480i2997_4_3">
@@ -216,25 +220,29 @@
                     <param name="height">480</param>
                     <param name="frameRate">30000/1001</param>
                     <param name="interlaced">true</param>
-                    <param name="aspectRatio">4/3</param>
+                    <param name="aspectRatio">16/9</param>
+                    <param name="dar">4/3</param>
                 </destContext>
                 <destContext name="sdfilmntsc480p2997_4_3">
                     <param name="width">720</param>
                     <param name="height">480</param>
                     <param name="frameRate">30000/1001</param>
-                    <param name="aspectRatio">4/3</param>
+                    <param name="aspectRatio">16/9</param>
+                    <param name="dar">4/3</param>
                 </destContext>
                 <destContext name="sdfilmntsc480p24_4_3">
                     <param name="width">720</param>
                     <param name="height">480</param>
                     <param name="frameRate">24/1</param>
-                    <param name="aspectRatio">4/3</param>
+                    <param name="aspectRatio">16/9</param>
+                    <param name="dar">4/3</param>
                 </destContext>
                 <destContext name="sdfilmntsc480p23976_4_3">
                     <param name="width">720</param>
                     <param name="height">480</param>
                     <param name="frameRate">24000/1001</param>
-                    <param name="aspectRatio">4/3</param>
+                    <param name="aspectRatio">16/9</param>
+                    <param name="dar">4/3</param>
                 </destContext>
                 <!-- PAL -->
                 <!-- 16:9 -->
@@ -242,38 +250,44 @@
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">25/1</param>
-                    <param name="aspectRatio">16/9</param>
+                    <param name="aspectRatio">5/4</param>
+                    <param name="dar">16/9</param>
                 </destContext>
                 <destContext name="sdfilmpal576p24_16_9">
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">24/1</param>
-                    <param name="aspectRatio">16/9</param>
+                    <param name="aspectRatio">5/4</param>
+                    <param name="dar">16/9</param>
                 </destContext>
                 <destContext name="sdfilmpal576p23976_16_9">
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">24000/1001</param>
-                    <param name="aspectRatio">16/9</param>
+                    <param name="aspectRatio">5/4</param>
+                    <param name="dar">16/9</param>
                 </destContext>
                 <!-- 4:3 -->
                 <destContext name="sdfilmpal576p25_4_3">
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">25/1</param>
-                    <param name="aspectRatio">4/3</param>
+                    <param name="aspectRatio">5/4</param>
+                    <param name="dar">4/3</param>
                 </destContext>
                 <destContext name="sdfilmpal576p24_4_3">
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">24/1</param>
-                    <param name="aspectRatio">4/3</param>
+                    <param name="aspectRatio">5/4</param>
+                    <param name="dar">4/3</param>
                 </destContext>
                 <destContext name="sdfilmpal576p23976_4_3">
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">24000/1001</param>
-                    <param name="aspectRatio">4/3</param>
+                    <param name="aspectRatio">5/4</param>
+                    <param name="dar">4/3</param>
                 </destContext>
             </destContexts>
 
