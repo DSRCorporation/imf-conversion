@@ -140,8 +140,8 @@ public class CmdLineParametersParser {
         }
 
         // TTML mode parameters
-        boolean doOuputTTML = line.hasOption(outputTTML.getLongOpt());
-        if (doOuputTTML) {
+        boolean doOutputTTML = line.hasOption(outputTTML.getLongOpt());
+        if (doOutputTTML) {
             result.setDoOuputTTML(true);
             result.setOutputTTMLFile(line.getOptionValue(outputTTML.getLongOpt()));
         }

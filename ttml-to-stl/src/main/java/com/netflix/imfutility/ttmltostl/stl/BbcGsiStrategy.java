@@ -76,7 +76,8 @@ public final class BbcGsiStrategy extends DefaultGsiStrategy {
         fillTcp();
 
         // TCF
-        TCF.setValue(tto.captions.get(tto.captions.firstKey()).start.getTime("hhmmssff/25"));
+        TCF.setValue(tto.getCaptions().get(tto.getCaptions().firstKey()).getStart().getTime(
+                "hhmmssff/" + getFrameRate()));
 
         // PUB
         if (metadata.getEditorial().getOriginator() != null) {

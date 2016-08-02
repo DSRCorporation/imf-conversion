@@ -111,7 +111,7 @@ public class SilentConversionChecker {
         ContextInfo contextInfo = new ContextInfoBuilder().setSequenceUuid(seqUuid).setSequenceType(SequenceType.VIDEO).build();
         if (!allowFrameRate) {
             //  make check regardless to frame rate format (50 1 and 50/1 both allowed)
-            checkFrameRate(SequenceContextParameters.FRAME_RATE, ConversionParameterNameType.FRAME_RATE, contextInfo);
+            checkFrameRate(contextInfo);
         }
         if (!allowBitDepth) {
             checkParameter(SequenceContextParameters.BIT_DEPTH, ConversionParameterNameType.BIT_DEPTH, contextInfo);
@@ -131,9 +131,9 @@ public class SilentConversionChecker {
         checkParameter(param, conversionParam, contextInfo, Objects::equals);
     }
 
-    private void checkFrameRate(SequenceContextParameters param, ConversionParameterNameType conversionParam, ContextInfo contextInfo)
+    private void checkFrameRate(ContextInfo contextInfo)
             throws ConversionNotAllowedException {
-        checkParameter(param, conversionParam, contextInfo,
+        checkParameter(SequenceContextParameters.FRAME_RATE, ConversionParameterNameType.FRAME_RATE, contextInfo,
                 (f1, f2) -> Objects.equals(ConversionHelper.parseEditRate(f1), ConversionHelper.parseEditRate(f2)));
     }
 

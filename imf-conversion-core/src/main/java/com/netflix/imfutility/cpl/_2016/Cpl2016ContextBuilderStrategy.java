@@ -44,8 +44,6 @@ import javax.xml.bind.JAXBElement;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.netflix.imfutility.CoreConstants.CORE_CONSTRAINTS_2016_XSD;
 import static com.netflix.imfutility.CoreConstants.CPL_2016_PACKAGE;
@@ -70,9 +68,6 @@ public class Cpl2016ContextBuilderStrategy extends AbstractCplContextBuilderStra
     private SequenceType currentSequence;
     private SequenceUUID currentSequenceUuid;
     private com.netflix.imfutility.generated.conversion.SequenceType currentSequenceType;
-
-    private final Map<SequenceUUID, BigInteger> lastSegmentDuration = new HashMap<>();
-    private BigInteger currentSegmentDuration;
 
     public Cpl2016ContextBuilderStrategy(TemplateParameterContextProvider contextProvider, AssetMap assetMap) {
         super(contextProvider, assetMap);
@@ -155,20 +150,11 @@ public class Cpl2016ContextBuilderStrategy extends AbstractCplContextBuilderStra
             throw new ConversionException(String.format("Sequence '%s': Unknown sequence type", currentSequence.getId()));
         }
 
-        // 2. prepare the data for current segment duration calculation
-        if (!lastSegmentDuration.containsKey(currentSequenceUuid)) {
-            lastSegmentDuration.put(currentSequenceUuid, BigInteger.valueOf(0L));
-        }
-        currentSegmentDuration = BigInteger.valueOf(0L);
-
-        // 3. init the sequence
+        // 2. init the sequence
         contextProvider.getSequenceContext().initSequence(currentSequenceType, currentSequenceUuid);
 
-        // 4. process all resources within the sequence and segment and fill the Resource context
+        // 3. process all resources within the sequence and segment and fill the Resource context
         currentSequence.getResourceList().getResource().forEach(this::processResource);
-
-        // 5. save the duration of this segment for this sequence
-        lastSegmentDuration.put(currentSequenceUuid, currentSegmentDuration);
     }
 
     private void processResource(BaseResourceType resource) {

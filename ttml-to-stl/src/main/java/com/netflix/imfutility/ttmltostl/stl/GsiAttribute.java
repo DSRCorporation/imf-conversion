@@ -79,7 +79,7 @@ public enum GsiAttribute {
     UDA(576, true); // optional
 
 
-    private int bytesAllocated;
+    private final int bytesAllocated;
     private byte[] value = null;
     private int intValue;
     private String stringValue;

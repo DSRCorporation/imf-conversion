@@ -33,7 +33,7 @@ import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.TNS;
 /**
  * Default implementation of EBU STL GSI block building.
  */
-public class DefaultGsiStrategy implements IGsiStrategy {
+public class DefaultGsiStrategy extends AbstractStlStrategy implements IGsiStrategy {
 
     @Override
     public String getCharset() {
@@ -59,7 +59,7 @@ public class DefaultGsiStrategy implements IGsiStrategy {
         RD.setValue(currentDate);
 
         // TNS
-        TNS.setValue(tto.captions.size());
+        TNS.setValue(tto.getCaptions().size());
     }
 
     @Override

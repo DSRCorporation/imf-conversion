@@ -16,12 +16,23 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.ttmltostl.ttml;
+package com.netflix.imfutility.ttmltostl.stl;
 
 /**
- * An entity defining TTML regions.
- * TODO
+ * A base implementation for all STl blocks.
  */
-public class Region {
+public abstract class AbstractStlStrategy implements IStlStrategy {
+
+    @Override
+    public String getFrameRate() {
+        String dfcValue = GsiAttribute.DFC.getStringValue();
+        if ("STL25.01".equals(dfcValue)) {
+            return "25";
+        }
+        if ("STL30.01".equals(dfcValue)) {
+            return "30";
+        }
+        throw new RuntimeException("Can not get a frame rate. Unknown DFC attribute " + dfcValue);
+    }
 
 }

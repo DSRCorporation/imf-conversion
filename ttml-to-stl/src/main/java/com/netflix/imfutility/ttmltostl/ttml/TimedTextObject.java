@@ -25,7 +25,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * These objects can (should) only be created through the implementations of parseFile() in the {@link com.netflix.imfutility.ttmltostl.ttml.TimedTextFileFormat} interface
+ * These objects can (should) only be created through the implementations of parseFile() in
+ * the {@link com.netflix.imfutility.ttmltostl.ttml.TimedTextFileFormat} interface
  * They are an object representation of a subtitle file and contain all the captions and associated styles.
  * <br><br>
  * Copyright (c) 2012 J. David Requejo <br>
@@ -57,39 +58,37 @@ public class TimedTextObject {
      *
      */
     //meta info
-    public String title = "";
-    public String description = "";
-    public String copyrigth = "";
-    public String author = "";
-    public String fileName = "";
-    public String language = "";
+    private String title = "";
+    private String description = "";
+    private String copyrigth = "";
+    private String author = "";
+    private String fileName = "";
+    private String language = "";
 
     //list of styles (id, reference)
-    public Map<String, Style> styling = new HashMap<>();
+    private Map<String, Style> styling = new HashMap<>();
 
     //list of captions (begin time, reference)
     //represented by a tree map to maintain order
-    public TreeMap<Integer, Caption> captions = new TreeMap<>();
+    private TreeMap<Integer, Caption> captions = new TreeMap<>();
 
     //to store non fatal errors produced during parsing
-    public String warnings;
+    private String warnings;
 
     //to know if a parsing method has been applied
-    public boolean built = false;
+    private boolean built = false;
 
 
     /**
-     * Protected constructor so it can't be created from outside
+     * Protected constructor so it can't be created from outside.
      */
     protected TimedTextObject() {
-        warnings = "List of non fatal errors produced during parsing:\n\n";
+        setWarnings("List of non fatal errors produced during parsing:\n\n");
     }
 
-	
-	/*
+    /*
      * PROTECTED METHODS
-	 * 
-	 */
+     */
 
     /**
      * This method simply checks the style list and eliminate any style not referenced by any caption
@@ -101,20 +100,100 @@ public class TimedTextObject {
         //here all used styles will be stored
         Hashtable<String, Style> usedStyles = new Hashtable<>();
         //we iterate over the captions
-        Iterator<Caption> itrC = captions.values().iterator();
+        Iterator<Caption> itrC = getCaptions().values().iterator();
         while (itrC.hasNext()) {
             //new caption
             Caption current = itrC.next();
             //if it has a style
-            if (current.style != null) {
-                String iD = current.style.iD;
+            if (current.getStyle() != null) {
+                String iD = current.getStyle().getiD();
                 //if we haven't saved it yet
-                if (!usedStyles.containsKey(iD))
-                    usedStyles.put(iD, current.style);
+                if (!usedStyles.containsKey(iD)) {
+                    usedStyles.put(iD, current.getStyle());
+                }
             }
         }
         //we saved the used styles
-        this.styling = usedStyles;
+        this.setStyling(usedStyles);
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCopyrigth() {
+        return copyrigth;
+    }
+
+    public void setCopyrigth(String copyrigth) {
+        this.copyrigth = copyrigth;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public Map<String, Style> getStyling() {
+        return styling;
+    }
+
+    public void setStyling(Map<String, Style> styling) {
+        this.styling = styling;
+    }
+
+    public TreeMap<Integer, Caption> getCaptions() {
+        return captions;
+    }
+
+    public void setCaptions(TreeMap<Integer, Caption> captions) {
+        this.captions = captions;
+    }
+
+    public String getWarnings() {
+        return warnings;
+    }
+
+    public void setWarnings(String warnings) {
+        this.warnings = warnings;
+    }
+
+    public boolean isBuilt() {
+        return built;
+    }
+
+    public void setBuilt(boolean built) {
+        this.built = built;
+    }
 }

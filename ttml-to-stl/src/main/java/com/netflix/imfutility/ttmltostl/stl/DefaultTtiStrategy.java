@@ -34,11 +34,10 @@ import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.CPN;
 /**
  * Default implementation of EBU STL TTI block building.
  */
-public class DefaultTtiStrategy implements ITtiStrategy {
+public class DefaultTtiStrategy extends AbstractStlStrategy implements ITtiStrategy {
 
     private static final String ISO6937 = "ISO-6937";
 
-    private List<Caption> captions;
     private List<StlSubtitle> stlSubtitles;
 
     @Override
@@ -61,7 +60,7 @@ public class DefaultTtiStrategy implements ITtiStrategy {
     public byte[] build(TimedTextObject tto) throws IOException {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
 
-        this.captions = new ArrayList<>(tto.captions.values());
+        List<Caption> captions = new ArrayList<>(tto.getCaptions().values());
         this.stlSubtitles = new ArrayList<>();
 
         int sn = 0;
@@ -82,7 +81,7 @@ public class DefaultTtiStrategy implements ITtiStrategy {
             byte[][] extensionBlocks = splitToExtensionBlocks(text);
 
             // 1.5 create a subtitle object
-            StlSubtitle stlSubtitle = new StlSubtitle(captions, caption, captionNum, lines.length, extensionBlocks);
+            StlSubtitle stlSubtitle = new StlSubtitle(caption, lines.length, extensionBlocks);
             this.stlSubtitles.add(stlSubtitle);
         }
 
@@ -180,28 +179,28 @@ public class DefaultTtiStrategy implements ITtiStrategy {
         }
     }
 
-    private String[] splitAndCleanText(Caption caption) throws IOException {
-        return caption.content.split("\n");
+    private String[] splitAndCleanText(Caption caption) {
+        return caption.getContent().split("\n");
     }
 
-    private byte[] applyStyles(Caption caption) throws IOException {
+    private byte[] applyStyles(Caption caption) {
         ByteArrayOutputStream allText = new ByteArrayOutputStream();
 
-        if (caption.style != null) {
-            Style style = caption.style;
-            if (style.italic) {
+        if (caption.getStyle() != null) {
+            Style style = caption.getStyle();
+            if (style.isItalic()) {
                 allText.write((byte) 0x80);
             } else {
                 allText.write((byte) 0x81);
             }
-            if (style.underline) {
+            if (style.isUnderline()) {
                 allText.write((byte) 0x82);
             } else {
                 allText.write((byte) 0x83);
             }
 
             //colors
-            String color = style.color.substring(0, 6);
+            String color = style.getColor().substring(0, 6);
             if (color.equalsIgnoreCase("000000")) {
                 allText.write((byte) 0x00);
             } else if (color.equalsIgnoreCase("0000ff")) {
@@ -255,7 +254,7 @@ public class DefaultTtiStrategy implements ITtiStrategy {
         return allText.toByteArray();
     }
 
-    private byte[][] splitToExtensionBlocks(byte[] text) throws IOException {
+    private byte[][] splitToExtensionBlocks(byte[] text) {
         // how many eb we need
         int textPerBlock = TTI_TEXT_SIZE - 1; // 0x8F terminate
         int ebnBlockCount = 1 + (text.length / (textPerBlock + 1));
@@ -337,9 +336,7 @@ public class DefaultTtiStrategy implements ITtiStrategy {
 
     protected byte[] getTci(StlSubtitle stlSubtitle) {
         byte[] result = new byte[4];
-        //FIXME: f/25 is OK for BBC, but there may be case for:
-        // *In the STL30.01 format, the range is 00..29 frames (00h..1Dh).
-        String[] timeCode = stlSubtitle.getStart().getTime("h:m:s:f/25").split(":");
+        String[] timeCode = stlSubtitle.getStart().getTime("h:m:s:f/" + getFrameRate()).split(":");
         result[0] = Byte.parseByte(timeCode[0]);
         result[1] = Byte.parseByte(timeCode[1]);
         result[2] = Byte.parseByte(timeCode[2]);
@@ -349,9 +346,7 @@ public class DefaultTtiStrategy implements ITtiStrategy {
 
     protected byte[] getTco(StlSubtitle stlSubtitle) {
         byte[] result = new byte[4];
-        //FIXME: f/25 is OK for BBC, but there may be case for:
-        // *In the STL30.01 format, the range is 00..29 frames (00h..1Dh).
-        String[] timeCode = stlSubtitle.getEnd().getTime("h:m:s:f/25").split(":");
+        String[] timeCode = stlSubtitle.getEnd().getTime("h:m:s:f/" + getFrameRate()).split(":");
         result[0] = Byte.parseByte(timeCode[0]);
         result[1] = Byte.parseByte(timeCode[1]);
         result[2] = Byte.parseByte(timeCode[2]);
@@ -381,11 +376,11 @@ public class DefaultTtiStrategy implements ITtiStrategy {
             return (byte) 0x02; // center
         }
 
-        if (stlSubtitle.getCaptionStyle().textAlign.contains("left")) {
+        if (stlSubtitle.getCaptionStyle().getTextAlign().contains("left")) {
             return (byte) 0x01;
         }
 
-        if (stlSubtitle.getCaptionStyle().textAlign.contains("right")) {
+        if (stlSubtitle.getCaptionStyle().getTextAlign().contains("right")) {
             return (byte) 0x03;
         }
 

@@ -23,25 +23,81 @@ package com.netflix.imfutility.ttmltostl.ttml;
  */
 public class Caption {
 
-    public Style style;
-    public String region;
+    private Style style;
+    private String region;
 
-    public Time start;
-    public Time end;
+    private Time start;
+    private Time end;
 
-    public Caption nodes[];
-    public Style styles[];
+    private Caption[] nodes;
+    private Style[] styles;
+
+    private String content = "";
+
+    @Override
+    public String toString() {
+        return "Caption{"
+                + getStart() + ".." + getEnd()
+                + ", " + (getStyle() != null ? getStyle().getiD() : null) + ", " + getRegion() + ": " + getContent()
+                + '}';
+    }
+
+    public Style getStyle() {
+        return style;
+    }
+
+    public void setStyle(Style style) {
+        this.style = style;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public Time getStart() {
+        return start;
+    }
+
+    public void setStart(Time start) {
+        this.start = start;
+    }
+
+    public Time getEnd() {
+        return end;
+    }
+
+    public void setEnd(Time end) {
+        this.end = end;
+    }
+
+    public Caption[] getNodes() {
+        return nodes;
+    }
+
+    public void setNodes(Caption[] nodes) {
+        this.nodes = nodes;
+    }
+
+    public Style[] getStyles() {
+        return styles;
+    }
+
+    public void setStyles(Style[] styles) {
+        this.styles = styles;
+    }
 
     /**
      * Cleaned-up subtitle content.
      */
-    public String content = "";
+    public String getContent() {
+        return content;
+    }
 
-    @Override
-    public String toString() {
-        return "Caption{" +
-                start + ".." + end +
-                ", " + (style != null ? style.iD : null) + ", " + region + ": " + content +
-                '}';
+    public void setContent(String content) {
+        this.content = content;
     }
 }

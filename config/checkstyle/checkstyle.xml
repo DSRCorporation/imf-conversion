@@ -156,7 +156,12 @@
         <!-- Checks for blocks. You know, those {}'s         -->
         <!-- See http://checkstyle.sf.net/config_blocks.html -->
         <module name="AvoidNestedBlocks"/>
-        <module name="EmptyBlock"/>
+
+        <!-- a comment inside a block makes this block non-empty-->
+        <module name="EmptyBlock">
+            <property name="option" value="text" />
+        </module>
+
         <module name="LeftCurly"/>
         <module name="NeedBraces"/>
         <module name="RightCurly"/>

@@ -270,7 +270,7 @@ public abstract class AbstractFormatBuilder {
         logger.info("Checked required input parameters for conversion: OK\n");
     }
 
-    private void createWorkingDir() throws IOException {
+    private void createWorkingDir() {
         logger.info("Creating working directory...");
         if (!inputParameters.getWorkingDirFile().exists()) {
             boolean result = inputParameters.getWorkingDirFile().mkdirs();
@@ -402,7 +402,7 @@ public abstract class AbstractFormatBuilder {
 
     protected abstract void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException;
 
-    private void buildDestContext() throws IOException, XmlParsingException {
+    private void buildDestContext() {
         logger.info("Building Dest context...");
 
         DestTemplateParameterContext destContext = contextProvider.getDestContext();

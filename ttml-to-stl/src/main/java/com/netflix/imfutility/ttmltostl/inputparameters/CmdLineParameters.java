@@ -33,7 +33,7 @@ public class CmdLineParameters {
     private Boolean doOutputSTL = false;
     private String outputTTMLFile = null;
     private String outputSTLFile = null;
-    private List<TtmlInDescriptor> ttmlInDescriptors = new ArrayList<>();
+    private final List<TtmlInDescriptor> ttmlInDescriptors = new ArrayList<>();
     private String metadataXml = null;
 
     /**

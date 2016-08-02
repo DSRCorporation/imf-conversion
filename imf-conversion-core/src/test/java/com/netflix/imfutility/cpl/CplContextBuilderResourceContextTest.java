@@ -22,11 +22,9 @@ import com.netflix.imfutility.asset.AssetMap;
 import com.netflix.imfutility.asset.AssetMapParser;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
-import com.netflix.imfutility.conversion.templateParameter.context.DestTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
@@ -34,11 +32,9 @@ import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.util.ImpUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
-import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static com.netflix.imfutility.util.TemplateParameterContextCreator.putDestContextValue;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 
@@ -50,11 +46,10 @@ import static org.junit.Assert.assertArrayEquals;
 public class CplContextBuilderResourceContextTest {
 
     private static ResourceTemplateParameterContext resourceContext;
-    private static TemplateParameterContextProvider contextProvider;
 
     @BeforeClass
     public static void setUpAll() throws Exception {
-        contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
         new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCorrectCpl());
 

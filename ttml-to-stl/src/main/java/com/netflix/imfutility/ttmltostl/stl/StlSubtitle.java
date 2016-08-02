@@ -22,8 +22,6 @@ import com.netflix.imfutility.ttmltostl.ttml.Caption;
 import com.netflix.imfutility.ttmltostl.ttml.Style;
 import com.netflix.imfutility.ttmltostl.ttml.Time;
 
-import java.util.List;
-
 /**
  * An STL subtitle essence.
  */
@@ -37,9 +35,6 @@ public class StlSubtitle {
     //BBC probably use only 11 lines with step 2. In samples I didn't see any odd line number.
     public static final int TELETEXT_LINE_STEP = 2;
 
-
-    private final List<Caption> captions;
-    private final int captionNum;
     private final Caption caption;
     private final int linesCount;
     private final byte[][] extensionBlocks;
@@ -52,14 +47,12 @@ public class StlSubtitle {
     private Boolean cumulativeStartFlag = false;
     private Boolean cumulativeEndFlag = false;
 
-    public StlSubtitle(List<Caption> captions, Caption caption, int captionNum, int linesCount, byte[][] extensionBlocks) {
-        this.captions = captions;
+    public StlSubtitle(Caption caption, int linesCount, byte[][] extensionBlocks) {
         this.caption = caption;
-        this.captionNum = captionNum;
         this.linesCount = linesCount;
         this.extensionBlocks = extensionBlocks;
-        this.start = caption.start;
-        this.end = caption.end;
+        this.start = caption.getStart();
+        this.end = caption.getEnd();
         this.lineNum = BOTTOM_TELETEXT_LINE_TO_USE; //default Teletext line num for BBC recommendation.
     }
 
@@ -68,7 +61,7 @@ public class StlSubtitle {
     }
 
     public Style getCaptionStyle() {
-        return caption.style;
+        return caption.getStyle();
     }
 
     public int getLinesCount() {

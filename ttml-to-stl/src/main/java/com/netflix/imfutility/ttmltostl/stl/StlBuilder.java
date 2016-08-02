@@ -29,7 +29,7 @@ public class StlBuilder {
 
     public byte[][] build(TimedTextObject tto, IGsiStrategy gsiStrategy, ITtiStrategy ttiStrategy) throws IOException {
         // 1. first we check if the TimedTextObject had been built, otherwise...
-        if (!tto.built) {
+        if (!tto.isBuilt()) {
             return null;
         }
 

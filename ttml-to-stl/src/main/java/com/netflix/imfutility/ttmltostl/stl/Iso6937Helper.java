@@ -33,8 +33,8 @@ import java.util.Map;
  */
 public class Iso6937Helper {
 
-    private static Map<Integer, Integer> encodingMapping = new HashMap();
-    private static List<Integer> emptyMapping = new ArrayList<>();
+    private static final Map<Integer, Integer> ENCODING_MAPPING = new HashMap<>();
+    private static final List<Integer> EMPTY_MAPPING = new ArrayList<>();
 
     static {
         add(0x24, 0xa4);
@@ -65,21 +65,21 @@ public class Iso6937Helper {
     }
 
     private static void add(int x, int y) {
-        encodingMapping.put(x, y);
+        ENCODING_MAPPING.put(x, y);
     }
 
     private static void addEmpty(int x) {
-        emptyMapping.add(x);
+        EMPTY_MAPPING.add(x);
     }
 
     public Byte fixIso6937(byte ch) {
         int chInt = (ch & 0xff);
-        if (encodingMapping.containsKey(chInt)) {
-            chInt = encodingMapping.get(chInt);
+        if (ENCODING_MAPPING.containsKey(chInt)) {
+            chInt = ENCODING_MAPPING.get(chInt);
             ch = (byte) chInt;
         }
 
-        if (emptyMapping.contains(chInt)) {
+        if (EMPTY_MAPPING.contains(chInt)) {
             return null;
         }
 

@@ -16,12 +16,17 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.ttmltostl.ttml;
+package com.netflix.imfutility.ttmltostl.stl;
 
 /**
- * An entity defining TTML regions.
- * TODO
+ * A base strategy for all STl blocks.
  */
-public class Region {
+public interface IStlStrategy {
+
+    /**
+     * Gets fps as a string parsable to float (for example, "25", "30", "29.97", etc.).
+     * @return fps as a string parsable to float.
+     */
+    String getFrameRate();
 
 }

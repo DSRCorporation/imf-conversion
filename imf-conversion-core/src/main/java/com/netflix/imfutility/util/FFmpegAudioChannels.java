@@ -48,9 +48,9 @@ public enum FFmpegAudioChannels {
     SDR("surround direct right"),
     LFE2("low frequency 2");
 
-    private String description;
+    private final String description;
 
-    private FFmpegAudioChannels(String description) {
+    FFmpegAudioChannels(String description) {
         this.description = description;
     }
 

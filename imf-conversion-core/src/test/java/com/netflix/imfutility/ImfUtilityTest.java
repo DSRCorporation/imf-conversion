@@ -55,12 +55,12 @@ public class ImfUtilityTest {
 
     @Before
     public void setUp() {
-
+        // empty
     }
 
     @After
     public void tearDown() {
-
+        // empty
     }
 
 }
