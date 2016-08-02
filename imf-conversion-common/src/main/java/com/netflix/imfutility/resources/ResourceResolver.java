@@ -58,7 +58,7 @@ public class ResourceResolver implements LSResourceResolver {
         //  trying to get resource into specified paths
         for (String path : paths) {
             if (path != null && !path.isEmpty()) {
-                InputStream inputStream = ResourceHelper.getResourceInputStreamImpl(path + "/" + systemId);
+                InputStream inputStream = ResourceHelper.getResourceInputStreamImpl(getResourcePath(path, systemId));
 
                 if (inputStream != null) {
                     return inputStream;
@@ -67,6 +67,16 @@ public class ResourceResolver implements LSResourceResolver {
         }
         // tying to get resource from root
         return ResourceHelper.getResourceInputStream(systemId);
+    }
+
+    private String getResourcePath(String path, String systemId) {
+        if (systemId.startsWith("..")) {
+            systemId = systemId.substring(3, systemId.length());
+            if (path.contains("/")) {
+                path = path.substring(0, path.lastIndexOf("/"));
+            }
+        }
+        return path + "/" + systemId;
     }
 
     /**
