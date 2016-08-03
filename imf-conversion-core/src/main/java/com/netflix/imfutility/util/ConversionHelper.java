@@ -44,6 +44,19 @@ public final class ConversionHelper {
      */
     public static long smpteTimecodeToMilliSeconds(String tc, String unitsInSecStr) {
         BigFraction unitsInSec = parseEditRate(unitsInSecStr);
+        return smpteTimecodeToMilliSeconds(tc, unitsInSec);
+    }
+
+    /**
+     * Transforms a timecode string (hh:mm:ss:ff) to milliseconds according to the given edit rate (frame rate).
+     * <p>
+     *     Currently works with non-drop timecodes only.
+     * </p>
+     * @param tc an SMPTE timecode (hh:mm:ss:ff)
+     * @param unitsInSec edit unit rate in a form "25 1"
+     * @return a number of milliseconds
+     */
+    public static long smpteTimecodeToMilliSeconds(String tc, BigFraction unitsInSec) {
         String[] parts = tc.split("[:;\\.]");
         if (parts.length != 4) {
             throw new ConversionException(
@@ -177,10 +190,11 @@ public final class ConversionHelper {
     /**
      * Returns a fraction corresponding to the given edit rate string.
      *
-     * @param editRate input in a form "50 1"
+     * @param editRate input in both forms "50 1" and "50/1"
      * @return a fraction object representing the edit rate.
      */
     public static BigFraction parseEditRate(String editRate) {
+        editRate = editRate.contains("/") ? rFrameRateToEditRate(editRate) : editRate;
         String[] parts = editRate.split(" ");
         try {
             if (parts.length == 2) {
@@ -192,17 +206,6 @@ public final class ConversionHelper {
             throw new ConversionException("Incorrect edit rate! Edit rate must consist of two numbers.", e);
         }
         throw new ConversionException("Incorrect edit rate! Edit rate must consist of two values.");
-    }
-
-    /**
-     * Returns a fraction corresponding to the given edit rate string.
-     *
-     * @param editRate input in both forms "50 1" and "50/1"
-     * @return a fraction object representing the edit rate.
-     */
-    public static BigFraction safeParseEditRate(String editRate) {
-        editRate = editRate.contains("/") ? rFrameRateToEditRate(editRate) : editRate;
-        return parseEditRate(editRate);
     }
 
     /**

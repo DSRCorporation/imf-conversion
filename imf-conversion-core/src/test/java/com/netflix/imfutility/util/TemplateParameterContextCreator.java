@@ -68,7 +68,9 @@ public final class TemplateParameterContextCreator {
         ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
         ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ConversionUtils.getCorrectConversionXml(),
                 ConversionUtils.getCorrectConversionXmlPath(), new FakeFormat());
-        return new TemplateParameterContextProvider(configProvider, conversionProvider, getWorkingDir());
+        TemplateParameterContextProvider contextProvider = new TemplateParameterContextProvider(configProvider, conversionProvider, getWorkingDir());
+        initEmptyDestContext(contextProvider);
+        return contextProvider;
     }
 
     public static File getWorkingDir() {
@@ -289,6 +291,12 @@ public final class TemplateParameterContextCreator {
         putDestContextValue(DURATION.getName(), duration, contextMap);
 
         return contextMap;
+    }
+
+    public static void initEmptyDestContext(TemplateParameterContextProvider contextProvider) {
+        DestContextTypeMap map = new DestContextTypeMap();
+        map.setName("test");
+        contextProvider.getDestContext().setDestContextMap(map);
     }
 
     public static void putDestContextValue(String paramName, String paramValue, DestContextTypeMap contextMap) {

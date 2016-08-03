@@ -21,8 +21,8 @@ package com.netflix.imfutility.cpl;
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.asset.AssetMap;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.cpl._2013.Cpl2013ContextBuilder;
-import com.netflix.imfutility.cpl._2016.Cpl2016ContextBuilder;
+import com.netflix.imfutility.cpl._2013.Cpl2013ContextBuilderStrategy;
+import com.netflix.imfutility.cpl._2016.Cpl2016ContextBuilderStrategy;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 
@@ -64,7 +64,12 @@ public class CplContextBuilder {
         if (!cplFile.isFile()) {
             throw new FileNotFoundException(String.format("Invalid CPL file: '%s' not found", cplFile.getAbsolutePath()));
         }
+        ICplContextBuilderStrategy strategy = getStrategy(cplFile);
+        strategy.parse(cplFile);
+        strategy.build();
+    }
 
+    private ICplContextBuilderStrategy getStrategy(File cplFile) throws FileNotFoundException, XmlParsingException {
         // 1. get the CPL namespace
         String cplNamespaceStr = XmlParser.getNamespace(cplFile);
         CplNamespace cplNamespace = CplNamespace.fromName(cplNamespaceStr);
@@ -77,11 +82,9 @@ public class CplContextBuilder {
         // 2. call a CPL parser depending on the namespace.
         switch (cplNamespace) {
             case CPL_2013:
-                new Cpl2013ContextBuilder(contextProvider, assetMap).build(cplFile);
-                break;
+                return new Cpl2013ContextBuilderStrategy(contextProvider, assetMap);
             case CPL_2016:
-                new Cpl2016ContextBuilder(contextProvider, assetMap).build(cplFile);
-                break;
+                return new Cpl2016ContextBuilderStrategy(contextProvider, assetMap);
             default:
                 throw new ConversionException(
                         String.format(
@@ -90,5 +93,6 @@ public class CplContextBuilder {
                         ));
         }
     }
+
 
 }

@@ -74,6 +74,7 @@ configure(project.javaSubprojectList) {
 
     findbugs {
         sourceSets = [sourceSets.main]
+        excludeFilter = rootProject.file("config/findbugs/findbugs-excludeFilter.xml")
     }
 
     tasks.withType(FindBugs) {

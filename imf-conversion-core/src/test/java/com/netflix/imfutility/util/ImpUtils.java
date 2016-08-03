@@ -39,6 +39,16 @@ public final class ImpUtils {
         return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL.xml").toURI());
     }
 
+    public static File getCorrectCplNonZeroStart() throws URISyntaxException {
+        //noinspection ConstantConditions,ConstantConditions
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL-non-zero-start.xml").toURI());
+    }
+
+    public static File getCorrectCplNoStart() throws URISyntaxException {
+        //noinspection ConstantConditions,ConstantConditions
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL-no-start.xml").toURI());
+    }
+
     public static File getCorrectCplOneEssence() throws URISyntaxException {
         //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL-one-essence.xml").toURI());

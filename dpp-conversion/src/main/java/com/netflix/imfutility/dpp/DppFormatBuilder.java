@@ -184,9 +184,14 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         String fileName = getOutputName() + ".mxf";
         logger.info("   {}", new File(inputParameters.getWorkingDirFile(), fileName).getAbsoluteFile());
         int subtitleCount = contextProvider.getSequenceContext().getSequenceCount(SequenceType.SUBTITLE);
-        for (int i = 0; i < subtitleCount; i++) {
-            fileName = i + getOutputName() + ".stl";
+        if (subtitleCount == 1) {
+            fileName = getOutputName() + ".stl";
             logger.info("   {}", new File(inputParameters.getWorkingDirFile(), fileName).getAbsoluteFile());
+        } else {
+            for (int i = 0; i < subtitleCount; i++) {
+                fileName = getOutputName() + "-" + i + ".stl";
+                logger.info("   {}", new File(inputParameters.getWorkingDirFile(), fileName).getAbsoluteFile());
+            }
         }
     }
 }
