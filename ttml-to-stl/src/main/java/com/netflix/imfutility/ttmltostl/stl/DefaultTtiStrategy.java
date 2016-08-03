@@ -94,8 +94,8 @@ public class DefaultTtiStrategy extends AbstractStlStrategy implements ITtiStrat
             for (int ebn = 0; ebn < stlSubtitle.getExtensionBlocks().length; ebn++) {
                 byte[] ttiBlock = doBuildTtiBlock(stlSubtitle, sn, ebn);
                 result.write(ttiBlock);
-                sn++;
             }
+            sn++;
         }
 
         return result.toByteArray();

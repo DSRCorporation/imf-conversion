@@ -116,7 +116,7 @@ public class StlTtiTest {
                 Arrays.copyOfRange(tti, offset + 16, offset + 128));
     }
 
-    //@Test
+    @Test
     public void testEbnBlocksForLongSubtitle() throws Exception {
         // prepare long subtitles, so that one subtitles is stored in two tti blocks
         TimedTextObject tto = StlTestUtil.buildTto(
