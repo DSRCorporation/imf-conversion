@@ -95,9 +95,6 @@ public abstract class AbstractCplContextBuilderStrategy implements ICplContextBu
      * <ul>
      * <li>Calculate other Resource parameters (such as millisecond-based parameters and timecode-based parameters)
      * using edit-unit-based parameters filled by a concrete strategy.</li>
-     * <li>It contains common logic to calculate Offset and edit-unit-frame parameters.</li>
-     * <li>Start timecode is taken into account when calculating offset parameter (the start code specified in conversion.xml's
-     * Destination context has higher priority than the start timecode from CPL's composition)</li>
      * </ul>
      */
     private void calculateMsAndTcParameters() {
