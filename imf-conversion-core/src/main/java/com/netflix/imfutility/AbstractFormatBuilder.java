@@ -135,23 +135,23 @@ public abstract class AbstractFormatBuilder {
             // 11. perform validation of the input IMP and CPL (after dynamic context is filled).
             validateImpAndCpl();
 
-            // 12. build IMF CPL contexts
-            buildCplContext();
-
-            // 13. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
-            buildMediaInfoContext();
-
-            // 14. fill dynamic context post CPL
-            buildDynamicContextPostCpl();
-
-            // 15. select a conversion config within format.
-            selectConversionConfig();
-
-            // 16. select a dest context within conversion config.
+            // 12. select a dest context within conversion config.
             selectDestContext();
 
-            // 17. fill destination context
+            // 13. fill destination context (before CPL context!)
             buildDestContext();
+
+            // 14. build IMF CPL contexts
+            buildCplContext();
+
+            // 15. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
+            buildMediaInfoContext();
+
+            // 16. fill dynamic context post CPL
+            buildDynamicContextPostCpl();
+
+            // 17. select a conversion config within format.
+            selectConversionConfig();
 
             // 18. check whether we can silently convert to destination parameters
             checkForSilentConversion();
@@ -270,7 +270,7 @@ public abstract class AbstractFormatBuilder {
         logger.info("Checked required input parameters for conversion: OK\n");
     }
 
-    private void createWorkingDir() throws IOException {
+    private void createWorkingDir() {
         logger.info("Creating working directory...");
         if (!inputParameters.getWorkingDirFile().exists()) {
             boolean result = inputParameters.getWorkingDirFile().mkdirs();
@@ -382,6 +382,7 @@ public abstract class AbstractFormatBuilder {
         boolean hasVideo = seqContext.getSequenceCount(SequenceType.VIDEO) > 0;
         boolean hasSubtitle = seqContext.getSequenceCount(SequenceType.SUBTITLE) > 0;
         boolean singleAudio = seqContext.getSequenceCount(SequenceType.AUDIO) == 1;
+        boolean singleSubtitle = seqContext.getSequenceCount(SequenceType.SUBTITLE) == 1;
 
         dynamicContext.addParameter(DynamicContextParameters.HAS_AUDIO, String.valueOf(hasAudio));
         dynamicContext.addParameter(DynamicContextParameters.HAS_VIDEO, String.valueOf(hasVideo));
@@ -391,6 +392,7 @@ public abstract class AbstractFormatBuilder {
         dynamicContext.addParameter(DynamicContextParameters.HAS_VIDEO_ONLY, String.valueOf(!hasAudio && hasVideo));
 
         dynamicContext.addParameter(DynamicContextParameters.SINGLE_AUDIO, String.valueOf(singleAudio));
+        dynamicContext.addParameter(DynamicContextParameters.SINGLE_SUBTITLE, String.valueOf(singleSubtitle));
 
         // build format-specific dynamic parameters
         doBuildDynamicContextPostCpl();
@@ -400,7 +402,7 @@ public abstract class AbstractFormatBuilder {
 
     protected abstract void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException;
 
-    private void buildDestContext() throws IOException, XmlParsingException {
+    private void buildDestContext() {
         logger.info("Building Dest context...");
 
         DestTemplateParameterContext destContext = contextProvider.getDestContext();

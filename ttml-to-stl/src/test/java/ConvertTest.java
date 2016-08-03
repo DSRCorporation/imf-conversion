@@ -17,6 +17,7 @@
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
 import com.netflix.imfutility.dpp.MetadataXmlProvider;
+import com.netflix.imfutility.ttmltostl.Convert;
 import org.junit.Test;
 
 import java.io.File;
@@ -61,7 +62,7 @@ public class ConvertTest {
                 tempSTL.getPath() //"testoutput.stl"
         };
 
-        Boolean result = Convert.convertTTML(args);
+        Boolean result = new Convert().convertTTML(args);
 
         assertTrue("Convert.convertTTML returned failure.", result);
         assertTrue("Generated TTML is zero size.", tempXML.length() > 0);
@@ -90,7 +91,7 @@ public class ConvertTest {
         String[] args = {
                 "--ttml",
                 xml1.getAbsolutePath(),
-                "10:00:00:00",//offset
+                "36000000",//offset
                 "--metadata",
                 tempMetadataXml.getPath(),
                 "--outputTTML",
@@ -99,7 +100,7 @@ public class ConvertTest {
                 tempSTL.getPath() //"testoutput.stl"
         };
 
-        Boolean result = Convert.convertTTML(args);
+        Boolean result = new Convert().convertTTML(args);
 
         assertTrue("Convert.convertTTML returned failure.", result);
         assertTrue("Generated TTML is zero size.", tempXML.length() > 0);
@@ -131,19 +132,19 @@ public class ConvertTest {
         String[] args = {
                 "--ttml",
                 xml1.getAbsolutePath(),
-                "10:00:00:00",//offset
-                "00:00:00:00",//start
-                "00:01:45:20",//end
+                "36000000",//offset
+                "0",//start
+                "45200",//end
                 "--ttml",
                 xml2.getAbsolutePath(),
-                "11:01:01:01",//offset
-                "00:00:6:10",//start
-                "00:00:13:04",//end
+                "39661010",//offset
+                "6100",//start
+                "13040",//end
                 "--ttml",
                 xml3.getAbsolutePath(),
-                "12:02:02:02",//offset
-                "00:04:57:00",//start
-                "59:59:59:00",//end
+                "43322020",//offset
+                "297000",//start
+                "215999000",//end
                 "--metadata",
                 tempMetadataXml.getPath(),
                 "--outputTTML",
@@ -152,7 +153,7 @@ public class ConvertTest {
                 tempSTL.getPath() //"testoutput.stl"
         };
 
-        Boolean result = Convert.convertTTML(args);
+        Boolean result = new Convert().convertTTML(args);
 
         assertTrue("Convert.convertTTML returned failure.", result);
         assertTrue("Generated TTML is zero size.", tempXML.length() > 0);
@@ -170,7 +171,7 @@ public class ConvertTest {
                 "--ttml",
         };
 
-        Boolean result = Convert.convertTTML(args);
+        Boolean result = new Convert().convertTTML(args);
         assertTrue("Convert.convertTTML didn't fail.", !result);
     }
 

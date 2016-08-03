@@ -29,7 +29,6 @@ import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
-import org.apache.commons.math3.fraction.BigFraction;
 
 import java.math.BigInteger;
 
@@ -103,11 +102,9 @@ public final class CplHelper {
      * @param contextInfo a context info defining a resource (all fields must be set).
      * @return a duration of the given resource within a segment and sequence in milliseconds.
      */
-    public static long getResourceDurationMS(TemplateParameterContextProvider contextProvider, ContextInfo contextInfo) {
-        BigInteger durationEU = getResourceDurationEU(contextProvider, contextInfo);
-        BigFraction editRate = ConversionHelper.parseEditRate(contextProvider.getResourceContext()
-                .getParameterValue(ResourceContextParameters.EDIT_RATE, contextInfo));
-        return ConversionHelper.editUnitToMilliSeconds(durationEU, editRate);
+    private static long getResourceDurationMS(TemplateParameterContextProvider contextProvider, ContextInfo contextInfo) {
+        return new BigInteger(contextProvider.getResourceContext()
+                .getParameterValue(ResourceContextParameters.DURATION_MS, contextInfo)).longValue();
     }
 
     /**
@@ -117,7 +114,7 @@ public final class CplHelper {
      * @param contextInfo a context info defining a resource (all fields must be set).
      * @return a duration of the given resource within a segment and sequence in edit units (frames or samples)
      */
-    public static BigInteger getResourceDurationEU(TemplateParameterContextProvider contextProvider, ContextInfo contextInfo) {
+    private static BigInteger getResourceDurationEU(TemplateParameterContextProvider contextProvider, ContextInfo contextInfo) {
         return new BigInteger(contextProvider.getResourceContext()
                 .getParameterValue(ResourceContextParameters.DURATION_EDIT_UNIT, contextInfo));
     }

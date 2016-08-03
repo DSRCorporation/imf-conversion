@@ -37,19 +37,23 @@
                 <param id="videoEncoded" deleteOnExit="true">output.x264</param>
                 <param id="audioEncoded" deleteOnExit="true">output.pcm</param>
                 <param id="mediaInfoOutput" deleteOnExit="true">mediaInfo.xml</param>
-                <param id="outputStartTime" deleteOnExit="true">09:59:30:00</param>
             </tmpContext>
 
             <!--
                 Destination parameters for conversion
              -->
             <defaultDestContext name="main">
+                <!-- Common -->
+                <param name="startTime">09:59:30:00</param>
                 <!-- Video -->
                 <param name="width">1920</param>
                 <param name="height">1080</param>
-                <param name="frameRate">25 1</param>
+                <param name="frameRate">25</param>
                 <param name="pixelFormat">yuv422p10le</param>
                 <param name="bitDepth">10</param>
+                <param name="colorSpace">bt709</param>
+                <param name="chromaSubsampling">i422</param>
+                <param name="avcIntraClass">100</param>
                 <!-- Audio -->
                 <param name="sampleRate">48000</param>
                 <param name="bitsSample">24</param>
@@ -82,16 +86,16 @@
                                         -ss %{resource.startTimeTC}
                                         -t %{resource.durationTC} -an
                                         -vf
-                                        "scale=iw*sar*min(1920/(iw*sar)\,1080/ih):ih*min(1920/(iw*sar)\,1080/ih),pad=1920:1080:(ow-iw)/2:(oh-ih)/2,fps=25"
-                                        -pix_fmt yuv422p10le -f rawvideo -
+                                        "scale=iw*sar*min(%{dest.width}/(iw*sar)\,%{dest.height}/ih):ih*min(%{dest.width}/(iw*sar)\,%{dest.height}/ih),pad=%{dest.width}:%{dest.height}:(ow-iw)/2:(oh-ih)/2,fps=%{dest.frameRate}"
+                                        -pix_fmt %{dest.pixelFormat} -f rawvideo -
                                     </execOnce>
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_video">
-                                "%{tool.x264}" --input-res 1920x1080 --input-csp i422 --input-depth 10 -
-                                --colorprim bt709 --transfer bt709 --colormatrix bt709 --tune psnr
-                                --fps 25/1 --interlaced --force-cfr --output-csp i422
-                                --avcintra-class 100 -o "%{tmp.videoEncoded}"
+                                "%{tool.x264}" --input-res %{dest.width}x%{dest.height} --input-csp %{dest.chromaSubsampling} --input-depth %{dest.bitDepth} -
+                                --colorprim %{dest.colorSpace} --transfer %{dest.colorSpace} --colormatrix %{dest.colorSpace} --tune psnr
+                                --fps %{dest.frameRate}/1 --interlaced --force-cfr --output-csp %{dest.chromaSubsampling}
+                                --avcintra-class %{dest.avcIntraClass} -o "%{tmp.videoEncoded}"
                             </execOnce>
                         </pipe>
                     </execEachSequence>
@@ -126,13 +130,13 @@
                                         "%{tool.ffmpeg}" -f s%{seq.bits_per_sample}le -ar %{seq.sample_rate}
                                         -ac %{seq.channels_num}
                                         -i "%{dynamic.audio-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}}" -vn -af
-                                        aresample=48000
-                                        -acodec pcm_s24le -f s24le -
+                                        aresample=%{dest.sampleRate}
+                                        -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
                                     </execOnce>
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_audio">
-                                "%{tool.ffmpeg}" -f s24le -ar %{seq.sample_rate} -ac %{seq.channels_num} -i - -vn -c:a
+                                "%{tool.ffmpeg}" -f s%{dest.bitsSample}le -ar %{seq.sample_rate} -ac %{seq.channels_num} -i - -vn -c:a
                                 copy -f wav %{seq.num}-audio-encoded.wav
                             </execOnce>
                         </pipe>
@@ -158,7 +162,7 @@
                     <execOnce name="audioMaping" if="%{dynamic.hasAudio}">
                         "%{tool.ffmpeg}" %{dynamic.concatAudioInput} -filter_complex
                         "%{dynamic.concatAudioMap}amerge,pan=%{dynamic.panParameter}[aout]"
-                        -map "[aout]" -acodec pcm_s24le -ar 48000 -f s24le "%{tmp.audioEncoded}"
+                        -map "[aout]" -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f s%{dest.bitsSample}le "%{tmp.audioEncoded}"
                     </execOnce>
 
                     <!--
@@ -166,30 +170,30 @@
                     -->
                     <execOnce name="muxing_mxf_audio_video" if="%{dynamic.hasAudioAndVideo}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
-                        -y %{tmp.outputStartTime}
+                        -y %{dest.startTime}
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
-                        --afd 10 --avci100_1080i "%{tmp.videoEncoded}"
-                        -q 24 -s 48000 --audio-chan %{dynamic.ebuAudioTracks}
+                        --afd 10 --avci%{dest.avcIntraClass}_%{dest.height}i "%{tmp.videoEncoded}"
+                        -q %{dest.bitsSample} -s %{dest.sampleRate} --audio-chan %{dynamic.ebuAudioTracks}
                         --pcm "%{tmp.audioEncoded}"
                     </execOnce>
                     <execOnce name="muxing_mxf_audio_only" if="%{dynamic.hasAudioOnly}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
-                        -y %{tmp.outputStartTime}
+                        -y %{dest.startTime}
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
-                        -q 24 -s 48000 --audio-chan %{dynamic.ebuAudioTracks}
+                        -q %{dest.bitsSample} -s %{dest.sampleRate} --audio-chan %{dynamic.ebuAudioTracks}
                         --pcm "%{tmp.audioEncoded}"
                     </execOnce>
                     <execOnce name="muxing_mxf_video_only" if="%{dynamic.hasVideoOnly}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
-                        -y %{tmp.outputStartTime}
+                        -y %{dest.startTime}
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
-                        --afd 10 --avci100_1080i "%{tmp.videoEncoded}"
+                        --afd 10 --avci%{dest.avcIntraClass}_%{dest.height}i "%{tmp.videoEncoded}"
                     </execOnce>
 
                     <!--
@@ -209,14 +213,18 @@
 
                             <dynamicParameter name="concatTTML" concat="true" concatWhitespace="true">
                                 --ttml
-                                %{seq.num}-%{segm.num}-%{resource.num}.xml %{resource.offsetTC} %{resource.startTimeTC}
-                                %{resource.endTimeTC}
+                                %{seq.num}-%{segm.num}-%{resource.num}.xml %{resource.offsetMS} %{resource.startTimeMS}
+                                %{resource.endTimeMS}
                             </dynamicParameter>
 
                         </execEachSegment>
 
+                        <dynamicParameter name="stlName">%{dynamic.output}</dynamicParameter>
+                        <dynamicParameter name="stlName" unless="%{dynamic.singleSubtitle}" concat="true">-%{seq.num}</dynamicParameter>
+                        <dynamicParameter name="stlName" concat="true">.stl</dynamicParameter>
+
                         <execOnce name="convert_ttml_to_stl">
-                            %{dynamic.ttml-to-stl} %{dynamic.concatTTML} --outputSTL %{seq.num}-%{dynamic.output}.stl
+                            %{dynamic.ttml-to-stl} %{dynamic.concatTTML} --outputSTL %{dynamic.stlName}
                             --metadata "%{dynamic.metadataXml}"
                         </execOnce>
                     </execEachSequence>
