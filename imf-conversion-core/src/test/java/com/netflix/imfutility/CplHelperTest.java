@@ -45,7 +45,7 @@ public class CplHelperTest {
     public static void setUpAll() throws Exception {
         contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCorrectCpl());
+        new CplContextBuilder(contextProvider, assetMap, ImpUtils.getCorrectCpl()).build();
     }
 
     @Test

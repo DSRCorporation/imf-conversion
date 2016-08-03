@@ -29,6 +29,7 @@ import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.util.ImpUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -42,13 +43,19 @@ import static org.junit.Assert.assertArrayEquals;
  */
 public class CplContextBuilderSequenceContextTest {
 
-    @Test
-    public void testAllSequenceTypesPresent() throws Exception {
+    private static SequenceTemplateParameterContext sequenceContext;
+
+    @BeforeClass
+    public static void setUpAll() throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCplSequence());
+        new CplContextBuilder(contextProvider, assetMap, ImpUtils.getCplSequence()).build();
 
-        SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
+        sequenceContext = contextProvider.getSequenceContext();
+    }
+
+    @Test
+    public void testAllSequenceTypesPresent() throws Exception {
         assertArrayEquals(
                 new SequenceType[]{SequenceType.VIDEO, SequenceType.AUDIO, SequenceType.SUBTITLE},
                 sequenceContext.getSequenceTypes().toArray(new SequenceType[]{}));
@@ -56,11 +63,6 @@ public class CplContextBuilderSequenceContextTest {
 
     @Test
     public void testVideoSequenceContext() throws Exception {
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
-        AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCplSequence());
-
-        SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
         assertEquals(1, sequenceContext.getSequenceCount(SequenceType.VIDEO));
 
         // UUIDs as defined in CPL.xml
@@ -80,11 +82,6 @@ public class CplContextBuilderSequenceContextTest {
 
     @Test
     public void testAudioSequenceContext() throws Exception {
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
-        AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCplSequence());
-
-        SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
         assertEquals(2, sequenceContext.getSequenceCount(SequenceType.AUDIO));
 
         // UUIDs as defined in CPL.xml
@@ -115,11 +112,6 @@ public class CplContextBuilderSequenceContextTest {
 
     @Test
     public void testSubtitleSequenceContext() throws Exception {
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
-        AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCplSequence());
-
-        SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
         assertEquals(6, sequenceContext.getSequenceCount(SequenceType.SUBTITLE));
 
         // UUIDs as defined in CPL.xml
@@ -186,12 +178,6 @@ public class CplContextBuilderSequenceContextTest {
                 sequenceContext.getParameterValue(SequenceContextParameters.NUM, contextInfo));
         assertEquals("subtitle",
                 sequenceContext.getParameterValue(SequenceContextParameters.TYPE, contextInfo));
-    }
-
-    private CplContextBuilder createCplContextBuilder() throws Exception {
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
-        AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        return new CplContextBuilder(contextProvider, assetMap);
     }
 
 }

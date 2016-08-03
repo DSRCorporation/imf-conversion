@@ -42,6 +42,11 @@ public interface ICplContextBuilderStrategy {
     void build();
 
     /**
+     * Adds CPL context with information obtained using destination context.
+     */
+    void buildPostDest();
+
+    /**
      * Gets a composition start timecode as defined in CPL.
      * @return a composition start timecode as defined in CPL or null it it's absent
      */
