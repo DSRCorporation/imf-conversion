@@ -45,7 +45,7 @@ public class CplContextBuilderSegmentContextTest {
     public void testSegmentContextCreatedCorrectly() throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCorrectCpl());
+        new CplContextBuilder(contextProvider, assetMap, ImpUtils.getCorrectCpl()).build();
 
         SegmentTemplateParameterContext segmentContext = contextProvider.getSegmentContext();
         assertEquals(2, segmentContext.getSegmentsNum());
@@ -73,12 +73,6 @@ public class CplContextBuilderSegmentContextTest {
                 segmentContext.getParameterValue(SegmentContextParameters.UUID, contextInfo));
         assertEquals("1",
                 segmentContext.getParameterValue(SegmentContextParameters.NUM, contextInfo));
-    }
-
-    private CplContextBuilder createCplContextBuilder() throws Exception {
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
-        AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        return new CplContextBuilder(contextProvider, assetMap);
     }
 
 }
