@@ -24,7 +24,7 @@
         <Segment>
             <Id>urn:uuid:956ea073-f177-41be-8162-6f2fe5613d96</Id>
             <SequenceList>
-             <!--   <cc:MainImageSequence xmlns:cc="http://www.smpte-ra.org/schemas/2067-2/2013">
+                <cc:MainImageSequence xmlns:cc="http://www.smpte-ra.org/schemas/2067-2/2013">
                     <Id>urn:uuid:ecbcdc9d-b482-403f-95ef-6b45d14b7e4c</Id>
                     <TrackId>urn:uuid:4aef00f2-8c88-4cdd-9a34-28d5ce5aea6a</TrackId>
                     <ResourceList>
@@ -54,7 +54,7 @@
                             <TrackFileId>urn:uuid:14d97197-22c6-4b81-bf72-e39fd3d6d3ba</TrackFileId>
                         </Resource>
                     </ResourceList>
-                </cc:MainAudioSequence>-->
+                </cc:MainAudioSequence>
 
                 <cc:SubtitlesSequence xmlns:cc="http://www.smpte-ra.org/schemas/2067-2/2013">
                     <Id>urn:uuid:f5c7f5bb-f45d-477f-8be0-47ad54a2e7af</Id>
