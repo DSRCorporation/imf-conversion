@@ -70,7 +70,7 @@ public class InputDestContextResolveStrategy implements DestContextResolveStrate
             throws ConversionException {
         Integer width = Integer.parseInt(getSequenceParameterValue(WIDTH));
         Integer height = Integer.parseInt(getSequenceParameterValue(HEIGHT));
-        BigFraction frameRate = ConversionHelper.safeParseEditRate(getSequenceParameterValue(FRAME_RATE));
+        BigFraction frameRate = ConversionHelper.parseEditRate(getSequenceParameterValue(FRAME_RATE));
         Long duration = getSequenceDuration();
 
         return resolveStrategy
