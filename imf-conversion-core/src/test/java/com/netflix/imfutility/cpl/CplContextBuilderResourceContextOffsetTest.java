@@ -50,7 +50,9 @@ public class CplContextBuilderResourceContextOffsetTest {
     public void testStartTimeFromCplZeroStart() throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCorrectCpl());
+        CplContextBuilder cplContextBuilder = new CplContextBuilder(contextProvider, assetMap, ImpUtils.getCorrectCpl());
+        cplContextBuilder.build();
+        cplContextBuilder.buildPostDestContext();
 
         doTestOffset(contextProvider, 0);
     }
@@ -59,7 +61,9 @@ public class CplContextBuilderResourceContextOffsetTest {
     public void testStartTimeFromCplNonZeroZeroStart() throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCorrectCplNonZeroStart());
+        CplContextBuilder cplContextBuilder = new CplContextBuilder(contextProvider, assetMap, ImpUtils.getCorrectCplNonZeroStart());
+        cplContextBuilder.build();
+        cplContextBuilder.buildPostDestContext();
 
         doTestOffset(contextProvider, 3670500);
     }
@@ -75,7 +79,9 @@ public class CplContextBuilderResourceContextOffsetTest {
         dest.setDestContextMap(map);
 
         AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCorrectCpl());
+        CplContextBuilder cplContextBuilder = new CplContextBuilder(contextProvider, assetMap, ImpUtils.getCorrectCpl());
+        cplContextBuilder.build();
+        cplContextBuilder.buildPostDestContext();
 
         doTestOffset(contextProvider, 35430200);
     }

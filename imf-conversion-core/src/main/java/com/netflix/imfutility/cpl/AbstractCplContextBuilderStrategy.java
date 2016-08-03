@@ -80,36 +80,16 @@ public abstract class AbstractCplContextBuilderStrategy implements ICplContextBu
         buildTimeAndDurationInFrames();
     }
 
+    @Override
+    public void buildPostDest() {
+        calculateOffsetMs();
+    }
+
     /**
      * Init sequence, segment and resource contexts. Fill all resource parameters based on CPL
      * (such as EditUnit-based parameters and Repeat)
      */
     protected abstract void buildFromCpl();
-
-    private long getDestStartTime() {
-        // composition timecode as specified in CPL
-        String cplStartTime = getCompositionTimecodeStart();
-        BigFraction cplRate = getCompositionTimecodeRate();
-
-        // start time as specified in conversion.xml (destination parameter).
-        DestTemplateParameterContext destContext = contextProvider.getDestContext();
-        String destStartTime = destContext.getParameterValue(DestContextParameters.START_TIME);
-        String destRateStr = destContext.getParameterValue(DestContextParameters.FRAME_RATE);
-        BigFraction destRate = StringUtils.isEmpty(destRateStr)
-                ? null : ConversionHelper.parseEditRate(destRateStr);
-
-        // values from conversion.xml has higher priority
-        String startTime = StringUtils.isEmpty(destStartTime) ? cplStartTime : destStartTime;
-        BigFraction rate = destRate == null ? cplRate : destRate;
-
-        // convert to milliseconds
-        if (!StringUtils.isEmpty(startTime) && (rate != null)) {
-            return ConversionHelper.smpteTimecodeToMilliSeconds(startTime, rate);
-        }
-
-        // default fallback 00:00:00:00
-        return 0L;
-    }
 
     /**
      * <ul>
@@ -122,11 +102,8 @@ public abstract class AbstractCplContextBuilderStrategy implements ICplContextBu
      */
     private void calculateMsAndTcParameters() {
         ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
-        long destStartTimeMs = getDestStartTime();
-
         for (SequenceType seqType : contextProvider.getSequenceContext().getSequenceTypes()) {
             for (SequenceUUID seqUuid : contextProvider.getSequenceContext().getUuids(seqType)) {
-                long offsetMs = destStartTimeMs;
                 for (SegmentUUID segmUuid : contextProvider.getSegmentContext().getUuids()) {
                     ResourceKey resourceKey = ResourceKey.create(segmUuid, seqUuid, seqType);
                     for (ResourceUUID resUuid : resourceContext.getUuids(resourceKey)) {
@@ -168,12 +145,7 @@ public abstract class AbstractCplContextBuilderStrategy implements ICplContextBu
                         resourceContext.addResourceParameter(resourceKey, resUuid,
                                 ResourceContextParameters.END_TIME_TIMECODE, String.valueOf(endTimeTimeCode));
 
-                        // 4. offset in MS
-                        resourceContext.addResourceParameter(resourceKey, resUuid,
-                                ResourceContextParameters.OFFSET_MS, String.valueOf(offsetMs));
-                        offsetMs += durationMs;
-
-                        // 5. startTime and duration in frameEditUnits (will be re-calculated later)
+                        // 4. startTime and duration in frameEditUnits (will be re-calculated later)
                         // assume essence has only one seq type (either video or audio),
                         // so start time in frames is equal to start time in edit units.
                         contextProvider.getResourceContext().addResourceParameter(resourceKey, resUuid,
@@ -184,6 +156,65 @@ public abstract class AbstractCplContextBuilderStrategy implements ICplContextBu
                 }
             }
         }
+    }
+
+    /**
+     * <ul>
+     * <li>It contains common logic to calculate Offset in milliseconds.</li>
+     * <li>Start timecode is taken into account when calculating offset parameter (the start code specified in conversion.xml's
+     * Destination context has higher priority than the start timecode from CPL's composition)</li>
+     * </ul>
+     */
+    private void calculateOffsetMs() {
+        ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
+        long destStartTimeMs = getDestStartTime();
+
+        for (SequenceType seqType : contextProvider.getSequenceContext().getSequenceTypes()) {
+            for (SequenceUUID seqUuid : contextProvider.getSequenceContext().getUuids(seqType)) {
+                long offsetMs = destStartTimeMs;
+                for (SegmentUUID segmUuid : contextProvider.getSegmentContext().getUuids()) {
+                    ResourceKey resourceKey = ResourceKey.create(segmUuid, seqUuid, seqType);
+                    for (ResourceUUID resUuid : resourceContext.getUuids(resourceKey)) {
+                        ContextInfo contextInfo = new ContextInfoBuilder()
+                                .setResourceUuid(resUuid)
+                                .setSegmentUuid(segmUuid)
+                                .setSequenceUuid(seqUuid)
+                                .setSequenceType(seqType).build();
+
+                        resourceContext.addResourceParameter(resourceKey, resUuid,
+                                ResourceContextParameters.OFFSET_MS, String.valueOf(offsetMs));
+                        long durationMs = new BigInteger(contextProvider.getResourceContext()
+                                .getParameterValue(ResourceContextParameters.DURATION_MS, contextInfo)).longValue();
+                        offsetMs += durationMs;
+                    }
+                }
+            }
+        }
+    }
+
+    private long getDestStartTime() {
+        // composition timecode as specified in CPL
+        String cplStartTime = getCompositionTimecodeStart();
+        BigFraction cplRate = getCompositionTimecodeRate();
+
+        // start time as specified in conversion.xml (destination parameter).
+        DestTemplateParameterContext destContext = contextProvider.getDestContext();
+        String destStartTime = destContext.getParameterValue(DestContextParameters.START_TIME);
+        String destRateStr = destContext.getParameterValue(DestContextParameters.FRAME_RATE);
+        BigFraction destRate = StringUtils.isEmpty(destRateStr)
+                ? null : ConversionHelper.parseEditRate(destRateStr);
+
+        // values from conversion.xml has higher priority
+        String startTime = StringUtils.isEmpty(destStartTime) ? cplStartTime : destStartTime;
+        BigFraction rate = destRate == null ? cplRate : destRate;
+
+        // convert to milliseconds
+        if (!StringUtils.isEmpty(startTime) && (rate != null)) {
+            return ConversionHelper.smpteTimecodeToMilliSeconds(startTime, rate);
+        }
+
+        // default fallback 00:00:00:00
+        return 0L;
     }
 
     /**

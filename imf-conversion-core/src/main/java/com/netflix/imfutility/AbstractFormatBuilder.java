@@ -87,6 +87,7 @@ public abstract class AbstractFormatBuilder {
     protected DestContextTypeMap destContextMap;
     protected TemplateParameterContextProvider contextProvider;
     protected AssetMap assetMap;
+    protected CplContextBuilder cplContextBuilder;
 
     public AbstractFormatBuilder(IFormat format, ImfUtilityInputParameters inputParameters) {
         this.format = format;
@@ -138,28 +139,33 @@ public abstract class AbstractFormatBuilder {
             // 12. select a dest context within conversion config.
             selectDestContext();
 
-            // 13. fill destination context (before CPL context!)
-            buildDestContext();
-
-            // 14. build IMF CPL contexts
+            // 13. build IMF CPL contexts
             buildCplContext();
 
-            // 15. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
+            // 14. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
             buildMediaInfoContext();
 
-            // 16. fill dynamic context post CPL
+            // 15. fill destination context
+            // (after CPL and media info context, as CPL and media info contexts may be needed
+            // to select destination parameters!)
+            buildDestContext();
+
+            // 16. Update CPl context with parameters calculated using dest context
+            buildCplContextPostDest();
+
+            // 17. fill dynamic context post CPL
             buildDynamicContextPostCpl();
 
-            // 17. select a conversion config within format.
+            // 18. select a conversion config within format.
             selectConversionConfig();
 
-            // 18. check whether we can silently convert to destination parameters
+            // 19. check whether we can silently convert to destination parameters
             checkForSilentConversion();
 
-            // 19. convert
+            // 20. convert
             doConvert();
 
-            // 20. delete tmp files.
+            // 21. delete tmp files.
             deleteTmpFilesOnExit();
 
             logger.info("Conversion to '{}' format: OK\n", format.getName());
@@ -357,11 +363,19 @@ public abstract class AbstractFormatBuilder {
         logger.info("Parsed ASSETMAP.xml: OK");
 
         logger.info("Parsing CPL ('{}')...", inputParameters.getCplFile().getAbsolutePath());
-        new CplContextBuilder(contextProvider, assetMap).build(inputParameters.getCplFile());
+        this.cplContextBuilder = new CplContextBuilder(contextProvider, assetMap, inputParameters.getCplFile());
+        cplContextBuilder.build();
         logger.info("Parsed CPL: OK");
 
         logger.info("Built CPL contexts: OK\n");
     }
+
+    private void buildCplContextPostDest() throws XmlParsingException, FileNotFoundException {
+        logger.info("Updating CPL contexts...");
+        cplContextBuilder.buildPostDestContext();
+        logger.info("Updated CPL contexts: OK\n");
+    }
+
 
     private void buildMediaInfoContext() throws XmlParsingException, IOException, MediaInfoException {
         logger.info("Building Metadata Info contexts...");

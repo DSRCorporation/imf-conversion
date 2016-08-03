@@ -47,26 +47,36 @@ public class CplContextBuilder {
 
     private final TemplateParameterContextProvider contextProvider;
     private final AssetMap assetMap;
+    private final ICplContextBuilderStrategy strategy;
+    private final File cplFile;
 
-    public CplContextBuilder(TemplateParameterContextProvider contextProvider, AssetMap assetMap) {
+    public CplContextBuilder(TemplateParameterContextProvider contextProvider, AssetMap assetMap, File cplFile)
+            throws FileNotFoundException, XmlParsingException {
         this.contextProvider = contextProvider;
         this.assetMap = assetMap;
+        if (!cplFile.isFile()) {
+            throw new FileNotFoundException(String.format("Invalid CPL file: '%s' not found", cplFile.getAbsolutePath()));
+        }
+        this.cplFile = cplFile;
+        this.strategy = getStrategy(cplFile);
     }
 
     /**
      * Parses the given CPL file and fills sequence, segment and resource contexts.
      *
-     * @param cplFile a full path to the input CPL file.
      * @throws XmlParsingException   if input is not a valid XML or it doesn't pass XSD validation
      * @throws FileNotFoundException if the input path doesn't define a file.
      */
-    public void build(File cplFile) throws XmlParsingException, FileNotFoundException {
-        if (!cplFile.isFile()) {
-            throw new FileNotFoundException(String.format("Invalid CPL file: '%s' not found", cplFile.getAbsolutePath()));
-        }
-        ICplContextBuilderStrategy strategy = getStrategy(cplFile);
+    public void build() throws XmlParsingException, FileNotFoundException {
         strategy.parse(cplFile);
         strategy.build();
+    }
+
+    /**
+     * Updates the CPL context with parameters calculated using dest context values.
+     */
+    public void buildPostDestContext() {
+        strategy.buildPostDest();
     }
 
     private ICplContextBuilderStrategy getStrategy(File cplFile) throws FileNotFoundException, XmlParsingException {
