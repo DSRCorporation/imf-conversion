@@ -164,7 +164,7 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
 
         public BigFraction getValueAsFrameRate(String paramName) {
             String value = getValue(paramName);
-            return value != null ? ConversionHelper.safeParseEditRate(value) : null;
+            return value != null ? ConversionHelper.parseEditRate(value) : null;
         }
 
         public Boolean getValueAsBoolean(String paramName) {
