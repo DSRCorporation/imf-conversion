@@ -52,6 +52,7 @@ public final class StlTestUtil {
 
         TimedTextObject tto = new TimedTextObject();
         int i = 0;
+        int index = 0;
         while (i < args.length) {
             String start = args[i++];
             String end = args[i++];
@@ -60,7 +61,7 @@ public final class StlTestUtil {
             caption.setStart(new Time("h:m:s:f/fps", start + "/25"));
             caption.setEnd(new Time("h:m:s:f/fps", end + "/25"));
             caption.setContent(text);
-            tto.getCaptions().put(i, caption);
+            tto.getCaptions().put(index++, caption);
         }
         tto.setBuilt(true);
         return tto;
