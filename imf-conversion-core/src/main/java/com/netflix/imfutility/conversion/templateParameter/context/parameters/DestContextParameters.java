@@ -31,7 +31,8 @@ public enum DestContextParameters {
     FRAME_RATE("frameRate"),
     INTERLACED("interlaced"),
     ASPECT_RATIO("aspectRatio"),
-    DURATION("duration");
+    DURATION("duration"),
+    DAR("dar");
 
     private final String name;
 
