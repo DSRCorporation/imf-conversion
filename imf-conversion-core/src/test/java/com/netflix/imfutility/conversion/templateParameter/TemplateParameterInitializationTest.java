@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -20,6 +20,7 @@ package com.netflix.imfutility.conversion.templateParameter;
 
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SegmentContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
@@ -27,9 +28,11 @@ import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.DynamicParameterConcatType;
 import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import org.junit.Test;
 
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.createDefaultContextProvider;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.createDefaultContextProviderWithDestContext;
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.fillCPLContext;
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.getResourceUuid;
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.getSegmentUuid;
@@ -416,6 +419,21 @@ public class TemplateParameterInitializationTest {
 
         param.setAdd("test");
         contextProvider.getDynamicContext().addParameter(param, ContextInfo.EMPTY, false);
+    }
+
+    @Test
+    public void testAddDestParameter() throws Exception {
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithDestContext(
+                new DestContextTypeMap());
+        contextProvider.getDestContext()
+                .addParameter(DestContextParameters.ASPECT_RATIO, "16/9")
+                .addParameter("dest1", "dest1Value")
+                .addParameter("dest2", "dest2Value");
+
+        assertEquals(3, contextProvider.getDestContext().getAllParameters().size());
+        assertEquals("16/9", contextProvider.getDestContext().getParameterValue(DestContextParameters.ASPECT_RATIO));
+        assertEquals("dest1Value", contextProvider.getDestContext().getParameterValue("dest1"));
+        assertEquals("dest2Value", contextProvider.getDestContext().getParameterValue("dest2"));
     }
 
     @Test

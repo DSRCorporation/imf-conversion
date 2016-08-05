@@ -61,6 +61,34 @@ public class DestTemplateParameterContext implements ITemplateParameterContext {
     }
 
     /**
+     * Adds a dest parameter value.
+     *
+     * @param destParam  enum defining the parameter name.
+     * @param paramValue parameter value
+     * @return this dest parameter context.
+     */
+    public DestTemplateParameterContext addParameter(DestContextParameters destParam, String paramValue) {
+        return addParameter(destParam.getName(), paramValue);
+    }
+
+    /**
+     * Adds a dest parameter value.
+     *
+     * @param paramName  parameter name.
+     * @param paramValue parameter value
+     * @return this dest parameter context.
+     */
+    public DestTemplateParameterContext addParameter(String paramName, String paramValue) {
+        DestContextParamType parameter = new DestContextParamType();
+        parameter.setName(paramName);
+        parameter.setValue(paramValue);
+
+        destContextMap.getMap().put(paramName, parameter);
+
+        return this;
+    }
+
+    /**
      * Gets a parameter value.
      *
      * @param destParameter pre-defined dest parameter

@@ -424,7 +424,13 @@ public abstract class AbstractFormatBuilder {
         DestTemplateParameterContext destContext = contextProvider.getDestContext();
         destContext.setDestContextMap(destContextMap);
 
+        // build format-specific dest parameters
+        doBuildDestContext();
+
         logger.info("Built Dest context: OK\n");
+    }
+
+    protected void doBuildDestContext() {
     }
 
     private void selectConversionConfig() {
