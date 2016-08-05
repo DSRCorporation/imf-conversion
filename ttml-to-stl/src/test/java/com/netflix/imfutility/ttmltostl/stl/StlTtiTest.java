@@ -35,16 +35,16 @@ import static org.junit.Assert.assertArrayEquals;
 public class StlTtiTest {
 
     @Test
-    public void testSimpleTti() throws Exception {
+    public void testSubtitleZero() throws Exception {
         TimedTextObject tto = StlTestUtil.buildTto(
-                "00:00:00:00", "00:00:05:00", "text1",
-                "00:00:05:00", "00:00:10:12", "text2",
-                "00:04:59:00", "23:59:59:24", "text3"
+                "10:00:00:00", "10:00:05:00", "text1",
+                "10:00:05:00", "10:00:10:12", "text2",
+                "10:04:59:00", "23:59:59:24", "text3"
         );
         byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
         byte[] tti = stl[1];
 
-        // 1st block: information
+        // subtitle zero
         assertArrayEquals(
                 new byte[]{
                         0x00, // group number - 0
@@ -52,7 +52,7 @@ public class StlTtiTest {
                         (byte) 0xff, // extension block - default
                         0x00, // cumulative status - 00 (no cumulative)
                         0x00, 0x00, 0x00, 0x00, // code in: 00:00:00:00
-                        0x00, 0x00, 0x05, 0x00, // code out: 00:00:05:00
+                        0x00, 0x00, 0x01, 0x00, // code out: 00:00:01:00 // default for zero subtitle
                         0x16, // vertical position
                         0x02, // centered by default
                         0x00, // comment - 00 (contains subtitle)
@@ -61,19 +61,55 @@ public class StlTtiTest {
 
         // 1st block: text
         assertArrayEquals(
-                fillExpectedText(new byte[]{0x74, 0x65, 0x78, 0x74, 0x31}),
+                fillExpectedText(new byte[]{
+                                0x50, 0x72, 0x6f, 0x67, 0x72, 0x61, 0x6d, 0x6d, 0x65  // 'Programme' as in metadata.xml
+                        }
+                ),
                 Arrays.copyOfRange(tti, 16, 128));
+    }
 
-        // 2d block: information
-        int offset = 128;
+    @Test
+    public void testSimpleTti() throws Exception {
+        TimedTextObject tto = StlTestUtil.buildTto(
+                "10:00:00:00", "10:00:05:00", "text1",
+                "10:00:05:00", "10:00:10:12", "text2",
+                "10:04:59:00", "23:59:59:24", "text3"
+        );
+        byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
+        byte[] tti = stl[1];
+
+
+        // 1st block: information
+        int offset = 128; // subtitle zero
         assertArrayEquals(
                 new byte[]{
                         0x00, // group number - 0
                         0x01, 0x00, // subtitle number - 1
                         (byte) 0xff, // extension block - default
                         0x00, // cumulative status - 00 (no cumulative)
-                        0x00, 0x00, 0x05, 0x00, // code in: 00:00:05:00
-                        0x00, 0x00, 0x0a, 0x0c, // code out: 00:00:10:12
+                        0x0a, 0x00, 0x00, 0x00, // code in: 10:00:00:00
+                        0x0a, 0x00, 0x05, 0x00, // code out: 10:00:05:00
+                        0x16, // vertical position
+                        0x02, // centered by default
+                        0x00, // comment - 00 (contains subtitle)
+                },
+                Arrays.copyOfRange(tti, offset, offset + 16));
+
+        // 1st block: text
+        assertArrayEquals(
+                fillExpectedText(new byte[]{0x74, 0x65, 0x78, 0x74, 0x31}),
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
+
+        // 2d block: information
+        offset += 128;
+        assertArrayEquals(
+                new byte[]{
+                        0x00, // group number - 0
+                        0x02, 0x00, // subtitle number - 2
+                        (byte) 0xff, // extension block - default
+                        0x00, // cumulative status - 00 (no cumulative)
+                        0x0a, 0x00, 0x05, 0x00, // code in: 10:00:05:00
+                        0x0a, 0x00, 0x0a, 0x0c, // code out: 10:00:10:12
                         0x16, // vertical position
                         0x02, // centered by default
                         0x00, // comment - 00 (contains subtitle)
@@ -90,10 +126,10 @@ public class StlTtiTest {
         assertArrayEquals(
                 new byte[]{
                         0x00, // group number - 0
-                        0x02, 0x00, // subtitle number - 2
+                        0x03, 0x00, // subtitle number - 3
                         (byte) 0xff, // extension block - default
                         0x00, // cumulative status - 00 (no cumulative)
-                        0x00, 0x04, 0x3b, 0x00, // code in: 00:04:59:00
+                        0x0a, 0x04, 0x3b, 0x00, // code in: 10:04:59:00
                         0x17, 0x3b, 0x3b, 0x18, // code out: 23:59:59:24
                         0x16, // vertical position
                         0x02, // centered by default
@@ -111,33 +147,34 @@ public class StlTtiTest {
     public void testEbnBlocksForLongSubtitle() throws Exception {
         // prepare long subtitles, so that one subtitles is stored in two tti blocks
         TimedTextObject tto = StlTestUtil.buildTto(
-                "00:00:00:00", "00:00:05:00", StringUtils.rightPad("", 200, '1'), // in 2 tti
-                "00:00:10:00", "00:01:10:00", StringUtils.rightPad("", 400, '2') // in 4 tti
+                "10:00:00:00", "10:00:05:00", StringUtils.rightPad("", 200, '1'), // in 2 tti
+                "10:00:10:00", "10:01:10:00", StringUtils.rightPad("", 400, '2') // in 4 tti
         );
         byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
         byte[] tti = stl[1];
 
         // 1st subtitle 1st block
+        int offset = 128; // zero subtitle;
         assertArrayEquals(
                 new byte[]{
-                        0x00, 0x00, // subtitle number - 0
+                        0x01, 0x00, // subtitle number - 1
                         (byte) 0x00, // extension block - 1st
                         0x00, // cumulative status - 00 (no cumulative)
-                        0x00, 0x00, 0x00, 0x00, // code in: 00:00:00:00
-                        0x00, 0x00, 0x05, 0x00, // code out: 00:00:05:00
+                        0x0a, 0x00, 0x00, 0x00, // code in: 10:00:00:00
+                        0x0a, 0x00, 0x05, 0x00, // code out: 10:00:05:00
                         0x16 // vertical position
                 },
-                Arrays.copyOfRange(tti, 1, 14));
+                Arrays.copyOfRange(tti, offset + 1, offset + 14));
 
         // 1st subtitle 2d block
-        int offset = 128;
+        offset += 128;
         assertArrayEquals(
                 new byte[]{
-                        0x00, 0x00, // subtitle number - 0
+                        0x01, 0x00, // subtitle number - 1
                         (byte) 0xff, // extension block - last
                         0x00, // cumulative status - 00 (no cumulative)
-                        0x00, 0x00, 0x00, 0x00, // code in: 00:00:00:00
-                        0x00, 0x00, 0x05, 0x00, // code out: 00:00:05:00
+                        0x0a, 0x00, 0x00, 0x00, // code in: 10:00:00:00
+                        0x0a, 0x00, 0x05, 0x00, // code out: 10:00:05:00
                         0x16 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
@@ -146,11 +183,11 @@ public class StlTtiTest {
         offset += 128;
         assertArrayEquals(
                 new byte[]{
-                        0x01, 0x00, // subtitle number - 0
+                        0x02, 0x00, // subtitle number - 2
                         (byte) 0x00, // extension block - 1st
                         0x00, // cumulative status - 00 (no cumulative)
-                        0x00, 0x00, 0x0a, 0x00, // code in: 00:00:10:00
-                        0x00, 0x01, 0x0a, 0x00, // code out: 00:01:10:00
+                        0x0a, 0x00, 0x0a, 0x00, // code in: 10:00:10:00
+                        0x0a, 0x01, 0x0a, 0x00, // code out: 10:01:10:00
                         0x16 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
@@ -159,11 +196,11 @@ public class StlTtiTest {
         offset += 128;
         assertArrayEquals(
                 new byte[]{
-                        0x01, 0x00, // subtitle number - 0
+                        0x02, 0x00, // subtitle number - 2
                         (byte) 0x01, // extension block - 2d
                         0x00, // cumulative status - 00 (no cumulative)
-                        0x00, 0x00, 0x0a, 0x00, // code in: 00:00:10:00
-                        0x00, 0x01, 0x0a, 0x00, // code out: 00:01:10:00
+                        0x0a, 0x00, 0x0a, 0x00, // code in: 10:00:10:00
+                        0x0a, 0x01, 0x0a, 0x00, // code out: 10:01:10:00
                         0x16 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
@@ -172,11 +209,11 @@ public class StlTtiTest {
         offset += 128;
         assertArrayEquals(
                 new byte[]{
-                        0x01, 0x00, // subtitle number - 0
+                        0x02, 0x00, // subtitle number - 2
                         (byte) 0x02, // extension block - 3d
                         0x00, // cumulative status - 00 (no cumulative)
-                        0x00, 0x00, 0x0a, 0x00, // code in: 00:00:10:00
-                        0x00, 0x01, 0x0a, 0x00, // code out: 00:01:10:00
+                        0x0a, 0x00, 0x0a, 0x00, // code in: 10:00:10:00
+                        0x0a, 0x01, 0x0a, 0x00, // code out: 10:01:10:00
                         0x16 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
@@ -185,11 +222,11 @@ public class StlTtiTest {
         offset += 128;
         assertArrayEquals(
                 new byte[]{
-                        0x01, 0x00, // subtitle number - 0
+                        0x02, 0x00, // subtitle number - 2
                         (byte) 0xff, // extension block - last
                         0x00, // cumulative status - 00 (no cumulative)
-                        0x00, 0x00, 0x0a, 0x00, // code in: 00:00:10:00
-                        0x00, 0x01, 0x0a, 0x00, // code out: 00:01:10:00
+                        0x0a, 0x00, 0x0a, 0x00, // code in: 10:00:10:00
+                        0x0a, 0x01, 0x0a, 0x00, // code out: 10:01:10:00
                         0x16 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
@@ -204,36 +241,37 @@ public class StlTtiTest {
     public void testTextEndsWith8H() throws Exception {
         // prepare long subtitles, so that one subtitles is stored in two tti blocks
         TimedTextObject tto = StlTestUtil.buildTto(
-                "00:00:00:00", "00:00:05:00", StringUtils.rightPad("", 111, '1'), // 1 block
-                "00:00:05:00", "00:00:10:00", StringUtils.rightPad("", 112, '2'), // 2 blocks
-                "00:00:10:00", "00:00:15:00", StringUtils.rightPad("", 222, '3'), // 2 blocks
-                "00:00:15:00", "00:00:20:00", StringUtils.rightPad("", 223, '4') // 3 blocks
+                "10:00:00:00", "10:00:05:00", StringUtils.rightPad("", 111, '1'), // 1 block
+                "10:00:05:00", "10:00:10:00", StringUtils.rightPad("", 112, '2'), // 2 blocks
+                "10:00:10:00", "10:00:15:00", StringUtils.rightPad("", 222, '3'), // 2 blocks
+                "10:00:15:00", "10:00:20:00", StringUtils.rightPad("", 223, '4') // 3 blocks
         );
         byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
         byte[] tti = stl[1];
 
         // 1st subtitle  - 1 block
+        int offset = 128; // subtitle zero
         byte[] textWithPadding = new byte[112];
         Arrays.fill(textWithPadding, (byte) 0x31);
         textWithPadding[111] = (byte) 0x8f;
         assertArrayEquals(
                 new byte[]{
-                        0x00, 0x00, // subtitle number - 0
+                        0x01, 0x00, // subtitle number - 1
                         (byte) 0xff, // extension block - last
                 },
-                Arrays.copyOfRange(tti, 1, 4));
+                Arrays.copyOfRange(tti, offset + 1, offset + 4));
         assertArrayEquals(
                 textWithPadding,
-                Arrays.copyOfRange(tti, 16, 128));
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
 
         // 2d subtitle  - 2 blocks
-        int offset = 128;
+        offset += 128;
         textWithPadding = new byte[112];
         Arrays.fill(textWithPadding, (byte) 0x32);
         textWithPadding[111] = (byte) 0x8f;
         assertArrayEquals(
                 new byte[]{
-                        0x01, 0x00, // subtitle number - 1
+                        0x02, 0x00, // subtitle number - 2
                         (byte) 0x00, // extension block - 1st
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 4));
@@ -247,7 +285,7 @@ public class StlTtiTest {
         textWithPadding[0] = (byte) 0x32;
         assertArrayEquals(
                 new byte[]{
-                        0x01, 0x00, // subtitle number - 1
+                        0x02, 0x00, // subtitle number - 2
                         (byte) 0xff, // extension block - last
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 4));
@@ -262,7 +300,7 @@ public class StlTtiTest {
         textWithPadding[111] = (byte) 0x8f;
         assertArrayEquals(
                 new byte[]{
-                        0x02, 0x00, // subtitle number - 2
+                        0x03, 0x00, // subtitle number - 3
                         (byte) 0x00, // extension block - 1st
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 4));
@@ -273,7 +311,7 @@ public class StlTtiTest {
         offset += 128;
         assertArrayEquals(
                 new byte[]{
-                        0x02, 0x00, // subtitle number - 2
+                        0x03, 0x00, // subtitle number - 3
                         (byte) 0xff, // extension block - last
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 4));
@@ -288,7 +326,7 @@ public class StlTtiTest {
         textWithPadding[111] = (byte) 0x8f;
         assertArrayEquals(
                 new byte[]{
-                        0x03, 0x00, // subtitle number - 3
+                        0x04, 0x00, // subtitle number - 4
                         (byte) 0x00, // extension block - 1st
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 4));
@@ -299,7 +337,7 @@ public class StlTtiTest {
         offset += 128;
         assertArrayEquals(
                 new byte[]{
-                        0x03, 0x00, // subtitle number - 3
+                        0x04, 0x00, // subtitle number - 4
                         (byte) 0x01, // extension block - last
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 4));
@@ -313,7 +351,7 @@ public class StlTtiTest {
         textWithPadding[0] = (byte) 0x34;
         assertArrayEquals(
                 new byte[]{
-                        0x03, 0x00, // subtitle number - 3
+                        0x04, 0x00, // subtitle number - 4
                         (byte) 0xff, // extension block - last
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 4));
@@ -332,21 +370,22 @@ public class StlTtiTest {
     @Test
     public void testMultilineText() throws Exception {
         TimedTextObject tto = StlTestUtil.buildTto(
-                "00:00:00:00", "00:00:05:00", "line1\n2\n3\n\n\n4"
+                "10:00:00:00", "10:00:05:00", "line1\n2\n3\n\n\n4"
         );
         byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
         byte[] tti = stl[1];
 
+        int offset = 128; // subtitle zero
         assertArrayEquals(
                 new byte[]{
-                        0x00, 0x00, // subtitle number - 0
+                        0x01, 0x00, // subtitle number - 1
                         (byte) 0xff, // extension block - default
                         0x00, // cumulative status - 00 (no)
-                        0x00, 0x00, 0x00, 0x00, // code in: 00:00:00:00
-                        0x00, 0x00, 0x05, 0x00, // code out: 00:00:05:00
+                        0x0a, 0x00, 0x00, 0x00, // code in: 10:00:00:00
+                        0x0a, 0x00, 0x05, 0x00, // code out: 10:00:05:00
                         0x0c // vertical position
                 },
-                Arrays.copyOfRange(tti, 1, 14));
+                Arrays.copyOfRange(tti, offset + 1, offset + 14));
 
         assertArrayEquals(
                 fillExpectedText(
@@ -358,7 +397,7 @@ public class StlTtiTest {
                                 (byte) 0x8a,
                                 0x34}
                 ),
-                Arrays.copyOfRange(tti, 16, 128));
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
     }
 
     /**
@@ -369,21 +408,22 @@ public class StlTtiTest {
     @Test
     public void testMultilineTextWithMoreThanMNR() throws Exception {
         TimedTextObject tto = StlTestUtil.buildTto(
-                "00:00:00:00", "00:00:05:00", "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14" // 14 > 11
+                "10:00:00:00", "10:00:05:00", "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14" // 14 > 11
         );
         byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
         byte[] tti = stl[1];
 
+        int offset = 128; // subtitle zero
         assertArrayEquals(
                 new byte[]{
-                        0x00, 0x00, // subtitle number - 0
+                        0x01, 0x00, // subtitle number - 1
                         (byte) 0xff, // extension block - default
                         0x00, // cumulative status - 00 (no)
-                        0x00, 0x00, 0x00, 0x00, // code in: 00:00:00:00
-                        0x00, 0x00, 0x05, 0x00, // code out: 00:00:05:00
+                        0x0a, 0x00, 0x00, 0x00, // code in: 10:00:00:00
+                        0x0a, 0x00, 0x05, 0x00, // code out: 10:00:05:00
                         0x02 // vertical position (min value!)
                 },
-                Arrays.copyOfRange(tti, 1, 14));
+                Arrays.copyOfRange(tti, offset + 1, offset + 14));
 
         assertArrayEquals(
                 fillExpectedText(
@@ -404,7 +444,7 @@ public class StlTtiTest {
                                 0x31, 0x34
                         }
                 ),
-                Arrays.copyOfRange(tti, 16, 128));
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
     }
 
     /**
@@ -415,31 +455,32 @@ public class StlTtiTest {
     @Test
     public void testCumulativeSubtitleSameTime() throws Exception {
         TimedTextObject tto = StlTestUtil.buildTto(
-                "00:00:00:00", "00:00:05:00", "text1",
-                "00:00:00:00", "00:00:05:00", "text2"
+                "10:00:00:00", "10:00:05:00", "text1",
+                "10:00:00:00", "10:00:05:00", "text2"
         );
         byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
         byte[] tti = stl[1];
 
-        assertArrayEquals(
-                new byte[]{
-                        0x00, 0x00, // subtitle number - 0
-                        (byte) 0xff, // extension block - default
-                        0x01, // cumulative status - 01 (first)
-                        0x00, 0x00, 0x00, 0x00, // code in: 00:00:00:00
-                        0x00, 0x00, 0x05, 0x00, // code out: 00:00:05:00
-                        0x14 // vertical position
-                },
-                Arrays.copyOfRange(tti, 1, 14));
-
-        int offset = 128;
+        int offset = 128; // subtitle zero
         assertArrayEquals(
                 new byte[]{
                         0x01, 0x00, // subtitle number - 1
                         (byte) 0xff, // extension block - default
+                        0x01, // cumulative status - 01 (first)
+                        0x0a, 0x00, 0x00, 0x00, // code in: 10:00:00:00
+                        0x0a, 0x00, 0x05, 0x00, // code out: 10:00:05:00
+                        0x14 // vertical position
+                },
+                Arrays.copyOfRange(tti, offset + 1, offset + 14));
+
+        offset += 128;
+        assertArrayEquals(
+                new byte[]{
+                        0x02, 0x00, // subtitle number - 2
+                        (byte) 0xff, // extension block - default
                         0x03, // cumulative status - 03 (last)
-                        0x00, 0x00, 0x00, 0x00, // code in: 00:00:00:00
-                        0x00, 0x00, 0x05, 0x00, // code out: 00:00:05:00
+                        0x0a, 0x00, 0x00, 0x00, // code in: 10:00:00:00
+                        0x0a, 0x00, 0x05, 0x00, // code out: 10:00:05:00
                         0x16 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
@@ -453,33 +494,22 @@ public class StlTtiTest {
     @Test
     public void testCumulativeSubtitleEqualEndTime() throws Exception {
         TimedTextObject tto = StlTestUtil.buildTto(
-                "00:00:10:00", "00:00:20:00", "text3",
-                "00:00:14:00", "00:00:20:00", "text4",
-                "00:00:18:00", "00:00:20:00", "text4"
+                "10:00:10:00", "10:00:20:00", "text3",
+                "10:00:14:00", "10:00:20:00", "text4",
+                "10:00:18:00", "10:00:20:00", "text4"
         );
         byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
         byte[] tti = stl[1];
 
-        assertArrayEquals(
-                new byte[]{
-                        0x00, 0x00, // subtitle number - 0
-                        (byte) 0xff, // extension block - default
-                        0x01, // cumulative status - 01 (first)
-                        0x00, 0x00, 0x0a, 0x00, // code in: 00:00:10:00
-                        0x00, 0x00, 0x14, 0x00, // code out: 00:00:20:00
-                        0x12 // vertical position
-                },
-                Arrays.copyOfRange(tti, 1, 14));
-
-        int offset = 128;
+        int offset = 128; // subtitle zero
         assertArrayEquals(
                 new byte[]{
                         0x01, 0x00, // subtitle number - 1
                         (byte) 0xff, // extension block - default
-                        0x02, // cumulative status - 02 (intermediate)
-                        0x00, 0x00, 0x0e, 0x00, // code in: 00:00:14:00
-                        0x00, 0x00, 0x14, 0x00, // code out: 00:00:20:00
-                        0x14 // vertical position
+                        0x01, // cumulative status - 01 (first)
+                        0x0a, 0x00, 0x0a, 0x00, // code in: 10:00:10:00
+                        0x0a, 0x00, 0x14, 0x00, // code out: 10:00:20:00
+                        0x12 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
 
@@ -488,9 +518,21 @@ public class StlTtiTest {
                 new byte[]{
                         0x02, 0x00, // subtitle number - 2
                         (byte) 0xff, // extension block - default
+                        0x02, // cumulative status - 02 (intermediate)
+                        0x0a, 0x00, 0x0e, 0x00, // code in: 10:00:14:00
+                        0x0a, 0x00, 0x14, 0x00, // code out: 10:00:20:00
+                        0x14 // vertical position
+                },
+                Arrays.copyOfRange(tti, offset + 1, offset + 14));
+
+        offset += 128;
+        assertArrayEquals(
+                new byte[]{
+                        0x03, 0x00, // subtitle number - 3
+                        (byte) 0xff, // extension block - default
                         0x03, // cumulative status - 03 (last)
-                        0x00, 0x00, 0x12, 0x00, // code in: 00:00:18:00
-                        0x00, 0x00, 0x14, 0x00, // code out: 00:00:20:00
+                        0x0a, 0x00, 0x12, 0x00, // code in: 10:00:18:00
+                        0x0a, 0x00, 0x14, 0x00, // code out: 10:00:20:00
                         0x16 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
@@ -504,31 +546,32 @@ public class StlTtiTest {
     @Test
     public void testTwoIntersectedSubtitlesMadeCumulative() throws Exception {
         TimedTextObject tto = StlTestUtil.buildTto(
-                "00:00:00:00", "00:00:10:00", "text1",
-                "00:00:05:00", "00:00:15:00", "text2"
+                "10:00:00:00", "10:00:10:00", "text1",
+                "10:00:05:00", "10:00:15:00", "text2"
         );
         byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
         byte[] tti = stl[1];
 
-        assertArrayEquals(
-                new byte[]{
-                        0x00, 0x00, // subtitle number - 0
-                        (byte) 0xff, // extension block - default
-                        0x01, // cumulative status - 01 (first)
-                        0x00, 0x00, 0x00, 0x00, // code in: 00:00:00:00
-                        0x00, 0x00, 0x0f, 0x00, // code out: 00:00:15:00, not 00:00:10:00!!!
-                        0x14 // vertical position
-                },
-                Arrays.copyOfRange(tti, 1, 14));
-
-        int offset = 128;
+        int offset = 128; // subtitle zero
         assertArrayEquals(
                 new byte[]{
                         0x01, 0x00, // subtitle number - 1
                         (byte) 0xff, // extension block - default
+                        0x01, // cumulative status - 01 (first)
+                        0x0a, 0x00, 0x00, 0x00, // code in: 10:00:00:00
+                        0x0a, 0x00, 0x0f, 0x00, // code out: 10:00:15:00, not 10:00:10:00!!!
+                        0x14 // vertical position
+                },
+                Arrays.copyOfRange(tti, offset + 1, offset + 14));
+
+        offset += 128;
+        assertArrayEquals(
+                new byte[]{
+                        0x02, 0x00, // subtitle number - 2
+                        (byte) 0xff, // extension block - default
                         0x03, // cumulative status - 03 (last)
-                        0x00, 0x00, 0x05, 0x00, // code in: 00:00:05:00
-                        0x00, 0x00, 0x0f, 0x00, // code out: 00:00:15:00
+                        0x0a, 0x00, 0x05, 0x00, // code in: 10:00:05:00
+                        0x0a, 0x00, 0x0f, 0x00, // code out: 10:00:15:00
                         0x16 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
@@ -542,35 +585,24 @@ public class StlTtiTest {
     @Test
     public void testManyIntersectedSubtitlesMadeCumulative() throws Exception {
         TimedTextObject tto = StlTestUtil.buildTto(
-                "00:00:00:00", "00:00:10:00", "text1",
-                "00:00:05:00", "00:00:15:00", "text2",
-                "00:00:07:00", "00:00:20:00", "text3",
-                "00:00:08:00", "00:00:20:00", "text4",
-                "00:00:09:00", "00:00:22:00", "text5"
+                "10:00:00:00", "10:00:10:00", "text1",
+                "10:00:05:00", "10:00:15:00", "text2",
+                "10:00:07:00", "10:00:20:00", "text3",
+                "10:00:08:00", "10:00:20:00", "text4",
+                "10:00:09:00", "10:00:22:00", "text5"
         );
         byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
         byte[] tti = stl[1];
 
-        assertArrayEquals(
-                new byte[]{
-                        0x00, 0x00, // subtitle number - 0
-                        (byte) 0xff, // extension block - default
-                        0x01, // cumulative status - 01 (first)
-                        0x00, 0x00, 0x00, 0x00, // code in: 00:00:00:00
-                        0x00, 0x00, 0x16, 0x00, // code out: 00:00:22:00, not 00:00:10:00!!!
-                        0x0e // vertical position
-                },
-                Arrays.copyOfRange(tti, 1, 14));
-
-        int offset = 128;
+        int offset = 128; // subtitle zero
         assertArrayEquals(
                 new byte[]{
                         0x01, 0x00, // subtitle number - 1
                         (byte) 0xff, // extension block - default
-                        0x02, // cumulative status - 02 (intermediate)
-                        0x00, 0x00, 0x05, 0x00, // code in: 00:00:05:00
-                        0x00, 0x00, 0x16, 0x00, // code out: 00:00:22:00 not 00:00:15:00!!!
-                        0x10 // vertical position
+                        0x01, // cumulative status - 01 (first)
+                        0x0a, 0x00, 0x00, 0x00, // code in: 10:00:00:00
+                        0x0a, 0x00, 0x16, 0x00, // code out: 10:00:22:00, not 10:00:10:00!!!
+                        0x0e // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
 
@@ -580,9 +612,9 @@ public class StlTtiTest {
                         0x02, 0x00, // subtitle number - 2
                         (byte) 0xff, // extension block - default
                         0x02, // cumulative status - 02 (intermediate)
-                        0x00, 0x00, 0x07, 0x00, // code in: 00:00:07:00
-                        0x00, 0x00, 0x16, 0x00, // code out: 00:00:22:00 not 00:00:20:00!!!
-                        0x12 // vertical position
+                        0x0a, 0x00, 0x05, 0x00, // code in: 10:00:05:00
+                        0x0a, 0x00, 0x16, 0x00, // code out: 10:00:22:00 not 10:00:15:00!!!
+                        0x10 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
 
@@ -592,9 +624,9 @@ public class StlTtiTest {
                         0x03, 0x00, // subtitle number - 3
                         (byte) 0xff, // extension block - default
                         0x02, // cumulative status - 02 (intermediate)
-                        0x00, 0x00, 0x08, 0x00, // code in: 00:00:08:00
-                        0x00, 0x00, 0x16, 0x00, // code out: 00:00:22:00 not 00:00:20:00!!!
-                        0x14 // vertical position
+                        0x0a, 0x00, 0x07, 0x00, // code in: 10:00:07:00
+                        0x0a, 0x00, 0x16, 0x00, // code out: 10:00:22:00 not 10:00:20:00!!!
+                        0x12 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
 
@@ -603,9 +635,21 @@ public class StlTtiTest {
                 new byte[]{
                         0x04, 0x00, // subtitle number - 4
                         (byte) 0xff, // extension block - default
+                        0x02, // cumulative status - 02 (intermediate)
+                        0x0a, 0x00, 0x08, 0x00, // code in: 10:00:08:00
+                        0x0a, 0x00, 0x16, 0x00, // code out: 10:00:22:00 not 10:00:20:00!!!
+                        0x14 // vertical position
+                },
+                Arrays.copyOfRange(tti, offset + 1, offset + 14));
+
+        offset += 128;
+        assertArrayEquals(
+                new byte[]{
+                        0x05, 0x00, // subtitle number - 5
+                        (byte) 0xff, // extension block - default
                         0x03, // cumulative status - 03 (last)
-                        0x00, 0x00, 0x09, 0x00, // code in: 00:00:09:00
-                        0x00, 0x00, 0x16, 0x00, // code out: 00:00:22:00
+                        0x0a, 0x00, 0x09, 0x00, // code in: 10:00:09:00
+                        0x0a, 0x00, 0x16, 0x00, // code out: 10:00:22:00
                         0x16 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
@@ -620,34 +664,23 @@ public class StlTtiTest {
     @Test
     public void testMultilineIntersectedSubtitlesCheckedAgainstMNR() throws Exception {
         TimedTextObject tto = StlTestUtil.buildTto(
-                "00:00:00:00", "00:00:10:00", "1\n2\n3\n4\n5",
-                "00:00:05:00", "00:00:15:00", "6\n7\n8\n9\n10\n11",
-                "00:00:07:00", "00:00:22:00", "14\n15",
-                "00:00:08:00", "00:00:22:00", "16\n17"
+                "10:00:00:00", "10:00:10:00", "1\n2\n3\n4\n5",
+                "10:00:05:00", "10:00:15:00", "6\n7\n8\n9\n10\n11",
+                "10:00:07:00", "10:00:22:00", "14\n15",
+                "10:00:08:00", "10:00:22:00", "16\n17"
         );
         byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
         byte[] tti = stl[1];
 
-        assertArrayEquals(
-                new byte[]{
-                        0x00, 0x00, // subtitle number - 0
-                        (byte) 0xff, // extension block - default
-                        0x01, // cumulative status - 01 (first)
-                        0x00, 0x00, 0x00, 0x00, // code in: 00:00:00:00
-                        0x00, 0x00, 0x0f, 0x00, // code out: 00:00:15:00, not 00:00:10:00!!!
-                        0x02 // vertical position
-                },
-                Arrays.copyOfRange(tti, 1, 14));
-
-        int offset = 128;
+        int offset = 128; // subtitle zero
         assertArrayEquals(
                 new byte[]{
                         0x01, 0x00, // subtitle number - 1
                         (byte) 0xff, // extension block - default
-                        0x03, // cumulative status - 03 (last)
-                        0x00, 0x00, 0x05, 0x00, // code in: 00:00:05:00
-                        0x00, 0x00, 0x0f, 0x00, // code out: 00:00:15:00
-                        0x0c // vertical position
+                        0x01, // cumulative status - 01 (first)
+                        0x0a, 0x00, 0x00, 0x00, // code in: 10:00:00:00
+                        0x0a, 0x00, 0x0f, 0x00, // code out: 10:00:15:00, not 10:00:10:00!!!
+                        0x02 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
 
@@ -656,10 +689,10 @@ public class StlTtiTest {
                 new byte[]{
                         0x02, 0x00, // subtitle number - 2
                         (byte) 0xff, // extension block - default
-                        0x01, // cumulative status - 01 (first)
-                        0x00, 0x00, 0x0f, 0x00, // code in: 00:00:15:00, not 00:00:07:00!!!
-                        0x00, 0x00, 0x16, 0x00, // code out: 00:00:22:00
-                        0x10 // vertical position
+                        0x03, // cumulative status - 03 (last)
+                        0x0a, 0x00, 0x05, 0x00, // code in: 10:00:05:00
+                        0x0a, 0x00, 0x0f, 0x00, // code out: 10:00:15:00
+                        0x0c // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
 
@@ -668,9 +701,21 @@ public class StlTtiTest {
                 new byte[]{
                         0x03, 0x00, // subtitle number - 3
                         (byte) 0xff, // extension block - default
+                        0x01, // cumulative status - 01 (first)
+                        0x0a, 0x00, 0x0f, 0x00, // code in: 10:00:15:00, not 10:00:07:00!!!
+                        0x0a, 0x00, 0x16, 0x00, // code out: 10:00:22:00
+                        0x10 // vertical position
+                },
+                Arrays.copyOfRange(tti, offset + 1, offset + 14));
+
+        offset += 128;
+        assertArrayEquals(
+                new byte[]{
+                        0x04, 0x00, // subtitle number - 4
+                        (byte) 0xff, // extension block - default
                         0x03, // cumulative status - 02 (last)
-                        0x00, 0x00, 0x0f, 0x00, // code in: 00:00:15:00, not 00:00:08:00!!!
-                        0x00, 0x00, 0x16, 0x00, // code out: 00:00:22:00
+                        0x0a, 0x00, 0x0f, 0x00, // code in: 10:00:15:00, not 10:00:08:00!!!
+                        0x0a, 0x00, 0x16, 0x00, // code out: 10:00:22:00
                         0x14 // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
@@ -684,31 +729,32 @@ public class StlTtiTest {
     @Test
     public void testMultilineCumulativeFirstMoreThanMNR() throws Exception {
         TimedTextObject tto = StlTestUtil.buildTto(
-                "00:00:00:00", "00:00:10:00", "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13",
-                "00:00:05:00", "00:00:15:00", "6\n7\n8\n9\n10\n11"
+                "10:00:00:00", "10:00:10:00", "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13",
+                "10:00:05:00", "10:00:15:00", "6\n7\n8\n9\n10\n11"
         );
         byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
         byte[] tti = stl[1];
 
-        assertArrayEquals(
-                new byte[]{
-                        0x00, 0x00, // subtitle number - 0
-                        (byte) 0xff, // extension block - default
-                        0x00, // cumulative status - 00 (no)
-                        0x00, 0x00, 0x00, 0x00, // code in: 00:00:00:00
-                        0x00, 0x00, 0x0a, 0x00, // code out: 00:00:10:00, not 00:00:15:00!!!
-                        0x02 // vertical position (min)
-                },
-                Arrays.copyOfRange(tti, 1, 14));
-
-        int offset = 128;
+        int offset = 128; // subtitle zero
         assertArrayEquals(
                 new byte[]{
                         0x01, 0x00, // subtitle number - 1
                         (byte) 0xff, // extension block - default
                         0x00, // cumulative status - 00 (no)
-                        0x00, 0x00, 0x0a, 0x00, // code in: 00:00:10:00, not 00:00:05:00!!!
-                        0x00, 0x00, 0x0f, 0x00, // code out: 00:00:15:00
+                        0x0a, 0x00, 0x00, 0x00, // code in: 10:00:00:00
+                        0x0a, 0x00, 0x0a, 0x00, // code out: 10:00:10:00, not 10:00:15:00!!!
+                        0x02 // vertical position (min)
+                },
+                Arrays.copyOfRange(tti, offset + 1, offset + 14));
+
+        offset += 128;
+        assertArrayEquals(
+                new byte[]{
+                        0x02, 0x00, // subtitle number - 2
+                        (byte) 0xff, // extension block - default
+                        0x00, // cumulative status - 00 (no)
+                        0x0a, 0x00, 0x0a, 0x00, // code in: 10:00:10:00, not 10:00:05:00!!!
+                        0x0a, 0x00, 0x0f, 0x00, // code out: 10:00:15:00
                         0x0c // vertical position
                 },
                 Arrays.copyOfRange(tti, offset + 1, offset + 14));
@@ -723,9 +769,9 @@ public class StlTtiTest {
     @Test
     public void testTextAlign() throws Exception {
         TimedTextObject tto = StlTestUtil.buildTto(
-                "00:00:00:00", "00:00:05:00", "text1",
-                "00:00:05:00", "00:00:10:12", "text2",
-                "00:04:59:00", "23:59:59:24", "text3"
+                "10:00:00:00", "10:00:05:00", "text1",
+                "10:00:05:00", "10:00:10:12", "text2",
+                "10:04:59:00", "23:59:59:24", "text3"
         );
 
         // set styles
@@ -743,12 +789,13 @@ public class StlTtiTest {
         byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
         byte[] tti = stl[1];
 
-        assertEquals(0x01, tti[14]); // 01 - left
+        int offset = 128; // subtitle zero
+        assertEquals(0x01, tti[offset + 14]); // 01 - left
         assertArrayEquals(
                 fillExpectedText(new byte[]{0x74, 0x65, 0x78, 0x74, 0x31}),
-                Arrays.copyOfRange(tti, 16, 128));
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
 
-        int offset = 128;
+        offset += 128;
         assertEquals(0x03, tti[offset + 14]); // 03 - right
         assertArrayEquals(
                 fillExpectedText(new byte[]{0x74, 0x65, 0x78, 0x74, 0x32}),
@@ -764,15 +811,15 @@ public class StlTtiTest {
     @Test
     public void testTextColor() throws Exception {
         TimedTextObject tto = StlTestUtil.buildTto(
-                "00:00:00:00", "00:00:05:00", "text1",
-                "00:00:05:00", "00:00:10:12", "text2",
-                "00:00:15:00", "00:00:20:24", "text3",
-                "00:00:20:00", "00:00:25:24", "text4",
-                "00:00:25:00", "00:00:30:24", "text5",
-                "00:00:30:00", "00:00:35:24", "text6",
-                "00:00:35:00", "00:00:40:24", "text7",
-                "00:00:40:00", "00:00:45:24", "text8",
-                "00:00:45:00", "00:00:50:24", "text9"
+                "10:00:00:00", "10:00:05:00", "text1",
+                "10:00:05:00", "10:00:10:12", "text2",
+                "10:00:15:00", "10:00:20:24", "text3",
+                "10:00:20:00", "10:00:25:24", "text4",
+                "10:00:25:00", "10:00:30:24", "text5",
+                "10:00:30:00", "10:00:35:24", "text6",
+                "10:00:35:00", "10:00:40:24", "text7",
+                "10:00:40:00", "10:00:45:24", "text8",
+                "10:00:45:00", "10:00:50:24", "text9"
         );
 
         // set styles
@@ -807,13 +854,14 @@ public class StlTtiTest {
         byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
         byte[] tti = stl[1];
 
+        int offset = 128; // subtitle zero
         assertArrayEquals(
                 fillExpectedText(new byte[]{
                         0x00, // black
                         0x74, 0x65, 0x78, 0x74, 0x31}),
-                Arrays.copyOfRange(tti, 16, 128));
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
 
-        int offset = 128;
+        offset += 128;
         assertArrayEquals(
                 fillExpectedText(new byte[]{
                         0x01, // red
