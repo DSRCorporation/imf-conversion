@@ -29,8 +29,8 @@ call .\chimera25-segments "%~1\%Chimera25Dir%" %2 %3
 
 :: no audio/video/CC
 call .\chimera50-no-audio "%~1\%Chimera50Dir%" %2 %3
-call .\chimera50-no-video "%~1\%Chimera50Dir%" %2 %3
-call .\chimera29-CC-no-audio-no-video "%~1\%Chimera29Dir%" %2 %3
+::call .\chimera50-no-video "%~1\%Chimera50Dir%" %2 %3
+::call .\chimera29-CC-no-audio-no-video "%~1\%Chimera29Dir%" %2 %3
 
 :: audiomap
 call .\chimera25-audiomap-2A "%~1\%Chimera25Dir%" %2 %3
