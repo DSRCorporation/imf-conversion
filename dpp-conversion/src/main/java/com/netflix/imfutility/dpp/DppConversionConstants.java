@@ -26,7 +26,7 @@ public final class DppConversionConstants {
 /* 1. Conversion.xml */
 
     // 1.1. conversion.xml location
-    public static final String CONVERSION_XML = "xml/conversion.xml";
+    public static final String CONVERSION_XML = "xml/dpp-conversion.xml";
 
     // 1.2 dynamic parameters:
     public static final String DYNAMIC_PARAM_PAN = "panParameter";
