@@ -18,8 +18,8 @@
  */
 package com.netflix.imfutility.ttmltostl.ttml;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * This class specifies the interface for any format supported by the converter, these formats must
@@ -56,7 +56,7 @@ public interface TimedTextFileFormat {
      * @return TimedTextObject representing the parsed file
      * @throws java.io.IOException when having trouble reading the file from the given path
      */
-    TimedTextObject parseFile(String fileName, InputStream is, int startMS, int endMS, int offsetMS)
+    TimedTextObject parseFile(File file, int startMS, int endMS, int offsetMS)
             throws IOException, FatalParsingException;
 
     /**

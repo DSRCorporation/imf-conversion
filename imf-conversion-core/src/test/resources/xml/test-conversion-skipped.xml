@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<conversion xmlns="http://conversion.imfutility.netflix.com">
+
+    <imfValidation>%{dynamic.validateTool} -i %{dynamic.imp} -c %{dynamic.cpl} -d %{dynamic.workingDir} -f
+        %{dynamic.outputValidationFile}
+    </imfValidation>
+
+    <formats>
+        <!--
+            specific configuration for each format
+        -->
+        <format name="fakeFormat">
+            <!--
+                tmp context for temporary template parameters
+            -->
+            <tmpContext>
+                <param id="tmpParamSimple">tmpParamSimple</param>
+                <param id="tmpParamWhitespace">tmpParam whitespace</param>
+                <param id="tmpParamNewline">
+
+                    tmpParam newline
+
+                </param>
+                <param id="tmpParamEmpty"></param>
+                <param id="tmpParamEmptyNewline">
+
+
+                </param>
+                <param id="tmpParam6">"tmpParam6 Value"</param>
+            </tmpContext>
+
+
+            <!--
+                Destination parameters for conversion
+             -->
+            <defaultDestContext name="1">
+            </defaultDestContext>
+
+            <mediaInfoCommandVideo>mediaInfoCommandVideo %{dynamic.mediaInfoInput}</mediaInfoCommandVideo>
+            <mediaInfoCommandAudio>mediaInfoCommandAudio %{dynamic.mediaInfoInput}</mediaInfoCommandAudio>
+            <mediaInfoCommandSubtitle>mediaInfoCommandSubtitle %{dynamic.mediaInfoInput}</mediaInfoCommandSubtitle>
+
+
+            <formatConfigurations>
+
+                <!--complex test-->
+                <formatConfiguration name="skippedComplex">
+
+                    <execOnce name="execOnce1">
+                        execOnce1Exec - param
+                    </execOnce>
+
+                    <execEachSequence type="video" name="seqVideo">
+                        <execOnce name="seqVideoExecOnce1">
+                            seqVideoExecOnce1Exec - param
+                        </execOnce>
+
+                        <execOnce name="seqVideoExecOnceSkip" if="false">
+                            seqVideoExecOnceSkipExec - param
+                        </execOnce>
+
+                        <pipe>
+                            <cycle>
+                                <execOnce name="seqVideoPipeCycleExecOnce1">
+                                    seqVideoPipeCycleExecOnce1Exec - param
+                                </execOnce>
+                                <execEachSegment name="seqVideoPipeCycleExecSegmentSkip" unless="true">
+                                    <execOnce name="seqVideoPipeCycleExecSegmentExecOnce">
+                                        seqVideoPipeCycleExecSegmentSkipExec - param
+                                    </execOnce>
+                                </execEachSegment>
+                                <execEachSegment name="seqVideoPipeCycleExecSegment">
+                                    <execOnce name="seqVideoPipeCycleExecSegmentExecOnce">
+                                        seqVideoPipeCycleExecSegmentExec - param
+                                    </execOnce>
+                                </execEachSegment>
+                            </cycle>
+
+                            <execOnce name="seqVideoPipeExecOnce1">
+                                seqVideoPipeExecOnce1Exec - param
+                            </execOnce>
+
+                            <execOnce name="seqVideoPipeExecOnceSkip" if="true" unless="true">
+                                seqVideoPipeExecOnceSkipExec - param
+                            </execOnce>
+
+                            <execOnce name="seqVideoPipeExecOnce2">
+                                seqVideoPipeExecOnce2Exec - param
+                            </execOnce>
+                        </pipe>
+
+                        <execOnce name="seqVideoExecOnce2">
+                            seqVideoExecOnce2Exec - param
+                        </execOnce>
+                    </execEachSequence>
+
+                    <execOnce name="execOnce2">
+                        execOnce2Exec - param
+                    </execOnce>
+                </formatConfiguration>
+
+                <!--test 1 element pipe with skipped exec-->
+                <formatConfiguration name="skippedPipeAllCycle">
+                    <execEachSequence type="audio" name="seqAudio">
+                        <pipe>
+                            <cycle>
+                                <execEachSegment name="seqAudioPipeCycleExecSeq">
+                                    <execOnce name="seqAudioPipeCycleExecSeqExecOnce" if="false">
+                                        seqAudioPipeCycleExecSeqExecOnceExec -param
+                                    </execOnce>
+                                </execEachSegment>
+                            </cycle>
+                            <execOnce name="seqAudioPipeExecOnce">
+                                seqAudioPipeExecOnceExec - param
+                            </execOnce>
+                        </pipe>
+                    </execEachSequence>
+                </formatConfiguration>
+
+                <!--test empty (skipped all exec) pipe -->
+                <formatConfiguration name="skippedAllPipe">
+                    <execEachSequence type="video" name="seqSubtitle">
+                        <pipe>
+                            <cycle>
+                                <execEachSegment name="seqSubtitlePipeCycleExecSeq" if="false">
+                                    <execOnce name="seqSubtitlePipeCycleExecSeqExecOnce">
+                                        seqSubtitlePipeCycleExecSeqExecOnceExec -param
+                                    </execOnce>
+                                </execEachSegment>
+                            </cycle>
+                            <execOnce name="seqSubtitlePipeExecOnce" unless="true">
+                                seqSubtitlePipeExecOnceExec - param
+                            </execOnce>
+                        </pipe>
+                    </execEachSequence>
+
+                </formatConfiguration>
+            </formatConfigurations>
+
+        </format>
+    </formats>
+</conversion>
+

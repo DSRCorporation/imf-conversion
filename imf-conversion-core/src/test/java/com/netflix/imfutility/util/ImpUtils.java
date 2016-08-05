@@ -88,28 +88,4 @@ public final class ImpUtils {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/invalid-xsd-ASSETMAP.xml").toURI());
     }
 
-
-    public static File getCorrectImpForValidation() throws URISyntaxException {
-        //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("imp-validate-correct").toURI());
-    }
-
-    public static File getCorrectCplForValidation() throws URISyntaxException {
-        //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource(
-                "imp-validate-correct/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml").toURI());
-    }
-
-    public static File getInvalidImpForValidation() throws URISyntaxException {
-        //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource("imp-validate-invalid").toURI());
-    }
-
-    public static File getInvalidCplForValidation() throws URISyntaxException {
-        //noinspection ConstantConditions
-        return new File(ClassLoader.getSystemClassLoader().getResource(
-                "imp-validate-invalid/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml").toURI());
-    }
-
-
 }

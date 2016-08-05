@@ -38,6 +38,14 @@ public final class ConversionUtils {
         return "xml/test-conversion.xml";
     }
 
+    public static InputStream getCorrectConversionXmlSkipped() {
+        return ResourceHelper.getResourceInputStream(getCorrectConversionXmlSkippedPath());
+    }
+
+    public static String getCorrectConversionXmlSkippedPath() {
+        return "xml/test-conversion-skipped.xml";
+    }
+
     public static InputStream getConversionXmlSkipDynamicParams() {
         return ResourceHelper.getResourceInputStream(getConversionXmlSkipDynamicParamsPath());
     }

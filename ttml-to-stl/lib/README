@@ -1,0 +1,11 @@
+It's built from the project
+https://github.com/noophq/java-charset.git
+commit 70fd5b5
+
+The source code contains some fixes:
+- supported 1989 version ($ at 0xa4);
+- fixed encoding of two-byte chars;
+- added required mapping;
+- fixed bugs in mapping;
+
+There is a patch in the current folder that can be applied to commit 70fd5b5 to view the changes.

@@ -19,32 +19,14 @@
 package com.netflix.imfutility.ttmltostl.stl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * This is a fix for fr.noop.charset implementation.
- * <ul>
- *     <li>It matches $ sign correctly (not at 0x24, but at 0xa4 as defined by ISO 6937/2-1983, Addendum 1-1989).</li>
- *     <li>Adds some missing matches.</li>
- *     <li>Checks whether the encoded byte is in the allowed range.</li>
- * </ul>
+ * Checks whether the encoded byte is in the allowed range.
  */
 public class Iso6937Helper {
 
-    private static final Map<Integer, Integer> ENCODING_MAPPING = new HashMap<>();
     private static final List<Integer> EMPTY_MAPPING = new ArrayList<>();
-
-    static {
-        add(0x24, 0xa4);
-        add(0xa8, 0x24);
-        add(0xa4, 0x24);
-        add(0xaf, 0xc5);
-        add(0xb4, 0xc2);
-        add(0xb8, 0xc8);
-        add(0xba, 0xeb);
-    }
 
     static {
         for (int i = 0x00; i <= 0x1f; i++) {
@@ -62,10 +44,7 @@ public class Iso6937Helper {
         addEmpty(0xd9);
         addEmpty(0xda);
         addEmpty(0xdb);
-    }
-
-    private static void add(int x, int y) {
-        ENCODING_MAPPING.put(x, y);
+        addEmpty(0xe5);
     }
 
     private static void addEmpty(int x) {
@@ -74,10 +53,6 @@ public class Iso6937Helper {
 
     public Byte fixIso6937(byte ch) {
         int chInt = (ch & 0xff);
-        if (ENCODING_MAPPING.containsKey(chInt)) {
-            chInt = ENCODING_MAPPING.get(chInt);
-            ch = (byte) chInt;
-        }
 
         if (EMPTY_MAPPING.contains(chInt)) {
             return null;

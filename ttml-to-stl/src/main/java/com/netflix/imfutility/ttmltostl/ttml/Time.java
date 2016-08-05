@@ -32,7 +32,7 @@ public class Time {
      * @param format supported formats: "hh:mm:ss,ms", "h:mm:ss.cs" and "h:m:s:f/fps"
      * @param value  string in the correct format
      */
-    protected Time(String format, String value) {
+    public Time(String format, String value) {
         if (format.equalsIgnoreCase("hh:mm:ss,ms")) {
             // this type of format:  01:02:22,501 (used in .SRT)
             int h, m, s, ms;

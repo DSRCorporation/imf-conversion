@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -71,6 +72,18 @@ public class TestExecutorLogger {
     public void reset() {
         processes.clear();
         iterator = null;
+    }
+
+    public void assertNextStart(String text, int num) {
+        assertEquals("START: External Process " + num + ": " + text, getNext());
+    }
+
+    public void assertNextFinish(String text, int num) {
+        assertEquals("FINISH: External Process " + num + ": " + text, getNext());
+    }
+
+    public void assertSkipped(String text) {
+        assertEquals("SKIPPED: " + text, getNext());
     }
 
 }
