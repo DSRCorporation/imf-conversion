@@ -34,9 +34,9 @@ public final class ITunesConversionXsdConstants {
 
     // audiomap.xml
     public static final String AUDIOMAP_DEFAUL_FILE = "audiomap.xml";
-    public static final String AUDIOMAP_XML_SCHEME = "xsd/audiomap/audiomap.xsd";
+    public static final String AUDIOMAP_XML_SCHEME = "xsd/audiomap/itunes-audiomap.xsd";
     public static final String AUDIOMAP_PACKAGE = "com.netflix.imfutility.generated.itunes.audiomap";
 
-    public static final String CHAPTERS_XML_SCHEME = "xsd/chapters/chapters.xsd";
+    public static final String CHAPTERS_XML_SCHEME = "xsd/chapters/itunes-chapters.xsd";
     public static final String CHAPTERS_PACKAGE = "com.netflix.imfutility.generated.itunes.metadata";
 }

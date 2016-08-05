@@ -19,13 +19,13 @@
         </schemaBindings>
     </bindings>
 
-    <bindings schemaLocation="../xsd/audiomap/audiomap.xsd">
+    <bindings schemaLocation="../xsd/audiomap/itunes-audiomap.xsd">
         <schemaBindings>
             <package name="com.netflix.imfutility.generated.itunes.audiomap" />
         </schemaBindings>
     </bindings>
 
-    <bindings schemaLocation="../xsd/chapters/chapters.xsd">
+    <bindings schemaLocation="../xsd/chapters/itunes-chapters.xsd">
         <schemaBindings>
             <package name="com.netflix.imfutility.generated.itunes.metadata" />
         </schemaBindings>
