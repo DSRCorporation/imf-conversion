@@ -42,7 +42,7 @@ public class Style {
      *
      * @param styleName = identifier of this style
      */
-    protected Style(String styleName) {
+    public Style(String styleName) {
         this.setiD(styleName);
     }
 
@@ -52,7 +52,7 @@ public class Style {
      * @param styleName a style name
      * @param style a style
      */
-    protected Style(String styleName, Style style) {
+    public Style(String styleName, Style style) {
         this.setiD(styleName);
         this.setFont(style.getFont());
         this.setFontSize(style.getFontSize());
@@ -106,7 +106,7 @@ public class Style {
                     color = "ff00ffff";
                     break;
                 case "magenta":
-                    color = "ff00ffff ";
+                    color = "ff00ffff";
                     break;
                 case "green":
                     color = "008000ff";
@@ -133,7 +133,7 @@ public class Style {
                     color = "00ffffff";
                     break;
                 case "cyan":
-                    color = "00ffffff ";
+                    color = "00ffffff";
                     break;
                 default:
                     // nothing

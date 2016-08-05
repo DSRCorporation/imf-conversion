@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Dpp xmlns="http://metadata.dpp.imfutility.netflix.com">
+    <Editorial>
+        <SeriesTitle>Series</SeriesTitle>
+        <ProgrammeTitle>Programme</ProgrammeTitle>
+        <EpisodeTitleNumber>Episode</EpisodeTitleNumber>
+        <ProductionNumber>Required Production Number</ProductionNumber>
+        <Synopsis>Required Synopsis</Synopsis>
+        <Originator>Originator</Originator>
+        <CopyrightYear>2016</CopyrightYear>
+        <OtherIdentifier></OtherIdentifier>
+        <OtherIdentifierType></OtherIdentifierType>
+        <Genre></Genre>
+        <Distributor>Distributor</Distributor>
+    </Editorial>
+    <Technical>
+        <ShimName>UK DPP HD</ShimName>
+        <ShimVersion>1.1</ShimVersion>
+        <Video>
+            <PictureRatio>16:9</PictureRatio>
+            <ThreeD>false</ThreeD>
+            <ThreeDType>Side by side</ThreeDType>
+            <ProductPlacement>false</ProductPlacement>
+            <PSEPass>Not tested</PSEPass>
+            <PSEManufacturer></PSEManufacturer>
+            <PSEVersion></PSEVersion>
+            <VideoComments></VideoComments>
+        </Video>
+        <Audio>
+            <AudioTrackLayout>EBU R 48: 2a</AudioTrackLayout>
+            <PrimaryAudioLanguage>zxx</PrimaryAudioLanguage>
+            <SecondaryAudioLanguage>zxx</SecondaryAudioLanguage>
+            <TertiaryAudioLanguage>zxx</TertiaryAudioLanguage>
+            <AudioLoudnessStandard>None</AudioLoudnessStandard>
+            <AudioComments></AudioComments>
+        </Audio>
+        <Timecodes>
+            <LineUpStart>09:59:30:00</LineUpStart>
+            <IdentClockStart>09:59:50:00</IdentClockStart>
+            <Parts>
+                <Part>
+                    <PartNumber>1</PartNumber>
+                    <PartTotal>1</PartTotal>
+                    <PartSOM>10:00:00:20</PartSOM>
+                    <PartDuration>00:00:00:00</PartDuration>
+                </Part>
+            </Parts>
+            <TotalNumberOfParts>1</TotalNumberOfParts>
+            <TotalProgrammeDuration>00:00:00:00</TotalProgrammeDuration>
+        </Timecodes>
+        <AccessServices>
+            <AudioDescriptionPresent>false</AudioDescriptionPresent>
+            <AudioDescriptionType>Control data / Narration</AudioDescriptionType>
+            <ClosedCaptionsPresent>false</ClosedCaptionsPresent>
+            <ClosedCaptionsType>Translation</ClosedCaptionsType>
+            <ClosedCaptionsLanguage>zxx</ClosedCaptionsLanguage>
+            <OpenCaptionsPresent>false</OpenCaptionsPresent>
+            <OpenCaptionsType>Hard of Hearing</OpenCaptionsType>
+            <OpenCaptionsLanguage>zxx</OpenCaptionsLanguage>
+            <SigningPresent>No</SigningPresent>
+            <SignLanguage>BSL (British Sign Language)</SignLanguage>
+        </AccessServices>
+        <Additional>
+            <CompletionDate>2016-07-08+03:00</CompletionDate>
+            <TextlessElementsExist>false</TextlessElementsExist>
+            <ProgrammeHasText>false</ProgrammeHasText>
+            <ProgrammeTextLanguage>zxx</ProgrammeTextLanguage>
+        </Additional>
+        <ContactInformation>
+            <ContactEmail>account@myemail.com</ContactEmail>
+            <ContactTelephoneNumber>+1 000 000 0000</ContactTelephoneNumber>
+        </ContactInformation>
+    </Technical>
+</Dpp>

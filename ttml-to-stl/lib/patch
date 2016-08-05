@@ -1,0 +1,72 @@
+diff --git a/src/main/java/fr/noop/charset/iso6937/Iso6937CharsetEncoder.java b/src/main/java/fr/noop/charset/iso6937/Iso6937CharsetEncoder.java
+index 2423d23..15b4631 100644
+--- a/src/main/java/fr/noop/charset/iso6937/Iso6937CharsetEncoder.java
++++ b/src/main/java/fr/noop/charset/iso6937/Iso6937CharsetEncoder.java
+@@ -34,7 +34,7 @@ public class Iso6937CharsetEncoder extends CharsetEncoder {
+                 char ch = in.get();
+ 
+                 // Convert to int to get unsigned byte
+-                int by = ((byte) ch & 0xff);
++                int by = (int) ch;
+ 
+                 // Try to decompose char
+                 String decomposed = Normalizer.normalize(String.valueOf(ch), Normalizer.Form.NFD);
+diff --git a/src/main/java/fr/noop/charset/iso6937/Iso6937CharsetMapping.java b/src/main/java/fr/noop/charset/iso6937/Iso6937CharsetMapping.java
+index f5dbd01..94faac8 100644
+--- a/src/main/java/fr/noop/charset/iso6937/Iso6937CharsetMapping.java
++++ b/src/main/java/fr/noop/charset/iso6937/Iso6937CharsetMapping.java
+@@ -20,8 +20,8 @@ public class Iso6937CharsetMapping {
+     private static HashMap<Integer, Integer> decodingMapping = new HashMap();
+ 
+     static {
+-
+-        add(0xa4, 0xa8);
++	add(0x24, 0xa4);
++        add(0xa4, 0x24);
+  	add(0x2018, 0xa9);
+ 	add(0x201C, 0xaa);
+ 	add(0x2190, 0xac);
+@@ -29,7 +29,7 @@ public class Iso6937CharsetMapping {
+ 	add(0x2192, 0xae);
+ 	add(0x2193, 0xaf);
+ 	add(0xd7, 0xb4);
+-	add(0xf7, 0xb7);
++	add(0xf7, 0xb8);
+ 	add(0x2019, 0xb9);
+ 	add(0x201d, 0xba);
+  	add(0x300, 0xc1);
+@@ -63,7 +63,7 @@ public class Iso6937CharsetMapping {
+ 	add(0xaa, 0xe3);
+ 	add(0x126, 0xe4);
+ 	add(0x132, 0xe6);
+-	add(0x13d, 0xe7);
++	add(0x13f, 0xe7);
+ 	add(0x141, 0xe8);
+ 	add(0xd8, 0xe9);
+ 	add(0x152, 0xea);
+diff --git a/src/test/java/fr/noop/charset/iso6937/Iso6937CharsetDecoderTest.java b/src/test/java/fr/noop/charset/iso6937/Iso6937CharsetDecoderTest.java
+index e7b0b4e..73d3094 100644
+--- a/src/test/java/fr/noop/charset/iso6937/Iso6937CharsetDecoderTest.java
++++ b/src/test/java/fr/noop/charset/iso6937/Iso6937CharsetDecoderTest.java
+@@ -263,7 +263,7 @@ public class Iso6937CharsetDecoderTest {
+ 
+     @Test
+     public void testSpecialChars() throws UnsupportedEncodingException {
+-        assertEquals("¤", decodeBytes(DatatypeConverter.parseHexBinary("a8")));
++        assertEquals("¤", decodeBytes(DatatypeConverter.parseHexBinary("24")));
+         assertEquals("®", decodeBytes(DatatypeConverter.parseHexBinary("d2")));
+         assertEquals("©", decodeBytes(DatatypeConverter.parseHexBinary("d3")));
+         assertEquals("¬", decodeBytes(DatatypeConverter.parseHexBinary("d6")));
+diff --git a/src/test/java/fr/noop/charset/iso6937/Iso6937CharsetEncoderTest.java b/src/test/java/fr/noop/charset/iso6937/Iso6937CharsetEncoderTest.java
+index 5648ccc..6792b80 100644
+--- a/src/test/java/fr/noop/charset/iso6937/Iso6937CharsetEncoderTest.java
++++ b/src/test/java/fr/noop/charset/iso6937/Iso6937CharsetEncoderTest.java
+@@ -266,7 +266,7 @@ public class Iso6937CharsetEncoderTest {
+ 
+     @Test
+     public void testSpecialChars() throws UnsupportedEncodingException {
+-        assertTrue(Arrays.equals(DatatypeConverter.parseHexBinary("a8"), encodeToBytes("¤")));
++        assertTrue(Arrays.equals(DatatypeConverter.parseHexBinary("24"), encodeToBytes("¤")));
+         assertTrue(Arrays.equals(DatatypeConverter.parseHexBinary("d2"), encodeToBytes("®")));
+         assertTrue(Arrays.equals(DatatypeConverter.parseHexBinary("d3"), encodeToBytes("©")));
+         assertTrue(Arrays.equals(DatatypeConverter.parseHexBinary("d6"), encodeToBytes("¬")));

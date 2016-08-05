@@ -70,6 +70,10 @@ configure(project.javaSubprojectList) {
         testCompile group: 'junit', name: 'junit', version: '4.12'
     }
 
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
     // 4.2 Findbugs plugin
 
     apply plugin: 'findbugs'
