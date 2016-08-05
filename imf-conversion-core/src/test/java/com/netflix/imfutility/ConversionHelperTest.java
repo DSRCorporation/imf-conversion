@@ -53,6 +53,12 @@ public class ConversionHelperTest {
     }
 
     @Test
+    public void toREditRate() {
+        assertEquals("30000/1001", ConversionHelper.toREditRate(new BigFraction(30000, 1001)));
+        assertEquals("50/1", ConversionHelper.toREditRate(new BigFraction(50)));
+    }
+
+    @Test
     public void rFrameRateToEditRate() {
         assertEquals("50 1", ConversionHelper.rFrameRateToEditRate("50/1"));
         assertEquals("50 1", ConversionHelper.rFrameRateToEditRate("50"));

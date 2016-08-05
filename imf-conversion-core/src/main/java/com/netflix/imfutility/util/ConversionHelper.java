@@ -188,6 +188,16 @@ public final class ConversionHelper {
     }
 
     /**
+     * Converts the edit rate as a fraction instance to the edit rate form such as "50/1".
+     *
+     * @param editRate input
+     * @return output in a form "50/1"
+     */
+    public static String toREditRate(BigFraction editRate) {
+        return String.format("%s/%s", String.valueOf(editRate.getNumeratorAsLong()), String.valueOf(editRate.getDenominatorAsLong()));
+    }
+
+    /**
      * Returns a fraction corresponding to the given edit rate string.
      *
      * @param editRate input in both forms "50 1" and "50/1"
