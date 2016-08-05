@@ -1,0 +1,50 @@
+Quick Start Guide for MAC OS X.
+
+    Please see README.md for a full documentation.
+
+1. Run install.sh script to install all external tools needed for conversion.
+   The script does the following:
+        1.1 Installs brew and uses it for installation of some tools.
+        1.2 Uses brew to install Java (JDK-8).
+        1.3 Uses brew to install FFMPEG.
+        1.4 Uses brew to install x264 (10 bit).
+        1.5 Uses brew to install uriparser (needed for bmx).
+        1.6 Uses brew to install openssl (needed for as-02-unwrap).
+        1.7 Copies pre-build BMX (raw2bmx and mxf2raw) and as-02-unwrap with required libraries to /usr/local/bin and /use/local/lib
+            (so, they will be added to the PATH automatically).
+
+2. Extract the distribution (imf-conversion-utility-1.0-beta.tar.gz) to some place.
+
+3. Go to 'imf-conversion-utility-1.0-beta' folder.
+   
+4. [Optional] Edit sample/config.xml if needed. It can be used as is, if all external tools are installed successfully at step 1.
+   Please see README for a full description of config.xml.
+
+5. Edit sample/metadata.xml if needed (either enter correct duration for PartDuration and TotalProgrammeDuration fields, or use 00:00:00:00).
+   Please see README for a full description of metadata.xml.
+   A sample metadata.xml can be created by running the following command:
+
+        bin/imf-conversion-utility dpp -m metadata -o metadata.xml
+
+6. [Optional] Edit sample/audiomap.xml if needed.
+   Please see README for a full description of audiomap.xml.
+   A sample audiomap.xml can be created by running the following command:
+
+        bin/imf-conversion-utility dpp -m audiomap -o audiomap.xml
+
+7. Run conversion by executing the following command:
+
+        bin/imf-conversion-utility dpp -c sample/config.xml --metadata sample/metadata.xml -o outputName --imp path-to/imp --cpl CPL-name.xml -w path-to-output-folder
+
+   if audiomap must be used, then run
+
+        bin/imf-conversion-utility dpp -c sample/config.xml --metadata sample/metadata.xml --audiomap sample/audiomap.xml -o outputName --imp path-to/imp --cpl CPL-name.xml -w path-to-output-folder
+
+   Please note, than -w, --imp and --cpl values can be set in config.xml instead.
+
+8. An output flat files are created under the specified -w directory and called '{output-dir}/{outputName}.mxf' and '{output-dir}/{outputName}.stl'.
+
+9. Logs:
+    10.1 The current conversion job log file: /logs/imf-utility.log.
+    10.2 Previous conversion jobs log files: /logs/archive.
+    10.3 External tools log files: {output-dir}/logs.

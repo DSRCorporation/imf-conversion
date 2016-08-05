@@ -33,10 +33,10 @@ The distribution includes
 1. All necessary .jar files in the _lib_ folder (_lib/imf-conversion-utility-{version}.jar_ contains the Main Class). 
 2. Start scripts in the _bin_ folder.
 3. Default tools used by the utility in the _tools_ folder.
-4. Sample _config.xml_.
+4. Sample _config.xml_ in _samples_ folder.
 5. License.
 6. README
-7. Sample metadata.xml and audiomap.xml.
+7. Sample metadata.xml and audiomap.xml in _samples_ folder.
 
 ## Usage
 
@@ -68,7 +68,7 @@ The distribution includes
     * --imp path-to-imp-folder (optional: can be set in config.xml)
     * --cpl CPL.xml (optional: can be set in config.xml)
     * --working-dir [-w] path-to-output-folder (optional: can be set in config.xml)
-    * -- output [-o] the output .mxf file name without .mxf extension (optional: if not set, 'output' default name will be used).
+    * -- output [-o] the output .mxf file name (as well as .stl file name) without extension (optional: if not set, 'output' default name will be used).
 8. An output flat file is created under the specified output directory (-w) and is called _output.mxf_.
 9. Logs:
     * The current conversion job log file: _/logs/imf-utility.log_.
@@ -82,7 +82,6 @@ The distribution includes
 1. Get FFMPEG [FFMPEG](https://ffmpeg.org/)
 
 2. Get x264 Encoder [x264](http://www.videolan.org/developers/x264.html). 10-bit version must be used!
-One can download official builds of x264: [x264-builds](http://download.videolan.org/pub/x264/binaries/)
 
 3. Get BMX: bmx2raw and raw2bmx applications [BMX](https://sourceforge.net/projects/bmxlib/).
 
@@ -91,41 +90,41 @@ There is a Windows distribution there which can be used out of the box on Window
 
 #### Prepare config.xml
 
-1. A sample _config.xml_ can be found within the distribution archive or in the _/samples_ folder.
+1. A sample _config.xml_ can be found in the _/samples_ folder.
  
 2. Required External Tools
     * Specify external tools to be used.
-    * If an executable is added to the PATH, then a short name can be used. Otherwise set a full absolute path.  
+    * If an executable is added to the PATH, then a short name can be used. Otherwise enter a full absolute path.  
 ```
     <externalTools>
-        <tool id="ffmpeg">ffmpeg</tool>
-        <tool id="ffprobe">ffprobe</tool>
-        <tool id="bmx">raw2bmx</tool>
-        <tool id="mxf2raw">mxf2raw</tool>
-        <tool id="x264">x264-10bit</tool>
-        <tool id="asdcp-unwrap">as-02-unwrap</tool>
+            <tool id="ffmpeg">ffmpeg</tool>
+            <tool id="ffprobe">ffprobe</tool>
+            <tool id="bmx">raw2bmx</tool>
+            <tool id="mxf2raw">mxf2raw</tool>
+            <tool id="x264">x264-10bit</tool>
+            <tool id="asdcp-unwrap">as-02-unwrap</tool>
     </externalTools>
 ```
 
 3. Optional External Tools
     * There is a number of external tools which are distributed with the utility and used by default (no user settings required)
-        * IMF validation (_/imf-validation_ project which as a wrapper on Photon tool ([Photon](https://github.com/Netflix/photon)).
+        * IMF validation (_/imf-validation_ project which as a wrapper on Photon tool ([Photon](https://github.com/Netflix/photon))).
         * TTML to EBU STL captions converter (_/ttml-to-stl_).
     * However, it's possible to use another external tools for these tasks.
     * If another tools are used, then either they should expect the same input and output as the default tools, or the code should be modified to support the new tools.
     * To specify custom IMF validation and TTML to STL conversion tools, add the following to the _config.xml_: 
 ```
     <externalTools>
-        ...
-        <tool id="ttml-to-stl">ttmlToStl path</tool>
-        <tool id="imf-validation">imf validation path</tool>
+            ...
+            <tool id="ttml-to-stl">ttmlToStl path</tool>
+            <tool id="imf-validation">imf validation path</tool>
     </externalTools>
 ```
 
 4. IMF package and CPL
     * The input IMF package and CPL can be specified either in _config.xml_ or as a command line argument.
     * If it's specified in both places, then values from command line parameters will be used.
-    * Including IMF package and CPL into _config.xml_ can be used to reduce number of command line arguments when using the same IMP and CPL for different conversions.
+    * Including IMF package and CPL into _config.xml_ can be used to reduce the number of command line arguments when using the same IMP and CPL for different conversions.
     * To set IMF package and CPL in _config.xml_, add the following:    
 ```
     <imp>path to imp</imp>
@@ -151,16 +150,12 @@ There is a Windows distribution there which can be used out of the box on Window
     * To allow/disallow conversion, do the following for each parameter to be controlled:
 ```
     <conversionParameters>
-        <video>
-            <size>yes/no</size>
-            <frameRate>yes/no</frameRate>
-            <pixelFormat>yes/no</pixelFormat>
-            <bitDepth>yes/no</bitDepth>
-        </video>
-        <audio>
-            <sampleRate>yes/no</sampleRate>
-            <bitsSample>yes/no</bitsSample>
-        </audio>
+            <param name="bitDepth">yes</param>
+            <param name="frameRate">no</param>
+            <param name="size">yes</param>
+            <param name="pixelFormat">yes</param>
+            <param name="bitsSample">yes</param>
+            <param name="sampleRate">no</param>
     </conversionParameters>
 ```
     * If the parameter is not specified, then conversion is allowed.
@@ -174,7 +169,7 @@ There is a Windows distribution there which can be used out of the box on Window
             * true by default
             * _{output-dir}/logs_ folder with the logs of all external processed is not deleted
         * delete all tmp files at the end of the job when the job finished with an error
-            * true by default
+            * false by default
             * useful to find the reason of fail
     * To control these options in _config.xml_, add the following:
 ```
@@ -183,9 +178,17 @@ There is a Windows distribution there which can be used out of the box on Window
     <deleteTmpFilesOnFail>false</deleteTmpFilesOnFail>
 ```
 
+8. It can be configured whether to perform IMF validation of the input IMF package (Photon is used by default for validation).
+    * It's true by default
+    * It may be set to false for some test reasons
+    * To control this option in _config.xml_, add the following:
+```
+    <validateImf>false</validateImf>
+```
+
 #### Generate metadata.xml
 
-* Metadata.xml is needed to enter the DPP metadata values needed for conversion and output container ([DPP_MMS_TechMetadata](http://www.amwa.tv/downloads/specifications/DPP_MMS_TechMetadata_V1.1_2013-10-08.xls)).
+* Metadata.xml is needed to enter the DPP metadata values needed for conversion and the output container ([DPP_MMS_TechMetadata](http://www.amwa.tv/downloads/specifications/DPP_MMS_TechMetadata_V1.1_2013-10-08.xls)).
 * The following command generates a sample metadata.xml
     
 ```
@@ -197,17 +200,18 @@ imf-conversion-utility dpp -m metadata -o metadata.xml
 
 #### Generate audiomap.xml
 
-* Audiomap.xml is used to map input audio and tracks and channels to the output ones depending on the _AudioTrackLayout_ set in metadata.xml.
+* Audiomap.xml is used to map input IMF virtual audio tracks and channels to the output ones depending on the _AudioTrackLayout_ set in metadata.xml.
 * Please see Section 4.4.1 in [BBC](http://dpp-assets.s3.amazonaws.com/wp-content/uploads/specs/bbc/TechnicalDeliveryStandardsBBC.pdf) for the description of different layouts.
-* If no audiomap.xml is specified, then default mapping will be used (each input audio track/channel will be mapped  to the output ones subsequently; remaining output tracks will be filled with silence).
+* If no audiomap.xml is specified, then default mapping will be used (each input IMF virtual audio track/channel will be mapped  to the output ones subsequently; remaining output tracks will be filled with silence).
 * The following command generates a sample audiomap.xml
 ```
    imf-conversion-utility dpp -m audiomap -o audiomap.xml
 ```
-* The number of _EBUTrack_ nodes must correspond to the number of output audio tracks defined by the selected layout.
+* The number of _EBUTrack_ nodes must correspond to the number of output audio tracks defined by the selected layout 
+    * 4 for R48:2a and R123:4b layouts;
+    * 16 for other layouts.
 * _EBUTrack_ defines an input channel (of a CPL virtual track, or CPL audio sequence) to be used for the output audio track.
-* _Number_ defines a number of the output audio track as defined in Section 4.4.1 of the document referenced above (starting from 1).
-* _CPLVirtualTrackId_ must point to a _TrackId_ attribute of a virtual track (audio sequence) within CPL.
+* _CPLVirtualTrackId_ must point to a _\<TrackId\>_ attribute of a virtual track (audio sequence) within CPL.xml.
 * _CPLVirtualTrackChannel_ is a channel number (starting from 1) within a virtual track specified above.
 * If either _CPLVirtualTrackId_ or _CPLVirtualTrackChannel_ is absent, then the output track will be silence. 
 * An example of mapping of two Stereo input Audio Virtual tracks tracks to _'R123: 4b'_ layout (4 output tracks, Stereo with M&E):
@@ -250,15 +254,27 @@ imf-conversion-utility dpp -c path-to/config.xml -m convert --metadata path-to/m
 
 * A full command if IMP, CPL, and working directory are specified via command line arguments (the values from command line override values from config.xml):
 ```
-imf-conversion-utility dpp -c path-to/config.xml -m convert --imp path-to/imp --cpl CPL.xml -w path-to/working-sir --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml -o outputName
+imf-conversion-utility dpp -c path-to/config.xml -m convert --imp path-to/imp --cpl CPL.xml -w path-to/working-dir --metadata path-to/metadata.xml --audiomap path-to/audiomap.xml -o outputName
 ```
 
 #### Output and Logs
 
-* An output flat file is created under the specified output directory (-w) and is called _output.mxf_.
+* An output flat file and captions files are created under the specified output directory (-w) and called _{outputName}.mxf_ and _{outputName}.stl_, where {outputName} is a value of --output (-o) parameter.
+ If --output parameter is not set, then _output.mxf_ and _output.stl_ values are used.
+      ```
+      {output-directory}/{outputName}.mxf
+      ```
+      ```
+      {output-directory}/{outputName}.stl
+      ```
+      or
       ```
       {output-directory}/output.mxf
       ```
+      ```
+      {output-directory}/output.stl
+      ```
+
 * The current conversion job log file:
      ```
       /logs/imf-utility.log

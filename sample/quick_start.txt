@@ -10,7 +10,6 @@ Quick Start Guide for 'Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV' test package:
 
     1.3. Get x264 Encoder (http://www.videolan.org/developers/x264.html).
          10-bit version must be used!
-         One can download official builds of x264: [x264-builds](http://download.videolan.org/pub/x264/binaries/)
 
     1.4. Get BMX: bmx2raw and raw2bmx applications (https://sourceforge.net/projects/bmxlib/).
 
@@ -24,7 +23,7 @@ Quick Start Guide for 'Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV' test package:
     
 4. Go to /build directory to find a distribution.
 
-5. Extract the distribution and go to 'imf-conversion-utility-1.0-alpha' folder. 
+5. Extract the distribution and go to 'imf-conversion-utility-1.0-beta' folder.
    
 6. Edit config.xml:
 
@@ -35,7 +34,7 @@ Quick Start Guide for 'Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV' test package:
             <tool id="ffprobe">ffprobe</tool>
             <tool id="bmx">raw2bmx</tool>
             <tool id="mxf2raw">mxf2raw</tool>
-            <tool id="x264">x264-10bit</tool>
+            <tool id="x264">x264</tool>
             <tool id="asdcp-unwrap">as-02-unwrap</tool>
         </externalTools>
     
@@ -55,12 +54,12 @@ Quick Start Guide for 'Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV' test package:
     6.3 Enter the output directory where the flat .mxf file will be generated:
             <workingDirectory>/tmp/imf-conversion-output</workingDirectory>
             
-7. Edit metadata.xml if needed (can be used as is for tests).
+7. Edit metadata.xml if needed (can be used as is for Chimera25 test).
      
 8. Run conversion by executing the following command:
     bin/imf-conversion-utility dpp -c config.xml --metadata metadata.xml --audiomap audiomap.xml -o outputName
     
-9. An output flat file is created under the specified output directory and is called '{output-dir}/output.mxf'.
+9. An output flat file is created under the specified output directory and is called '{output-dir}/{outputName}.mxf'.
 
 10. Logs:
     10.1 The current conversion job log file: /logs/imf-utility.log.
