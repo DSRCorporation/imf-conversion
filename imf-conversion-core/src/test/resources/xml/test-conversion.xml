@@ -2,7 +2,8 @@
 
 <conversion xmlns="http://conversion.imfutility.netflix.com">
 
-    <imfValidation>%{dynamic.validateTool} -i %{dynamic.imp} -c %{dynamic.cpl} -d %{dynamic.workingDir} -f %{dynamic.outputValidationFile}
+    <imfValidation>%{dynamic.validateTool} -i %{dynamic.imp} -c %{dynamic.cpl} -d %{dynamic.workingDir} -f
+        %{dynamic.outputValidationFile}
     </imfValidation>
 
     <formats>
@@ -42,7 +43,159 @@
 
 
             <formatConfigurations>
-                <formatConfiguration name="1">
+
+
+                <!-- 1. simple exec once -->
+                <formatConfiguration name="execOnce">
+                    <execOnce name="execOnce1">
+                        execOnce1Exec - param
+                    </execOnce>
+                </formatConfiguration>
+
+                <!-- 2. simple exec each sequence - exec each segment -->
+                <formatConfiguration name="execEachSequence">
+                    <execEachSequence type="video" name="seqVideo">
+                        <execOnce name="seqVideoExecOnce1">
+                            seqVideoExecOnce1Exec - param
+                        </execOnce>
+
+                        <execEachSegment name="seqVideoExecSegment">
+                            <execOnce name="seqVideoExecSegmentExecOnce">
+                                seqVideoExecSegmentExec - param
+                            </execOnce>
+                        </execEachSegment>
+
+                        <execOnce name="seqVideoExecOnce2">
+                            seqVideoExecOnce2Exec - param
+                        </execOnce>
+
+                    </execEachSequence>
+                </formatConfiguration>
+
+                <!-- 3. simple exec each segment - exec each sequence -->
+                <formatConfiguration name="execEachSegment">
+                    <execEachSegment name="segm">
+                        <execOnce name="segmExecOnce1">
+                            segmExecOnce1Exec - param
+                        </execOnce>
+
+                        <execEachSequence type="audio" name="segmAudioExecSeq">
+                            <execOnce name="segmAudioExecSeqExecOnce">
+                                segmAudioExecSeqExecOnce - param
+                            </execOnce>
+                        </execEachSequence>
+
+                        <execOnce name="segmExecOnce2">
+                            segmExecOnce2Exec - param
+                        </execOnce>
+
+                    </execEachSegment>
+                </formatConfiguration>
+
+                <!-- 4. simple pipe -->
+                <formatConfiguration name="execPipe">
+                    <pipe>
+                        <cycle>
+                            <execOnce name="cyclePipe1">
+                                cyclePipe1 - param
+                            </execOnce>
+
+                            <execOnce name="cyclePipe2">
+                                cyclePipe2 - param
+                            </execOnce>
+
+                            <execOnce name="cyclePipe3">
+                                cyclePipe3 - param
+                            </execOnce>
+
+                        </cycle>
+                        <execOnce name="pipe4">
+                            pipe4 - param
+                        </execOnce>
+                    </pipe>
+                </formatConfiguration>
+
+                <!-- 5. pipe within exec each sequence -->
+                <formatConfiguration name="execEachSequencePipe">
+                    <execEachSequence type="video" name="seqVideo">
+
+                        <pipe>
+                            <cycle>
+                                <execOnce name="seqVideoPipeCycleExecOnce1">
+                                    seqVideoPipeCycleExecOnce1Exec - param
+                                </execOnce>
+
+                                <execEachSegment name="seqVideoPipeCycleExecSegment1">
+                                    <execOnce name="seqVideoPipeCycleExecSegmentExecOnce1">
+                                        seqVideoPipeCycleExecSegmentExec1 - param
+                                    </execOnce>
+                                </execEachSegment>
+
+                                <execEachSegment name="seqVideoPipeCycleExecSegment2">
+                                    <execOnce name="seqVideoPipeCycleExecSegmentExecOnce2">
+                                        seqVideoPipeCycleExecSegmentExec2 - param
+                                    </execOnce>
+                                </execEachSegment>
+                            </cycle>
+
+                            <execOnce name="seqVideoPipeExecOnce1">
+                                seqVideoPipeExecOnce1Exec - param
+                            </execOnce>
+
+                            <execOnce name="seqVideoPipeExecOnce2">
+                                seqVideoPipeExecOnce2Exec - param
+                            </execOnce>
+
+                            <execOnce name="seqVideoPipeExecOnce3">
+                                seqVideoPipeExecOnce3Exec - param
+                            </execOnce>
+                        </pipe>
+
+                    </execEachSequence>
+                </formatConfiguration>
+
+                <!-- 6. pipe within exec each segment -->
+                <formatConfiguration name="execEachSegmentPipe">
+                    <execEachSegment name="segm">
+
+                        <pipe>
+                            <cycle>
+                                <execOnce name="segmPipeCycleExecOnce1">
+                                    segmPipeCycleExecOnce1 - param
+                                </execOnce>
+
+                                <execEachSequence type="video" name="segmVideoPipeCycleExecSeq1">
+                                    <execOnce name="seqVideoPipeCycleExecSegmentExecOnce1">
+                                        segmVideoPipeCycleExecSegmentExec1 - param
+                                    </execOnce>
+                                </execEachSequence>
+
+                                <execEachSequence type="video" name="segmVideoPipeCycleExecSeq2">
+                                    <execOnce name="seqVideoPipeCycleExecSegmentExecOnce2">
+                                        segmVideoPipeCycleExecSegmentExec2 - param
+                                    </execOnce>
+                                </execEachSequence>
+
+                            </cycle>
+
+                            <execOnce name="segmPipeExecOnce1">
+                                segmPipeExecOnceExec1 - param
+                            </execOnce>
+
+                            <execOnce name="segmPipeExecOnce2">
+                                segmPipeExecOnceExec2 - param
+                            </execOnce>
+
+                            <execOnce name="segmPipeExecOnce3">
+                                segmPipeExecOnceExec3 - param
+                            </execOnce>
+                        </pipe>
+
+                    </execEachSegment>
+                </formatConfiguration>
+
+                <!-- 7. a complex test -->
+                <formatConfiguration name="complex">
 
                     <execOnce name="execOnce1">
                         execOnce1Exec - param
@@ -53,20 +206,11 @@
                             seqVideoExecOnce1Exec - param
                         </execOnce>
 
-                        <execOnce name="seqVideoExecOnceSkip" if="false">
-                            seqVideoExecOnceSkipExec - param
-                        </execOnce>
-
                         <pipe>
                             <cycle>
                                 <execOnce name="seqVideoPipeCycleExecOnce1">
                                     seqVideoPipeCycleExecOnce1Exec - param
                                 </execOnce>
-                                <execEachSegment name="seqVideoPipeCycleExecSegmentSkip" unless="true">
-                                    <execOnce name="seqVideoPipeCycleExecSegmentExecOnce">
-                                        seqVideoPipeCycleExecSegmentSkipExec - param
-                                    </execOnce>
-                                </execEachSegment>
                                 <execEachSegment name="seqVideoPipeCycleExecSegment">
                                     <execOnce name="seqVideoPipeCycleExecSegmentExecOnce">
                                         seqVideoPipeCycleExecSegmentExec - param
@@ -76,10 +220,6 @@
 
                             <execOnce name="seqVideoPipeExecOnce1">
                                 seqVideoPipeExecOnce1Exec - param
-                            </execOnce>
-
-                            <execOnce name="seqVideoPipeExecOnceSkip" if="true" unless="true">
-                                seqVideoPipeExecOnceSkipExec - param
                             </execOnce>
 
                             <execOnce name="seqVideoPipeExecOnce2">
@@ -95,40 +235,6 @@
                     <execOnce name="execOnce2">
                         execOnce2Exec - param
                     </execOnce>
-
-                    <!--test 1 element pipe with skipped exec-->
-
-                    <execEachSequence type="audio" name="seqAudio">
-                        <pipe>
-                            <cycle>
-                                <execEachSegment name="seqAudioPipeCycleExecSeq">
-                                    <execOnce name="seqAudioPipeCycleExecSeqExecOnce" if="false">
-                                        seqAudioPipeCycleExecSeqExecOnceExec -param
-                                    </execOnce>
-                                </execEachSegment>
-                            </cycle>
-                            <execOnce name="seqAudioPipeExecOnce">
-                                seqAudioPipeExecOnceExec - param
-                            </execOnce>
-                        </pipe>
-                    </execEachSequence>
-
-                    <!--test empty (skipped all exec) pipe -->
-
-                    <execEachSequence type="video" name="seqSubtitle">
-                        <pipe>
-                            <cycle>
-                                <execEachSegment name="seqSubtitlePipeCycleExecSeq" if="false">
-                                    <execOnce name="seqSubtitlePipeCycleExecSeqExecOnce">
-                                        seqSubtitlePipeCycleExecSeqExecOnceExec -param
-                                    </execOnce>
-                                </execEachSegment>
-                            </cycle>
-                            <execOnce name="seqSubtitlePipeExecOnce" unless="true">
-                                seqSubtitlePipeExecOnceExec - param
-                            </execOnce>
-                        </pipe>
-                    </execEachSequence>
 
                 </formatConfiguration>
             </formatConfigurations>

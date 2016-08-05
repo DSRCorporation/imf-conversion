@@ -111,7 +111,7 @@ public class ConversionExecutorSegment extends AbstractConversionExecutor {
             pipeInfo.getTailOperations().add(getExecOnceOperation(tailOperation));
         }
         if (pipe.getCycle() != null) {
-            for (Object cycleOperation : pipe.getCycle().getExecEachSegmentOrPipeOrExecOnce()) {
+            for (Object cycleOperation : pipe.getCycle().getExecEachSequenceOrPipeOrExecOnce()) {
                 if (cycleOperation instanceof ExecOnceType) {
                     pipeInfo.addCycleOperation(getExecOnceOperation((ExecOnceType) cycleOperation));
                 } else if (cycleOperation instanceof SubPipeType) {

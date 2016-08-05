@@ -137,7 +137,7 @@ public final class TemplateParameterContextCreator {
         // init sequence ctxt
         SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
         for (SequenceType seqType : sequenceTypes) {
-            for (int i = 0; i < segmentCount; i++) {
+            for (int i = 0; i < seqCount; i++) {
                 sequenceContext.initSequence(seqType, getSequenceUuid(i, seqType));
             }
         }
