@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
  * Pre-defined dest context parameter names (it's possible to define another ones).
  */
 public enum DestContextParameters {
+    START_TIME("startTime"),
     WIDTH("width"),
     HEIGHT("height"),
     FRAME_RATE("frameRate"),

@@ -28,13 +28,16 @@ public final class ITunesConversionConstants {
 
     /* Conversion.xml */
 
-    // conversion.xml location
-    public static final String CONVERSION_XML = "xml/conversion.xml";
+    // 1.1. conversion.xml location
+    public static final String CONVERSION_XML = "xml/itunes-conversion.xml";
 
     // common dynamic parameters:
     public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "output";
     public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
     public static final String DYNAMIC_PARAM_METADATA_XML = "metadata";
+    public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT = "trailerMediaInfoInput";
+    public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT = "trailerMediaInfoOutput";
+
 
     // AudioMap constants
     public static final String GEN_MAIN_SEQ_UUID = "urn:uuid:38d52c00-68d3-4056-8858-28eeaf3238d3";

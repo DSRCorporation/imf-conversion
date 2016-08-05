@@ -63,6 +63,8 @@ public class ConversionHelperTest {
     public void parseCorrectEditRate() {
         assertEquals(new BigFraction(30000, 1001), ConversionHelper.parseEditRate("30000 1001"));
         assertEquals(new BigFraction(50, 1), ConversionHelper.parseEditRate("50"));
+        assertEquals(new BigFraction(30000, 1001), ConversionHelper.parseEditRate("30000/1001"));
+        assertEquals(new BigFraction(50, 1), ConversionHelper.parseEditRate("50 1"));
     }
 
     @Test
@@ -144,25 +146,23 @@ public class ConversionHelperTest {
     }
 
     @Test
-    public void safeParseCorrectEditRate() {
-        assertEquals(new BigFraction(30000, 1001), ConversionHelper.safeParseEditRate("30000 1001"));
-        assertEquals(new BigFraction(50, 1), ConversionHelper.safeParseEditRate("50"));
-        assertEquals(new BigFraction(30000, 1001), ConversionHelper.safeParseEditRate("30000/1001"));
-        assertEquals(new BigFraction(50, 1), ConversionHelper.safeParseEditRate("50 1"));
+    public void safeParseCorrectAspectRatio() {
+        assertEquals(new BigFraction(16, 9), ConversionHelper.parseAspectRatio("16/9"));
+        assertEquals(new BigFraction(2), ConversionHelper.parseAspectRatio("2"));
     }
 
     @Test(expected = com.netflix.imfutility.ConversionException.class)
-    public void safeParseIncorrectEditRateMoreArguments() {
-        ConversionHelper.safeParseEditRate("30000 1001 1");
+    public void safeParseIncorrectAspectRatioMoreArguments() {
+        ConversionHelper.parseAspectRatio("30000 1001 1");
     }
 
     @Test(expected = com.netflix.imfutility.ConversionException.class)
-    public void safeParseIncorrectEditRateEmpty() {
-        ConversionHelper.safeParseEditRate("");
+    public void safeParseIncorrectAspectRatioEmpty() {
+        ConversionHelper.parseAspectRatio("");
     }
 
     @Test(expected = com.netflix.imfutility.ConversionException.class)
-    public void safeParseIncorrectEditRateNotNumber() {
-        ConversionHelper.safeParseEditRate("aaaaa");
+    public void safeParseIncorrectAspectRatioNotNumber() {
+        ConversionHelper.parseAspectRatio("aaaaa");
     }
 }

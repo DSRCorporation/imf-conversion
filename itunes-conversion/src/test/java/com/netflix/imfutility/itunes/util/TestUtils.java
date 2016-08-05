@@ -25,8 +25,8 @@ import java.net.URISyntaxException;
  * Common test utility.
  */
 public class TestUtils {
-    private TestUtils() {
 
+    private TestUtils() {
     }
 
     public static File getTestFile() throws URISyntaxException {

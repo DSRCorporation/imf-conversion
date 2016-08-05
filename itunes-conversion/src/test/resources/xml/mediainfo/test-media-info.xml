@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2016 Netflix, Inc.
+  ~
+  ~     This file is part of IMF Conversion Utility.
+  ~
+  ~     IMF Conversion Utility is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     IMF Conversion Utility is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<ffprobe:ffprobe xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:ffprobe='http://www.ffmpeg.org/schema/ffprobe'
+                 xsi:schemaLocation='http://www.ffmpeg.org/schema/ffprobe ffprobe.xsd'>
+    <format filename="sample.mov" nb_streams="2" nb_programs="0" format_name="mov,mp4,m4a,3gp,3g2,mj2"
+            format_long_name="QuickTime / MOV" start_time="0.000000" duration="85.500000" size="3284257" bit_rate="307298"
+            probe_score="100">
+        <tag key="major_brand" value="qt  "/>
+        <tag key="minor_version" value="537199360"/>
+        <tag key="compatible_brands" value="qt  "/>
+        <tag key="creation_time" value="2005-10-17 22:54:32"/>
+    </format>
+</ffprobe:ffprobe>

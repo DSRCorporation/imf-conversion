@@ -74,7 +74,7 @@ public final class AudioMapXmlProvider {
     /**
      * Internal. Describes AudioOption of iTunes audio asset configuration.
      */
-    class AudioOption extends ArrayList<LinkedHashMap<String, ChannelType>> {
+    static class AudioOption extends ArrayList<LinkedHashMap<String, ChannelType>> {
         private String fileName = null;
         private String locale = null;
 
@@ -174,35 +174,35 @@ public final class AudioMapXmlProvider {
             t1.setLs(new ChannelType());
             t1.setRs(new ChannelType());
 
-            ChannelType L = t1.getL();
-            L.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            L.setCPLVirtualTrackChannel(1);
-            ChannelType R = t1.getR();
-            R.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            R.setCPLVirtualTrackChannel(2);
-            ChannelType C = t1.getC();
-            C.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            C.setCPLVirtualTrackChannel(3);
-            ChannelType LFE = t1.getLFE();
-            LFE.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            LFE.setCPLVirtualTrackChannel(4);
-            ChannelType Ls = t1.getLs();
-            Ls.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            Ls.setCPLVirtualTrackChannel(5);
-            ChannelType Rs = t1.getRs();
-            Rs.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            Rs.setCPLVirtualTrackChannel(6);
+            ChannelType l = t1.getL();
+            l.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
+            l.setCPLVirtualTrackChannel(1);
+            ChannelType r = t1.getR();
+            r.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
+            r.setCPLVirtualTrackChannel(2);
+            ChannelType c = t1.getC();
+            c.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
+            c.setCPLVirtualTrackChannel(3);
+            ChannelType lfe = t1.getLFE();
+            lfe.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
+            lfe.setCPLVirtualTrackChannel(4);
+            ChannelType ls = t1.getLs();
+            ls.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
+            ls.setCPLVirtualTrackChannel(5);
+            ChannelType rs = t1.getRs();
+            rs.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
+            rs.setCPLVirtualTrackChannel(6);
 
             Option3Type.Track2 t2 = opt3.getTrack2();
             t2.setLt(new ChannelType());
             t2.setRt(new ChannelType());
 
-            ChannelType Lt = t2.getLt();
-            Lt.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            Lt.setCPLVirtualTrackChannel(1);
-            ChannelType Rt = t2.getRt();
-            Rt.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            Rt.setCPLVirtualTrackChannel(2);
+            ChannelType lt = t2.getLt();
+            lt.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
+            lt.setCPLVirtualTrackChannel(1);
+            ChannelType rt = t2.getRt();
+            rt.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
+            rt.setCPLVirtualTrackChannel(2);
 
             AlternativeAudioType alt = audioMap.getAlternativeAudio().get(0);
             alt.setLocale("de");
@@ -216,12 +216,12 @@ public final class AudioMapXmlProvider {
             t61.setL(new ChannelType());
             t61.setR(new ChannelType());
 
-            ChannelType L61 = t61.getL();
-            L61.setCPLVirtualTrackId(GEN_ADDITIONAL_SEQ_UUID);
-            L61.setCPLVirtualTrackChannel(1);
-            ChannelType R61 = t61.getR();
-            R61.setCPLVirtualTrackId(GEN_ADDITIONAL_SEQ_UUID);
-            R61.setCPLVirtualTrackChannel(2);
+            ChannelType l61 = t61.getL();
+            l61.setCPLVirtualTrackId(GEN_ADDITIONAL_SEQ_UUID);
+            l61.setCPLVirtualTrackChannel(1);
+            ChannelType r61 = t61.getR();
+            r61.setCPLVirtualTrackId(GEN_ADDITIONAL_SEQ_UUID);
+            r61.setCPLVirtualTrackChannel(2);
 
             JAXBElement<AudioMapType> audioMapJaxb = new ObjectFactory().createAudiomap(audioMap);
             jaxbMarshaller.marshal(audioMapJaxb, file);

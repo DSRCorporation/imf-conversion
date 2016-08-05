@@ -35,14 +35,28 @@ public final class ConversionHelper {
     /**
      * Transforms a timecode string (hh:mm:ss:ff) to milliseconds according to the given edit rate (frame rate).
      * <p>
-     *     Currently works with non-drop timecodes only.
+     * Currently works with non-drop timecodes only.
      * </p>
-     * @param tc an SMPTE timecode (hh:mm:ss:ff)
+     *
+     * @param tc            an SMPTE timecode (hh:mm:ss:ff)
      * @param unitsInSecStr edit unit rate in a form "25 1"
      * @return a number of milliseconds
      */
     public static long smpteTimecodeToMilliSeconds(String tc, String unitsInSecStr) {
         BigFraction unitsInSec = parseEditRate(unitsInSecStr);
+        return smpteTimecodeToMilliSeconds(tc, unitsInSec);
+    }
+
+    /**
+     * Transforms a timecode string (hh:mm:ss:ff) to milliseconds according to the given edit rate (frame rate).
+     * <p>
+     *     Currently works with non-drop timecodes only.
+     * </p>
+     * @param tc an SMPTE timecode (hh:mm:ss:ff)
+     * @param unitsInSec edit unit rate in a form "25 1"
+     * @return a number of milliseconds
+     */
+    public static long smpteTimecodeToMilliSeconds(String tc, BigFraction unitsInSec) {
         String[] parts = tc.split("[:;\\.]");
         if (parts.length != 4) {
             throw new ConversionException(
@@ -176,10 +190,11 @@ public final class ConversionHelper {
     /**
      * Returns a fraction corresponding to the given edit rate string.
      *
-     * @param editRate input in a form "50 1"
+     * @param editRate input in both forms "50 1" and "50/1"
      * @return a fraction object representing the edit rate.
      */
     public static BigFraction parseEditRate(String editRate) {
+        editRate = editRate.contains("/") ? rFrameRateToEditRate(editRate) : editRate;
         String[] parts = editRate.split(" ");
         try {
             if (parts.length == 2) {
@@ -194,17 +209,6 @@ public final class ConversionHelper {
     }
 
     /**
-     * Returns a fraction corresponding to the given edit rate string.
-     *
-     * @param editRate input in both forms "50 1" and "50/1"
-     * @return a fraction object representing the edit rate.
-     */
-    public static BigFraction safeParseEditRate(String editRate) {
-        editRate = editRate.contains("/") ? rFrameRateToEditRate(editRate) : editRate;
-        return parseEditRate(editRate);
-    }
-
-    /**
      * Converts rFrameRate in a form "50/1" or "50" to the edit rate form "50 1".
      *
      * @param rFrameRate input in a form "50/1" or "50"
@@ -216,6 +220,26 @@ public final class ConversionHelper {
             return String.format("%s %s", parts[0], parts[1]);
         }
         return String.format("%s %s", rFrameRate, 1);
+    }
+
+    /**
+     * Returns a fraction corresponding to the given aspect ratio string.
+     *
+     * @param aspectRatio input in a form "16/9"
+     * @return a fraction object representing the aspect ratio.
+     */
+    public static BigFraction parseAspectRatio(String aspectRatio) {
+        String[] parts = aspectRatio.split("/");
+        try {
+            if (parts.length == 2) {
+                return new BigFraction(Long.parseLong(parts[0]), Long.parseLong(parts[1]));
+            } else if (parts.length == 1) {
+                return new BigFraction(Long.parseLong(parts[0]));
+            }
+        } catch (NumberFormatException e) {
+            throw new ConversionException("Incorrect aspect ratio! Aspect ratio must consist of two numbers.", e);
+        }
+        throw new ConversionException("Incorrect aspect ratio! Aspect ratio must consist of two values.");
     }
 
     public static String zeroTimecode() {

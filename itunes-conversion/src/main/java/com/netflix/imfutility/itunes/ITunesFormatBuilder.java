@@ -20,35 +20,49 @@ package com.netflix.imfutility.itunes;
 
 import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.conversion.ConversionEngine;
+import com.netflix.imfutility.conversion.templateParameter.context.DestTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.ASPECT_RATIO;
 import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
+import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
+import com.netflix.imfutility.generated.mediainfo.FfprobeType;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_ADDITIONAL_AUDIO_COUNT;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_ADDITIONAL_AUDIO_PREFIX;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_ADDITIONAL_AUDIO_TRACKS_PREFIX;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_MAIN_AUDIO;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_MAIN_AUDIO_TRACKS;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PAN_PARAMETER_PREFIX;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_OUTPUT_ITMSP;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_VENDOR_ID;
+import com.netflix.imfutility.itunes.asset.ChapterAssetProcessor;
+import com.netflix.imfutility.itunes.asset.PosterAssetProcessor;
+import com.netflix.imfutility.itunes.asset.TrailerAssetProcessor;
 import com.netflix.imfutility.itunes.destcontext.DestContextResolveStrategy;
 import com.netflix.imfutility.itunes.destcontext.InputDestContextResolveStrategy;
 import com.netflix.imfutility.itunes.destcontext.NameDestContextResolveStrategy;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
+import com.netflix.imfutility.itunes.mediainfo.SimpleMediaInfoBuilder;
+import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider;
+import com.netflix.imfutility.itunes.xmlprovider.ChaptersXmlProvider;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
+import com.netflix.imfutility.mediainfo.MediaInfoException;
+import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.commons.math3.fraction.BigFraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_OUTPUT_ITMSP;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_VENDOR_ID;
-import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider;
-import java.io.FileNotFoundException;
 
 /**
  * iTunes format builder (see {@link AbstractFormatBuilder}). It's used for conversion to iTunes format ('convert' iTunes mode).
@@ -58,7 +72,9 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     private final Logger logger = LoggerFactory.getLogger(ITunesFormatBuilder.class);
 
     private final ITunesInputParameters iTunesInputParameters;
+    private File itmspDir;
     private MetadataXmlProvider metadataXmlProvider;
+    private ChaptersXmlProvider chaptersXmlProvider;
 
     public ITunesFormatBuilder(ITunesInputParameters inputParameters) {
         super(new ITunesFormat(), inputParameters);
@@ -98,6 +114,9 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
         // 2. load, parse and validate metadata.xml
         loadMetadata();
+
+        // 3. process additional assets (poster, chapters, trailer)
+        processAdditionalAssets();
     }
 
     @Override
@@ -125,7 +144,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
         logger.info("Creating {} output directory...", itmspName);
 
-        File itmspDir = new File(contextProvider.getWorkingDir(), itmspName);
+        itmspDir = new File(contextProvider.getWorkingDir(), itmspName);
         logger.info("Itmsp output directory: {}", itmspDir);
         if (!itmspDir.mkdir()) {
             throw new ConversionException(String.format(
@@ -188,5 +207,82 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
             contextProvider.getDynamicContext().addParameter(DYNAMIC_ADDITIONAL_AUDIO_PREFIX + i[0], p);
             i[0]++;
         });
+    }
+
+    private void processAdditionalAssets() throws XmlParsingException, IOException {
+        processPoster();
+        processTrailer();
+        processChapters();
+    }
+
+    private void processPoster() throws IOException {
+        File poster = iTunesInputParameters.getPosterFile();
+        if (poster == null) {
+            return;
+        }
+
+        new PosterAssetProcessor(metadataXmlProvider, itmspDir)
+                .setVendorId(iTunesInputParameters.getCmdLineArgs().getVendorId())
+                .process(poster);
+    }
+
+    private void processChapters() throws XmlParsingException, IOException {
+        File chaptersFile = iTunesInputParameters.getChaptersFile();
+        if (chaptersFile == null) {
+            return;
+        }
+
+        chaptersXmlProvider = new ChaptersXmlProvider(chaptersFile);
+
+        metadataXmlProvider.appendChaptersTimeCode(chaptersXmlProvider.getChapters().getTimecodeFormat());
+
+        ChapterAssetProcessor processor = new ChapterAssetProcessor(metadataXmlProvider, itmspDir)
+                .setAspectRatio(getDestAspectRatio());
+
+        int i = 1;
+        for (ChapterInputType chapter : chaptersXmlProvider.getChapters().getChapter()) {
+            processor.setInputChapter(chapter)
+                    .setChapterIndex(i)
+                    .process(chaptersXmlProvider.getChapterFile(chapter));
+            i++;
+        }
+    }
+
+    private void processTrailer() throws XmlParsingException, IOException {
+        File trailer = iTunesInputParameters.getTrailerFile();
+        if (trailer == null) {
+            return;
+        }
+
+        new TrailerAssetProcessor(metadataXmlProvider, itmspDir)
+                .setVendorId(iTunesInputParameters.getCmdLineArgs().getVendorId())
+                .setFormat(getTrailerMediaInfo(trailer).getFormat())
+                .setLocale(getDefaultLocale())
+                .process(trailer);
+    }
+
+    private FfprobeType getTrailerMediaInfo(File trailer) throws XmlParsingException, IOException {
+        try {
+            return new SimpleMediaInfoBuilder(contextProvider, new ConversionEngine().getExecuteStrategyFactory())
+                    .setCommandName("trailer")
+                    .setInputDynamicParam(DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT)
+                    .setOutputDynamicParam(DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT)
+                    .build(trailer);
+        } catch (MediaInfoException e) {
+            throw new ConversionException("Conversion aborted cause of MediaInfo failures", e);
+        }
+    }
+
+    private BigFraction getDestAspectRatio() {
+        DestTemplateParameterContext destContext = contextProvider.getDestContext();
+        return ConversionHelper.parseAspectRatio(destContext.getParameterValue(ASPECT_RATIO));
+    }
+
+    private LocaleType getDefaultLocale() {
+        LocaleType locale = new LocaleType();
+        locale.setName(iTunesInputParameters.getCmdLineArgs().getFallbackLocale() != null
+                ? iTunesInputParameters.getCmdLineArgs().getFallbackLocale()
+                : metadataXmlProvider.getLanguage());
+        return locale;
     }
 }

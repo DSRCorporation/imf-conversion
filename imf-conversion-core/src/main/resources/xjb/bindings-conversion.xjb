@@ -41,6 +41,12 @@
             </jaxb:property>
         </jaxb:bindings>
 
+        <jaxb:bindings node="//xs:element[@name='mediaInfoCommandOthers']">
+            <jaxb:property>
+                <jaxb:baseType name="com.netflix.imfutility.xsd.conversion.MediaInfoCommandOthersTypeMap" />
+            </jaxb:property>
+        </jaxb:bindings>
+
         <jaxb:bindings schemaLocation="../xsd/conversion.xsd">
             <jaxb:schemaBindings>
                 <jaxb:package name="com.netflix.imfutility.generated.conversion" />

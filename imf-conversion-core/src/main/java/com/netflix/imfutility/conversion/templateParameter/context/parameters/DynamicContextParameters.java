@@ -52,7 +52,9 @@ public enum DynamicContextParameters {
 
     OUTPUT_VALIDATION_FILE("outputValidationFile"),
 
-    SINGLE_AUDIO("singleAudio");
+    SINGLE_AUDIO("singleAudio"),
+
+    SINGLE_SUBTITLE("singleSubtitle");
 
     private final String name;
 

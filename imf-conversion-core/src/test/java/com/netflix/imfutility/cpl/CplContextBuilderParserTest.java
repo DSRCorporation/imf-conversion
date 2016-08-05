@@ -39,28 +39,28 @@ public class CplContextBuilderParserTest {
 
     @Test
     public void testParseCorrectConfigWithoutErrors() throws Exception {
-        createCplContextBuilder().build(ImpUtils.getCorrectCpl());
+        createCplContextBuilder(ImpUtils.getCorrectCpl()).build();
     }
 
     @Test(expected = XmlParsingException.class)
     public void testParseBrokenXml() throws Exception {
-        createCplContextBuilder().build(ImpUtils.getBrokenXmlCpl());
+        createCplContextBuilder(ImpUtils.getBrokenXmlCpl()).build();
     }
 
     @Test(expected = XmlParsingException.class)
     public void testParseInvalidXsd() throws Exception {
-        createCplContextBuilder().build(ImpUtils.getInvalidXsdCpl());
+        createCplContextBuilder(ImpUtils.getInvalidXsdCpl()).build();
     }
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
-        createCplContextBuilder().build(new File("invalid-path"));
+        createCplContextBuilder(new File("invalid-path")).build();
     }
 
-    private CplContextBuilder createCplContextBuilder() throws Exception {
+    private CplContextBuilder createCplContextBuilder(File cpl) throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        return new CplContextBuilder(contextProvider, assetMap);
+        return new CplContextBuilder(contextProvider, assetMap, cpl);
     }
 
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<package xmlns="http://apple.com/itunes/importer" version="film5.0">
+    <provider>Required company</provider>
+    <language>en-US</language>
+    <video>
+        <type>film</type>
+        <subtype>feature</subtype>
+        <vendor_id>000000000000</vendor_id>
+        <country>US</country>
+        <original_spoken_locale>en-US</original_spoken_locale>
+        <title>Required title</title>
+        <synopsis>Required synopsis</synopsis>
+        <production_company>Required company</production_company>
+        <copyright_cline>2016 Required Company</copyright_cline>
+        <theatrical_release_date>2016-08-02</theatrical_release_date>
+        <genres>
+            <genre>Classics</genre>
+        </genres>
+        <ratings>
+            <rating system="mpaa">G</rating>
+        </ratings>
+        <cast>
+            <cast_member billing="top">
+                <display_name>Required cast member display name</display_name>
+                <character_name>Required cast member character name</character_name>
+            </cast_member>
+        </cast>
+        <crew>
+            <crew_member billing="top">
+                <display_name>Required crew member name</display_name>
+                <roles>
+                    <role>Director</role>
+                </roles>
+            </crew_member>
+        </crew>
+        <products>
+            <product>
+                <territory>WW</territory>
+                <cleared_for_sale>true</cleared_for_sale>
+            </product>
+        </products>
+    </video>
+</package>
