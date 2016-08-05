@@ -18,13 +18,13 @@
          </schemaBindings>
      </bindings>
 
-     <bindings schemaLocation="../xsd/metadata/metadata.xsd">
+     <bindings schemaLocation="../xsd/metadata/dpp-metadata.xsd">
          <schemaBindings>
              <package name="com.netflix.imfutility.generated.dpp.metadata" />
          </schemaBindings>
      </bindings>
 
-     <bindings schemaLocation="../xsd/audiomap/audiomap.xsd">
+     <bindings schemaLocation="../xsd/audiomap/dpp-audiomap.xsd">
          <schemaBindings>
              <package name="com.netflix.imfutility.generated.dpp.audiomap" />
          </schemaBindings>
