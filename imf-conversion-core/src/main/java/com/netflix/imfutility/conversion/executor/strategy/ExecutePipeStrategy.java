@@ -18,11 +18,12 @@
  */
 package com.netflix.imfutility.conversion.executor.strategy;
 
-import com.netflix.imfutility.conversion.executor.ExecutionException;
 import com.netflix.imfutility.conversion.executor.ExternalProcess;
 import com.netflix.imfutility.conversion.executor.OutputRedirect;
 import com.netflix.imfutility.conversion.executor.ProcessStarter;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,6 +56,8 @@ import java.util.List;
  * </p>
  */
 public class ExecutePipeStrategy extends AbstractExecuteStrategy {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExecutePipeStrategy.class);
 
     public ExecutePipeStrategy(TemplateParameterContextProvider contextProvider, ProcessStarter processStarter) {
         super(contextProvider, processStarter);
@@ -179,7 +182,23 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
                     }
                 }
             } catch (IOException e) {
-                throw new ExecutionException(
+                try {
+                    input.close();
+                } catch (IOException e1) {
+                    LOGGER.error(
+                            "Can not close " + inputProcess.toString(),
+                            e1);
+                }
+
+                try {
+                    output.close();
+                } catch (IOException e1) {
+                    LOGGER.error(
+                            "Can not close " + outputProcess.toString(),
+                            e1);
+                }
+
+                LOGGER.error(
                         String.format("Broken pipe. Input process: %s. Output Process: %s",
                                 inputProcess.toString(), outputProcess.toString()),
                         e);
