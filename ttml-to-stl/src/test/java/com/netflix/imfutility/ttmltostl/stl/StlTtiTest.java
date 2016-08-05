@@ -20,6 +20,7 @@ package com.netflix.imfutility.ttmltostl.stl;
 
 import com.netflix.imfutility.ttmltostl.ttml.Style;
 import com.netflix.imfutility.ttmltostl.ttml.TimedTextObject;
+import com.netflix.imfutility.ttmltostl.util.StlTestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
@@ -720,7 +721,7 @@ public class StlTtiTest {
      * @throws Exception
      */
     @Test
-    public void testTextAllign() throws Exception {
+    public void testTextAlign() throws Exception {
         TimedTextObject tto = StlTestUtil.buildTto(
                 "00:00:00:00", "00:00:05:00", "text1",
                 "00:00:05:00", "00:00:10:12", "text2",
@@ -757,6 +758,116 @@ public class StlTtiTest {
         assertEquals(0x02, tti[offset + 14]); // 02 - center
         assertArrayEquals(
                 fillExpectedText(new byte[]{0x74, 0x65, 0x78, 0x74, 0x33}),
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
+    }
+
+    @Test
+    public void testTextColor() throws Exception {
+        TimedTextObject tto = StlTestUtil.buildTto(
+                "00:00:00:00", "00:00:05:00", "text1",
+                "00:00:05:00", "00:00:10:12", "text2",
+                "00:00:15:00", "00:00:20:24", "text3",
+                "00:00:20:00", "00:00:25:24", "text4",
+                "00:00:25:00", "00:00:30:24", "text5",
+                "00:00:30:00", "00:00:35:24", "text6",
+                "00:00:35:00", "00:00:40:24", "text7",
+                "00:00:40:00", "00:00:45:24", "text8",
+                "00:00:45:00", "00:00:50:24", "text9"
+        );
+
+        // set styles
+        Style style1 = new Style("1");
+        style1.setColor("000000ff"); // black
+        Style style2 = new Style("2");
+        style2.setColor("FF0000ff"); // red
+        Style style3 = new Style("3");
+        style3.setColor("00ff00"); // green
+        Style style4 = new Style("4");
+        style4.setColor("FFff00"); // yellow
+        Style style5 = new Style("5");
+        style5.setColor("0000ff"); // blue
+        Style style6 = new Style("6");
+        style6.setColor("ff00ffff"); // magenta
+        Style style7 = new Style("7");
+        style7.setColor("00ffffFF"); // cyn
+        Style style8 = new Style("8");
+        style8.setColor("ffffffff"); // white
+        Style style9 = new Style("9");
+        style9.setColor("0f0f0fff"); // some color (fallback to white)
+        tto.getCaptions().get(0).setStyle(style1);
+        tto.getCaptions().get(1).setStyle(style2);
+        tto.getCaptions().get(2).setStyle(style3);
+        tto.getCaptions().get(3).setStyle(style4);
+        tto.getCaptions().get(4).setStyle(style5);
+        tto.getCaptions().get(5).setStyle(style6);
+        tto.getCaptions().get(6).setStyle(style7);
+        tto.getCaptions().get(7).setStyle(style8);
+        tto.getCaptions().get(8).setStyle(style9);
+
+        byte[][] stl = StlTestUtil.build(tto, StlTestUtil.getMetadataXml());
+        byte[] tti = stl[1];
+
+        assertArrayEquals(
+                fillExpectedText(new byte[]{
+                        0x00, // black
+                        0x74, 0x65, 0x78, 0x74, 0x31}),
+                Arrays.copyOfRange(tti, 16, 128));
+
+        int offset = 128;
+        assertArrayEquals(
+                fillExpectedText(new byte[]{
+                        0x01, // red
+                        0x74, 0x65, 0x78, 0x74, 0x32}),
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
+
+        offset += 128;
+        assertArrayEquals(
+                fillExpectedText(new byte[]{
+                        0x02, // green
+                        0x74, 0x65, 0x78, 0x74, 0x33}),
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
+
+        offset += 128;
+        assertArrayEquals(
+                fillExpectedText(new byte[]{
+                        0x03, // yellow
+                        0x74, 0x65, 0x78, 0x74, 0x34}),
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
+
+        offset += 128;
+        assertArrayEquals(
+                fillExpectedText(new byte[]{
+                        0x04, // blue
+                        0x74, 0x65, 0x78, 0x74, 0x35}),
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
+
+        offset += 128;
+        assertArrayEquals(
+                fillExpectedText(new byte[]{
+                        0x05, // magenta
+                        0x74, 0x65, 0x78, 0x74, 0x36}),
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
+
+        offset += 128;
+        assertArrayEquals(
+                fillExpectedText(new byte[]{
+                        0x06, // cyn
+                        0x74, 0x65, 0x78, 0x74, 0x37}),
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
+
+
+        offset += 128;
+        assertArrayEquals(
+                fillExpectedText(new byte[]{
+                        0x07, // white
+                        0x74, 0x65, 0x78, 0x74, 0x38}),
+                Arrays.copyOfRange(tti, offset + 16, offset + 128));
+
+        offset += 128;
+        assertArrayEquals(
+                fillExpectedText(new byte[]{
+                        0x07, // fallback - white
+                        0x74, 0x65, 0x78, 0x74, 0x39}),
                 Arrays.copyOfRange(tti, offset + 16, offset + 128));
     }
 

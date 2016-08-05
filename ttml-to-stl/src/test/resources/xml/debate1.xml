@@ -26,11 +26,11 @@
 
 	<body>
 		<div xml:lang="es">
-			<p begin="0:0:7.800" end="0:0:11.360" region="pop1" style="blanco">  Subtitulado para personas sordas<br />patrocinado por el Real Patronato...</p>
-			<p begin="0:0:13.16" end="0:0:15.04" region="pop1" style="magenta">...sobre Discapacidad, CESyA y UC3 M</p>
-			<p begin="0:1:34.640" end="0:1:38.120" region="pop1" style="verde"><br /><br />Moderadora: Bueno, señores, muchas<br /> gracias.<br /> Hay que abandonar la...<br /></p>
-			<p begin="99:59:59.998" end="99:59:59.999" region="pop1" style="blanco"></p>
-			<p begin="10:1:4.6" end="10:12:46.007" region="pop1" style="fullblack">...Señores.<br /> Usted allí, usted, aquí.</p>
+			<p begin="0:0:7:0" end="0:0:11:15" region="pop1" style="blanco">  Subtitulado para personas sordas<br />patrocinado por el Real Patronato...</p>
+			<p begin="0:0:13:16" end="0:0:15:29" region="pop1" style="blanco">...sobre Discapacidad, CESyA y UC3 M</p>
+			<p begin="0:1:34:5" end="0:1:38:09" region="pop1" style="blanco">Moderadora: Bueno, señores, muchas<br /> gracias. Hay que abandonar la...</p>
+			<p begin="99:59:59:28" end="99:59:59:29" region="pop1" style="blanco">...sala porque tenemos que empezar.<br />Gracias a todos, eh, compañeros....</p>
+			<p begin="10:1:4:0" end="10:1:4:29" region="pop1" style="blanco">...Señores. Usted allí, usted, aquí.</p>
 		</div>
 	</body>
 </tt>

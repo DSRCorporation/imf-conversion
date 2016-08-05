@@ -106,7 +106,7 @@ public class Style {
                     color = "ff00ffff";
                     break;
                 case "magenta":
-                    color = "ff00ffff ";
+                    color = "ff00ffff";
                     break;
                 case "green":
                     color = "008000ff";
@@ -133,7 +133,7 @@ public class Style {
                     color = "00ffffff";
                     break;
                 case "cyan":
-                    color = "00ffffff ";
+                    color = "00ffffff";
                     break;
                 default:
                     // nothing

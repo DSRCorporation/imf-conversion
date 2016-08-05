@@ -17,14 +17,15 @@
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.netflix.imfutility.ttmltostl;
+
 import com.netflix.imfutility.dpp.MetadataXmlProvider;
-import com.netflix.imfutility.ttmltostl.Convert;
+import com.netflix.imfutility.ttmltostl.util.TtmlTestUtil;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for the converter.
@@ -50,7 +51,7 @@ public class ConvertTest {
         tempMetadataXml.deleteOnExit();
         MetadataXmlProvider.generateEmptyXml(tempMetadataXml.getAbsolutePath());
 
-        File xml1 = new File(ClassLoader.getSystemClassLoader().getResource("xml/debate.xml").toURI());
+        File xml1 = TtmlTestUtil.getTtml("xml/debate.xml");
 
         String[] args = {
                 "--ttml",
@@ -87,7 +88,7 @@ public class ConvertTest {
         tempMetadataXml.deleteOnExit();
         MetadataXmlProvider.generateEmptyXml(tempMetadataXml.getAbsolutePath());
 
-        File xml1 = new File(ClassLoader.getSystemClassLoader().getResource("xml/debate.xml").toURI());
+        File xml1 = TtmlTestUtil.getTtml("xml/debate.xml");
 
         String[] args = {
                 "--ttml",
@@ -126,9 +127,9 @@ public class ConvertTest {
         tempMetadataXml.deleteOnExit();
         MetadataXmlProvider.generateEmptyXml(tempMetadataXml.getAbsolutePath());
 
-        File xml1 = new File(ClassLoader.getSystemClassLoader().getResource("xml/debate.xml").toURI());
-        File xml2 = new File(ClassLoader.getSystemClassLoader().getResource("xml/prueba_angel.xml").toURI());
-        File xml3 = new File(ClassLoader.getSystemClassLoader().getResource("xml/prueba_angel2.xml").toURI());
+        File xml1 = TtmlTestUtil.getTtml("xml/debate.xml");
+        File xml2 = TtmlTestUtil.getTtml("xml/prueba_angel.xml");
+        File xml3 = TtmlTestUtil.getTtml("xml/prueba_angel2.xml");
 
         String[] args = {
                 "--ttml",

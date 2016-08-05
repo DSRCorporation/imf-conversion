@@ -19,6 +19,7 @@
 package com.netflix.imfutility.ttmltostl.stl;
 
 import com.netflix.imfutility.ttmltostl.ttml.TimedTextObject;
+import com.netflix.imfutility.ttmltostl.util.StlTestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
