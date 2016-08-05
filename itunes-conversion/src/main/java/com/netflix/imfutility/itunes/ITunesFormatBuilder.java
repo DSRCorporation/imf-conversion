@@ -51,6 +51,9 @@ import java.io.File;
 import java.io.IOException;
 
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.ASPECT_RATIO;
+import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.DAR;
+import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.FRAME_RATE;
+import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.INTERLACED;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_OUTPUT_ITMSP;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT;
@@ -66,7 +69,6 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     private final ITunesInputParameters iTunesInputParameters;
     private File itmspDir;
     private MetadataXmlProvider metadataXmlProvider;
-    private ChaptersXmlProvider chaptersXmlProvider;
 
     public ITunesFormatBuilder(ITunesInputParameters inputParameters) {
         super(new ITunesFormat(), inputParameters);
@@ -117,12 +119,40 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
     @Override
     protected DestContextTypeMap getDestContextMap(DestContextsTypeMap destContexts) {
-        String format = iTunesInputParameters.getCmdLineArgs().getFormat();
+        logger.info("Resolving destination format...");
 
+        String format = iTunesInputParameters.getCmdLineArgs().getFormat();
         DestContextResolveStrategy resolveStrategy = format != null
                 ? new NameDestContextResolveStrategy(format)
                 : new InputDestContextResolveStrategy(contextProvider);
-        return resolveStrategy.resolveContext(destContexts);
+        DestContextTypeMap destContextMap = resolveStrategy.resolveContext(destContexts);
+
+        logger.info("Destination format defined by {}", format != null
+                ? "cmdline arg"
+                : "source video");
+        logger.info("Destination format: {}", destContextMap.getName());
+        logger.info("Resolved destination format: OK\n");
+
+        return destContextMap;
+    }
+
+    @Override
+    protected void doBuildDestContext() {
+        DestTemplateParameterContext destContext = contextProvider.getDestContext();
+
+        // set interlaced to false if not specified
+        String interlaced = destContext.getParameterValue(INTERLACED);
+        destContext.addParameter(INTERLACED, interlaced == null ? Boolean.FALSE.toString() : interlaced);
+
+        // define is dar provided
+        destContext.addParameter("isDarSpecified", Boolean.toString(destContext.getParameterValue(DAR) != null));
+
+        // set frame rate for interlaced scan (for ffmpeg = frameRate*2, for OS X tool = frameRate)
+        BigFraction frameRate = ConversionHelper.parseEditRate(destContext.getParameterValue(FRAME_RATE));
+        if (!SystemUtils.IS_OS_MAC_OSX) {
+            frameRate = frameRate.multiply(2);
+        }
+        destContext.addParameter("iFrameRate", ConversionHelper.toREditRate(frameRate));
     }
 
     private void createItmspDir() {
@@ -177,7 +207,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
             return;
         }
 
-        chaptersXmlProvider = new ChaptersXmlProvider(chaptersFile);
+        ChaptersXmlProvider chaptersXmlProvider = new ChaptersXmlProvider(chaptersFile);
 
         metadataXmlProvider.appendChaptersTimeCode(chaptersXmlProvider.getChapters().getTimecodeFormat());
 
