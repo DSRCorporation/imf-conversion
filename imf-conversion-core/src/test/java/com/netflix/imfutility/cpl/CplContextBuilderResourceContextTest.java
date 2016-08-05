@@ -51,7 +51,7 @@ public class CplContextBuilderResourceContextTest {
     public static void setUpAll() throws Exception {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCorrectCpl());
+        new CplContextBuilder(contextProvider, assetMap, ImpUtils.getCorrectCpl()).build();
 
         resourceContext = contextProvider.getResourceContext();
     }
@@ -272,15 +272,8 @@ public class CplContextBuilderResourceContextTest {
                 resourceContext.getParameterValue(ResourceContextParameters.EDIT_RATE, contextInfo));
     }
 
-
     @Test
     public void testUuidsAndCountWithRepeat() throws Exception {
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
-        AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCorrectCpl());
-
-        ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
-
         // UUIDs as defined in CPL.xml
 
         // first segment
@@ -891,7 +884,7 @@ public class CplContextBuilderResourceContextTest {
         TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
         AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
         // get a CPL that uses one essence for both audio and video
-        new CplContextBuilder(contextProvider, assetMap).build(ImpUtils.getCorrectCplOneEssence());
+        new CplContextBuilder(contextProvider, assetMap, ImpUtils.getCorrectCplOneEssence()).build();
 
         ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
 
@@ -948,12 +941,6 @@ public class CplContextBuilderResourceContextTest {
                 resourceContext.getParameterValue(ResourceContextParameters.START_TIME_FRAME_EDIT_UNIT, contextInfo));
         assertEquals("1097",
                 resourceContext.getParameterValue(ResourceContextParameters.DURATION_FRAME_EDIT_UNIT, contextInfo));
-    }
-
-    private CplContextBuilder createCplContextBuilder() throws Exception {
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider();
-        AssetMap assetMap = new AssetMapParser().parse(ImpUtils.getImpFolder(), ImpUtils.getCorrectAssetmap());
-        return new CplContextBuilder(contextProvider, assetMap);
     }
 
 }
