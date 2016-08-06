@@ -197,6 +197,7 @@ imf-conversion-utility dpp -m metadata -o metadata.xml
 
 * The user can enter the values and they will be applied for the output MXF.
 * The metadata.xml is a required parameter for conversion to DPP format.
+* Please note that all timestamps are in SMPTE timecode format (hh:mm:ss:ff), where ff is in range [0,24] for 25 fps.
 
 #### Generate audiomap.xml
 

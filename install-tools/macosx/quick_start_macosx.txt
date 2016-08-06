@@ -21,6 +21,7 @@ Quick Start Guide for MAC OS X.
    Please see README for a full description of config.xml.
 
 5. Edit sample/metadata.xml if needed (either enter correct duration for PartDuration and TotalProgrammeDuration fields, or use 00:00:00:00).
+   Please note that all timestamps are in SMPTE timecode format (hh:mm:ss:ff), where ff is in range [0,24] for 25 fps.
    Please see README for a full description of metadata.xml.
    A sample metadata.xml can be created by running the following command:
 

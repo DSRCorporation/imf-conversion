@@ -22,6 +22,7 @@ import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.dpp.MetadataXmlProvider.DMFramework;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
@@ -34,6 +35,7 @@ import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.math3.fraction.BigFraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,7 +141,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     }
 
     /**
-     * Check that total duration specified in Metadata.xml matches total duration of the output file.
+     * Check that total duration specified in Metadata.xml is less than total duration of the output file.
      * Otherwise conversion will abort at the very last step (BMX). It may make the user unhappy after a long conversion.
      */
     private void checkTotalDuration() {
@@ -148,8 +150,14 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
             return;
         }
 
+        String destFps = contextProvider.getDestContext().getParameterValue(DestContextParameters.FRAME_RATE);
+        if (destFps == null) {
+            destFps = MetadataXmlProvider.DEST_FRAME_RATE;
+        }
+        BigFraction fps = ConversionHelper.parseEditRate(destFps);
+
         long metadataTotalDurationMs = ConversionHelper.smpteTimecodeToMilliSeconds(
-                metadataTotalDurationTc, MetadataXmlProvider.DEST_FRAME_RATE);
+                metadataTotalDurationTc, fps);
         long cplTotalDurationMs = getCplTotalDurationMs();
 
         // BMX accepts any total duration if zero timecode is specified in metadata.xml
@@ -157,11 +165,12 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
             return;
         }
 
-        if (metadataTotalDurationMs != cplTotalDurationMs) {
+        if (metadataTotalDurationMs > cplTotalDurationMs) {
             throw new ConversionException(
-                    String.format("A total programme duration as specified in metadata.xml (%s) doesn't match a "
-                                    + "total duration of the output as defined by the CPL (%s) ",
-                            String.valueOf(metadataTotalDurationMs), String.valueOf(cplTotalDurationMs)));
+                    String.format("A total programme duration as specified in metadata.xml (%s, %s ms) exceeds a "
+                                    + "total duration of the output as defined by the CPL (%s, %s ms) ",
+                            metadataTotalDurationTc, String.valueOf(metadataTotalDurationMs),
+                            ConversionHelper.msToSmpteTimecode(cplTotalDurationMs, fps), String.valueOf(cplTotalDurationMs)));
         }
     }
 
