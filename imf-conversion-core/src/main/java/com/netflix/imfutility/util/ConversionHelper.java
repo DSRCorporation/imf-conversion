@@ -126,6 +126,47 @@ public final class ConversionHelper {
     }
 
     /**
+     * Transforms milliseconds to an SMPTE timecode according to the given edit unit rate.
+     * <ul>
+     * <li>An example of edit units is a frame.</li>
+     * <li>The output timecode has the following format 'hh:mm:ss:ff'.</li>
+     * </ul>
+     *
+     * @param milliseconds         milliseconds to be transformed
+     * @param unitsInSec edit unit rate
+     * @return timecode as a string in "hh:mm:ss:ff" format.
+     */
+    public static String msToSmpteTimecode(long milliseconds, BigFraction unitsInSec) {
+        BigFraction ms = new BigFraction(milliseconds);
+        BigFraction msInMin = new BigFraction(60 * 1000);
+        BigFraction msInHour = new BigFraction(60 * 60 * 1000);
+        BigFraction msInSec = new BigFraction(1000);
+        BigFraction unitsInMs = unitsInSec.divide(msInSec);
+
+
+        int hours = ms
+                .divide(msInHour)
+                .intValue();
+        int minutes = ms
+                .subtract(msInHour.multiply(hours))
+                .divide(msInMin)
+                .intValue();
+        int seconds = ms
+                .subtract(msInHour.multiply(hours))
+                .subtract(msInMin.multiply(minutes))
+                .divide(msInSec)
+                .intValue();
+        int units = ms
+                .subtract(msInHour.multiply(hours))
+                .subtract(msInMin.multiply(minutes))
+                .subtract(msInSec.multiply(seconds))
+                .multiply(unitsInMs)
+                .intValue();
+
+        return String.format("%02d:%02d:%02d:%02d", hours, minutes, seconds, units);
+    }
+
+    /**
      * Converts the given number of edit units in old edit rate to a new edit rate.
      * It can be used to convert audio samples to video frames.
      *
