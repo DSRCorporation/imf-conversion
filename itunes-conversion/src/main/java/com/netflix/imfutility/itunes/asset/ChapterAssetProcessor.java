@@ -20,6 +20,7 @@ package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.generated.itunes.metadata.ArtWorkFileType;
 import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
+import com.netflix.imfutility.itunes.asset.distribute.CopyAssetStrategy;
 import com.netflix.imfutility.itunes.image.ImageValidator;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.itunes.xmlprovider.builder.file.ArtWorkFileTagBuilder;
@@ -45,6 +46,7 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
 
     public ChapterAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
+        setDistributeAssetStrategy(new CopyAssetStrategy());
     }
 
     public ChapterAssetProcessor setChapterIndex(Integer chapterIndex) {
@@ -83,7 +85,7 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
 
     @Override
     protected ArtWorkFileType buildMetadata(File assetFile) {
-        return new ArtWorkFileTagBuilder(assetFile, getFileName()).build();
+        return new ArtWorkFileTagBuilder(assetFile, getDestFileName(assetFile)).build();
     }
 
     @Override
@@ -92,7 +94,7 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
     }
 
     @Override
-    protected String getFileName() {
+    protected String getDestFileName(File assetFile) {
         return "chapter" + String.format("%02d", chapterIndex) + ".jpg";
     }
 }

@@ -23,7 +23,6 @@ import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
 import com.netflix.imfutility.itunes.util.AssetUtils;
-import com.netflix.imfutility.itunes.util.TestUtils;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.apache.commons.io.FileUtils;
@@ -35,13 +34,14 @@ import java.io.File;
 import java.io.IOException;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
 /**
- * Tests trailer asset processing.
- * (see {@link TrailerAssetProcessor}).
+ * Tests additional audio source asset processing.
+ * (see {@link AudioAssetProcessor}).
  */
-public class TrailerAssetProcessorTest {
+public class AudioAssetProcessorTest {
 
     @BeforeClass
     public static void setupAll() throws IOException {
@@ -59,57 +59,54 @@ public class TrailerAssetProcessorTest {
     }
 
     @Test
-    public void testCorrectTrailer() throws Exception {
+    public void testCorrectSource() throws Exception {
         MetadataXmlProvider metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
+        File destDir = new File(TemplateParameterContextCreator.getWorkingDir(), "destDir");
+        destDir.mkdir();
 
-        processor.setVendorId("vendor_id")
-                .setLocale(AssetUtils.createLocale("en-US"))
-                .setFormat(AssetUtils.createCorrectVideoFormat())
-                .process(TestUtils.getTestFile());
+        AudioAssetProcessor processor = new AudioAssetProcessor(metadataXmlProvider, destDir);
 
-        File asset = new File(TemplateParameterContextCreator.getWorkingDir(), "vendor_id-preview.mov");
-        assertTrue(asset.exists());
-        assertTrue(asset.isFile());
+        File inputAsset = new File(TemplateParameterContextCreator.getWorkingDir(), "audio");
+        inputAsset.createNewFile();
 
-        //  first asset section always relay to full asset
-        AssetType trailerAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(1);
-        assertEquals(AssetTypeType.PREVIEW, trailerAsset.getType());
+        processor.setLocale(AssetUtils.createLocale("en-US"))
+                .process(inputAsset);
 
-        DataFileType trailerDataFile = trailerAsset.getDataFile().get(0);
-        assertEquals("vendor_id-preview.mov", trailerDataFile.getFileName());
-        assertEquals(DataFileRoleType.SOURCE, trailerDataFile.getRole());
-        assertEquals("en-US", trailerDataFile.getLocale().getName());
-    }
+        // input asset must be moved to dest dir
+        assertFalse(inputAsset.exists());
 
-    @Test(expected = AssetValidationException.class)
-    public void testInvalidFormat() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
-                TemplateParameterContextCreator.getWorkingDir());
+        File outputAsset = new File(destDir, inputAsset.getName());
+        assertTrue(outputAsset.exists());
+        assertTrue(outputAsset.isFile());
 
-        processor.setVendorId("vendor_id")
-                .setLocale(AssetUtils.createLocale("en-US"))
-                .setFormat(AssetUtils.createIncorrectVideoFormat())
-                .process(TestUtils.getTestFile());
+
+        AssetType sourceAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
+        assertEquals(AssetTypeType.FULL, sourceAsset.getType());
+
+        DataFileType audioDataFile = sourceAsset.getDataFile().get(0);
+        assertEquals("audio", audioDataFile.getFileName());
+        assertEquals(DataFileRoleType.AUDIO, audioDataFile.getRole());
+        assertEquals("en-US", audioDataFile.getLocale().getName());
     }
 
     @Test(expected = AssetValidationException.class)
     public void testInvalidPath() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        AudioAssetProcessor processor = new AudioAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setVendorId("vendor_id")
-                .setLocale(AssetUtils.createLocale("en-US"))
-                .setFormat(AssetUtils.createCorrectVideoFormat())
+        processor.setLocale(AssetUtils.createLocale("en-US"))
                 .process(new File("invalid_path"));
     }
 
     @Test(expected = AssetValidationException.class)
     public void testParametersNotSet() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        AudioAssetProcessor processor = new AudioAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
-        //  vendor_id, locale and format are required
-        processor.process(TestUtils.getTestFile());
+        File inputAsset = new File(TemplateParameterContextCreator.getWorkingDir(), "audio");
+        inputAsset.createNewFile();
+
+        //  locale is required
+        processor.process(inputAsset);
     }
 }

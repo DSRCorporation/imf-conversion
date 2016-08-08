@@ -18,6 +18,11 @@
  */
 package com.netflix.imfutility.itunes.util;
 
+import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
+import com.netflix.imfutility.generated.mediainfo.FormatType;
+import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
+import com.netflix.imfutility.util.TemplateParameterContextCreator;
+
 import java.io.File;
 import java.net.URISyntaxException;
 
@@ -40,4 +45,30 @@ public final class AssetUtils {
     public static File getTestCorrectChapterFile() throws URISyntaxException {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/image/test-image-1920-1080.jpg").toURI());
     }
+
+    public static MetadataXmlProvider createMetadataXmlProvider() {
+        return new MetadataXmlProvider(TemplateParameterContextCreator.getWorkingDir(),
+                MetadataXmlProvider.generateSampleMetadata());
+    }
+
+    public static LocaleType createLocale(String language) {
+        LocaleType locale = new LocaleType();
+        locale.setName(language);
+        return locale;
+    }
+
+    public static FormatType createCorrectVideoFormat() {
+        FormatType format = new FormatType();
+        format.setFilename("file_name");
+        format.setFormatLongName("QuickTime / MOV");
+        return format;
+    }
+
+    public static FormatType createIncorrectVideoFormat() {
+        FormatType format = new FormatType();
+        format.setFilename("file_name");
+        format.setFormatLongName("Not MOV");
+        return format;
+    }
+    
 }

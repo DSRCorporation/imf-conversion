@@ -18,12 +18,17 @@
  */
 package com.netflix.imfutility.itunes.xmlprovider.builder.file;
 
+import com.netflix.imfutility.generated.itunes.metadata.AttributeNameType;
+import com.netflix.imfutility.generated.itunes.metadata.AttributeType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
 import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
 
 import java.io.File;
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Builder for creating iTunes data_file metadata info for asset file.
@@ -31,11 +36,17 @@ import java.math.BigInteger;
  * (see {@link DataFileType}).
  */
 public class DataFileTagBuilder extends FileTagBuilder<DataFileType> {
+    private static final AttributeNameType[] CROP_ATTRIBUTE_NAMES = new AttributeNameType[]{
+            AttributeNameType.CROP_TOP,
+            AttributeNameType.CROP_BOTTOM,
+            AttributeNameType.CROP_LEFT,
+            AttributeNameType.CROP_RIGHT};
 
     private final CheckSumTagBuilder checkSumBuilder;
 
     private DataFileRoleType role;
     private LocaleType locale;
+    private boolean cropToZero;
 
     public DataFileTagBuilder(File assetFile, String fileName) {
         super(assetFile, fileName);
@@ -52,6 +63,11 @@ public class DataFileTagBuilder extends FileTagBuilder<DataFileType> {
         return this;
     }
 
+    public DataFileTagBuilder setCropToZero(boolean cropToZero) {
+        this.cropToZero = cropToZero;
+        return this;
+    }
+
     @Override
     public DataFileType build() {
         DataFileType dataFile = new DataFileType();
@@ -60,6 +76,22 @@ public class DataFileTagBuilder extends FileTagBuilder<DataFileType> {
         dataFile.setFileName(fileName);
         dataFile.setSize(BigInteger.valueOf(assetFile.length()));
         dataFile.setChecksum(checkSumBuilder.build());
+        if (cropToZero) {
+            dataFile.getAttribute().addAll(buildZeroCrops());
+        }
         return dataFile;
+    }
+
+    private List<AttributeType> buildZeroCrops() {
+        return Arrays.stream(CROP_ATTRIBUTE_NAMES)
+                .map(this::buildZeroCrop)
+                .collect(Collectors.toList());
+    }
+
+    private AttributeType buildZeroCrop(AttributeNameType attributeName) {
+        AttributeType attribute = new AttributeType();
+        attribute.setValue(String.valueOf(0));
+        attribute.setName(attributeName);
+        return attribute;
     }
 }

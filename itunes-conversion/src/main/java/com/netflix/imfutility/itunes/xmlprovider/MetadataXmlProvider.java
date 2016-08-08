@@ -59,11 +59,15 @@ public class MetadataXmlProvider {
     public MetadataXmlProvider(File workingDir, File metadataFile) throws FileNotFoundException, XmlParsingException {
         this.workingDir = workingDir;
         this.packageType = loadMetadata(metadataFile);
+
+        initMetadata();
     }
 
     public MetadataXmlProvider(File workingDir, PackageType packageType) {
         this.workingDir = workingDir;
         this.packageType = packageType;
+
+        initMetadata();
     }
 
     private PackageType loadMetadata(File metadataFile) throws FileNotFoundException, XmlParsingException {
@@ -90,6 +94,11 @@ public class MetadataXmlProvider {
      */
     public String getLanguage() {
         return packageType.getLanguage();
+    }
+
+    private void initMetadata() {
+        ensureChaptersCreated();
+        ensureFullAssetCreated();
     }
 
     //  Chapters processing
@@ -126,17 +135,35 @@ public class MetadataXmlProvider {
         return packageType.getVideo().getAssets();
     }
 
-    public void appendAsset(DataFileType dataFile, AssetTypeType assetType) {
-        //  set WW territory by default
-        TerritoriesType territories = new TerritoriesType();
-        territories.getTerritory().add("WW");
-
+    private AssetType createAsset(AssetTypeType assetType, TerritoriesType territories) {
         AssetType asset = new AssetType();
         asset.setType(assetType);
         asset.setTerritories(territories);
-        asset.getDataFile().add(dataFile);
 
         ensureAssetsCreated().getAsset().add(asset);
+        return asset;
+    }
+
+    private AssetType ensureFullAssetCreated() {
+        return ensureAssetsCreated().getAsset().stream()
+                .filter(asset -> asset.getType() == AssetTypeType.FULL)
+                .findFirst()
+                .orElseGet(() -> createAsset(AssetTypeType.FULL, null));
+    }
+
+    public void appendAssetDataFile(DataFileType dataFile, AssetTypeType assetType) {
+        AssetType asset = assetType == AssetTypeType.FULL
+                ? ensureFullAssetCreated()
+                : createAsset(assetType, getDefaultTerritories());
+
+        asset.getDataFile().add(dataFile);
+    }
+
+    private TerritoriesType getDefaultTerritories() {
+        //  get WW territory by default
+        TerritoriesType territories = new TerritoriesType();
+        territories.getTerritory().add("WW");
+        return territories;
     }
 
     /**

@@ -28,6 +28,7 @@ import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
 import com.netflix.imfutility.generated.mediainfo.FfprobeType;
 import com.netflix.imfutility.itunes.asset.ChapterAssetProcessor;
 import com.netflix.imfutility.itunes.asset.PosterAssetProcessor;
+import com.netflix.imfutility.itunes.asset.SourceAssetProcessor;
 import com.netflix.imfutility.itunes.asset.TrailerAssetProcessor;
 import com.netflix.imfutility.itunes.destcontext.DestContextResolveStrategy;
 import com.netflix.imfutility.itunes.destcontext.InputDestContextResolveStrategy;
@@ -54,6 +55,7 @@ import static com.netflix.imfutility.conversion.templateParameter.context.parame
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.DAR;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.FRAME_RATE;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.INTERLACED;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_DEST_SOURCE;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_OUTPUT_ITMSP;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT;
@@ -83,12 +85,19 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     @Override
     protected void doBuildDynamicContextPreCpl() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
+
         // fill vendorId parameter
         String vendorId = iTunesInputParameters.getCmdLineArgs().getVendorId();
         dynamicContext.addParameter(DYNAMIC_PARAM_VENDOR_ID, vendorId);
-        // fill output parameter to [vendor-id].itmsp
+
+        // fill output package parameter to [vendor-id].itmsp
         String itmspName = vendorId + ".itmsp";
         dynamicContext.addParameter(DYNAMIC_PARAM_OUTPUT_ITMSP, itmspName, false);
+
+        // fill destination main source path
+        String destSource = itmspName + File.separator + vendorId + "-source.mov";
+        dynamicContext.addParameter(DYNAMIC_PARAM_DEST_SOURCE, destSource, false);
+
         setOSParameters();
     }
 
@@ -110,6 +119,9 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
     @Override
     protected void postConvert() throws IOException, XmlParsingException {
+        processMainSource();
+
+        metadataXmlProvider.saveMetadata(itmspDir.getName());
     }
 
     @Override
@@ -147,7 +159,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         // define is dar provided
         destContext.addParameter("isDarSpecified", Boolean.toString(destContext.getParameterValue(DAR) != null));
 
-        // set frame rate for interlaced scan (for ffmpeg = frameRate*2, for OS X tool = frameRate)
+        // set frame rate for interlaced scan (for ffmpeg iFrameRate=frameRate*2, for OS X tool iFrameRate=frameRate)
         BigFraction frameRate = ConversionHelper.parseEditRate(destContext.getParameterValue(FRAME_RATE));
         if (!SystemUtils.IS_OS_MAC_OSX) {
             frameRate = frameRate.multiply(2);
@@ -185,8 +197,8 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     }
 
     private void processAdditionalAssets() throws XmlParsingException, IOException {
-        processPoster();
         processTrailer();
+        processPoster();
         processChapters();
     }
 
@@ -234,6 +246,16 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
                 .setFormat(getTrailerMediaInfo(trailer).getFormat())
                 .setLocale(getDefaultLocale())
                 .process(trailer);
+    }
+
+    private void processMainSource() throws IOException {
+        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
+
+        File destSource = new File(contextProvider.getWorkingDir(), dynamicContext.getParameterValueAsString(DYNAMIC_PARAM_DEST_SOURCE));
+
+        new SourceAssetProcessor(metadataXmlProvider, itmspDir)
+                .setLocale(getDefaultLocale())
+                .process(destSource);
     }
 
     private FfprobeType getTrailerMediaInfo(File trailer) throws XmlParsingException, IOException {

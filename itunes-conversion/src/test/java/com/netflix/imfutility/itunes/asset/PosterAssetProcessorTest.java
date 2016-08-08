@@ -20,6 +20,7 @@ package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.generated.itunes.metadata.AssetType;
 import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
+import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
 import com.netflix.imfutility.itunes.image.ImageValidationException;
 import com.netflix.imfutility.itunes.util.AssetUtils;
 import com.netflix.imfutility.itunes.util.TestUtils;
@@ -58,14 +59,9 @@ public class PosterAssetProcessorTest {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
     }
 
-    private static MetadataXmlProvider createMetadataXmlProvider() {
-        return new MetadataXmlProvider(TemplateParameterContextCreator.getWorkingDir(),
-                MetadataXmlProvider.generateSampleMetadata());
-    }
-
     @Test
     public void testCorrectPoster() throws Exception {
-        MetadataXmlProvider metadataXmlProvider = createMetadataXmlProvider();
+        MetadataXmlProvider metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
         PosterAssetProcessor processor = new PosterAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
@@ -75,15 +71,18 @@ public class PosterAssetProcessorTest {
         assertTrue(asset.exists());
         assertTrue(asset.isFile());
 
-        AssetType poster = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
-        assertEquals(AssetTypeType.ARTWORK, poster.getType());
-        assertEquals("vendor_id.jpg", poster.getDataFile().get(0).getFileName());
-        assertNull(poster.getDataFile().get(0).getRole());
+        //  first asset section always relay to full asset
+        AssetType posterAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(1);
+        assertEquals(AssetTypeType.ARTWORK, posterAsset.getType());
+
+        DataFileType posterDataFile = posterAsset.getDataFile().get(0);
+        assertEquals("vendor_id.jpg", posterDataFile.getFileName());
+        assertNull(posterDataFile.getRole());
     }
 
     @Test(expected = ImageValidationException.class)
     public void testInvalidPoster() throws Exception {
-        PosterAssetProcessor processor = new PosterAssetProcessor(createMetadataXmlProvider(),
+        PosterAssetProcessor processor = new PosterAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
@@ -92,7 +91,7 @@ public class PosterAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testInvalidFile() throws Exception {
-        PosterAssetProcessor processor = new PosterAssetProcessor(createMetadataXmlProvider(),
+        PosterAssetProcessor processor = new PosterAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
@@ -101,7 +100,7 @@ public class PosterAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testInvalidPath() throws Exception {
-        PosterAssetProcessor processor = new PosterAssetProcessor(createMetadataXmlProvider(),
+        PosterAssetProcessor processor = new PosterAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
@@ -110,7 +109,7 @@ public class PosterAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testParametersNotSet() throws Exception {
-        PosterAssetProcessor processor = new PosterAssetProcessor(createMetadataXmlProvider(),
+        PosterAssetProcessor processor = new PosterAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
         //  vendor_id required

@@ -35,13 +35,12 @@ import java.io.File;
 import java.io.IOException;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
 
 /**
- * Tests trailer asset processing.
- * (see {@link TrailerAssetProcessor}).
+ * Tests main source asset processing.
+ * (see {@link SourceAssetProcessor}).
  */
-public class TrailerAssetProcessorTest {
+public class SourceAssetProcessorTest {
 
     @BeforeClass
     public static void setupAll() throws IOException {
@@ -59,57 +58,37 @@ public class TrailerAssetProcessorTest {
     }
 
     @Test
-    public void testCorrectTrailer() throws Exception {
+    public void testCorrectSource() throws Exception {
         MetadataXmlProvider metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
+        SourceAssetProcessor processor = new SourceAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setVendorId("vendor_id")
-                .setLocale(AssetUtils.createLocale("en-US"))
-                .setFormat(AssetUtils.createCorrectVideoFormat())
+        processor.setLocale(AssetUtils.createLocale("en-US"))
                 .process(TestUtils.getTestFile());
 
-        File asset = new File(TemplateParameterContextCreator.getWorkingDir(), "vendor_id-preview.mov");
-        assertTrue(asset.exists());
-        assertTrue(asset.isFile());
+        AssetType sourceAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
+        assertEquals(AssetTypeType.FULL, sourceAsset.getType());
 
-        //  first asset section always relay to full asset
-        AssetType trailerAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(1);
-        assertEquals(AssetTypeType.PREVIEW, trailerAsset.getType());
-
-        DataFileType trailerDataFile = trailerAsset.getDataFile().get(0);
-        assertEquals("vendor_id-preview.mov", trailerDataFile.getFileName());
-        assertEquals(DataFileRoleType.SOURCE, trailerDataFile.getRole());
-        assertEquals("en-US", trailerDataFile.getLocale().getName());
-    }
-
-    @Test(expected = AssetValidationException.class)
-    public void testInvalidFormat() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
-                TemplateParameterContextCreator.getWorkingDir());
-
-        processor.setVendorId("vendor_id")
-                .setLocale(AssetUtils.createLocale("en-US"))
-                .setFormat(AssetUtils.createIncorrectVideoFormat())
-                .process(TestUtils.getTestFile());
+        DataFileType sourceDataFile = sourceAsset.getDataFile().get(0);
+        assertEquals("test-file", sourceDataFile.getFileName());
+        assertEquals(DataFileRoleType.SOURCE, sourceDataFile.getRole());
+        assertEquals("en-US", sourceDataFile.getLocale().getName());
     }
 
     @Test(expected = AssetValidationException.class)
     public void testInvalidPath() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        SourceAssetProcessor processor = new SourceAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setVendorId("vendor_id")
-                .setLocale(AssetUtils.createLocale("en-US"))
-                .setFormat(AssetUtils.createCorrectVideoFormat())
+        processor.setLocale(AssetUtils.createLocale("en-US"))
                 .process(new File("invalid_path"));
     }
 
     @Test(expected = AssetValidationException.class)
     public void testParametersNotSet() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        SourceAssetProcessor processor = new SourceAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
-        //  vendor_id, locale and format are required
+        //  locale is required
         processor.process(TestUtils.getTestFile());
     }
 }

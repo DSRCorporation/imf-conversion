@@ -16,27 +16,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes;
+package com.netflix.imfutility.itunes.asset.distribute;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
- * CoreConstants related to iTunes format.
+ * Strategy to define distribution destination asset file behaviour.
  */
-public final class ITunesConversionConstants {
+public interface DistributeAssetStrategy {
 
-    private ITunesConversionConstants() {
-    }
-
-    /* 1. Conversion.xml */
-
-    // 1.1. conversion.xml location
-    public static final String CONVERSION_XML = "xml/itunes-conversion.xml";
-
-    // 1.2 dynamic parameters:
-    public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "outputItmsp";
-    public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
-    public static final String DYNAMIC_PARAM_DEST_SOURCE = "destSource";
-    public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT = "trailerMediaInfoInput";
-    public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT = "trailerMediaInfoOutput";
-
-
+    void distribute(File assetFile, File destDir, String fileName) throws IOException;
 }

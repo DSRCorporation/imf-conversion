@@ -41,6 +41,8 @@ import static junit.framework.TestCase.assertNotNull;
  */
 public class ChaptersXmlProviderTest {
 
+    private static String userDir;
+
     @BeforeClass
     public static void setupAll() throws IOException {
         // create both working directory and logs folder.
@@ -49,20 +51,19 @@ public class ChaptersXmlProviderTest {
         if (!workingDir.mkdir()) {
             throw new RuntimeException("Could not create a working dir within tmp folder");
         }
+        //  set user.dir to working directory
+        userDir = System.getProperty("user.dir");
+        System.setProperty("user.dir", workingDir.getAbsolutePath());
 
-        createChapterFile("chapter01.jpg");
-        createChapterFile("chapter02.jpg");
+        ChaptersUtils.createChapterFile("chapter01.jpg");
+        ChaptersUtils.createChapterFile("chapter02.jpg");
     }
 
     @AfterClass
     public static void teardownAll() throws IOException {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
-    }
 
-    private static void createChapterFile(String chapterName) throws IOException {
-        File file = new File(chapterName);
-        file.createNewFile();
-        file.deleteOnExit();
+        System.setProperty("user.dir", userDir);
     }
 
     @Test

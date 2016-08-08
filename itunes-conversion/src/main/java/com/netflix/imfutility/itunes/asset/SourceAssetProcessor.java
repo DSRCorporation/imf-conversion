@@ -22,57 +22,35 @@ import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
 import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
-import com.netflix.imfutility.generated.mediainfo.FormatType;
-import com.netflix.imfutility.itunes.asset.distribute.CopyAssetStrategy;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.itunes.xmlprovider.builder.file.DataFileTagBuilder;
 
 import java.io.File;
 
-import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.MOV_FORMAT;
-
 /**
- * Asset processor specified for trailer managing.
+ * Asset processor specified for main source managing.
  */
-public class TrailerAssetProcessor extends AssetProcessor<DataFileType> {
+public class SourceAssetProcessor extends AssetProcessor<DataFileType> {
 
-    private String vendorId;
-    private FormatType format;
     private LocaleType locale;
 
-    public TrailerAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
+    public SourceAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
-        setDistributeAssetStrategy(new CopyAssetStrategy());
     }
 
-    public TrailerAssetProcessor setVendorId(String vendorId) {
-        this.vendorId = vendorId;
-        return this;
-    }
-
-    public TrailerAssetProcessor setFormat(FormatType format) {
-        this.format = format;
-        return this;
-    }
-
-    public TrailerAssetProcessor setLocale(LocaleType locale) {
+    public SourceAssetProcessor setLocale(LocaleType locale) {
         this.locale = locale;
         return this;
     }
 
     @Override
     protected boolean checkInput(File assetFile) {
-        return super.checkInput(assetFile)
-                && vendorId != null
-                && format != null
-                && locale != null;
+        return super.checkInput(assetFile) && locale != null;
     }
 
     @Override
     protected void validate(File assetFile) throws AssetValidationException {
-        if (!format.getFormatLongName().equals(MOV_FORMAT)) {
-            throw new AssetValidationException("Trailer must be an MOV container");
-        }
+        // already validated
     }
 
     @Override
@@ -86,11 +64,11 @@ public class TrailerAssetProcessor extends AssetProcessor<DataFileType> {
 
     @Override
     protected void appendMetadata(DataFileType tag) {
-        metadataXmlProvider.appendAssetDataFile(tag, AssetTypeType.PREVIEW);
+        metadataXmlProvider.appendAssetDataFile(tag, AssetTypeType.FULL);
     }
 
     @Override
     protected String getDestFileName(File assetFile) {
-        return vendorId + "-preview.mov";
+        return assetFile.getName();
     }
 }

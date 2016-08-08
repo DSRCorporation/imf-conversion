@@ -20,6 +20,7 @@ package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
+import com.netflix.imfutility.itunes.asset.distribute.CopyAssetStrategy;
 import com.netflix.imfutility.itunes.image.ImageValidationException;
 import com.netflix.imfutility.itunes.image.ImageValidator;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
@@ -45,6 +46,7 @@ public class PosterAssetProcessor extends AssetProcessor<DataFileType> {
 
     public PosterAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
+        setDistributeAssetStrategy(new CopyAssetStrategy());
     }
 
     public PosterAssetProcessor setVendorId(String vendorId) {
@@ -69,17 +71,17 @@ public class PosterAssetProcessor extends AssetProcessor<DataFileType> {
     @Override
     protected DataFileType buildMetadata(File assetFile) {
         //  poster do not need locale and role info
-        return new DataFileTagBuilder(assetFile, getFileName())
+        return new DataFileTagBuilder(assetFile, getDestFileName(assetFile))
                 .build();
     }
 
     @Override
     protected void appendMetadata(DataFileType tag) {
-        metadataXmlProvider.appendAsset(tag, AssetTypeType.ARTWORK);
+        metadataXmlProvider.appendAssetDataFile(tag, AssetTypeType.ARTWORK);
     }
 
     @Override
-    protected String getFileName() {
+    protected String getDestFileName(File assetFile) {
         return vendorId + ".jpg";
     }
 }
