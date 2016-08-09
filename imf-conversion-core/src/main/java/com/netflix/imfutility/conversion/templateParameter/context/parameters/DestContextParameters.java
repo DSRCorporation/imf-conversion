@@ -32,7 +32,9 @@ public enum DestContextParameters {
     INTERLACED("interlaced"),
     ASPECT_RATIO("aspectRatio"),
     DURATION("duration"),
-    DAR("dar");
+    DAR("dar"),
+    SAMPLE_RATE("sampleRate"),
+    BITS_SAMPLE("bitsSample");
 
     private final String name;
 
