@@ -196,6 +196,7 @@
                 <xs:element type="pipeType" name="pipe"/>
                 <xs:element type="dynamicParameterConcatType" name="dynamicParameter"/>
                 <xs:element type="forType" name="for"/>
+                <xs:element type="ifType" name="if"/>
             </xs:choice>
         </xs:sequence>
         <xs:attribute type="xs:string" name="name" use="required"/>
@@ -392,6 +393,21 @@
         <xs:attribute name="from" type="xs:string" use="optional" default="0"/>
         <xs:attribute name="to" type="xs:string" use="optional" default="0"/>
         <xs:attribute name="count" type="xs:string" use="optional" default="0"/>
+    </xs:complexType>
+
+    <xs:complexType name="ifType">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded" minOccurs="1">
+                <xs:element type="execOnceType" name="execOnce"/>
+                <xs:element type="execEachSegmentSequenceType" name="execEachSegment"/>
+                <xs:element type="execEachSequenceSegmentType" name="execEachSequence"/>
+                <xs:element type="pipeType" name="pipe"/>
+                <xs:element type="dynamicParameterConcatType" name="dynamicParameter"/>
+                <xs:element type="forType" name="for"/>
+                <xs:element type="ifType" name="if"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="test" type="xs:string" use="required"/>
     </xs:complexType>
 
     <xs:simpleType name="NotEmptyString">
