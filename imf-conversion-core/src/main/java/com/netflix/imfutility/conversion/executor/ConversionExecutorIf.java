@@ -16,71 +16,70 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.conversion;
+package com.netflix.imfutility.conversion.executor;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.conversion.executor.ConversionExecutorDynamicParameter;
-import com.netflix.imfutility.conversion.executor.ConversionExecutorFor;
-import com.netflix.imfutility.conversion.executor.ConversionExecutorIf;
-import com.netflix.imfutility.conversion.executor.ConversionExecutorOnce;
-import com.netflix.imfutility.conversion.executor.ConversionExecutorPipe;
-import com.netflix.imfutility.conversion.executor.ConversionExecutorSegment;
-import com.netflix.imfutility.conversion.executor.ConversionExecutorSequence;
 import com.netflix.imfutility.conversion.executor.strategy.ExecuteStrategyFactory;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
+import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.generated.conversion.DynamicParameterConcatType;
 import com.netflix.imfutility.generated.conversion.ExecEachSegmentSequenceType;
 import com.netflix.imfutility.generated.conversion.ExecEachSequenceSegmentType;
 import com.netflix.imfutility.generated.conversion.ExecOnceType;
 import com.netflix.imfutility.generated.conversion.ForType;
-import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
 import com.netflix.imfutility.generated.conversion.IfType;
 import com.netflix.imfutility.generated.conversion.PipeType;
 
 import java.io.IOException;
 
 /**
- * Performs conversion to a destination format as specified in conversion.xml
- * <ul>
- * <li>The context must be already prepared and provided to the engine</li>
- * <li>Each conversion operation from conversion.xml is executed using an appropriate executor depending on the operation type.</li>
- * </ul>
+ * An executor for {@link IfType} conversion operation that described simple "if" condition functionality.
  */
-public class ConversionEngine {
+public class ConversionExecutorIf extends AbstractConversionExecutor {
 
-    public void convert(FormatConfigurationType formatConfigurationType, TemplateParameterContextProvider contextProvider)
-            throws IOException {
-        for (Object operation : formatConfigurationType.getExecOnceOrExecEachSegmentOrExecEachSequence()) {
+    private final IfType ifElem;
+    private final TemplateParameterResolver parameterResolver;
+
+    public ConversionExecutorIf(TemplateParameterContextProvider contextProvider,
+                                ExecuteStrategyFactory executeStrategyFactory,
+                                IfType ifElem) {
+        super(contextProvider, executeStrategyFactory);
+        this.parameterResolver = new TemplateParameterResolver(contextProvider);
+        this.ifElem = ifElem;
+    }
+
+    @Override
+    public void execute() throws IOException {
+        String ifValue = parameterResolver.resolveTemplateParameter(ifElem.getTest(), ContextInfo.EMPTY);
+
+        //  skip section on false condition
+        if (!Boolean.valueOf(ifValue)) {
+            return;
+        }
+
+        for (Object operation : ifElem.getExecOnceOrExecEachSegmentOrExecEachSequence()) {
             if (operation instanceof ExecOnceType) {
-                new ConversionExecutorOnce(contextProvider, getExecuteStrategyFactory(), (ExecOnceType) operation).execute();
+                new ConversionExecutorOnce(contextProvider, executeStrategyFactory, (ExecOnceType) operation).execute();
             } else if (operation instanceof ExecEachSegmentSequenceType) {
-                new ConversionExecutorSegment(contextProvider, getExecuteStrategyFactory(),
+                new ConversionExecutorSegment(contextProvider, executeStrategyFactory,
                         (ExecEachSegmentSequenceType) operation).execute();
             } else if (operation instanceof ExecEachSequenceSegmentType) {
-                new ConversionExecutorSequence(contextProvider, getExecuteStrategyFactory(),
+                new ConversionExecutorSequence(contextProvider, executeStrategyFactory,
                         (ExecEachSequenceSegmentType) operation).execute();
             } else if (operation instanceof PipeType) {
-                new ConversionExecutorPipe(contextProvider, getExecuteStrategyFactory(), (PipeType) operation).execute();
+                new ConversionExecutorPipe(contextProvider, executeStrategyFactory, (PipeType) operation).execute();
             } else if (operation instanceof DynamicParameterConcatType) {
-                new ConversionExecutorDynamicParameter(contextProvider, getExecuteStrategyFactory(),
+                new ConversionExecutorDynamicParameter(contextProvider, executeStrategyFactory,
                         (DynamicParameterConcatType) operation).execute();
             } else if (operation instanceof ForType) {
-                new ConversionExecutorFor(contextProvider, getExecuteStrategyFactory(), (ForType) operation).execute();
+                new ConversionExecutorFor(contextProvider, executeStrategyFactory, (ForType) operation).execute();
             } else if (operation instanceof IfType) {
-                new ConversionExecutorIf(contextProvider, getExecuteStrategyFactory(), (IfType) operation).execute();
+                new ConversionExecutorIf(contextProvider, executeStrategyFactory, (IfType) operation).execute();
             } else {
                 throw new ConversionException(String.format("Unknown Conversion Operation type: %s", operation.toString()));
             }
         }
-    }
-
-    /**
-     * Returns a factory to create execute strategies to execute external conversion operations.
-     *
-     * @return a factory to create execute strategies to execute external conversion operations.
-     */
-    public ExecuteStrategyFactory getExecuteStrategyFactory() {
-        return new ExecuteStrategyFactory();
     }
 
 }

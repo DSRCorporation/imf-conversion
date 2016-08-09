@@ -36,6 +36,7 @@ import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.DestContextParamType;
 import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 
 import java.io.File;
@@ -104,6 +105,17 @@ public final class TemplateParameterContextCreator {
             DestContextTypeMap destContextMap) throws Exception {
         TemplateParameterContextProvider contextProvider = createDefaultContextProvider();
         contextProvider.getDestContext().setDestContextMap(destContextMap);
+        return contextProvider;
+    }
+
+    public static TemplateParameterContextProvider createDefaultContextProvider(
+            String conversionXmlPath) throws Exception {
+        ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ResourceHelper.getResourceInputStream(conversionXmlPath),
+                conversionXmlPath, new FakeFormat());
+        TemplateParameterContextProvider contextProvider = new TemplateParameterContextProvider(configProvider, conversionProvider,
+                getWorkingDir());
+        initEmptyDestContext(contextProvider);
         return contextProvider;
     }
 
