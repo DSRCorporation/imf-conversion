@@ -71,8 +71,7 @@ public class PosterAssetProcessorTest {
         assertTrue(asset.exists());
         assertTrue(asset.isFile());
 
-        //  first asset section always relay to full asset
-        AssetType posterAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(1);
+        AssetType posterAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
         assertEquals(AssetTypeType.ARTWORK, posterAsset.getType());
 
         DataFileType posterDataFile = posterAsset.getDataFile().get(0);

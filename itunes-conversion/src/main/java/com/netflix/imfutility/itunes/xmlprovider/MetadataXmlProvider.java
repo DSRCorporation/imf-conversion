@@ -27,12 +27,14 @@ import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
 import com.netflix.imfutility.generated.itunes.metadata.ChapterType;
 import com.netflix.imfutility.generated.itunes.metadata.ChaptersType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
+import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
 import com.netflix.imfutility.generated.itunes.metadata.ObjectFactory;
 import com.netflix.imfutility.generated.itunes.metadata.PackageType;
 import com.netflix.imfutility.generated.itunes.metadata.TerritoriesType;
 import com.netflix.imfutility.itunes.xmlprovider.builder.MetadataXmlSampleBuilder;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBContext;
@@ -59,15 +61,11 @@ public class MetadataXmlProvider {
     public MetadataXmlProvider(File workingDir, File metadataFile) throws FileNotFoundException, XmlParsingException {
         this.workingDir = workingDir;
         this.packageType = loadMetadata(metadataFile);
-
-        initMetadata();
     }
 
     public MetadataXmlProvider(File workingDir, PackageType packageType) {
         this.workingDir = workingDir;
         this.packageType = packageType;
-
-        initMetadata();
     }
 
     private PackageType loadMetadata(File metadataFile) throws FileNotFoundException, XmlParsingException {
@@ -96,7 +94,41 @@ public class MetadataXmlProvider {
         return packageType.getLanguage();
     }
 
-    private void initMetadata() {
+
+    /**
+     * Get default locale based on language set in language tag.
+     *
+     * @return default locale
+     */
+    public LocaleType getDefaultLocale() {
+        return getLocale(packageType.getLanguage());
+    }
+
+    /**
+     * Get default locale based on provided language.
+     *
+     * @return locale
+     */
+    public LocaleType getLocale(String language) {
+        LocaleType locale = new LocaleType();
+        locale.setName(language);
+        return locale;
+    }
+
+    /**
+     * Update metadata info. Set specified vendorId and locale (if not empty).
+     * Ensures creating empty chapters section and asset with for full-type asset.
+     *
+     * @param vendorId vendor identifier
+     * @param locale   locale
+     */
+    public void updateMetadata(String vendorId, String locale) {
+        packageType.getVideo().setVendorId(vendorId);
+
+        if (!StringUtils.isBlank(locale)) {
+            packageType.setLanguage(locale);
+        }
+
         ensureChaptersCreated();
         ensureFullAssetCreated();
     }

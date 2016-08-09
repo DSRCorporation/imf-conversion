@@ -169,7 +169,7 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
 
         public Boolean getValueAsBoolean(String paramName) {
             String value = getValue(paramName);
-            return value != null ? Boolean.parseBoolean(value) : false;
+            return value != null && Boolean.parseBoolean(value);
         }
 
         public <T extends Comparable> int compare(T value, T comp, boolean nullsFirst) {
