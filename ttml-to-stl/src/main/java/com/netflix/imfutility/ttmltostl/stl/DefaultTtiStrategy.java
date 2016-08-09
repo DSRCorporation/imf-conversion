@@ -165,10 +165,10 @@ public class DefaultTtiStrategy extends AbstractStlStrategy implements ITtiStrat
 
             //set start and endTime for all CSs
             //set linenumber for each subtitle.
-            int startTTLine = StlSubtitle.BOTTOM_TELETEXT_LINE_TO_USE + StlSubtitle.TELETEXT_LINE_STEP
-                    - (totalCsLines * StlSubtitle.TELETEXT_LINE_STEP);
+            int startTTLine = getBottomLine() + getLineStep()
+                    - (totalCsLines * getLineStep());
             startTTLine = startTTLine <= 0
-                    ? StlSubtitle.TOP_TELETEXT_LINE_TO_USE * StlSubtitle.TELETEXT_LINE_STEP
+                    ? getTopLine() * getLineStep()
                     : startTTLine;
             for (int e = i; e <= lastCSindex; e++) {
                 StlSubtitle csSubtitle = this.stlSubtitles.get(e);
@@ -179,12 +179,24 @@ public class DefaultTtiStrategy extends AbstractStlStrategy implements ITtiStrat
                     csSubtitle.setStart(previousEndCSTime);
                 }
                 csSubtitle.setLineNum(startTTLine);
-                startTTLine += csSubtitle.getLinesCount() * StlSubtitle.TELETEXT_LINE_STEP;
+                startTTLine += csSubtitle.getLinesCount() * getLineStep();
             }
 
             i = lastCSindex;
             previousEndCSTime = endCSTime;
         }
+    }
+
+    protected int getLineStep() {
+        return 1;
+    }
+
+    protected int getBottomLine() {
+        return StlSubtitle.BOTTOM_TELETEXT_LINE_TO_USE;
+    }
+
+    protected int getTopLine() {
+        return StlSubtitle.TOP_TELETEXT_LINE_TO_USE;
     }
 
     private String[] splitAndCleanText(Caption caption) {

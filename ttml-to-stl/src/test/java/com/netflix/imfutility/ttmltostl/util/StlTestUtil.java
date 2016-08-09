@@ -19,7 +19,7 @@
 package com.netflix.imfutility.ttmltostl.util;
 
 import com.netflix.imfutility.ttmltostl.stl.BbcGsiStrategy;
-import com.netflix.imfutility.ttmltostl.stl.DefaultTtiStrategy;
+import com.netflix.imfutility.ttmltostl.stl.BbcTtiStrategy;
 import com.netflix.imfutility.ttmltostl.stl.StlBuilder;
 import com.netflix.imfutility.ttmltostl.ttml.Caption;
 import com.netflix.imfutility.ttmltostl.ttml.Time;
@@ -45,15 +45,16 @@ public final class StlTestUtil {
 
     public static byte[][] build(TimedTextObject tto, String metadataXml) throws Exception {
         return new StlBuilder()
-                .build(tto, new BbcGsiStrategy(metadataXml), new DefaultTtiStrategy());
+                .build(tto, new BbcGsiStrategy(metadataXml), new BbcTtiStrategy());
     }
 
     public static TimedTextObject buildTto(String... args) {
+        TimedTextObject tto = new TimedTextObject();
+        tto.setBuilt(true);
         if (args.length % 3 != 0 || args.length < 3) {
-            throw new RuntimeException("Expected arguments when building TTO: <startTime>, <endTime>, <text>");
+            return tto;
         }
 
-        TimedTextObject tto = new TimedTextObject();
         int i = 0;
         int index = 0;
         while (i < args.length) {
@@ -66,7 +67,6 @@ public final class StlTestUtil {
             caption.setContent(text);
             tto.getCaptions().put(index++, caption);
         }
-        tto.setBuilt(true);
         return tto;
     }
 

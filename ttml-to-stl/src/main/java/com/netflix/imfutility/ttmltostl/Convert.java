@@ -23,7 +23,7 @@ import com.netflix.imfutility.ttmltostl.inputparameters.CmdLineParameters;
 import com.netflix.imfutility.ttmltostl.inputparameters.CmdLineParametersParser;
 import com.netflix.imfutility.ttmltostl.inputparameters.TtmlInDescriptor;
 import com.netflix.imfutility.ttmltostl.stl.BbcGsiStrategy;
-import com.netflix.imfutility.ttmltostl.stl.DefaultTtiStrategy;
+import com.netflix.imfutility.ttmltostl.stl.BbcTtiStrategy;
 import com.netflix.imfutility.ttmltostl.stl.StlBuilder;
 import com.netflix.imfutility.ttmltostl.ttml.FatalParsingException;
 import com.netflix.imfutility.ttmltostl.ttml.FormatTTML;
@@ -83,7 +83,7 @@ public class Convert {
                     String outputSTLFile = cmdLineParams.getOutputSTLFile();
                     System.out.println("Generating output STL: " + outputSTLFile);
                     byte[][] stl = new StlBuilder()
-                            .build(tto, new BbcGsiStrategy(cmdLineParams.getMetadataXml()), new DefaultTtiStrategy());
+                            .build(tto, new BbcGsiStrategy(cmdLineParams.getMetadataXml()), new BbcTtiStrategy());
                     FileWriteHelper.writeFileRaw(outputSTLFile, stl);
                 }
 

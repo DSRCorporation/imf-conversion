@@ -176,9 +176,10 @@ public class StlIso6937Test {
         Arrays.fill(textWithPadding, (byte) 0x8f);
         System.arraycopy(expected, 0, textWithPadding, 0, expected.length);
 
+        int offset = 128; // subtitle zero
         assertArrayEquals(
                 textWithPadding,
-                Arrays.copyOfRange(actual, 16, 128));
+                Arrays.copyOfRange(actual, offset + 16, offset + 128));
     }
 
 }
