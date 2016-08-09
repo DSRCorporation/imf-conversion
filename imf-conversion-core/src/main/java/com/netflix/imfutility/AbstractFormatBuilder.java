@@ -440,10 +440,13 @@ public abstract class AbstractFormatBuilder {
     }
 
     private void selectDestContext() {
-        DestContextTypeMap destContextMap = conversionProvider.getFormat().getDefaultDestContext();
-        this.destContextMap = destContextMap != null
-                ? destContextMap
-                : getDestContextMap(conversionProvider.getFormat().getDestContexts());
+        DestContextTypeMap destContext = getDestContextMap(conversionProvider.getFormat().getDestContexts());
+
+        this.destContextMap = conversionProvider.getFormat().getDefaultDestContext();
+        if (destContext != null) { // merge with default
+            this.destContextMap.getMap().putAll(destContext.getMap());
+            this.destContextMap.setName(destContext.getName());
+        }
     }
 
     private void checkForSilentConversion() throws ConversionNotAllowedException {
