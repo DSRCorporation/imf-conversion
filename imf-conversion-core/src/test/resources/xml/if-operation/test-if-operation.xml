@@ -42,7 +42,7 @@
 
             <formatConfigurations>
 
-                <!-- 1. simple true condition -->
+                <!-- simple true condition -->
                 <formatConfiguration name="simpleTrue">
                     <if test="true">
                         <execOnce name="execOnceTrue">
@@ -51,7 +51,7 @@
                     </if>
                 </formatConfiguration>
 
-                <!-- 2. simple false condition -->
+                <!-- simple false condition -->
                 <formatConfiguration name="simpleFalse">
                     <if test="false">
                         <execOnce name="execOnceFalse">
@@ -60,7 +60,7 @@
                     </if>
                 </formatConfiguration>
 
-                <!-- 3. tmp context parameter condition -->
+                <!-- tmp context parameter condition -->
                 <formatConfiguration name="tmpContext">
                     <if test="%{tmp.trueParam}">
                         <execOnce name="execOnceTmpTrue">
@@ -75,7 +75,7 @@
                     </if>
                 </formatConfiguration>
 
-                <!-- 4. dynamic context parameter (set in conversion) condition -->
+                <!-- dynamic context parameter (set in conversion) condition -->
                 <formatConfiguration name="dynamicContext">
                     <dynamicParameter name="trueParam">true</dynamicParameter>
                     <dynamicParameter name="falseParam">false</dynamicParameter>
@@ -93,7 +93,7 @@
                     </if>
                 </formatConfiguration>
 
-                <!-- 5. dynamic context parameter (set from code) condition -->
+                <!-- dynamic context parameter (set from code) condition -->
                 <formatConfiguration name="dynamicContextCode">
 
                     <if test="%{dynamic.falseCodeParam}">
@@ -109,7 +109,56 @@
                     </if>
                 </formatConfiguration>
 
-                <!-- 6. inner if operations -->
+                <!-- simple execEachSequence in if -->
+                <formatConfiguration name="innerExecEachSequence">
+                    <if test="true">
+                        <execEachSequence name="execEachSequence" type="video">
+                            <execOnce name="execEachSequence">
+                                execEachSequenceExec - param
+                            </execOnce>
+                        </execEachSequence>
+                    </if>
+                </formatConfiguration>
+
+                <!-- simple execEachSegment in if  -->
+                <formatConfiguration name="innerExecEachSegment">
+                    <if test="true">
+                        <execEachSegment name="execEachSegment">
+                            <execOnce name="execEachSegment">
+                                execEachSegmentExec - param
+                            </execOnce>
+                        </execEachSegment>
+                    </if>
+                </formatConfiguration>
+
+                <!-- simple pipe in if  -->
+                <formatConfiguration name="innerPipe">
+                    <if test="true">
+                        <pipe>
+                            <execOnce name="pipeExecOnce">
+                                pipeExecOnceExec - param
+                            </execOnce>
+                        </pipe>
+                    </if>
+                </formatConfiguration>
+
+                <!-- simple dynamic parameter in if  -->
+                <formatConfiguration name="innerDynamicParameter">
+                    <if test="true">
+                        <dynamicParameter name="param">paramValue</dynamicParameter>
+                    </if>
+                </formatConfiguration>
+
+                <!-- simple for in if  -->
+                <formatConfiguration name="innerFor">
+                    <if test="true">
+                        <for iterator="i" count="1">
+                            <dynamicParameter name="forResult">%{i}</dynamicParameter>
+                        </for>
+                    </if>
+                </formatConfiguration>
+
+                <!-- inner if operations -->
                 <formatConfiguration name="innerIf">
                     <if test="true">
                         <if test="true">
@@ -135,7 +184,22 @@
                     </if>
                 </formatConfiguration>
 
-                <!-- 7. unresolved if condition -->
+                <!-- multiple operations in if -->
+                <formatConfiguration name="innerMultipleExec">
+                    <if test="true">
+                        <execOnce name="execOnce1">
+                            execOnce1Exec - param
+                        </execOnce>
+                        <execOnce name="execOnce2">
+                            execOnce2Exec - param
+                        </execOnce>
+                        <execOnce name="execOnce3">
+                            execOnce3Exec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+                <!-- unresolved if condition -->
                 <formatConfiguration name="unresolvedIfCondition">
                     <if test="%{dynamic.xxx}">
                         <execOnce name="execOnceUnresolved">
