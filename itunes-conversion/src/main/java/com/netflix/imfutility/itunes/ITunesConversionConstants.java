@@ -43,6 +43,11 @@ public final class ITunesConversionConstants {
     public static final String GEN_MAIN_SEQ_UUID = "urn:uuid:38d52c00-68d3-4056-8858-28eeaf3238d3";
     public static final String GEN_ADDITIONAL_SEQ_UUID = "urn:uuid:38d52c00-68d3-4056-8858-28eeaf3238d4";
 
+    public static final int MONO_CHANNELS = 1;
+    public static final int STEREO_CHANNELS = 2;
+    public static final int SURROUND51_CHANNELS = 6;
+    public static final int SURROUND51_DOWNMIX_CHANNELS = 8;
+
     public static final String DEFAULT_AUDIO_MAP_FILE = "audiomap.xml";
 
     public static final String DYNAMIC_AUDIOMAP_FILE = "itunesAudioMap";

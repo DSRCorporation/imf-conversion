@@ -40,6 +40,10 @@ import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEFAULT_AU
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_AUDIOMAP_FILE;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.GEN_ADDITIONAL_SEQ_UUID;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.GEN_MAIN_SEQ_UUID;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.MONO_CHANNELS;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.STEREO_CHANNELS;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.SURROUND51_CHANNELS;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.SURROUND51_DOWNMIX_CHANNELS;
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.AUDIOMAP_PACKAGE;
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.AUDIOMAP_XML_SCHEME;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.FC;
@@ -910,10 +914,14 @@ public final class AudioMapXmlProvider {
     private ArrayList<ChannelType> createGeneratedChannels(Object xmlOpt) {
         int activeChannels = getOptionActiveChannels(xmlOpt);
         int totalChannels = sequencedTrackChannelNumbers.size();
-        int optionChannels = (totalChannels >= activeChannels) ? activeChannels : 1;
-        if (totalChannels < activeChannels && totalChannels != 1 && activeChannels != 2) {
+        int optionChannels = (totalChannels >= activeChannels) ? activeChannels
+                : (totalChannels >= 6) ? 6 : 1;
+
+        if (totalChannels < activeChannels
+                && !(totalChannels == MONO_CHANNELS && activeChannels == STEREO_CHANNELS)
+                && !(totalChannels >= SURROUND51_CHANNELS && activeChannels == SURROUND51_DOWNMIX_CHANNELS)) {
             throw new ConversionException(
-                    "Default Option layout can be generated because not enough channels of sequences.");
+                    "Default Option layout can not be generated: not enough channels in sequences.");
         }
 
         ArrayList<ChannelType> channels = sequencedTrackChannelNumbers.stream().limit(optionChannels)
@@ -928,9 +936,9 @@ public final class AudioMapXmlProvider {
                 }).collect(Collectors.toCollection(ArrayList::new));
 
         // add the same channel again if channels layout is only mono
-        if (optionChannels == 1) {
+        if (optionChannels == MONO_CHANNELS) {
             channels.add(channels.get(0));
-        } else if (optionChannels == 6) { // add Lt and Rt channels as L and R
+        } else if (optionChannels == SURROUND51_CHANNELS) { // add Lt and Rt channels as L and R
             channels.add(channels.get(0));
             channels.add(channels.get(1));
         }
@@ -942,17 +950,17 @@ public final class AudioMapXmlProvider {
         int activeChannels = 0;
 
         if (xmlOpt instanceof Option1AType) {
-            activeChannels = 6;
+            activeChannels = SURROUND51_DOWNMIX_CHANNELS;
         } else if (xmlOpt instanceof Option2Type) {
-            activeChannels = 6;
+            activeChannels = SURROUND51_DOWNMIX_CHANNELS;
         } else if (xmlOpt instanceof Option3Type) {
-            activeChannels = 6;
+            activeChannels = SURROUND51_DOWNMIX_CHANNELS;
         } else if (xmlOpt instanceof Option4Type) {
-            activeChannels = 6;
+            activeChannels = SURROUND51_DOWNMIX_CHANNELS;
         } else if (xmlOpt instanceof Option5Type) {
-            activeChannels = 2;
+            activeChannels = STEREO_CHANNELS;
         } else if (xmlOpt instanceof Option6Type) {
-            activeChannels = 2;
+            activeChannels = STEREO_CHANNELS;
         } else {
             // nothing
         }

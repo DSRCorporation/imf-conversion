@@ -293,9 +293,9 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         assertChannelEquals(seq2, 1, mainAudio.get(0).get(SL.name()));
         assertChannelEquals(seq2, 2, mainAudio.get(0).get(SR.name()));
 
-        assertChannelEquals(seq1, 1, mainAudio.get(1).get(FL.name()));
+        assertChannelEquals(seq3, 1, mainAudio.get(1).get(FL.name()));
 
-        assertChannelEquals(seq1, 2, mainAudio.get(2).get(FR.name()));
+        assertChannelEquals(seq3, 2, mainAudio.get(2).get(FR.name()));
     }
 
     @Test
@@ -331,9 +331,9 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         assertChannelEquals(seq2, 1, mainAudio.get(4).get(SL.name()));
         assertChannelEquals(seq2, 2, mainAudio.get(5).get(SR.name()));
 
-        assertChannelEquals(seq1, 1, mainAudio.get(6).get(FL.name()));
+        assertChannelEquals(seq3, 1, mainAudio.get(6).get(FL.name()));
 
-        assertChannelEquals(seq1, 2, mainAudio.get(7).get(FR.name()));
+        assertChannelEquals(seq3, 2, mainAudio.get(7).get(FR.name()));
     }
 
     @Test
@@ -369,9 +369,9 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         assertChannelEquals(seq2, 1, mainAudio.get(0).get(SL.name()));
         assertChannelEquals(seq2, 2, mainAudio.get(0).get(SR.name()));
 
-        assertChannelEquals(seq1, 1, mainAudio.get(1).get(FL.name()));
+        assertChannelEquals(seq3, 1, mainAudio.get(1).get(FL.name()));
 
-        assertChannelEquals(seq1, 2, mainAudio.get(1).get(FR.name()));
+        assertChannelEquals(seq3, 2, mainAudio.get(1).get(FR.name()));
     }
 
     @Test
@@ -407,9 +407,9 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         assertChannelEquals(seq2, 1, mainAudio.get(4).get(SL.name()));
         assertChannelEquals(seq2, 2, mainAudio.get(5).get(SR.name()));
 
-        assertChannelEquals(seq1, 1, mainAudio.get(6).get(FL.name()));
+        assertChannelEquals(seq3, 1, mainAudio.get(6).get(FL.name()));
 
-        assertChannelEquals(seq1, 2, mainAudio.get(6).get(FR.name()));
+        assertChannelEquals(seq3, 2, mainAudio.get(6).get(FR.name()));
     }
 
     @Test
@@ -473,6 +473,142 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         assertChannelEquals(seq1, 2, mainAudio.get(0).get(FR.name()));
     }
 
+    @Test
+    public void emptyOption1AWithSixSequencesChanneslCanBeGenerated() throws Exception {
+        String seq1 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711";
+        String seq2 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712";
+        TemplateParameterContextProvider contextProvider =
+                TemplateParameterContextCreator.createDefaultContextProvider();
+        prepareCplVirtualTracksWithChannels(
+                contextProvider,
+                trackChannels(seq1, 4),
+                trackChannels(seq2, 2));
+
+        /* EXECUTION */
+        AudioOption mainAudio = new AudioMapXmlProvider(
+                getAudiomapXml("xml/audiomap/1a-empty-audiomap.xml"), contextProvider)
+                .getMainAudio();
+
+        /* VALIDATION */
+        assertEquals("main-audio.mov", mainAudio.getFileName());
+        assertEquals("en-US", mainAudio.getLocale());
+
+        assertEquals("Track count", 3, mainAudio.size());
+
+        assertChannelEquals(seq1, 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(seq1, 2, mainAudio.get(0).get(FR.name()));
+        assertChannelEquals(seq1, 3, mainAudio.get(0).get(FC.name()));
+        assertChannelEquals(seq1, 4, mainAudio.get(0).get(LFE.name()));
+        assertChannelEquals(seq2, 1, mainAudio.get(0).get(SL.name()));
+        assertChannelEquals(seq2, 2, mainAudio.get(0).get(SR.name()));
+
+        assertChannelEquals(seq1, 1, mainAudio.get(1).get(FL.name()));
+
+        assertChannelEquals(seq1, 2, mainAudio.get(2).get(FR.name()));
+    }
+
+    @Test
+    public void emptyOption2WithSixSequencesChanneslCanBeGenerated() throws Exception {
+        String seq1 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711";
+        String seq2 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712";
+        TemplateParameterContextProvider contextProvider =
+                TemplateParameterContextCreator.createDefaultContextProvider();
+        prepareCplVirtualTracksWithChannels(
+                contextProvider,
+                trackChannels(seq1, 4),
+                trackChannels(seq2, 2));
+
+        /* EXECUTION */
+        AudioOption mainAudio = new AudioMapXmlProvider(
+                getAudiomapXml("xml/audiomap/2-empty-audiomap.xml"), contextProvider)
+                .getMainAudio();
+
+        /* VALIDATION */
+        assertEquals("main-audio.mov", mainAudio.getFileName());
+        assertEquals("en-US", mainAudio.getLocale());
+
+        assertEquals("Track count", 8, mainAudio.size());
+
+        assertChannelEquals(seq1, 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(seq1, 2, mainAudio.get(1).get(FR.name()));
+        assertChannelEquals(seq1, 3, mainAudio.get(2).get(FC.name()));
+        assertChannelEquals(seq1, 4, mainAudio.get(3).get(LFE.name()));
+        assertChannelEquals(seq2, 1, mainAudio.get(4).get(SL.name()));
+        assertChannelEquals(seq2, 2, mainAudio.get(5).get(SR.name()));
+
+        assertChannelEquals(seq1, 1, mainAudio.get(6).get(FL.name()));
+
+        assertChannelEquals(seq1, 2, mainAudio.get(7).get(FR.name()));
+    }
+
+    @Test
+    public void emptyOption3SixSequencesChanneslCanBeGenerated() throws Exception {
+        String seq1 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711";
+        String seq2 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712";
+        TemplateParameterContextProvider contextProvider =
+                TemplateParameterContextCreator.createDefaultContextProvider();
+        prepareCplVirtualTracksWithChannels(
+                contextProvider,
+                trackChannels(seq1, 4),
+                trackChannels(seq2, 2));
+
+        /* EXECUTION */
+        AudioOption mainAudio = new AudioMapXmlProvider(
+                getAudiomapXml("xml/audiomap/3-empty-audiomap.xml"), contextProvider)
+                .getMainAudio();
+
+        /* VALIDATION */
+        assertEquals("main-audio.mov", mainAudio.getFileName());
+        assertEquals("en-US", mainAudio.getLocale());
+
+        assertEquals("Track count", 2, mainAudio.size());
+
+        assertChannelEquals(seq1, 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(seq1, 2, mainAudio.get(0).get(FR.name()));
+        assertChannelEquals(seq1, 3, mainAudio.get(0).get(FC.name()));
+        assertChannelEquals(seq1, 4, mainAudio.get(0).get(LFE.name()));
+        assertChannelEquals(seq2, 1, mainAudio.get(0).get(SL.name()));
+        assertChannelEquals(seq2, 2, mainAudio.get(0).get(SR.name()));
+
+        assertChannelEquals(seq1, 1, mainAudio.get(1).get(FL.name()));
+
+        assertChannelEquals(seq1, 2, mainAudio.get(1).get(FR.name()));
+    }
+
+    @Test
+    public void emptyOption4WithSixSequencesChanneslCanBeGenerated() throws Exception {
+        String seq1 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711";
+        String seq2 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712";
+        TemplateParameterContextProvider contextProvider =
+                TemplateParameterContextCreator.createDefaultContextProvider();
+        prepareCplVirtualTracksWithChannels(
+                contextProvider,
+                trackChannels(seq1, 4),
+                trackChannels(seq2, 2));
+
+        /* EXECUTION */
+        AudioOption mainAudio = new AudioMapXmlProvider(
+                getAudiomapXml("xml/audiomap/4-empty-audiomap.xml"), contextProvider)
+                .getMainAudio();
+
+        /* VALIDATION */
+        assertEquals("main-audio.mov", mainAudio.getFileName());
+        assertEquals("en-US", mainAudio.getLocale());
+
+        assertEquals("Track count", 7, mainAudio.size());
+
+        assertChannelEquals(seq1, 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(seq1, 2, mainAudio.get(1).get(FR.name()));
+        assertChannelEquals(seq1, 3, mainAudio.get(2).get(FC.name()));
+        assertChannelEquals(seq1, 4, mainAudio.get(3).get(LFE.name()));
+        assertChannelEquals(seq2, 1, mainAudio.get(4).get(SL.name()));
+        assertChannelEquals(seq2, 2, mainAudio.get(5).get(SR.name()));
+
+        assertChannelEquals(seq1, 1, mainAudio.get(6).get(FL.name()));
+
+        assertChannelEquals(seq1, 2, mainAudio.get(6).get(FR.name()));
+    }
+
     @Test(expected = ConversionException.class)
     public void emptyOption1AWithoutEnoughSequencesChanneslThrowsException() throws Exception {
         String seq1 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711";
@@ -480,7 +616,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 TemplateParameterContextCreator.createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(
                 contextProvider,
-                trackChannels(seq1, 4));
+                trackChannels(seq1, 1));
 
         /* EXECUTION */
         new AudioMapXmlProvider(
@@ -497,7 +633,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 TemplateParameterContextCreator.createDefaultContextProvider();
         prepareCplVirtualTracksWithChannels(
                 contextProvider,
-                trackChannels(seq1, 4));
+                trackChannels(seq1, 1));
 
         /* EXECUTION */
         new AudioMapXmlProvider(
@@ -975,6 +1111,46 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq2, 2),
                 trackChannels(seq3, 2),
                 trackChannels(seq4, 2));
+
+        /* EXECUTION */
+        AudioMapType audioMap = new AudioMapXmlProvider(contextProvider).getAudioMap();
+
+        /* VALIDATION */
+        assertEquals("en-US", audioMap.getMainAudio().getLocale());
+        assertEquals("main-audio.mov", audioMap.getMainAudio().getName());
+
+        Option3Type opt3 = audioMap.getMainAudio().getOption3();
+        assertChannelEquals(seq1, 1, opt3.getTrack1().getL());
+        assertChannelEquals(seq1, 2, opt3.getTrack1().getR());
+        assertChannelEquals(seq2, 1, opt3.getTrack1().getC());
+        assertChannelEquals(seq2, 2, opt3.getTrack1().getLFE());
+        assertChannelEquals(seq3, 1, opt3.getTrack1().getLs());
+        assertChannelEquals(seq3, 2, opt3.getTrack1().getRs());
+        assertChannelEquals(seq4, 1, opt3.getTrack2().getLt());
+        assertChannelEquals(seq4, 2, opt3.getTrack2().getRt());
+
+        assertEquals(0, audioMap.getAlternativeAudio().size());
+    }
+
+    /**
+     * Checks audiomap.xml generation with 3 stereo and one mono sequences.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void generateAudioMapXmlWhen3StereoAndOneMonoSequences() throws Exception {
+        /* PREPARATION */
+        String seq1 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711";
+        String seq2 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712";
+        String seq3 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd713";
+        String seq4 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd714";
+        TemplateParameterContextProvider contextProvider =
+                TemplateParameterContextCreator.createDefaultContextProvider();
+        prepareCplVirtualTracksWithChannels(contextProvider,
+                trackChannels(seq1, 2),
+                trackChannels(seq2, 2),
+                trackChannels(seq3, 2),
+                trackChannels(seq4, 1));
 
         /* EXECUTION */
         AudioMapType audioMap = new AudioMapXmlProvider(contextProvider).getAudioMap();
