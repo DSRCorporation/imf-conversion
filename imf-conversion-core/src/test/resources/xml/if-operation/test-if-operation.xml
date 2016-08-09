@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (C) 2016 Netflix, Inc.
+  ~
+  ~     This file is part of IMF Conversion Utility.
+  ~
+  ~     IMF Conversion Utility is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     IMF Conversion Utility is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<conversion xmlns="http://conversion.imfutility.netflix.com">
+
+    <imfValidation>%{dynamic.validateTool} -i %{dynamic.imp} -c %{dynamic.cpl} -d %{dynamic.workingDir} -f %{dynamic.outputValidationFile}
+    </imfValidation>
+
+    <formats>
+        <!--
+            specific configuration for each format
+        -->
+        <format name="fakeFormat">
+            <tmpContext>
+                <param id="trueParam">true</param>
+                <param id="falseParam">false</param>
+            </tmpContext>
+
+            <defaultDestContext name="1"/>
+
+            <mediaInfoCommandVideo/>
+            <mediaInfoCommandAudio/>
+            <mediaInfoCommandSubtitle/>
+
+            <formatConfigurations>
+
+                <!-- 1. simple true condition -->
+                <formatConfiguration name="simpleTrue">
+                    <if test="true">
+                        <execOnce name="execOnceTrue">
+                            execOnceTrueExec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+                <!-- 2. simple false condition -->
+                <formatConfiguration name="simpleFalse">
+                    <if test="false">
+                        <execOnce name="execOnceFalse">
+                            execOnceFalseExec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+                <!-- 3. tmp context parameter condition -->
+                <formatConfiguration name="tmpContext">
+                    <if test="%{tmp.trueParam}">
+                        <execOnce name="execOnceTmpTrue">
+                            execOnceTmpTrueExec - param
+                        </execOnce>
+                    </if>
+
+                    <if test="%{tmp.falseParam}">
+                        <execOnce name="execOnceTmpFalse">
+                            execOnceTmpFalseExec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+                <!-- 4. dynamic context parameter (set in conversion) condition -->
+                <formatConfiguration name="dynamicContext">
+                    <dynamicParameter name="trueParam">true</dynamicParameter>
+                    <dynamicParameter name="falseParam">false</dynamicParameter>
+
+                    <if test="%{dynamic.falseParam}">
+                        <execOnce name="execOnceDynamicFalse">
+                            execOnceDynamicFalseExec - param
+                        </execOnce>
+                    </if>
+
+                    <if test="%{dynamic.trueParam}">
+                        <execOnce name="execOnceDynamicTrue">
+                            execOnceDynamicTrueExec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+                <!-- 5. dynamic context parameter (set from code) condition -->
+                <formatConfiguration name="dynamicContextCode">
+
+                    <if test="%{dynamic.falseCodeParam}">
+                        <execOnce name="execOnceDynamicFalse">
+                            execOnceDynamicFalseExec - param
+                        </execOnce>
+                    </if>
+
+                    <if test="%{dynamic.trueCodeParam}">
+                        <execOnce name="execOnceDynamicTrue">
+                            execOnceDynamicTrueExec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+                <!-- 6. inner if operations -->
+                <formatConfiguration name="innerIf">
+                    <if test="true">
+                        <if test="true">
+                            <execOnce name="execOnceInnerTrue1">
+                                execOnceInnerTrue1Exec - param
+                            </execOnce>
+                            <if test="false">
+                                <execOnce name="execOnceInnerFalse2">
+                                    execOnceInnerFalse2Exec - param
+                                </execOnce>
+                            </if>
+                        </if>
+                        <if test="false">
+                            <execOnce name="execOnceInnerFalse1">
+                                execOnceInnerFalse1Exec - param
+                            </execOnce>
+                            <if test="true">
+                                <execOnce name="execOnceInnerTrue2">
+                                    execOnceInnerTrue2Exec - param
+                                </execOnce>
+                            </if>
+                        </if>
+                    </if>
+                </formatConfiguration>
+
+                <!-- 7. unresolved if condition -->
+                <formatConfiguration name="unresolvedIfCondition">
+                    <if test="%{dynamic.xxx}">
+                        <execOnce name="execOnceUnresolved">
+                            execOnceUnresolvedExec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+            </formatConfigurations>
+
+        </format>
+    </formats>
+</conversion>
+

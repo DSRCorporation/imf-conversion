@@ -62,6 +62,9 @@ public class TestExecutorLogger {
     }
 
     public boolean hasNext() {
+        if (iterator == null) {
+            iterator = processes.iterator();
+        }
         return iterator.hasNext();
     }
 
