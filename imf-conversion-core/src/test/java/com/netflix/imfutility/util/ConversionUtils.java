@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -70,5 +70,8 @@ public final class ConversionUtils {
         return "xml/invalid/invalid-xsd-conversion.xml";
     }
 
+    public static String getIfConversionXmlPath() {
+        return "xml/if-operation/test-if-operation.xml";
+    }
 
 }

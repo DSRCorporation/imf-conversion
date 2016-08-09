@@ -82,9 +82,10 @@
                             <cycle>
                                 <execEachSegment name="decode_video">
                                     <execOnce name="decode_video">
-                                        "%{tool.ffmpeg}" -y -i "%{resource.essence}" -map 0:0
+                                        "%{tool.ffmpeg}" -y
                                         -ss %{resource.startTimeTC}
                                         -t %{resource.durationTC} -an
+                                        -i "%{resource.essence}" -map 0:0
                                         -vf
                                         "scale=iw*sar*min(%{dest.width}/(iw*sar)\,%{dest.height}/ih):ih*min(%{dest.width}/(iw*sar)\,%{dest.height}/ih),pad=%{dest.width}:%{dest.height}:(ow-iw)/2:(oh-ih)/2,fps=%{dest.frameRate}"
                                         -pix_fmt %{dest.pixelFormat} -f rawvideo -
@@ -174,7 +175,7 @@
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
-                        --afd 10 --avci%{dest.avcIntraClass}_%{dest.height}i "%{tmp.videoEncoded}"
+                        --afd 10 -a 16:9 --avci%{dest.avcIntraClass}_%{dest.height}i "%{tmp.videoEncoded}"
                         -q %{dest.bitsSample} -s %{dest.sampleRate} --audio-chan %{dynamic.ebuAudioTracks}
                         --pcm "%{tmp.audioEncoded}"
                     </execOnce>
@@ -193,7 +194,7 @@
                         --dm-file as11 "%{dynamic.as11CoreFramework}"
                         --dm-file dpp "%{dynamic.ukDppFramework}"
                         --seg "%{dynamic.as11SegmentationFramework}"
-                        --afd 10 --avci%{dest.avcIntraClass}_%{dest.height}i "%{tmp.videoEncoded}"
+                        --afd 10 -a 16:9 --avci%{dest.avcIntraClass}_%{dest.height}i "%{tmp.videoEncoded}"
                     </execOnce>
 
                     <!--

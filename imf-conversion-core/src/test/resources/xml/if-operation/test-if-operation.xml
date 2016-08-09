@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (C) 2016 Netflix, Inc.
+  ~
+  ~     This file is part of IMF Conversion Utility.
+  ~
+  ~     IMF Conversion Utility is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     IMF Conversion Utility is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<conversion xmlns="http://conversion.imfutility.netflix.com">
+
+    <imfValidation>%{dynamic.validateTool} -i %{dynamic.imp} -c %{dynamic.cpl} -d %{dynamic.workingDir} -f %{dynamic.outputValidationFile}
+    </imfValidation>
+
+    <formats>
+        <!--
+            specific configuration for each format
+        -->
+        <format name="fakeFormat">
+            <tmpContext>
+                <param id="trueParam">true</param>
+                <param id="falseParam">false</param>
+            </tmpContext>
+
+            <defaultDestContext name="1"/>
+
+            <mediaInfoCommandVideo/>
+            <mediaInfoCommandAudio/>
+            <mediaInfoCommandSubtitle/>
+
+            <formatConfigurations>
+
+                <!-- simple true condition -->
+                <formatConfiguration name="simpleTrue">
+                    <if test="true">
+                        <execOnce name="execOnceTrue">
+                            execOnceTrueExec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+                <!-- simple false condition -->
+                <formatConfiguration name="simpleFalse">
+                    <if test="false">
+                        <execOnce name="execOnceFalse">
+                            execOnceFalseExec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+                <!-- tmp context parameter condition -->
+                <formatConfiguration name="tmpContext">
+                    <if test="%{tmp.trueParam}">
+                        <execOnce name="execOnceTmpTrue">
+                            execOnceTmpTrueExec - param
+                        </execOnce>
+                    </if>
+
+                    <if test="%{tmp.falseParam}">
+                        <execOnce name="execOnceTmpFalse">
+                            execOnceTmpFalseExec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+                <!-- dynamic context parameter (set in conversion) condition -->
+                <formatConfiguration name="dynamicContext">
+                    <dynamicParameter name="trueParam">true</dynamicParameter>
+                    <dynamicParameter name="falseParam">false</dynamicParameter>
+
+                    <if test="%{dynamic.falseParam}">
+                        <execOnce name="execOnceDynamicFalse">
+                            execOnceDynamicFalseExec - param
+                        </execOnce>
+                    </if>
+
+                    <if test="%{dynamic.trueParam}">
+                        <execOnce name="execOnceDynamicTrue">
+                            execOnceDynamicTrueExec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+                <!-- dynamic context parameter (set from code) condition -->
+                <formatConfiguration name="dynamicContextCode">
+
+                    <if test="%{dynamic.falseCodeParam}">
+                        <execOnce name="execOnceDynamicFalse">
+                            execOnceDynamicFalseExec - param
+                        </execOnce>
+                    </if>
+
+                    <if test="%{dynamic.trueCodeParam}">
+                        <execOnce name="execOnceDynamicTrue">
+                            execOnceDynamicTrueExec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+                <!-- simple execEachSequence in if -->
+                <formatConfiguration name="innerExecEachSequence">
+                    <if test="true">
+                        <execEachSequence name="execEachSequence" type="video">
+                            <execOnce name="execEachSequence">
+                                execEachSequenceExec - param
+                            </execOnce>
+                        </execEachSequence>
+                    </if>
+                    <if test="false">
+                        <execEachSequence name="execEachSequenceFalse" type="video">
+                            <execOnce name="execEachSequenceFalse">
+                                execEachSequenceFalseExec - param
+                            </execOnce>
+                        </execEachSequence>
+                    </if>
+                </formatConfiguration>
+
+                <!-- simple execEachSegment in if  -->
+                <formatConfiguration name="innerExecEachSegment">
+                    <if test="true">
+                        <execEachSegment name="execEachSegment">
+                            <execOnce name="execEachSegment">
+                                execEachSegmentExec - param
+                            </execOnce>
+                        </execEachSegment>
+                    </if>
+                    <if test="false">
+                        <execEachSegment name="execEachSegmentFalse">
+                            <execOnce name="execEachSegmentFalse">
+                                execEachSegmentFalseExec - param
+                            </execOnce>
+                        </execEachSegment>
+                    </if>
+                </formatConfiguration>
+
+                <!-- simple pipe in if  -->
+                <formatConfiguration name="innerPipe">
+                    <if test="true">
+                        <pipe>
+                            <execOnce name="pipeExecOnce">
+                                pipeExecOnceExec - param
+                            </execOnce>
+                        </pipe>
+                    </if>
+                    <if test="false">
+                        <pipe>
+                            <execOnce name="pipeExecOnceFalse">
+                                pipeExecOnceFalseExec - param
+                            </execOnce>
+                        </pipe>
+                    </if>
+                </formatConfiguration>
+
+                <!-- simple dynamic parameter in if  -->
+                <formatConfiguration name="innerDynamicParameter">
+                    <if test="true">
+                        <dynamicParameter name="param">paramValue</dynamicParameter>
+                    </if>
+                    <if test="false">
+                        <dynamicParameter name="paramFalse">paramValueFalse</dynamicParameter>
+                    </if>
+                </formatConfiguration>
+
+                <!-- simple for in if  -->
+                <formatConfiguration name="innerFor">
+                    <if test="true">
+                        <for iterator="i" count="1">
+                            <dynamicParameter name="forResult">%{i}</dynamicParameter>
+                        </for>
+                    </if>
+                    <if test="false">
+                        <for iterator="j" count="1">
+                            <dynamicParameter name="forResultFalse">%{j}</dynamicParameter>
+                        </for>
+                    </if>
+                </formatConfiguration>
+
+                <!-- inner if operations -->
+                <formatConfiguration name="innerIf">
+                    <if test="true">
+                        <if test="true">
+                            <execOnce name="execOnceInnerTrue1">
+                                execOnceInnerTrue1Exec - param
+                            </execOnce>
+                            <if test="false">
+                                <execOnce name="execOnceInnerFalse2">
+                                    execOnceInnerFalse2Exec - param
+                                </execOnce>
+                            </if>
+                        </if>
+                        <if test="false">
+                            <execOnce name="execOnceInnerFalse1">
+                                execOnceInnerFalse1Exec - param
+                            </execOnce>
+                            <if test="true">
+                                <execOnce name="execOnceInnerTrue2">
+                                    execOnceInnerTrue2Exec - param
+                                </execOnce>
+                            </if>
+                        </if>
+                    </if>
+                </formatConfiguration>
+
+                <!-- multiple operations in if -->
+                <formatConfiguration name="innerMultipleExec">
+                    <if test="true">
+                        <execOnce name="execOnce1">
+                            execOnce1Exec - param
+                        </execOnce>
+                        <execOnce name="execOnce2">
+                            execOnce2Exec - param
+                        </execOnce>
+                        <execOnce name="execOnce3">
+                            execOnce3Exec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+                <!-- unresolved if condition -->
+                <formatConfiguration name="unresolvedIfCondition">
+                    <if test="%{dynamic.xxx}">
+                        <execOnce name="execOnceUnresolved">
+                            execOnceUnresolvedExec - param
+                        </execOnce>
+                    </if>
+                </formatConfiguration>
+
+            </formatConfigurations>
+
+        </format>
+    </formats>
+</conversion>
+
