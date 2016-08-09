@@ -35,6 +35,7 @@ distributions {
                 into "tools"
             }
             from('../sample') {
+                into "sample"
             }
             from('../COPYING') {
             }

@@ -23,7 +23,7 @@ import com.netflix.imfutility.ttmltostl.inputparameters.CmdLineParameters;
 import com.netflix.imfutility.ttmltostl.inputparameters.CmdLineParametersParser;
 import com.netflix.imfutility.ttmltostl.inputparameters.TtmlInDescriptor;
 import com.netflix.imfutility.ttmltostl.stl.BbcGsiStrategy;
-import com.netflix.imfutility.ttmltostl.stl.DefaultTtiStrategy;
+import com.netflix.imfutility.ttmltostl.stl.BbcTtiStrategy;
 import com.netflix.imfutility.ttmltostl.stl.StlBuilder;
 import com.netflix.imfutility.ttmltostl.ttml.FatalParsingException;
 import com.netflix.imfutility.ttmltostl.ttml.FormatTTML;
@@ -34,9 +34,7 @@ import com.netflix.imfutility.xml.XmlParsingException;
 import org.apache.commons.cli.ParseException;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 
 /**
@@ -69,10 +67,8 @@ public class Convert {
             for (TtmlInDescriptor ttmlInDescriptor : cmdLineParams.getTtmlInDescriptors()) {
                 System.out.println("Processing input TTML: " + ttmlInDescriptor.getFile());
                 File file = new File(ttmlInDescriptor.getFile());
-                try (InputStream is = new FileInputStream(file)) {
-                    tto = ttff.parseFile(file.getName(), is, ttmlInDescriptor.getStartMS(),
-                            ttmlInDescriptor.getEndMS(), ttmlInDescriptor.getOffsetMS());
-                }
+                tto = ttff.parseFile(file, ttmlInDescriptor.getStartMS(),
+                        ttmlInDescriptor.getEndMS(), ttmlInDescriptor.getOffsetMS());
             }
 
             // 3. Convert
@@ -87,7 +83,7 @@ public class Convert {
                     String outputSTLFile = cmdLineParams.getOutputSTLFile();
                     System.out.println("Generating output STL: " + outputSTLFile);
                     byte[][] stl = new StlBuilder()
-                            .build(tto, new BbcGsiStrategy(cmdLineParams.getMetadataXml()), new DefaultTtiStrategy());
+                            .build(tto, new BbcGsiStrategy(cmdLineParams.getMetadataXml()), new BbcTtiStrategy());
                     FileWriteHelper.writeFileRaw(outputSTLFile, stl);
                 }
 

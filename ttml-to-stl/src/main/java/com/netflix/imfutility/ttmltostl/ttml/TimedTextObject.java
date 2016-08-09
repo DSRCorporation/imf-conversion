@@ -82,7 +82,7 @@ public class TimedTextObject {
     /**
      * Protected constructor so it can't be created from outside.
      */
-    protected TimedTextObject() {
+    public TimedTextObject() {
         setWarnings("List of non fatal errors produced during parsing:\n\n");
     }
 

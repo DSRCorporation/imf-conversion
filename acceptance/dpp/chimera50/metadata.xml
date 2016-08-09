@@ -42,11 +42,11 @@
                     <PartNumber>1</PartNumber>
                     <PartTotal>1</PartTotal>
                     <PartSOM>09:59:30:00</PartSOM>
-                    <PartDuration>00:00:33:47</PartDuration>
+                    <PartDuration>00:00:33:23</PartDuration>
                 </Part>
             </Parts>
             <TotalNumberOfParts>1</TotalNumberOfParts>
-            <TotalProgrammeDuration>00:00:33:47</TotalProgrammeDuration>
+            <TotalProgrammeDuration>00:00:33:23</TotalProgrammeDuration>
         </Timecodes>
         <AccessServices>
             <AudioDescriptionPresent>false</AudioDescriptionPresent>

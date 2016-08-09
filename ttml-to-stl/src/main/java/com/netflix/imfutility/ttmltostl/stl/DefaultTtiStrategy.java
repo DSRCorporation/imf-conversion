@@ -30,6 +30,7 @@ import java.util.List;
 
 import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.CCT;
 import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.CPN;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.DSC;
 
 /**
  * Default implementation of EBU STL TTI block building.
@@ -54,6 +55,14 @@ public class DefaultTtiStrategy extends AbstractStlStrategy implements ITtiStrat
             return "ISO8859_8";
         }
         throw new RuntimeException("Can not get TTI block charset. Unknown CPN value: " + CPN.getStringValue());
+    }
+
+    private boolean isTeletext() {
+        return "1".equals(DSC.getStringValue());
+    }
+
+    private boolean isOpen() {
+        return "0".equals(DSC.getStringValue());
     }
 
     @Override
@@ -94,8 +103,8 @@ public class DefaultTtiStrategy extends AbstractStlStrategy implements ITtiStrat
             for (int ebn = 0; ebn < stlSubtitle.getExtensionBlocks().length; ebn++) {
                 byte[] ttiBlock = doBuildTtiBlock(stlSubtitle, sn, ebn);
                 result.write(ttiBlock);
-                sn++;
             }
+            sn++;
         }
 
         return result.toByteArray();
@@ -106,7 +115,7 @@ public class DefaultTtiStrategy extends AbstractStlStrategy implements ITtiStrat
         // Define start/end cumulative subtitles taking into account the there should not be more line than MNR
         int mnr = GsiAttribute.MNR.getIntValue();
         Time previousEndCSTime = null;
-        for (int i = 0; i < this.stlSubtitles.size() - 1; i++) {
+        for (int i = 0; i <= this.stlSubtitles.size() - 1; i++) {
             StlSubtitle stlSubtitle = this.stlSubtitles.get(i);
 
             Time endCSTime = stlSubtitle.getEnd(); // end time of whole cumulative set.
@@ -118,11 +127,9 @@ public class DefaultTtiStrategy extends AbstractStlStrategy implements ITtiStrat
                 if (endCSTime.getMseconds() > stlCummulativeSubtitle.getStart().getMseconds()) {
                     // check that we fit acceptable number of lines.
                     if (totalCsLines + stlCummulativeSubtitle.getLinesCount() > mnr) {
-                        // TODO: add a test when single subtitle has more than mnr lines
-                        // TODO: add a test when several subtitles has more than mnr lines in total
-
-                        //set previous CS as the last
-                        this.stlSubtitles.get(j - 1).setCumulativeEndFlag(true);
+                        //set previous CS as the last, if one before previous was cumulative
+                        this.stlSubtitles.get(j - 1).setCumulativeEndFlag(
+                                (j - 2) > 0 && this.stlSubtitles.get(j - 2).getCumulative());
                         //next iteration must start from Start always.
                         //i must point to the last element in the CS
                         lastCSindex = j - 1;
@@ -158,25 +165,38 @@ public class DefaultTtiStrategy extends AbstractStlStrategy implements ITtiStrat
 
             //set start and endTime for all CSs
             //set linenumber for each subtitle.
-            int startTTLine = StlSubtitle.BOTTOM_TELETEXT_LINE_TO_USE + StlSubtitle.TELETEXT_LINE_STEP
-                    - (totalCsLines * StlSubtitle.TELETEXT_LINE_STEP);
-            startTTLine = startTTLine < 0 ? 0 : startTTLine;
+            int startTTLine = getBottomLine() + getLineStep()
+                    - (totalCsLines * getLineStep());
+            startTTLine = startTTLine <= 0
+                    ? getTopLine() * getLineStep()
+                    : startTTLine;
             for (int e = i; e <= lastCSindex; e++) {
                 StlSubtitle csSubtitle = this.stlSubtitles.get(e);
                 csSubtitle.setEnd(endCSTime);
                 //set Start not less than previous CSs end time
                 if (previousEndCSTime != null
                         && previousEndCSTime.getMseconds() > csSubtitle.getStart().getMseconds()) {
-                    // TODO: add a test when we brake up CSs and got start time of next CS set less than end time of the CSs
                     csSubtitle.setStart(previousEndCSTime);
                 }
                 csSubtitle.setLineNum(startTTLine);
-                startTTLine += csSubtitle.getLinesCount() * StlSubtitle.TELETEXT_LINE_STEP;
+                startTTLine += csSubtitle.getLinesCount() * getLineStep();
             }
 
             i = lastCSindex;
             previousEndCSTime = endCSTime;
         }
+    }
+
+    protected int getLineStep() {
+        return 1;
+    }
+
+    protected int getBottomLine() {
+        return StlSubtitle.BOTTOM_TELETEXT_LINE_TO_USE;
+    }
+
+    protected int getTopLine() {
+        return StlSubtitle.TOP_TELETEXT_LINE_TO_USE;
     }
 
     private String[] splitAndCleanText(Caption caption) {
@@ -186,8 +206,13 @@ public class DefaultTtiStrategy extends AbstractStlStrategy implements ITtiStrat
     private byte[] applyStyles(Caption caption) {
         ByteArrayOutputStream allText = new ByteArrayOutputStream();
 
-        if (caption.getStyle() != null) {
-            Style style = caption.getStyle();
+        if (caption.getStyle() == null) {
+            return allText.toByteArray();
+        }
+        Style style = caption.getStyle();
+
+        // styles (for open captions only!)
+        if (isOpen()) {
             if (style.isItalic()) {
                 allText.write((byte) 0x80);
             } else {
@@ -198,25 +223,29 @@ public class DefaultTtiStrategy extends AbstractStlStrategy implements ITtiStrat
             } else {
                 allText.write((byte) 0x83);
             }
+        }
 
-            //colors
-            String color = style.getColor().substring(0, 6);
-            if (color.equalsIgnoreCase("000000")) {
-                allText.write((byte) 0x00);
-            } else if (color.equalsIgnoreCase("0000ff")) {
-                allText.write((byte) 0x04);
-            } else if (color.equalsIgnoreCase("00ffff")) {
-                allText.write((byte) 0x06);
-            } else if (color.equalsIgnoreCase("00ff00")) {
-                allText.write((byte) 0x02);
-            } else if (color.equalsIgnoreCase("ff0000")) {
-                allText.write((byte) 0x01);
-            } else if (color.equalsIgnoreCase("ffff00")) {
-                allText.write((byte) 0x03);
-            } else if (color.equalsIgnoreCase("ff00ff")) {
-                allText.write((byte) 0x05);
-            } else {
-                allText.write((byte) 0x07);
+        //colors (for teletext only)
+        if (isTeletext()) {
+            if (style.getColor() != null) {
+                String color = style.getColor().substring(0, 6);
+                if (color.equalsIgnoreCase("000000")) {
+                    allText.write((byte) 0x00);
+                } else if (color.equalsIgnoreCase("0000ff")) {
+                    allText.write((byte) 0x04);
+                } else if (color.equalsIgnoreCase("00ffff")) {
+                    allText.write((byte) 0x06);
+                } else if (color.equalsIgnoreCase("00ff00")) {
+                    allText.write((byte) 0x02);
+                } else if (color.equalsIgnoreCase("ff0000")) {
+                    allText.write((byte) 0x01);
+                } else if (color.equalsIgnoreCase("ffff00")) {
+                    allText.write((byte) 0x03);
+                } else if (color.equalsIgnoreCase("ff00ff")) {
+                    allText.write((byte) 0x05);
+                } else {
+                    allText.write((byte) 0x07);
+                }
             }
         }
 
@@ -257,7 +286,10 @@ public class DefaultTtiStrategy extends AbstractStlStrategy implements ITtiStrat
     private byte[][] splitToExtensionBlocks(byte[] text) {
         // how many eb we need
         int textPerBlock = TTI_TEXT_SIZE - 1; // 0x8F terminate
-        int ebnBlockCount = 1 + (text.length / (textPerBlock + 1));
+        int ebnBlockCount = text.length / textPerBlock;
+        if (text.length % textPerBlock != 0) {
+            ebnBlockCount++;
+        }
 
         // split bytes to ebs
         byte[][] result = new byte[ebnBlockCount][TTI_TEXT_SIZE];

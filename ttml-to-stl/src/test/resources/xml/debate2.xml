@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<tt xml:lang="es" xmlns="http://www.w3.org/ns/ttml" xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:ttm="http://www.w3.org/ns/ttml#metadata" xmlns:ttp="http://www.w3.org/ns/ttml#parameter" ttp:timeBase="media" ttp:frameRate="30" ttp:frameRateMultiplier="1000 1001" xmlns:smpte="http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt" xmlns:m608="http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt#cea608">
+	<head>
+        <metadata>
+            <ttm:desc>SMPTE Timed Text document created by MacCaption™ version 6.0.03 (16x9)</ttm:desc>
+            <smpte:information xmlns:m608="http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt#cea608" origin="http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt#cea608" mode="Preserved" m608:channel="CC1" m608:programName="Demo" m608:captionService="F1C1CC"/>
+        </metadata>
+		<styling>
+			<style id="fullblack" tts:fontWeight="bold" tts:color="#000000" tts:fontSize="15" tts:fontFamily="sansSerif" />
+			<style id="rojo" tts:fontWeight="bold" tts:color="#FF0000" tts:fontSize="15" tts:fontFamily="sansSerif" />
+			<style id="verde" tts:fontWeight="bold" tts:color="#00FF00" tts:fontSize="15" tts:fontFamily="sansSerif" />
+			<style id="amarillo" tts:fontWeight="bold" tts:color="#FFFF00FF" tts:fontSize="15" tts:fontFamily="sansSerif" />
+			<style id="azul" tts:fontWeight="bold" tts:color="#0000FFFF" tts:fontSize="15" tts:fontFamily="sansSerif" />
+			<style id="magenta" tts:fontWeight="bold" tts:color="#FF00FFFF" tts:fontSize="15" tts:fontFamily="sansSerif" />
+			<style id="cyan" tts:fontWeight="bold" tts:color="#00FFFF" tts:fontSize="15" tts:fontFamily="sansSerif" />
+			<style id="blanco" tts:fontWeight="bold" tts:color="#FFFFFF" tts:fontSize="15" tts:fontFamily="sansSerif" />
+			<style id="custom" tts:fontWeight="bold" tts:color="#0a0b0c0d" tts:fontSize="15" tts:fontFamily="sansSerif" />
+		</styling>
+        <layout>
+            <region xml:id="pop1" tts:backgroundColor="transparent" tts:showBackground="whenActive"/>
+            <region xml:id="pop2" tts:backgroundColor="transparent" tts:showBackground="whenActive"/>
+            <region xml:id="pop3" tts:backgroundColor="transparent" tts:showBackground="whenActive"/>
+            <region xml:id="pop4" tts:backgroundColor="transparent" tts:showBackground="whenActive"/>
+        </layout>
+
+	</head>
+
+	<body>
+		<div xml:lang="es">
+			<p begin="0:0:7.800" end="0:0:11.360" region="pop1" style="fullblack">  Subtitulado para personas sordas<br />patrocinado por el Real Patronato...</p>
+			<p begin="0:0:13.16" end="0:0:15.04" region="pop1" style="rojo">...sobre Discapacidad, CESyA y UC3 M</p>
+			<p begin="0:1:34.640" end="0:1:38.120" region="pop1" style="verde"><br /><br />Moderadora: Bueno, señores, muchas<br /> gracias.<br /> Hay que abandonar la...<br /></p>
+			<p begin="0:2:59.998" end="0:2:59.999" region="pop1" style="amarillo">dd</p>
+			<p begin="10:1:4.6" end="10:12:46.007" region="pop1" style="azul">...Señores.<br /> Usted allí, usted, aquí.</p>
+			<p begin="11:1:4.6" end="11:12:46.007" region="pop1" style="magenta">...Señores.<br /> Usted allí, usted, aquí.</p>
+			<p begin="12:1:4.6" end="12:12:46.007" region="pop1" style="cyan">...Señores.<br /> Usted allí, usted, aquí.</p>
+			<p begin="13:1:4.6" end="13:12:46.007" region="pop1" style="blanco">...Señores.<br /> Usted allí, usted, aquí.</p>
+			<p begin="14:1:4.6" end="14:12:46.007" region="pop1" style="custom">...Señores.<br /> Usted allí, usted, aquí.</p>
+		</div>
+	</body>
+</tt>

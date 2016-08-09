@@ -35,18 +35,18 @@
             <AudioComments></AudioComments>
         </Audio>
         <Timecodes>
-            <LineUpStart>00:00:00:00</LineUpStart>
-            <IdentClockStart>00:00:00:00</IdentClockStart>
+            <LineUpStart>09:59:30:00</LineUpStart>
+            <IdentClockStart>09:59:30:00</IdentClockStart>
             <Parts>
                 <Part>
                     <PartNumber>1</PartNumber>
                     <PartTotal>1</PartTotal>
-                    <PartSOM>00:00:00:00</PartSOM>
-                    <PartDuration>00:01:36:00</PartDuration>
+                    <PartSOM>09:59:30:00</PartSOM>
+                    <PartDuration>00:00:00:00</PartDuration>
                 </Part>
             </Parts>
             <TotalNumberOfParts>1</TotalNumberOfParts>
-            <TotalProgrammeDuration>00:01:36:00</TotalProgrammeDuration>
+            <TotalProgrammeDuration>00:00:00:00</TotalProgrammeDuration>
         </Timecodes>
         <AccessServices>
             <AudioDescriptionPresent>false</AudioDescriptionPresent>

@@ -13,7 +13,7 @@
         <tool id="ffprobe">ffprobe</tool>
         <tool id="bmx">raw2bmx</tool>
         <tool id="mxf2raw">mxf2raw</tool>
-        <tool id="x264">x264</tool>
+        <tool id="x264">x264-10bit</tool>
         <tool id="as-02-unwrap">as-02-unwrap</tool>
         <!--<tool id="java">java</tool>-->
         <!--<tool id="ttml-to-stl">ttml-to-stl.jar</tool>-->
@@ -24,17 +24,14 @@
         Allows/disallows silent conversion to format destination parameters if the input doesn't match.
         Conversion is allowed by default (if not specified here explicitly)
      -->
+
     <!--<conversionParameters>
-        <video>
-            <size>yes</size>
-            <frameRate>yes</frameRate>
-            <pixelFormat>yes</pixelFormat>
-            <bitDepth>yes</bitDepth>
-        </video>
-        <audio>
-            <sampleRate>yes</sampleRate>
-            <bitsSample>yes</bitsSample>
-        </audio>
+        <param name="bitDepth">yes</param>
+        <param name="frameRate">yes</param>
+        <param name="size">yes</param>
+        <param name="pixelFormat">yes</param>
+        <param name="bitsSample">yes</param>
+        <param name="sampleRate">yes</param>
     </conversionParameters>-->
 
     <validateImf>true</validateImf>

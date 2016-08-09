@@ -40,6 +40,22 @@ public class ConversionHelperTest {
     }
 
     @Test
+    public void msToSmpteTimecode() {
+        assertEquals("00:06:12:12", ConversionHelper.msToSmpteTimecode(372480, new BigFraction(25)));
+        assertEquals("00:06:12:11", ConversionHelper.msToSmpteTimecode(372470, new BigFraction(25, 1)));
+        assertEquals("00:00:00:00", ConversionHelper.msToSmpteTimecode(0, new BigFraction(25)));
+        assertEquals("00:00:00:00", ConversionHelper.msToSmpteTimecode(30, new BigFraction(25)));
+        assertEquals("00:00:00:01", ConversionHelper.msToSmpteTimecode(40, new BigFraction(25)));
+        assertEquals("00:00:01:00", ConversionHelper.msToSmpteTimecode(1000, new BigFraction(25)));
+        assertEquals("00:00:00:24", ConversionHelper.msToSmpteTimecode(999, new BigFraction(25)));
+        assertEquals("00:00:00:24", ConversionHelper.msToSmpteTimecode(970, new BigFraction(25)));
+        assertEquals("00:00:00:24", ConversionHelper.msToSmpteTimecode(960, new BigFraction(25)));
+        assertEquals("10:59:59:00", ConversionHelper.msToSmpteTimecode(39599000, new BigFraction(25)));
+        assertEquals("10:59:59:24", ConversionHelper.msToSmpteTimecode(39599960, new BigFraction(25)));
+        assertEquals("10:59:59:23", ConversionHelper.msToSmpteTimecode(39599959, new BigFraction(25)));
+    }
+
+    @Test
     public void toNewEditRate() {
         assertEquals(100, ConversionHelper.toNewEditRate(BigInteger.valueOf(160160), new BigFraction(48000), new BigFraction(30000, 1001)));
         assertEquals(50, ConversionHelper.toNewEditRate(BigInteger.valueOf(100), new BigFraction(50), new BigFraction(25)));

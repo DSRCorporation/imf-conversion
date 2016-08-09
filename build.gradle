@@ -18,7 +18,7 @@ buildscript {
 // 2. group and version for all projects
 subprojects {
     group = 'com.netflix.imfutility'
-    version = '1.0-alpha'
+    version = '1.0-beta'
 }
 
 // 3. define groups of projects with common configuration
@@ -68,6 +68,10 @@ configure(project.javaSubprojectList) {
 
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
     }
 
     // 4.2 Findbugs plugin

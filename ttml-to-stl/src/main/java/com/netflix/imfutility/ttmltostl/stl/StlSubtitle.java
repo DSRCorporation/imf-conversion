@@ -29,11 +29,8 @@ public class StlSubtitle {
 
     //Teletext usually - 25 lines (top is 0).
     //STL says it uses for teletext:  1-23 decimal (01h-17h)
-    //BBS spec says: The normally accepted position for subtitles is towards the bottom of the screen
-    //(Teletext lines 20 and 22. Line 18 is used if three subtitle lines are required).
+    public static final int TOP_TELETEXT_LINE_TO_USE = 1;
     public static final int BOTTOM_TELETEXT_LINE_TO_USE = 22;
-    //BBC probably use only 11 lines with step 2. In samples I didn't see any odd line number.
-    public static final int TELETEXT_LINE_STEP = 2;
 
     private final Caption caption;
     private final int linesCount;

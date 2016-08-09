@@ -21,6 +21,8 @@ package com.netflix.imfutility.ttmltostl.stl;
 import com.netflix.imfutility.dpp.DppConversionXsdConstants;
 import com.netflix.imfutility.generated.dpp.metadata.DppType;
 import com.netflix.imfutility.generated.dpp.metadata.TimecodeType;
+import com.netflix.imfutility.ttmltostl.ttml.Caption;
+import com.netflix.imfutility.ttmltostl.ttml.Time;
 import com.netflix.imfutility.ttmltostl.ttml.TimedTextObject;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -46,6 +48,8 @@ public final class BbcGsiStrategy extends DefaultGsiStrategy {
     private static final String METADATA_XML_SCHEME = DppConversionXsdConstants.METADATA_XML_SCHEME;
     private static final String METADATA_PACKAGE = DppConversionXsdConstants.METADATA_PACKAGE;
 
+    public static final int ZERO_SUBTITLE_DURATION_MS = 1000;
+
     private final DppType metadata;
 
     public BbcGsiStrategy(String metadataXml) throws XmlParsingException, FileNotFoundException {
@@ -56,11 +60,17 @@ public final class BbcGsiStrategy extends DefaultGsiStrategy {
 
     @Override
     public void fillAttributes(TimedTextObject tto) {
+        String programName = metadata.getEditorial().getProgrammeTitle() != null
+                ? metadata.getEditorial().getProgrammeTitle() : "";
+
+        // subtitle zero
+        addSubtitleZero(tto, programName);
+
         super.fillAttributes(tto);
 
         // OPT
-        if (metadata.getEditorial().getProgrammeTitle() != null) {
-            OPT.setValue(metadata.getEditorial().getProgrammeTitle());
+        if (!programName.isEmpty()) {
+            OPT.setValue(programName);
         } else {
             OPT.fillEmptyValue();
         }
@@ -76,19 +86,18 @@ public final class BbcGsiStrategy extends DefaultGsiStrategy {
         fillTcp();
 
         // TCF
-        TCF.setValue(tto.getCaptions().get(tto.getCaptions().firstKey()).getStart().getTime(
-                "hhmmssff/" + getFrameRate()));
+        fillTcf(tto);
 
         // PUB
-        if (metadata.getEditorial().getOriginator() != null) {
-            PUB.setValue(metadata.getEditorial().getOriginator());
+        if (metadata.getEditorial().getDistributor() != null) {
+            PUB.setValue(metadata.getEditorial().getDistributor());
         } else {
             PUB.fillEmptyValue();
         }
 
         // EN
-        if (metadata.getEditorial().getDistributor() != null) {
-            EN.setValue(metadata.getEditorial().getDistributor());
+        if (metadata.getEditorial().getOriginator() != null) {
+            EN.setValue(metadata.getEditorial().getOriginator());
         } else {
             EN.fillEmptyValue();
         }
@@ -100,6 +109,16 @@ public final class BbcGsiStrategy extends DefaultGsiStrategy {
         } else {
             ECD.fillEmptyValue();
         }
+    }
+
+    private void addSubtitleZero(TimedTextObject tto, String programName) {
+        // add subtitle zero
+        int key = tto.getCaptions().isEmpty() ? 0 : tto.getCaptions().firstKey() - 1;
+        Caption caption = new Caption();
+        caption.setStart(new Time(0));
+        caption.setEnd(new Time(ZERO_SUBTITLE_DURATION_MS));
+        caption.setContent(programName);
+        tto.getCaptions().put(key, caption);
     }
 
     private void fillTcp() {
@@ -134,6 +153,21 @@ public final class BbcGsiStrategy extends DefaultGsiStrategy {
         }
 
         TCP.setValue(sb.toString());
+    }
+
+    private void fillTcf(TimedTextObject tto) {
+        String firstCaptionTime;
+        if (tto.getCaptions().size() > 1) {
+            // ignore subtitle zero
+            firstCaptionTime = tto.getCaptions().values().toArray(new Caption[]{})[1]
+                    .getStart().getTime("hhmmssff/" + getFrameRate());
+        } else if (tto.getCaptions().size() == 1) {
+            firstCaptionTime = tto.getCaptions().values().toArray(new Caption[]{})[0]
+                    .getStart().getTime("hhmmssff/" + getFrameRate());
+        } else {
+            firstCaptionTime = "000000";
+        }
+        TCF.setValue(firstCaptionTime);
     }
 
 }

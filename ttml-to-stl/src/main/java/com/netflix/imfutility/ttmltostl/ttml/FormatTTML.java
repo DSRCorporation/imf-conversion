@@ -27,6 +27,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -65,14 +67,24 @@ public class FormatTTML implements TimedTextFileFormat {
     private int offsetMS = 0;
     private Document doc = null;
 
-    public TimedTextObject parseFile(String fileName, InputStream is, int startMS, int endMS, int offsetMS)
+    public TimedTextObject parseFile(File file, int startMS, int endMS, int offsetMS)
             throws IOException, FatalParsingException {
-        tto.setFileName(fileName);
+        tto.setFileName(file.getName());
         this.startMS = startMS;
         this.endMS = endMS;
         this.offsetMS = offsetMS;
         this.doc = null;
 
+        try (InputStream is = new FileInputStream(file)) {
+            doParse(is);
+        }
+
+        parsedFileCount++;
+        tto.setBuilt(true);
+        return tto;
+    }
+
+    private void doParse(InputStream is) throws FatalParsingException, IOException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder;
         try {
@@ -94,10 +106,6 @@ public class FormatTTML implements TimedTextFileFormat {
         } catch (SAXException | ParserConfigurationException e) {
             throw new FatalParsingException("Error during parsing: " + e.getMessage());
         }
-
-        parsedFileCount++;
-        tto.setBuilt(true);
-        return tto;
     }
 
     private void parseMetadata() {
@@ -569,20 +577,21 @@ public class FormatTTML implements TimedTextFileFormat {
                 alpha = true;
             }
             try {
+                color = color.replaceAll("[)]", "");
                 values = color.split("[(]")[1].split("[,]");
                 int r, g, b, a = 255;
                 r = Integer.parseInt(values[0]);
                 g = Integer.parseInt(values[1]);
-                b = Integer.parseInt(values[2].substring(0, 2));
+                b = Integer.parseInt(values[2]);
                 if (alpha) {
-                    a = Integer.parseInt(values[3].substring(0, 2));
+                    a = Integer.parseInt(values[3]);
                 }
 
                 values[0] = Integer.toHexString(r);
                 values[1] = Integer.toHexString(g);
                 values[2] = Integer.toHexString(b);
                 if (alpha) {
-                    values[2] = Integer.toHexString(a);
+                    values[3] = Integer.toHexString(a);
                 }
 
                 StringBuilder sb = new StringBuilder();
@@ -613,7 +622,7 @@ public class FormatTTML implements TimedTextFileFormat {
             }
         }
 
-        return value;
+        return value.toLowerCase();
     }
 
 
