@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2016 Netflix, Inc.
+
+        This file is part of IMF Conversion Utility.
+
+        IMF Conversion Utility is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+
+        IMF Conversion Utility is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+    targetNamespace="http://netflix.com/imf/itunes/audiomap"
+    xmlns="http://netflix.com/imf/itunes/audiomap"
+    xmlns:am="http://netflix.com/imf/itunes/audiomap"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!--
+        elements
+    -->
+
+    <!-- root element -->
+
+    <xs:element name="audiomap" type="AudioMapType">
+        <xs:unique name="AlternativeAudioLangUniqe">
+            <xs:selector xpath="am:alternativeAudio" />
+            <xs:field xpath="@locale" />
+        </xs:unique>
+    </xs:element>
+
+
+    <!-- simple elements and attribute definitions -->
+
+    <xs:element name="Option1a" type="Option1aType" />
+<!--    <xs:element name="Option1b" type="Option1bType" />
+    <xs:element name="Option1c" type="Option1cType" />
+    <xs:element name="Option1d" type="Option1dType" />-->
+    <xs:element name="Option2"  type="Option2Type" />
+    <xs:element name="Option3"  type="Option3Type" />
+    <xs:element name="Option4"  type="Option4Type" />
+    <xs:element name="Option5"  type="Option5Type" />
+    <xs:element name="Option6"  type="Option6Type" />
+
+    <xs:element name="L"   type="ChannelType" />
+    <xs:element name="R"   type="ChannelType" />
+    <xs:element name="C"   type="ChannelType" />
+    <xs:element name="LFE" type="ChannelType" />
+    <xs:element name="Ls"  type="ChannelType" />
+    <xs:element name="Rs"  type="ChannelType" />
+    <xs:element name="Lt"  type="ChannelType" />
+    <xs:element name="Rt"  type="ChannelType" />
+
+    <!--
+        types
+    -->
+    <xs:complexType name="AudioMapType">
+        <xs:sequence>
+            <xs:element name="mainAudio" type="MainAudioType" />
+            <xs:element name="alternativeAudio" type="AlternativeAudioType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MainAudioType">
+        <xs:choice>
+            <xs:element ref="Option1a" />
+<!--            <xs:element ref="Option1b" />
+            <xs:element ref="Option1c" />
+            <xs:element ref="Option1d" />-->
+            <xs:element ref="Option2" />
+            <xs:element ref="Option3" />
+            <xs:element ref="Option4" />
+            <xs:element ref="Option5" />
+            <xs:element ref="Option6" />
+        </xs:choice>
+
+        <xs:attribute name="locale" type="xs:language" use="required" />
+        <xs:attribute name="name" type="MoveFileType" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="AlternativeAudioType">
+        <xs:choice>
+            <xs:element ref="Option5" />
+            <xs:element ref="Option6" />
+        </xs:choice>
+
+        <xs:attribute name="locale" type="xs:language" use="required" />
+        <xs:attribute name="name" type="AlternativeNameType" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="Option1aType">
+        <xs:sequence>
+            <xs:element name="Track1" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="L"   />
+                        <xs:element ref="R"   />
+                        <xs:element ref="C"   />
+                        <xs:element ref="LFE" />
+                        <xs:element ref="Ls"  />
+                        <xs:element ref="Rs"  />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track2" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Lt" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track3" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Rt" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+<!--    <xs:complexType name="Option1bType">
+        <xs:sequence>
+            <xs:element name="Track1" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="L"   />
+                        <xs:element ref="R"   />
+                        <xs:element ref="Ls"  />
+                        <xs:element ref="Rs"  />
+                        <xs:element ref="C"   />
+                        <xs:element ref="LFE" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track2" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Lt" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track3" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Rt" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Option1cType">
+        <xs:sequence>
+            <xs:element name="Track1" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="L"   />
+                        <xs:element ref="C"   />
+                        <xs:element ref="R"   />
+                        <xs:element ref="Ls"  />
+                        <xs:element ref="Rs"  />
+                        <xs:element ref="LFE" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track2" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Lt" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track3" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Rt" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Option1dType">
+        <xs:sequence>
+            <xs:element name="Track1" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="C"   />
+                        <xs:element ref="L"   />
+                        <xs:element ref="R"   />
+                        <xs:element ref="Ls"  />
+                        <xs:element ref="Rs"  />
+                        <xs:element ref="LFE" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track2" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Lt" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track3" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Rt" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>-->
+
+    <xs:complexType name="Option2Type">
+        <xs:sequence>
+            <xs:element name="Track1" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="L" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track2" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="R" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track3" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="C" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track4" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="LFE" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track5" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Ls" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track6" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Rs" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track7" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Lt" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track8" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Rt" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Option3Type">
+        <xs:sequence>
+            <xs:element name="Track1" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="L"   />
+                        <xs:element ref="R"   />
+                        <xs:element ref="C"   />
+                        <xs:element ref="LFE" />
+                        <xs:element ref="Ls"  />
+                        <xs:element ref="Rs"  />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track2" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Lt" />
+                        <xs:element ref="Rt" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Option4Type">
+        <xs:sequence>
+            <xs:element name="Track1" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="L" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track2" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="R" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track3" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="C" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track4" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="LFE" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track5" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Ls" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track6" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Rs" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track7" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Lt" />
+                        <xs:element ref="Rt" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Option5Type">
+        <xs:sequence>
+            <xs:element name="Track1" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="L" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Track2" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="R" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Option6Type">
+        <xs:sequence>
+            <xs:element name="Track1" minOccurs="0" >
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="L" />
+                        <xs:element ref="R" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ChannelType">
+        <xs:sequence>
+            <xs:element name="CPLVirtualTrackId" type="CPLVirtualTrackIdType" />
+            <xs:element name="CPLVirtualTrackChannel" type="CPLVirtualTrackChannelType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="MoveFileType">
+        <xs:restriction base="xs:string">
+            <!-- regular file name with .mov extension -->
+            <xs:pattern value="[a-zA-Z0-9_-]*[.]mov" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="AlternativeNameType">
+        <xs:restriction base="xs:string">
+            <!-- audio_FR_FR.mov -->
+            <xs:pattern value="audio_[A-Z_]{2,8}[.]mov" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="CPLVirtualTrackIdType">
+        <xs:restriction base="xs:string">
+            <!-- urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711 -->
+            <xs:pattern value="urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="CPLVirtualTrackChannelType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="256"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

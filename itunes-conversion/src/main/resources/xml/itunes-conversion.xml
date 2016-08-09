@@ -21,8 +21,8 @@
 -->
 <conversion xmlns="http://conversion.imfutility.netflix.com">
 
-    <imfValidation>%{dynamic.validateTool} -i "%{dynamic.imp}" -c "%{dynamic.cpl}" -d "%{dynamic.workingDir}"
-        -f "%{dynamic.outputValidationFile}"
+    <imfValidation>
+        %{dynamic.validateTool} -i "%{dynamic.imp}" -c "%{dynamic.cpl}" -d "%{dynamic.workingDir}" -f "%{dynamic.outputValidationFile}"
     </imfValidation>
 
     <formats>
@@ -381,23 +381,63 @@
                                 copy -f wav %{seq.num}-audio-encoded.wav
                             </execOnce>
                         </pipe>
-                        <dynamicParameter name="concatAudioInput" concat="true">-i "%{seq.num}-audio-encoded.wav"
+                        <dynamicParameter name="concatAudioInput" concat="true" concatWhitespace="true">
+                            -i "%{seq.num}-audio-encoded.wav"
                         </dynamicParameter>
-                        <dynamicParameter name="concatAudioMap" concat="true">[%{seq.num}:a]</dynamicParameter>
+                        <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false">
+                            [%{seq.num}:a]
+                        </dynamicParameter>
                         <!-- to delete intermediate files at the end -->
                         <dynamicParameter name="audio-virtual-track-wav-%{seq.num}" deleteOnExit="true">
                             %{seq.num}-audio-encoded.wav
                         </dynamicParameter>
                     </execEachSequence>
 
+                    <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
+                    <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false"
+                                      if="%{dynamic.singleAudio}">[0:a]
+                    </dynamicParameter>
+
+
                     <!--
                         4. Remap audio in accordance with AudioMap.xml
                     -->
+                    <dynamicParameter name="audioSplitCount" add="%{dynamic.mainAudioTracks}" />
+                    <for iterator="i" count="%{dynamic.additionalAudioCount}">
+                        <dynamicParameter name="audioSplitCount" add="%{dynamic.additionalAudioTracks%{i}}" />
+                    </for>
+                    <for iterator="i" to="%{dynamic.audioSplitCount}">
+                        <dynamicParameter name="audioInLabels" concat="true" concatWhitespace="false">
+                            [in%{i}]
+                        </dynamicParameter>
+                        <dynamicParameter name="audioOutPanConfigurations" concat="true" concatWhitespace="false">
+                            ;[in%{i}]%{dynamic.panParameter%{i}}[out%{i}]
+                        </dynamicParameter>
+                    </for>
+                    <for iterator="i" to="%{dynamic.mainAudioTracks}">
+                        <dynamicParameter name="mainAudioOutputMap" concat="true" concatWhitespace="true">
+                            -map "[out%{i}]"
+                        </dynamicParameter>
+                    </for>
+                    <dynamicParameter name="additionalAudioOutputMapStart" add="%{dynamic.mainAudioTracks}" />
+                    <dynamicParameter name="additionalAudioOutputs" />
+                    <for iterator="i" count="%{dynamic.additionalAudioCount}">
+                        <for iterator="j" from="%{dynamic.additionalAudioOutputMapStart}" count="%{dynamic.additionalAudioTracks%{i}}">
+                            <dynamicParameter name="additionalAudioOutputMap%{i}" concat="true" concatWhitespace="true">
+                                -map "[out%{j}]"
+                            </dynamicParameter>
+                        </for>
+                        <dynamicParameter name="additionalAudioOutputMapStart" add="%{dynamic.additionalAudioTracks%{i}}" />
+                        <dynamicParameter name="additionalAudioOutputs" concat="true" concatWhitespace="true">
+                            %{dynamic.additionalAudioOutputMap%{i}} -acodec pcm_s24le -ar 48000 -f mov %{dynamic.additionalAudio%{i}}
+                        </dynamicParameter>
+                    </for>
+
                     <execOnce name="audioMaping">
-                        <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
                         %{tool.ffmpeg} %{dynamic.concatAudioInput} -filter_complex
-                        "%{dynamic.concatAudioMap}[0:a]amerge,pan=%{dynamic.panParameter}[aout]"
-                        -map "[aout]" -acodec pcm_s24le -ar 48000 -f s24le %{dynamic.mainAudio}
+                        "%{dynamic.concatAudioMap}amerge,asplit=%{dynamic.audioSplitCount}%{dynamic.audioInLabels}%{dynamic.audioOutPanConfigurations}"
+                        %{dynamic.mainAudioOutputMap} -acodec pcm_s24le -ar 48000 -f mov %{dynamic.mainAudio}
+                        %{dynamic.additionalAudioOutputs}
                     </execOnce>
 
                     <!--
