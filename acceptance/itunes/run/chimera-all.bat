@@ -3,14 +3,25 @@ pushd %~dp0
 if [%1]==[] goto first-missing
 if [%2]==[] goto second-missing
 
+SET Chimera23Dir=Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV
 SET Chimera25Dir=Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV
+SET Chimera50Dir=Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV
 
 @echo on
+
+:: default as-is full CPLs for all test packages
+:: call .\chimera23-default "%~1\%Chimera23Dir%" %2 %3
+:: call .\chimera25-default "%~1\%Chimera25Dir%" %2 %3
+:: call .\chimera50-default "%~1\%Chimera50Dir%" %2 %3
 
 :: short versions
 call .\chimera25-short              "%~1\%Chimera25Dir%" %2 %3
 call .\chimera25-short-metadata     "%~1\%Chimera25Dir%" %2 %3
 call .\chimera25-short-add-assets   "%~1\%Chimera25Dir%" %2 %3
+call .\chimera25-short-formats      "%~1\%Chimera25Dir%" %2 %3
+
+:: CPLs with tricky segments
+call .\chimera25-segments           "%~1\%Chimera25Dir%" %2 %3
 
 @echo off
 exit /b 0
