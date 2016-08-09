@@ -36,8 +36,13 @@
             -->
             <tmpContext>
                 <param id="videoEncoded" deleteOnExit="true">output.mov</param>
-                <param id="audioEncoded" deleteOnExit="true">output.pcm</param>
             </tmpContext>
+
+            <defaultDestContext name="default">
+                <!-- audio params -->
+                <param name="sampleRate">48000</param>
+                <param name="bitsSample">24</param>
+            </defaultDestContext>
 
             <destContexts>
                 <!-- HD -->
@@ -371,13 +376,13 @@
                                 <execEachSegment name="decode_audio">
                                     <execOnce name="decode_audio">
                                         %{tool.ffmpeg} -f s%{seq.bits_per_sample}le -ar %{seq.sample_rate} -ac %{seq.channels_num}
-                                        -i %{seq.num}-%{segm.num}_a0.raw -vn -af aresample=48000
-                                        -acodec pcm_s24le -f s24le -
+                                        -i %{seq.num}-%{segm.num}_a0.raw -vn -af aresample=%{dest.sampleRate}
+                                        -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
                                     </execOnce>
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_audio">
-                                %{tool.ffmpeg} -f s24le -ar %{seq.sample_rate} -ac %{seq.channels_num} -i - -vn -c:a
+                                %{tool.ffmpeg} -f s%{dest.bitsSample}le -ar %{dest.sampleRate} -ac %{seq.channels_num} -i - -vn -c:a
                                 copy -f wav %{seq.num}-audio-encoded.wav
                             </execOnce>
                         </pipe>
@@ -429,14 +434,14 @@
                         </for>
                         <dynamicParameter name="additionalAudioOutputMapStart" add="%{dynamic.additionalAudioTracks%{i}}" />
                         <dynamicParameter name="additionalAudioOutputs" concat="true" concatWhitespace="true">
-                            %{dynamic.additionalAudioOutputMap%{i}} -acodec pcm_s24le -ar 48000 -f mov %{dynamic.additionalAudio%{i}}
+                            %{dynamic.additionalAudioOutputMap%{i}} -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f mov %{dynamic.additionalAudio%{i}}
                         </dynamicParameter>
                     </for>
 
                     <execOnce name="audioMaping">
                         %{tool.ffmpeg} %{dynamic.concatAudioInput} -filter_complex
                         "%{dynamic.concatAudioMap}amerge,asplit=%{dynamic.audioSplitCount}%{dynamic.audioInLabels}%{dynamic.audioOutPanConfigurations}"
-                        %{dynamic.mainAudioOutputMap} -acodec pcm_s24le -ar 48000 -f mov %{dynamic.mainAudio}
+                        %{dynamic.mainAudioOutputMap} -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f mov %{dynamic.mainAudio}
                         %{dynamic.additionalAudioOutputs}
                     </execOnce>
 
