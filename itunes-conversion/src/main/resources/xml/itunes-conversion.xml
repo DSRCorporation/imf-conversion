@@ -374,7 +374,9 @@
                                             -
                                         </execOnce>
                                     </execEachSegment>
-                                    <execOnce name="generate_black_frame">
+                                    <!-- prenc insert black frame by itself -->
+                                    <!-- ffmpeg need 2 frames for interlaced and 1 for progressive-->
+                                    <execOnce name="generate_black_frame" unless="%{dynamic.isOSX}">
                                         %{tool.ffmpeg} -y
                                         -f lavfi
                                         -i color=c=black:s=%{dest.width}x%{dest.height}:r=%{dest.frameRate}:d=1
