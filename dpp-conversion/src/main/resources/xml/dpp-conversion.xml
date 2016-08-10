@@ -80,6 +80,15 @@
                     <execEachSequence type="video" name="encodeVideo">
                         <pipe>
                             <cycle>
+                                <execOnce name="White">
+                                    "%{tool.ffmpeg}"
+                                    -loop 1
+                                    -i "C:\Develop\Netflix\res\white.png"
+                                    -t 2
+                                    -s %{dest.width}x%{dest.height}
+                                    -r %{dest.frameRate}
+                                    -pix_fmt %{dest.pixelFormat} -f rawvideo -
+                                </execOnce>
                                 <execEachSegment name="decode_video">
                                     <execOnce name="decode_video">
                                         "%{tool.ffmpeg}" -y
@@ -126,6 +135,14 @@
                     <execEachSequence type="audio" name="encodeAudio">
                         <pipe>
                             <cycle>
+                                <execOnce name="Tone">
+                                    "%{tool.ffmpeg}"
+                                    -i "C:\Develop\Netflix\res\Stereo_Programmes_1kHz_GLITS_Lineup.wav"
+                                    -t 2
+                                    -vn
+                                    -af aresample=%{dest.sampleRate}
+                                    -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
+                                </execOnce>
                                 <execEachSegment name="decode_audio">
                                     <execOnce name="decode_audio">
                                         "%{tool.ffmpeg}" -f s%{seq.bits_per_sample}le -ar %{seq.sample_rate}
