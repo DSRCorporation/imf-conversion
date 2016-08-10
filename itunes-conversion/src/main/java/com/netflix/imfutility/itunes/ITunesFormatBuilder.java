@@ -39,6 +39,7 @@ import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
 import com.netflix.imfutility.itunes.mediainfo.SimpleMediaInfoBuilder;
 import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider;
+import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider.AudioOption;
 import com.netflix.imfutility.itunes.xmlprovider.ChaptersXmlProvider;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.mediainfo.MediaInfoException;
@@ -346,7 +347,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         audioMapXmlProvider.getAlternativesAudio().forEach(this::safeProcessAdditionalAudio);
     }
 
-    private void safeProcessAdditionalAudio(AudioMapXmlProvider.AudioOption audioOption) {
+    private void safeProcessAdditionalAudio(AudioOption audioOption) {
         try {
             processAdditionalAudio(audioOption);
         } catch (IOException e) {
@@ -354,7 +355,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         }
     }
 
-    private void processAdditionalAudio(AudioMapXmlProvider.AudioOption audioOption) throws IOException {
+    private void processAdditionalAudio(AudioOption audioOption) throws IOException {
         File audio = new File(inputParameters.getWorkingDirFile(), audioOption.getFileName());
 
         new AudioAssetProcessor(metadataXmlProvider, itmspDir)
