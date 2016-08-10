@@ -32,8 +32,6 @@ import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.CHAPTE
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.CHAPTER_MIN_INDEX;
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.CHAPTER_MIN_WIDTH;
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.CHAPTER_TYPE;
-import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.JPG_CONTENT_TYPE;
-import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.JPG_FORMAT_NAME;
 
 /**
  * Asset processor specified for chapter image managing.
@@ -79,7 +77,7 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
         //  validate only chapter width
         validator.validateSize(CHAPTER_MIN_WIDTH, null);
         validator.validateAspectRatio(aspectRatio);
-        validator.validateContentType(JPG_CONTENT_TYPE, JPG_FORMAT_NAME);
+        validator.validateJpeg();
         validator.validateRGBColorSpace();
     }
 

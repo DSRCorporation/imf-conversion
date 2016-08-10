@@ -26,10 +26,6 @@ public final class AssetProcessorConstants {
     private AssetProcessorConstants() {
     }
 
-    // common
-    public static final String JPG_FORMAT_NAME = "JPEG";
-    public static final String JPG_CONTENT_TYPE = "image/jpeg";
-
     // chapter constants
     public static final String CHAPTER_TYPE = "Chapter";
     public static final int CHAPTER_MIN_WIDTH = 640;
