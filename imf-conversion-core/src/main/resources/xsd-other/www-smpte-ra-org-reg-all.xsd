@@ -1,0 +1,2908 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:r0="http://www.smpte-ra.org/reg/2003/2012" xmlns:r1="http://www.smpte-ra.org/reg/395/2014/13/1/aaf"
+           xmlns:r2="http://www.smpte-ra.org/reg/395/2014/13/1/amwa/as11"
+           xmlns:r3="http://www.ebu.ch/ebucore/smpte/class13/group"
+           xmlns:r4="http://www.smpte-ra.org/reg/395/2014/13/12/as11"
+           xmlns:reg="http://sandflow.com/ns/SMPTEST2001-1/baseline" attributeFormDefault="unqualified"
+           elementFormDefault="qualified" targetNamespace="http://www.smpte-ra.org/reg/2003/2012"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import namespace="http://www.ebu.ch/ebucore/smpte/class13/group"/>
+    <xs:import namespace="http://www.smpte-ra.org/reg/395/2014/13/1/aaf"/>
+    <xs:import namespace="http://www.smpte-ra.org/reg/395/2014/13/12/as11"/>
+    <xs:import namespace="http://www.smpte-ra.org/reg/395/2014/13/1/amwa/as11"/>
+    <xs:import namespace="http://sandflow.com/ns/SMPTEST2001-1/baseline"/>
+
+    <xs:simpleType name="UInt8">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedByte"/>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="0x[0-9a-fA-F]{1,2}"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:element name="UInt8" type="r0:UInt8"/>
+    <xs:simpleType name="UInt16">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedShort"/>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="0x[0-9a-fA-F]{1,4}"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:element name="UInt16" type="r0:UInt16"/>
+    <xs:simpleType name="UInt32">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedInt"/>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="0x[0-9a-fA-F]{1,8}"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:element name="UInt32" type="r0:UInt32"/>
+    <xs:simpleType name="UInt64">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedLong"/>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="0x[0-9a-fA-F]{1,16}"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:element name="UInt64" type="r0:UInt64"/>
+    <xs:simpleType name="Int8">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:byte"/>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="0x[0-9a-fA-F]{1,2}"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:element name="Int8" type="r0:Int8"/>
+    <xs:simpleType name="Int16">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:short"/>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="0x[0-9a-fA-F]{1,4}"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:element name="Int16" type="r0:Int16"/>
+    <xs:simpleType name="Int32">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:int"/>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="0x[0-9a-fA-F]{1,8}"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:element name="Int32" type="r0:Int32"/>
+    <xs:simpleType name="Int64">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:long"/>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="0x[0-9a-fA-F]{1,16}"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:element name="Int64" type="r0:Int64"/>
+    <xs:simpleType name="PositionType">
+        <xs:restriction base="r0:Int64"/>
+    </xs:simpleType>
+    <xs:element name="PositionType" type="r0:PositionType"/>
+    <xs:simpleType name="LengthType">
+        <xs:restriction base="r0:Int64"/>
+    </xs:simpleType>
+    <xs:element name="LengthType" type="r0:LengthType"/>
+    <xs:simpleType name="JPEGTableIDType">
+        <xs:restriction base="r0:Int32"/>
+    </xs:simpleType>
+    <xs:element name="JPEGTableIDType" type="r0:JPEGTableIDType"/>
+    <xs:simpleType name="LocalTagType">
+        <xs:restriction base="r0:UInt16"/>
+    </xs:simpleType>
+    <xs:element name="LocalTagType" type="r0:LocalTagType"/>
+    <xs:simpleType name="S309M">
+        <xs:restriction base="r0:UInt64"/>
+    </xs:simpleType>
+    <xs:element name="S309M" type="r0:S309M"/>
+    <xs:simpleType name="S12M">
+        <xs:restriction base="r0:UInt64"/>
+    </xs:simpleType>
+    <xs:element name="S12M" type="r0:S12M"/>
+    <xs:simpleType name="MicroTime197001010000">
+        <xs:restriction base="r0:UInt64"/>
+    </xs:simpleType>
+    <xs:element name="MicroTime197001010000" type="r0:MicroTime197001010000"/>
+    <xs:simpleType name="Fix32Dec3">
+        <xs:restriction base="r0:Int32"/>
+    </xs:simpleType>
+    <xs:element name="Fix32Dec3" type="r0:Fix32Dec3"/>
+    <xs:simpleType name="CompactAdIDIdentifierType">
+        <xs:restriction base="r0:UInt32"/>
+    </xs:simpleType>
+    <xs:element name="CompactAdIDIdentifierType" type="r0:CompactAdIDIdentifierType"/>
+    <xs:simpleType name="PhaseFrameType">
+        <xs:restriction base="r0:Int32"/>
+    </xs:simpleType>
+    <xs:element name="PhaseFrameType" type="r0:PhaseFrameType"/>
+    <xs:simpleType name="Float">
+        <xs:restriction base="xs:float"/>
+    </xs:simpleType>
+    <xs:element name="Float" type="r0:Float"/>
+    <xs:simpleType name="Double">
+        <xs:restriction base="xs:double"/>
+    </xs:simpleType>
+    <xs:element name="Double" type="r0:Double"/>
+    <xs:simpleType name="HalfFloat">
+        <xs:restriction base="xs:float"/>
+    </xs:simpleType>
+    <xs:element name="HalfFloat" type="r0:HalfFloat"/>
+    <xs:simpleType name="LensSerialHalfFloat">
+        <xs:restriction base="xs:decimal"/>
+    </xs:simpleType>
+    <xs:element name="LensSerialHalfFloat" type="r0:LensSerialHalfFloat"/>
+    <xs:simpleType name="AUID">
+        <xs:restriction base="xs:anyURI">
+            <xs:pattern value="urn:smpte:ul:([0-9a-fA-F]{8}\.){3}[0-9a-fA-F]{8}"/>
+            <xs:pattern value="urn:uuid:[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="AUID" type="r0:AUID"/>
+    <xs:simpleType name="PackageIDType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="urn:smpte:umid:([0-9a-fA-F]{8}\.){7}[0-9a-fA-F]{8}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="PackageIDType" type="r0:PackageIDType"/>
+    <xs:simpleType name="UUID">
+        <xs:restriction base="xs:anyURI">
+            <xs:pattern value="urn:uuid:[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="UUID" type="r0:UUID"/>
+    <xs:simpleType name="Boolean">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="False"/>
+            <xs:enumeration value="True"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="Boolean" type="r0:Boolean"/>
+    <xs:complexType name="Character">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="reg:escaped" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:element name="Character" type="r0:Character"/>
+    <xs:complexType name="UTF16String">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="reg:escaped" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:element name="UTF16String" type="r0:UTF16String"/>
+    <xs:complexType name="Char">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="reg:escaped" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:element name="Char" type="r0:Char"/>
+    <xs:complexType name="ISO7">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="reg:escaped" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:element name="ISO7" type="r0:ISO7"/>
+    <xs:complexType name="UTF8Character">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="reg:escaped" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:element name="UTF8Character" type="r0:UTF8Character"/>
+    <xs:complexType name="UTF8String">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="reg:escaped" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:element name="UTF8String" type="r0:UTF8String"/>
+    <xs:complexType name="ISO3166_Country">
+        <xs:complexContent>
+            <xs:extension base="r0:ISO7"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="ISO3166_Country" type="r0:ISO3166_Country"/>
+    <xs:complexType name="ISO3166_Region">
+        <xs:complexContent>
+            <xs:extension base="r0:ISO7"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="ISO3166_Region" type="r0:ISO3166_Region"/>
+    <xs:complexType name="ISO639">
+        <xs:complexContent>
+            <xs:extension base="r0:ISO7"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="ISO639" type="r0:ISO639"/>
+    <xs:complexType name="ISO639_Ext">
+        <xs:complexContent>
+            <xs:extension base="r0:ISO7"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="ISO639_Ext" type="r0:ISO639_Ext"/>
+    <xs:complexType name="RFC2152">
+        <xs:complexContent>
+            <xs:extension base="r0:ISO7"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="RFC2152" type="r0:RFC2152"/>
+    <xs:complexType name="UTCmilliseconds">
+        <xs:complexContent>
+            <xs:extension base="r0:ISO7"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="UTCmilliseconds" type="r0:UTCmilliseconds"/>
+    <xs:complexType name="CanonicalDOINameType">
+        <xs:complexContent>
+            <xs:extension base="r0:UTF16String"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="CanonicalDOINameType" type="r0:CanonicalDOINameType"/>
+    <xs:complexType name="CanonicalEIDRIdentifierType">
+        <xs:complexContent>
+            <xs:extension base="r0:CanonicalDOINameType"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="CanonicalEIDRIdentifierType" type="r0:CanonicalEIDRIdentifierType"/>
+    <xs:complexType name="CanonicalFullAdIDIdentifierType">
+        <xs:complexContent>
+            <xs:extension base="r0:UTF16String"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="CanonicalFullAdIDIdentifierType" type="r0:CanonicalFullAdIDIdentifierType"/>
+    <xs:simpleType name="UMID">
+        <xs:restriction base="r0:PackageIDType"/>
+    </xs:simpleType>
+    <xs:element name="UMID" type="r0:UMID"/>
+    <xs:simpleType name="ProductReleaseType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="VersionUnknown"/>
+            <xs:enumeration value="VersionReleased"/>
+            <xs:enumeration value="VersionDebug"/>
+            <xs:enumeration value="VersionPatched"/>
+            <xs:enumeration value="VersionBeta"/>
+            <xs:enumeration value="VersionPrivateBuild"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="ProductReleaseType" type="r0:ProductReleaseType"/>
+    <xs:simpleType name="TapeFormatType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="TapeFormatNull"/>
+            <xs:enumeration value="BetacamFormat"/>
+            <xs:enumeration value="BetacamSPFormat"/>
+            <xs:enumeration value="VHSFormat"/>
+            <xs:enumeration value="SVHSFormat"/>
+            <xs:enumeration value="EightMillimeterFormat"/>
+            <xs:enumeration value="Hi8Format"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="TapeFormatType" type="r0:TapeFormatType"/>
+    <xs:simpleType name="VideoSignalType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="VideoSignalNull"/>
+            <xs:enumeration value="NTSCSignal"/>
+            <xs:enumeration value="PALSignal"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="VideoSignalType" type="r0:VideoSignalType"/>
+    <xs:simpleType name="TapeCaseType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="TapeCaseNull"/>
+            <xs:enumeration value="ThreeFourthInchVideoTape"/>
+            <xs:enumeration value="VHSVideoTape"/>
+            <xs:enumeration value="EightMillimeterVideoTape"/>
+            <xs:enumeration value="BetacamVideoTape"/>
+            <xs:enumeration value="CompactCassette"/>
+            <xs:enumeration value="DATCartridge"/>
+            <xs:enumeration value="NagraAudioTape"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="TapeCaseType" type="r0:TapeCaseType"/>
+    <xs:simpleType name="ColorSitingType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="CoSiting"/>
+            <xs:enumeration value="HorizontalMidpoint"/>
+            <xs:enumeration value="ThreeTap"/>
+            <xs:enumeration value="Quincunx"/>
+            <xs:enumeration value="Rec601"/>
+            <xs:enumeration value="LineAlternating"/>
+            <xs:enumeration value="VerticalMidpoint"/>
+            <xs:enumeration value="UnknownSiting"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="ColorSitingType" type="r0:ColorSitingType"/>
+    <xs:simpleType name="EditHintType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="NoEditHint"/>
+            <xs:enumeration value="Proportional"/>
+            <xs:enumeration value="RelativeLeft"/>
+            <xs:enumeration value="RelativeRight"/>
+            <xs:enumeration value="RelativeFixed"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="EditHintType" type="r0:EditHintType"/>
+    <xs:simpleType name="FadeType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="FadeNone"/>
+            <xs:enumeration value="FadeLinearAmp"/>
+            <xs:enumeration value="FadeLinearPower"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="FadeType" type="r0:FadeType"/>
+    <xs:simpleType name="LayoutType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="FullFrame"/>
+            <xs:enumeration value="SeparateFields"/>
+            <xs:enumeration value="OneField"/>
+            <xs:enumeration value="MixedFields"/>
+            <xs:enumeration value="SegmentedFrame"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="LayoutType" type="r0:LayoutType"/>
+    <xs:simpleType name="TCSource">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="TimecodeLTC"/>
+            <xs:enumeration value="TimecodeVITC"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="TCSource" type="r0:TCSource"/>
+    <xs:simpleType name="PulldownDirectionType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="TapeToFilmSpeed"/>
+            <xs:enumeration value="FilmToTapeSpeed"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="PulldownDirectionType" type="r0:PulldownDirectionType"/>
+    <xs:simpleType name="PulldownKindType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="TwoThreePD"/>
+            <xs:enumeration value="PALPD"/>
+            <xs:enumeration value="OneToOneNTSC"/>
+            <xs:enumeration value="OneToOnePAL"/>
+            <xs:enumeration value="VideoTapNTSC"/>
+            <xs:enumeration value="OneToOneHDSixty"/>
+            <xs:enumeration value="TwentyFourToSixtyPD"/>
+            <xs:enumeration value="TwoToOnePD"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="PulldownKindType" type="r0:PulldownKindType"/>
+    <xs:simpleType name="EdgeType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="EtNull"/>
+            <xs:enumeration value="EtKeycode"/>
+            <xs:enumeration value="EtEdgenum4"/>
+            <xs:enumeration value="EtEdgenum5"/>
+            <xs:enumeration value="EtHeaderSize"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="EdgeType" type="r0:EdgeType"/>
+    <xs:simpleType name="FilmType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="FtNull"/>
+            <xs:enumeration value="Ft35MM"/>
+            <xs:enumeration value="Ft16MM"/>
+            <xs:enumeration value="Ft8MM"/>
+            <xs:enumeration value="Ft65MM"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="FilmType" type="r0:FilmType"/>
+    <xs:simpleType name="RGBAComponentKind">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="CompNone"/>
+            <xs:enumeration value="CompAlpha"/>
+            <xs:enumeration value="CompBlue"/>
+            <xs:enumeration value="CompFill"/>
+            <xs:enumeration value="CompGreen"/>
+            <xs:enumeration value="CompPalette"/>
+            <xs:enumeration value="CompRed"/>
+            <xs:enumeration value="CompNull"/>
+            <xs:enumeration value="CompRedLSBs"/>
+            <xs:enumeration value="CompGreenLSBs"/>
+            <xs:enumeration value="CompBlueLSBs"/>
+            <xs:enumeration value="CompAlphaLSBs"/>
+            <xs:enumeration value="CompColorDifferenceU"/>
+            <xs:enumeration value="CompColorDifferenceV"/>
+            <xs:enumeration value="CompComposite"/>
+            <xs:enumeration value="CompNonCoSitedLuma"/>
+            <xs:enumeration value="CompLuma"/>
+            <xs:enumeration value="CompDepth"/>
+            <xs:enumeration value="CompColorDifferenceULSBs"/>
+            <xs:enumeration value="CompColorDifferenceVLSBs"/>
+            <xs:enumeration value="CompCompositeLSBs"/>
+            <xs:enumeration value="CompNonCoSitedLumaLSBs"/>
+            <xs:enumeration value="CompLumaLSBs"/>
+            <xs:enumeration value="CompDepthLSBs"/>
+            <xs:enumeration value="CompColorX"/>
+            <xs:enumeration value="CompColorY"/>
+            <xs:enumeration value="CompColorZ"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="RGBAComponentKind" type="r0:RGBAComponentKind"/>
+    <xs:simpleType name="ReferenceType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="RefLimitMinimum"/>
+            <xs:enumeration value="RefLimitMaximum"/>
+            <xs:enumeration value="RefMinimum"/>
+            <xs:enumeration value="RefMaximum"/>
+            <xs:enumeration value="RefEnumvalue"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="ReferenceType" type="r0:ReferenceType"/>
+    <xs:simpleType name="AlphaTransparencyType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="MinValueTransparent"/>
+            <xs:enumeration value="MaxValueTransparent"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="AlphaTransparencyType" type="r0:AlphaTransparencyType"/>
+    <xs:simpleType name="FieldNumber">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="UnspecifiedField"/>
+            <xs:enumeration value="FieldOne"/>
+            <xs:enumeration value="FieldTwo"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="FieldNumber" type="r0:FieldNumber"/>
+    <xs:simpleType name="ElectroSpatialFormulation">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ElectroSpatialFormulation_Default"/>
+            <xs:enumeration value="ElectroSpatialFormulation_TwoChannelMode"/>
+            <xs:enumeration value="ElectroSpatialFormulation_SingleChannelMode"/>
+            <xs:enumeration value="ElectroSpatialFormulation_PrimarySecondaryMode"/>
+            <xs:enumeration value="ElectroSpatialFormulation_StereophonicMode"/>
+            <xs:enumeration value="ElectroSpatialFormulation_SingleChannelDoubleSamplingFrequencyMode"/>
+            <xs:enumeration value="ElectroSpatialFormulation_StereoLeftChannelDoubleSamplingFrequencyMode"/>
+            <xs:enumeration value="ElectroSpatialFormulation_StereoRightChannelDoubleSamplingFrequencyMode"/>
+            <xs:enumeration value="ElectroSpatialFormulation_MultiChannelMode"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="ElectroSpatialFormulation" type="r0:ElectroSpatialFormulation"/>
+    <xs:simpleType name="EmphasisType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="Emphasis_Unknown"/>
+            <xs:enumeration value="Emphasis_Reserved0"/>
+            <xs:enumeration value="Emphasis_Reserved1"/>
+            <xs:enumeration value="Emphasis_Reserved2"/>
+            <xs:enumeration value="Emphasis_None"/>
+            <xs:enumeration value="Emphasis_Reserved3"/>
+            <xs:enumeration value="Emphasis_15and50"/>
+            <xs:enumeration value="Emphasis_ITU"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="EmphasisType" type="r0:EmphasisType"/>
+    <xs:simpleType name="AuxBitsModeType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="AuxBitsMode_NotDefined"/>
+            <xs:enumeration value="AuxBitsMode_MainAudioSampleData"/>
+            <xs:enumeration value="AuxBitsMode_SingleCoordinationSignal"/>
+            <xs:enumeration value="AuxBitsMode_UserDefined"/>
+            <xs:enumeration value="AuxBitsMode_Reserved0"/>
+            <xs:enumeration value="AuxBitsMode_Reserved1"/>
+            <xs:enumeration value="AuxBitsMode_Reserved2"/>
+            <xs:enumeration value="AuxBitsMode_Reserved3"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="AuxBitsModeType" type="r0:AuxBitsModeType"/>
+    <xs:simpleType name="ChannelStatusModeType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ChannelStatusMode_None"/>
+            <xs:enumeration value="ChannelStatusMode_Minimum"/>
+            <xs:enumeration value="ChannelStatusMode_Standard"/>
+            <xs:enumeration value="ChannelStatusMode_Fixed"/>
+            <xs:enumeration value="ChannelStatusMode_Stream"/>
+            <xs:enumeration value="ChannelStatusMode_Essence"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="ChannelStatusModeType" type="r0:ChannelStatusModeType"/>
+    <xs:simpleType name="UserDataModeType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="UserDataMode_NotDefined"/>
+            <xs:enumeration value="UserDataMode_192BitBlockStructure"/>
+            <xs:enumeration value="UserDataMode_AES18"/>
+            <xs:enumeration value="UserDataMode_UserDefined"/>
+            <xs:enumeration value="UserDataMode_IEC"/>
+            <xs:enumeration value="UserDataMode_Metadata"/>
+            <xs:enumeration value="UserDataMode_Reserved0"/>
+            <xs:enumeration value="UserDataMode_Reserved1"/>
+            <xs:enumeration value="UserDataMode_Reserved2"/>
+            <xs:enumeration value="UserDataMode_Reserved3"/>
+            <xs:enumeration value="UserDataMode_Reserved4"/>
+            <xs:enumeration value="UserDataMode_Reserved5"/>
+            <xs:enumeration value="UserDataMode_Reserved6"/>
+            <xs:enumeration value="UserDataMode_Reserved7"/>
+            <xs:enumeration value="UserDataMode_Reserved8"/>
+            <xs:enumeration value="UserDataMode_Reserved9"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="UserDataModeType" type="r0:UserDataModeType"/>
+    <xs:simpleType name="SignalStandardType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="SignalStandard_None"/>
+            <xs:enumeration value="SignalStandard_ITU601"/>
+            <xs:enumeration value="SignalStandard_ITU1358"/>
+            <xs:enumeration value="SignalStandard_SMPTE347M"/>
+            <xs:enumeration value="SignalStandard_SMPTE274M"/>
+            <xs:enumeration value="SignalStandard_SMPTE296M"/>
+            <xs:enumeration value="SignalStandard_SMPTE349M"/>
+            <xs:enumeration value="SignalStandard_SMPTE428_1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="SignalStandardType" type="r0:SignalStandardType"/>
+    <xs:simpleType name="ScanningDirectionType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ScanningDirection_LeftToRightTopToBottom"/>
+            <xs:enumeration value="ScanningDirection_RightToLeftTopToBottom"/>
+            <xs:enumeration value="ScanningDirection_LeftToRightBottomToTop"/>
+            <xs:enumeration value="ScanningDirection_RightToLeftBottomToTop"/>
+            <xs:enumeration value="ScanningDirection_TopToBottomLeftToRight"/>
+            <xs:enumeration value="ScanningDirection_TopToBottomRightToLeft"/>
+            <xs:enumeration value="ScanningDirection_BottomToTopLeftToRight"/>
+            <xs:enumeration value="ScanningDirection_BottomToTopRightToLeft"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="ScanningDirectionType" type="r0:ScanningDirectionType"/>
+    <xs:simpleType name="ToleranceModeType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ToleranceMode_Estimated"/>
+            <xs:enumeration value="ToleranceMode_Assumed"/>
+            <xs:enumeration value="ToleranceMode_Precise"/>
+            <xs:enumeration value="ToleranceMode_Window"/>
+            <xs:enumeration value="ToleranceMode_Interpolated"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="ToleranceModeType" type="r0:ToleranceModeType"/>
+    <xs:simpleType name="ContentScanningType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ContentScanning_NotKnown"/>
+            <xs:enumeration value="ContentScanning_Progressive"/>
+            <xs:enumeration value="ContentScanning_Interlace"/>
+            <xs:enumeration value="ContentScanning_Mixed"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="ContentScanningType" type="r0:ContentScanningType"/>
+    <xs:simpleType name="TitleAlignmentType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="TitleAlignment_Left"/>
+            <xs:enumeration value="TitleAlignment_Center"/>
+            <xs:enumeration value="TitleAlignment_Right"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="TitleAlignmentType" type="r0:TitleAlignmentType"/>
+    <xs:simpleType name="AVCContentScanningType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="AVCContentScanning_NotKnown"/>
+            <xs:enumeration value="AVCContentScanning_ProgressiveFramePicture"/>
+            <xs:enumeration value="AVCContentScanning_InterlaceFieldPicture"/>
+            <xs:enumeration value="AVCContentScanning_InterlaceFramePicture"/>
+            <xs:enumeration value="AVCContentScanning_Interlace_FrameFieldPicture"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="AVCContentScanningType" type="r0:AVCContentScanningType"/>
+    <xs:simpleType name="MPEG4VisualCodedContentType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="MPEG4VisualCodedContent_Unknown"/>
+            <xs:enumeration value="MPEG4VisualCodedContent_Progressive"/>
+            <xs:enumeration value="MPEG4VisualCodedContent_Interlaced"/>
+            <xs:enumeration value="MPEG4VisualCodedContent_Mixed"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="MPEG4VisualCodedContentType" type="r0:MPEG4VisualCodedContentType"/>
+    <xs:simpleType name="ColorCorrectionFilterWheelSettingType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ColorCorrectionFilterWheelSetting_CrossEffectFilter"/>
+            <xs:enumeration value="ColorCorrectionFilterWheelSetting_CCFilter3200K"/>
+            <xs:enumeration value="ColorCorrectionFilterWheelSetting_CCFilter4300K"/>
+            <xs:enumeration value="ColorCorrectionFilterWheelSetting_CCFilter6300K"/>
+            <xs:enumeration value="ColorCorrectionFilterWheelSetting_CCFilter5600K"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="ColorCorrectionFilterWheelSettingType" type="r0:ColorCorrectionFilterWheelSettingType"/>
+    <xs:simpleType name="ImageSensorReadoutModeType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ImageSensorReadoutMode_InterlacedField"/>
+            <xs:enumeration value="ImageSensorReadoutMode_InterlacedFrame"/>
+            <xs:enumeration value="ImageSensorReadoutMode_ProgressiveFrame"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="ImageSensorReadoutModeType" type="r0:ImageSensorReadoutModeType"/>
+    <xs:simpleType name="AutoWhiteBalanceModeType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="AutoWhiteBalanceMode_PresetWhiteBalanceSetup"/>
+            <xs:enumeration value="AutoWhiteBalanceMode_AutomaticWhiteBalanceSetup"/>
+            <xs:enumeration value="AutoWhiteBalanceMode_HoldWhiteBalanceSetup"/>
+            <xs:enumeration value="AutoWhiteBalanceMode_OnePushWhiteBalanceSetup"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="AutoWhiteBalanceModeType" type="r0:AutoWhiteBalanceModeType"/>
+    <xs:simpleType name="AutoFocusSensingAreaSettingType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="AutoFocusSensingAreaSetting_ManualFocusMode"/>
+            <xs:enumeration value="AutoFocusSensingAreaSetting_CenterSensitiveAutoFocusMode"/>
+            <xs:enumeration value="AutoFocusSensingAreaSetting_FullScreenSensingAutoFocusMode"/>
+            <xs:enumeration value="AutoFocusSensingAreaSetting_MultiSpotSensingAutoFocusMode"/>
+            <xs:enumeration value="AutoFocusSensingAreaSetting_SingleSpotSensingAutoFocusMode"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="AutoFocusSensingAreaSettingType" type="r0:AutoFocusSensingAreaSettingType"/>
+    <xs:simpleType name="TIFFByteOrderType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="TIFFByteOrder_BigEndian"/>
+            <xs:enumeration value="TIFFByteOrder_LittleEndian"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="TIFFByteOrderType" type="r0:TIFFByteOrderType"/>
+    <xs:simpleType name="TIFFCompressionKindType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="TIFFCompressionKind_NoCompression"/>
+            <xs:enumeration value="TIFFCompressionKind_LosslessHuffmanJPEG"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="TIFFCompressionKindType" type="r0:TIFFCompressionKindType"/>
+    <xs:simpleType name="TIFFPhotometricInterpretationKindType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="TIFFPhotometricInterpretationKind_ColorFilterArray"/>
+            <xs:enumeration value="TIFFPhotometricInterpretationKind_LinearRaw"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="TIFFPhotometricInterpretationKindType" type="r0:TIFFPhotometricInterpretationKindType"/>
+    <xs:simpleType name="OperationCategoryType">
+        <xs:restriction base="reg:AUID"/>
+    </xs:simpleType>
+    <xs:element name="OperationCategoryType" type="r0:OperationCategoryType"/>
+    <xs:simpleType name="TransferCharacteristicType">
+        <xs:restriction base="reg:AUID"/>
+    </xs:simpleType>
+    <xs:element name="TransferCharacteristicType" type="r0:TransferCharacteristicType"/>
+    <xs:simpleType name="PluginCategoryType">
+        <xs:restriction base="reg:AUID"/>
+    </xs:simpleType>
+    <xs:element name="PluginCategoryType" type="r0:PluginCategoryType"/>
+    <xs:simpleType name="UsageType">
+        <xs:restriction base="reg:AUID"/>
+    </xs:simpleType>
+    <xs:element name="UsageType" type="r0:UsageType"/>
+    <xs:simpleType name="ColorPrimariesType">
+        <xs:restriction base="reg:AUID"/>
+    </xs:simpleType>
+    <xs:element name="ColorPrimariesType" type="r0:ColorPrimariesType"/>
+    <xs:simpleType name="CodingEquationsType">
+        <xs:restriction base="reg:AUID"/>
+    </xs:simpleType>
+    <xs:element name="CodingEquationsType" type="r0:CodingEquationsType"/>
+    <xs:simpleType name="AutoExposureModeType">
+        <xs:restriction base="reg:AUID"/>
+    </xs:simpleType>
+    <xs:element name="AutoExposureModeType" type="r0:AutoExposureModeType"/>
+    <xs:simpleType name="ContractTypeCode">
+        <xs:restriction base="xs:token"/>
+    </xs:simpleType>
+    <xs:element name="ContractTypeCode" type="r0:ContractTypeCode"/>
+    <xs:simpleType name="ContractLineCode">
+        <xs:restriction base="xs:token"/>
+    </xs:simpleType>
+    <xs:element name="ContractLineCode" type="r0:ContractLineCode"/>
+    <xs:simpleType name="PublishingMediumCode">
+        <xs:restriction base="xs:token"/>
+    </xs:simpleType>
+    <xs:element name="PublishingMediumCode" type="r0:PublishingMediumCode"/>
+    <xs:simpleType name="JobFunctionCode">
+        <xs:restriction base="xs:token"/>
+    </xs:simpleType>
+    <xs:element name="JobFunctionCode" type="r0:JobFunctionCode"/>
+    <xs:simpleType name="ObjectTypeCode">
+        <xs:restriction base="xs:token"/>
+    </xs:simpleType>
+    <xs:element name="ObjectTypeCode" type="r0:ObjectTypeCode"/>
+    <xs:simpleType name="GammaCode">
+        <xs:restriction base="xs:token"/>
+    </xs:simpleType>
+    <xs:element name="GammaCode" type="r0:GammaCode"/>
+    <xs:simpleType name="SamplingStructureCode">
+        <xs:restriction base="xs:token"/>
+    </xs:simpleType>
+    <xs:element name="SamplingStructureCode" type="r0:SamplingStructureCode"/>
+    <xs:simpleType name="Rational">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="\-?\d{1,10}(/\-?\d{1,10})?"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="Rational" type="r0:Rational"/>
+    <xs:complexType name="ProductVersionType">
+        <xs:sequence>
+            <xs:element name="Major" type="r0:UInt16"/>
+            <xs:element name="Minor" type="r0:UInt16"/>
+            <xs:element name="Tertiary" type="r0:UInt16"/>
+            <xs:element name="PatchLevel" type="r0:UInt16"/>
+            <xs:element name="BuildType" type="r0:ProductReleaseType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ProductVersionType" type="r0:ProductVersionType"/>
+    <xs:simpleType name="VersionType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="\-?\d{1,3}\.\-?\d{1,3}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="VersionType" type="r0:VersionType"/>
+    <xs:complexType name="RGBAComponent">
+        <xs:sequence>
+            <xs:element name="Code" type="r0:RGBAComponentKind"/>
+            <xs:element name="ComponentSize" type="r0:UInt8"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="RGBAComponent" type="r0:RGBAComponent"/>
+    <xs:simpleType name="DateStruct">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:date">
+                    <xs:pattern value=".+(((\+|\-)\d\d:\d\d)|Z)"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="0000-00-00Z"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:element name="DateStruct" type="r0:DateStruct"/>
+    <xs:simpleType name="TimeStruct">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:time">
+                    <xs:pattern value=".+(((\+|\-)\d\d:\d\d)|Z)"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="00:00:00Z"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:element name="TimeStruct" type="r0:TimeStruct"/>
+    <xs:simpleType name="TimeStamp">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:dateTime">
+                    <xs:pattern value=".+(((\+|\-)\d\d:\d\d)|Z)"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="0000-00-00T00:00:00Z"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:element name="TimeStamp" type="r0:TimeStamp"/>
+    <xs:complexType name="LocalTagEntry">
+        <xs:sequence>
+            <xs:element name="LocalTag" type="r0:LocalTagType"/>
+            <xs:element name="UID" type="r0:AUID"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="LocalTagEntry" type="r0:LocalTagEntry"/>
+    <xs:complexType name="GeographicCoordinate">
+        <xs:sequence>
+            <xs:element name="Latitude" type="r0:Fix32Dec3"/>
+            <xs:element name="Longitude" type="r0:Fix32Dec3"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="GeographicCoordinate" type="r0:GeographicCoordinate"/>
+    <xs:complexType name="J2KComponentSizing">
+        <xs:sequence>
+            <xs:element name="Ssiz" type="r0:UInt8"/>
+            <xs:element name="XRSiz" type="r0:UInt8"/>
+            <xs:element name="YRSiz" type="r0:UInt8"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="J2KComponentSizing" type="r0:J2KComponentSizing"/>
+    <xs:complexType name="ASMLEKeyIDMapping">
+        <xs:sequence>
+            <xs:element name="ASMLEKeyID" type="r0:UInt32"/>
+            <xs:element name="ASMKey" type="r0:UInt8Array16"/>
+            <xs:element name="ASMExpireTime" type="r0:UInt32"/>
+            <xs:element name="ASMAttributeData" type="r0:UInt64"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ASMLEKeyIDMapping" type="r0:ASMLEKeyIDMapping"/>
+    <xs:complexType name="UInt8Array">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:UInt8"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UInt8Array" type="r0:UInt8Array"/>
+    <xs:complexType name="UInt8Array12">
+        <xs:sequence>
+            <xs:element maxOccurs="12" minOccurs="12" ref="r0:UInt8"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UInt8Array12" type="r0:UInt8Array12"/>
+    <xs:complexType name="Int32Array">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:Int32"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Int32Array" type="r0:Int32Array"/>
+    <xs:complexType name="Int64Array">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:Int64"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Int64Array" type="r0:Int64Array"/>
+    <xs:complexType name="UTF16StringArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:Character"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UTF16StringArray" type="r0:UTF16StringArray"/>
+    <xs:complexType name="AUIDArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:AUID"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="AUIDArray" type="r0:AUIDArray"/>
+    <xs:complexType name="PositionArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:UInt8"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="PositionArray" type="r0:PositionArray"/>
+    <xs:complexType name="UInt8Array8">
+        <xs:sequence>
+            <xs:element maxOccurs="8" minOccurs="8" ref="r0:UInt8"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UInt8Array8" type="r0:UInt8Array8"/>
+    <xs:complexType name="UInt32Array">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:UInt32"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UInt32Array" type="r0:UInt32Array"/>
+    <xs:complexType name="ChannelStatusModeArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:ChannelStatusModeType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ChannelStatusModeArray" type="r0:ChannelStatusModeArray"/>
+    <xs:complexType name="UserDataModeArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:UserDataModeType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UserDataModeArray" type="r0:UserDataModeArray"/>
+    <xs:complexType name="UInt8Array6">
+        <xs:sequence>
+            <xs:element maxOccurs="6" minOccurs="6" ref="r0:UInt8"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UInt8Array6" type="r0:UInt8Array6"/>
+    <xs:complexType name="UInt8Array3">
+        <xs:sequence>
+            <xs:element maxOccurs="3" minOccurs="3" ref="r0:UInt8"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UInt8Array3" type="r0:UInt8Array3"/>
+    <xs:complexType name="S352M">
+        <xs:sequence>
+            <xs:element maxOccurs="4" minOccurs="4" ref="r0:UInt8"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="S352M" type="r0:S352M"/>
+    <xs:complexType name="S330M_Spatial">
+        <xs:sequence>
+            <xs:element maxOccurs="12" minOccurs="12" ref="r0:UInt8"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="S330M_Spatial" type="r0:S330M_Spatial"/>
+    <xs:complexType name="ExtUMID">
+        <xs:sequence>
+            <xs:element maxOccurs="32" minOccurs="32" ref="r0:UInt8"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ExtUMID" type="r0:ExtUMID"/>
+    <xs:complexType name="UInt8Array16">
+        <xs:sequence>
+            <xs:element maxOccurs="16" minOccurs="16" ref="r0:UInt8"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UInt8Array16" type="r0:UInt8Array16"/>
+    <xs:complexType name="UInt16Array">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:UInt16"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UInt16Array" type="r0:UInt16Array"/>
+    <xs:complexType name="HalfFloatArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:HalfFloat"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="HalfFloatArray" type="r0:HalfFloatArray"/>
+    <xs:complexType name="UUIDArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:UUID"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UUIDArray" type="r0:UUIDArray"/>
+    <xs:complexType name="RGBALayout">
+        <xs:sequence>
+            <xs:element maxOccurs="8" minOccurs="8" ref="r0:RGBAComponent"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="RGBALayout" type="r0:RGBALayout"/>
+    <xs:complexType name="RationalArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:Rational"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="RationalArray" type="r0:RationalArray"/>
+    <xs:complexType name="GeographicCoordinateArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:GeographicCoordinate"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="GeographicCoordinateArray" type="r0:GeographicCoordinateArray"/>
+    <xs:complexType name="S309MArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:S309M"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="S309MArray" type="r0:S309MArray"/>
+    <xs:complexType name="UMIDArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:UMID"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UMIDArray" type="r0:UMIDArray"/>
+    <xs:complexType name="ExtUMIDArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:ExtUMID"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ExtUMIDArray" type="r0:ExtUMIDArray"/>
+    <xs:complexType name="IndexEntryArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:IndexEntry"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="IndexEntryArray" type="r0:IndexEntryArray"/>
+    <xs:complexType name="DeltaEntryArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:DeltaEntry"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="DeltaEntryArray" type="r0:DeltaEntryArray"/>
+    <xs:complexType name="J2KComponentSizingArray">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:J2KComponentSizing"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="J2KComponentSizingArray" type="r0:J2KComponentSizingArray"/>
+    <xs:complexType name="AUIDSet">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:AUID"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="AUIDSet" type="r0:AUIDSet"/>
+    <xs:complexType name="UInt32Set">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:UInt32"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="UInt32Set" type="r0:UInt32Set"/>
+    <xs:complexType name="LocalTagEntryBatch">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:LocalTagEntry"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="LocalTagEntryBatch" type="r0:LocalTagEntryBatch"/>
+    <xs:complexType name="ASMLEKeyIDMappingSet">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:ASMLEKeyIDMapping"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ASMLEKeyIDMappingSet" type="r0:ASMLEKeyIDMappingSet"/>
+    <xs:simpleType name="DataValue">
+        <xs:restriction base="reg:HexByteArrayType"/>
+    </xs:simpleType>
+    <xs:element name="DataValue" type="r0:DataValue"/>
+    <xs:complexType name="Stream">
+        <xs:attribute ref="reg:stream" use="optional"/>
+        <xs:attribute ref="xlink:href" use="optional"/>
+        <xs:attribute ref="reg:byteOrder" use="optional"/>
+    </xs:complexType>
+    <xs:element name="Stream" type="r0:Stream"/>
+    <xs:complexType name="Indirect">
+        <xs:complexContent>
+            <xs:restriction base="xs:anyType">
+                <xs:sequence>
+                    <xs:any maxOccurs="unbounded" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute ref="reg:actualType" use="required"/>
+                <xs:attribute ref="reg:escaped" use="optional"/>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Opaque">
+        <xs:simpleContent>
+            <xs:extension base="reg:HexByteArrayType">
+                <xs:attribute ref="reg:actualType" use="required"/>
+                <xs:attribute ref="reg:byteOrder" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:simpleType name="IndexEntry">
+        <xs:restriction base="r0:DataValue"/>
+    </xs:simpleType>
+    <xs:element name="IndexEntry" type="r0:IndexEntry"/>
+    <xs:simpleType name="S312M">
+        <xs:restriction base="r0:DataValue"/>
+    </xs:simpleType>
+    <xs:element name="S312M" type="r0:S312M"/>
+    <xs:simpleType name="S327M">
+        <xs:restriction base="r0:DataValue"/>
+    </xs:simpleType>
+    <xs:element name="S327M" type="r0:S327M"/>
+    <xs:simpleType name="BiM">
+        <xs:restriction base="r0:DataValue"/>
+    </xs:simpleType>
+    <xs:element name="BiM" type="r0:BiM"/>
+    <xs:simpleType name="DeltaEntry">
+        <xs:restriction base="r0:DataValue"/>
+    </xs:simpleType>
+    <xs:element name="DeltaEntry" type="r0:DeltaEntry"/>
+    <xs:simpleType name="ClassDefinitionWeakReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="ClassDefinitionWeakReference" type="r0:ClassDefinitionWeakReference"/>
+    <xs:simpleType name="ContainerDefinitionWeakReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="ContainerDefinitionWeakReference" type="r0:ContainerDefinitionWeakReference"/>
+    <xs:simpleType name="DataDefinitionWeakReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="DataDefinitionWeakReference" type="r0:DataDefinitionWeakReference"/>
+    <xs:simpleType name="DefinitionObjectWeakReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="DefinitionObjectWeakReference" type="r0:DefinitionObjectWeakReference"/>
+    <xs:simpleType name="InterpolationDefinitionWeakReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="InterpolationDefinitionWeakReference" type="r0:InterpolationDefinitionWeakReference"/>
+    <xs:simpleType name="PackageWeakReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="PackageWeakReference" type="r0:PackageWeakReference"/>
+    <xs:simpleType name="OperationDefinitionWeakReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="OperationDefinitionWeakReference" type="r0:OperationDefinitionWeakReference"/>
+    <xs:simpleType name="ParameterDefinitionWeakReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="ParameterDefinitionWeakReference" type="r0:ParameterDefinitionWeakReference"/>
+    <xs:simpleType name="TypeDefinitionWeakReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="TypeDefinitionWeakReference" type="r0:TypeDefinitionWeakReference"/>
+    <xs:simpleType name="PluginDefinitionWeakReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="PluginDefinitionWeakReference" type="r0:PluginDefinitionWeakReference"/>
+    <xs:simpleType name="CodecDefinitionWeakReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="CodecDefinitionWeakReference" type="r0:CodecDefinitionWeakReference"/>
+    <xs:simpleType name="PropertyDefinitionWeakReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="PropertyDefinitionWeakReference" type="r0:PropertyDefinitionWeakReference"/>
+    <xs:simpleType name="TypeDefinitionExtendibleEnumerationWeakReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="TypeDefinitionExtendibleEnumerationWeakReference"
+                type="r0:TypeDefinitionExtendibleEnumerationWeakReference"/>
+    <xs:complexType name="ContentStorageStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:ContentStorage"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ContentStorageStrongReference" type="r0:ContentStorageStrongReference"/>
+    <xs:complexType name="DictionaryStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:Dictionary"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="DictionaryStrongReference" type="r0:DictionaryStrongReference"/>
+    <xs:complexType name="EssenceDescriptorStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:AIFCDescriptor"/>
+            <xs:element ref="r1:DateTimeDescriptor"/>
+            <xs:element ref="r1:DataEssenceDescriptor"/>
+            <xs:element ref="r1:RP217Descriptor"/>
+            <xs:element ref="r1:AuxDataEssenceDescriptor"/>
+            <xs:element ref="r1:DCTimedTextDescriptor"/>
+            <xs:element ref="r1:VBIDataDescriptor"/>
+            <xs:element ref="r1:ANCDataDescriptor"/>
+            <xs:element ref="r1:HTMLParsedTextDescriptor"/>
+            <xs:element ref="r1:XMLDescriptor"/>
+            <xs:element ref="r1:STLDescriptor"/>
+            <xs:element ref="r1:MultipleDescriptor"/>
+            <xs:element ref="r1:HTMLDescriptor"/>
+            <xs:element ref="r1:RGBADescriptor"/>
+            <xs:element ref="r1:TIFFPictureEssenceDescriptor"/>
+            <xs:element ref="r1:CDCIDescriptor"/>
+            <xs:element ref="r1:MPEGVideoDescriptor"/>
+            <xs:element ref="r1:VC1VideoDescriptor"/>
+            <xs:element ref="r1:TIFFDescriptor"/>
+            <xs:element ref="r1:WAVEDescriptor"/>
+            <xs:element ref="r1:SoundDescriptor"/>
+            <xs:element ref="r1:WAVEPCMDescriptor"/>
+            <xs:element ref="r1:AES3PCMDescriptor"/>
+            <xs:element ref="r1:DCPCMSoundDescriptor"/>
+            <xs:element ref="r1:MPEGAudioDescriptor"/>
+            <xs:element ref="r1:ImportDescriptor"/>
+            <xs:element ref="r1:BWFImportDescriptor"/>
+            <xs:element ref="r1:AuxiliaryDescriptor"/>
+            <xs:element ref="r1:RecordingDescriptor"/>
+            <xs:element ref="r1:FilmDescriptor"/>
+            <xs:element ref="r1:TapeDescriptor"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="EssenceDescriptorStrongReference" type="r0:EssenceDescriptorStrongReference"/>
+    <xs:complexType name="NetworkLocatorStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:NetworkLocator"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="NetworkLocatorStrongReference" type="r0:NetworkLocatorStrongReference"/>
+    <xs:complexType name="OperationGroupStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:OperationGroup"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="OperationGroupStrongReference" type="r0:OperationGroupStrongReference"/>
+    <xs:complexType name="SegmentStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:TimecodeStream12M"/>
+            <xs:element ref="r1:Timecode"/>
+            <xs:element ref="r1:EssenceGroup"/>
+            <xs:element ref="r1:GPITrigger"/>
+            <xs:element ref="r1:CommentMarker"/>
+            <xs:element ref="r1:DescriptiveMarker"/>
+            <xs:element ref="r1:DynamicMarker"/>
+            <xs:element ref="r1:DynamicClip"/>
+            <xs:element ref="r1:EdgeCode"/>
+            <xs:element ref="r1:Filler"/>
+            <xs:element ref="r1:OperationGroup"/>
+            <xs:element ref="r1:ScopeReference"/>
+            <xs:element ref="r1:Selector"/>
+            <xs:element ref="r1:NestedScope"/>
+            <xs:element ref="r1:Pulldown"/>
+            <xs:element ref="r1:Sequence"/>
+            <xs:element ref="r1:SourceClip"/>
+            <xs:element ref="r1:DescriptiveClip"/>
+            <xs:element ref="r1:HTMLClip"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="SegmentStrongReference" type="r0:SegmentStrongReference"/>
+    <xs:complexType name="SourceClipStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:SourceClip"/>
+            <xs:element ref="r1:DescriptiveClip"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="SourceClipStrongReference" type="r0:SourceClipStrongReference"/>
+    <xs:complexType name="SourceReferenceStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:SourceClip"/>
+            <xs:element ref="r1:DescriptiveClip"/>
+            <xs:element ref="r1:HTMLClip"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="SourceReferenceStrongReference" type="r0:SourceReferenceStrongReference"/>
+    <xs:complexType name="ClassDefinitionStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:ClassDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ClassDefinitionStrongReference" type="r0:ClassDefinitionStrongReference"/>
+    <xs:complexType name="CodecDefinitionStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:CodecDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="CodecDefinitionStrongReference" type="r0:CodecDefinitionStrongReference"/>
+    <xs:complexType name="ComponentStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:TimecodeStream12M"/>
+            <xs:element ref="r1:Timecode"/>
+            <xs:element ref="r1:EssenceGroup"/>
+            <xs:element ref="r1:GPITrigger"/>
+            <xs:element ref="r1:CommentMarker"/>
+            <xs:element ref="r1:DescriptiveMarker"/>
+            <xs:element ref="r1:DynamicMarker"/>
+            <xs:element ref="r1:DynamicClip"/>
+            <xs:element ref="r1:EdgeCode"/>
+            <xs:element ref="r1:Filler"/>
+            <xs:element ref="r1:OperationGroup"/>
+            <xs:element ref="r1:ScopeReference"/>
+            <xs:element ref="r1:Selector"/>
+            <xs:element ref="r1:NestedScope"/>
+            <xs:element ref="r1:Pulldown"/>
+            <xs:element ref="r1:Sequence"/>
+            <xs:element ref="r1:SourceClip"/>
+            <xs:element ref="r1:DescriptiveClip"/>
+            <xs:element ref="r1:HTMLClip"/>
+            <xs:element ref="r1:Transition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ComponentStrongReference" type="r0:ComponentStrongReference"/>
+    <xs:complexType name="ContainerDefinitionStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:ContainerDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ContainerDefinitionStrongReference" type="r0:ContainerDefinitionStrongReference"/>
+    <xs:complexType name="ControlPointStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:ControlPoint"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ControlPointStrongReference" type="r0:ControlPointStrongReference"/>
+    <xs:complexType name="DataDefinitionStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:DataDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="DataDefinitionStrongReference" type="r0:DataDefinitionStrongReference"/>
+    <xs:complexType name="EssenceDataStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:EssenceData"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="EssenceDataStrongReference" type="r0:EssenceDataStrongReference"/>
+    <xs:complexType name="IdentificationStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:Identification"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="IdentificationStrongReference" type="r0:IdentificationStrongReference"/>
+    <xs:complexType name="InterpolationDefinitionStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:InterpolationDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="InterpolationDefinitionStrongReference" type="r0:InterpolationDefinitionStrongReference"/>
+    <xs:complexType name="LocatorStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:TextLocator"/>
+            <xs:element ref="r1:NetworkLocator"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="LocatorStrongReference" type="r0:LocatorStrongReference"/>
+    <xs:complexType name="PackageStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:CompositionPackage"/>
+            <xs:element ref="r1:MaterialPackage"/>
+            <xs:element ref="r1:SourcePackage"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="PackageStrongReference" type="r0:PackageStrongReference"/>
+    <xs:complexType name="TrackStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:EventTrack"/>
+            <xs:element ref="r1:StaticTrack"/>
+            <xs:element ref="r1:TimelineTrack"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="TrackStrongReference" type="r0:TrackStrongReference"/>
+    <xs:complexType name="OperationDefinitionStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:OperationDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="OperationDefinitionStrongReference" type="r0:OperationDefinitionStrongReference"/>
+    <xs:complexType name="ParameterStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:ConstantValue"/>
+            <xs:element ref="r1:VaryingValue"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ParameterStrongReference" type="r0:ParameterStrongReference"/>
+    <xs:complexType name="ParameterDefinitionStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:ParameterDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ParameterDefinitionStrongReference" type="r0:ParameterDefinitionStrongReference"/>
+    <xs:complexType name="PluginDefinitionStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:PluginDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="PluginDefinitionStrongReference" type="r0:PluginDefinitionStrongReference"/>
+    <xs:complexType name="PropertyDefinitionStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:PropertyDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="PropertyDefinitionStrongReference" type="r0:PropertyDefinitionStrongReference"/>
+    <xs:complexType name="TaggedValueStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:TaggedValue"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="TaggedValueStrongReference" type="r0:TaggedValueStrongReference"/>
+    <xs:complexType name="TypeDefinitionStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:TypeDefinitionRename"/>
+            <xs:element ref="r1:TypeDefinitionStream"/>
+            <xs:element ref="r1:TypeDefinitionRecord"/>
+            <xs:element ref="r1:TypeDefinitionVariableArray"/>
+            <xs:element ref="r1:TypeDefinitionFixedArray"/>
+            <xs:element ref="r1:TypeDefinitionString"/>
+            <xs:element ref="r1:TypeDefinitionSet"/>
+            <xs:element ref="r1:TypeDefinitionStrongObjectReference"/>
+            <xs:element ref="r1:TypeDefinitionInteger"/>
+            <xs:element ref="r1:TypeDefinitionEnumeration"/>
+            <xs:element ref="r1:TypeDefinitionWeakObjectReference"/>
+            <xs:element ref="r1:TypeDefinitionCharacter"/>
+            <xs:element ref="r1:TypeDefinitionExtendibleEnumeration"/>
+            <xs:element ref="r1:TypeDefinitionIndirect"/>
+            <xs:element ref="r1:TypeDefinitionOpaque"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="TypeDefinitionStrongReference" type="r0:TypeDefinitionStrongReference"/>
+    <xs:complexType name="KLVDataStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:KLVData"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="KLVDataStrongReference" type="r0:KLVDataStrongReference"/>
+    <xs:complexType name="FileDescriptorStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:AIFCDescriptor"/>
+            <xs:element ref="r1:DateTimeDescriptor"/>
+            <xs:element ref="r1:DataEssenceDescriptor"/>
+            <xs:element ref="r1:RP217Descriptor"/>
+            <xs:element ref="r1:AuxDataEssenceDescriptor"/>
+            <xs:element ref="r1:DCTimedTextDescriptor"/>
+            <xs:element ref="r1:VBIDataDescriptor"/>
+            <xs:element ref="r1:ANCDataDescriptor"/>
+            <xs:element ref="r1:HTMLParsedTextDescriptor"/>
+            <xs:element ref="r1:XMLDescriptor"/>
+            <xs:element ref="r1:STLDescriptor"/>
+            <xs:element ref="r1:MultipleDescriptor"/>
+            <xs:element ref="r1:HTMLDescriptor"/>
+            <xs:element ref="r1:RGBADescriptor"/>
+            <xs:element ref="r1:TIFFPictureEssenceDescriptor"/>
+            <xs:element ref="r1:CDCIDescriptor"/>
+            <xs:element ref="r1:MPEGVideoDescriptor"/>
+            <xs:element ref="r1:VC1VideoDescriptor"/>
+            <xs:element ref="r1:TIFFDescriptor"/>
+            <xs:element ref="r1:WAVEDescriptor"/>
+            <xs:element ref="r1:SoundDescriptor"/>
+            <xs:element ref="r1:WAVEPCMDescriptor"/>
+            <xs:element ref="r1:AES3PCMDescriptor"/>
+            <xs:element ref="r1:DCPCMSoundDescriptor"/>
+            <xs:element ref="r1:MPEGAudioDescriptor"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="FileDescriptorStrongReference" type="r0:FileDescriptorStrongReference"/>
+    <xs:complexType name="RIFFChunkStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:RIFFChunk"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="RIFFChunkStrongReference" type="r0:RIFFChunkStrongReference"/>
+    <xs:complexType name="DescriptiveFrameworkStrongReference">
+        <xs:choice>
+            <xs:element ref="r2:DM_AS_11_Segmentation_Framework"/>
+            <xs:element ref="r3:EBUCoreMainFramework"/>
+            <xs:element ref="r1:ProductionFramework"/>
+            <xs:element ref="r1:ClipFramework"/>
+            <xs:element ref="r1:SceneFramework"/>
+            <xs:element ref="r1:CryptographicFramework"/>
+            <xs:element ref="r1:TextBasedFramework"/>
+            <xs:element ref="r1:EIDRFramework"/>
+            <xs:element ref="r2:DM_AS_11_Core_Framework"/>
+            <xs:element ref="r4:DM_AS_11_UKDPP_Framework"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="DescriptiveFrameworkStrongReference" type="r0:DescriptiveFrameworkStrongReference"/>
+    <xs:complexType name="KLVDataDefinitionStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:KLVDataDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="KLVDataDefinitionStrongReference" type="r0:KLVDataDefinitionStrongReference"/>
+    <xs:complexType name="TaggedValueDefinitionStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:TaggedValueDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="TaggedValueDefinitionStrongReference" type="r0:TaggedValueDefinitionStrongReference"/>
+    <xs:complexType name="DescriptiveObjectStrongReference">
+        <xs:choice>
+            <xs:element ref="r3:contact"/>
+            <xs:element ref="r3:audioStreamFormat"/>
+            <xs:element ref="r3:captioning"/>
+            <xs:element ref="r3:title"/>
+            <xs:element ref="r3:statusGroup"/>
+            <xs:element ref="r3:technicalAttributeUInt8"/>
+            <xs:element ref="r3:temporal"/>
+            <xs:element ref="r3:track"/>
+            <xs:element ref="r3:type"/>
+            <xs:element ref="r3:height"/>
+            <xs:element ref="r3:audioProgramme"/>
+            <xs:element ref="r3:medium"/>
+            <xs:element ref="r3:audioTrackUID"/>
+            <xs:element ref="r3:publicationService"/>
+            <xs:element ref="r3:technicalAttributeRational"/>
+            <xs:element ref="r3:role"/>
+            <xs:element ref="r3:technicalAttributeInt16"/>
+            <xs:element ref="r3:part"/>
+            <xs:element ref="r3:imageFormat"/>
+            <xs:element ref="r3:genre"/>
+            <xs:element ref="r3:dimension"/>
+            <xs:element ref="r3:loudnessMetadata"/>
+            <xs:element ref="r3:rights"/>
+            <xs:element ref="r3:technicalAttributeInt32"/>
+            <xs:element ref="r3:audioObject"/>
+            <xs:element ref="r3:region"/>
+            <xs:element ref="r3:coverage"/>
+            <xs:element ref="r3:basicRelation"/>
+            <xs:element ref="r3:publicationChannel"/>
+            <xs:element ref="r3:technicalAttributeAnyURI"/>
+            <xs:element ref="r3:publicationEvent"/>
+            <xs:element ref="r3:signingFormat"/>
+            <xs:element ref="r3:audioBlockMatrix"/>
+            <xs:element ref="r3:format"/>
+            <xs:element ref="r3:date"/>
+            <xs:element ref="r3:locator"/>
+            <xs:element ref="r3:details"/>
+            <xs:element ref="r3:technicalAttributeUInt64"/>
+            <xs:element ref="r3:metadataSchemaInformation"/>
+            <xs:element ref="r3:technicalAttributeString"/>
+            <xs:element ref="r3:codec"/>
+            <xs:element ref="r3:metadataFormat"/>
+            <xs:element ref="r3:subtitling"/>
+            <xs:element ref="r3:location"/>
+            <xs:element ref="r3:textualAnnotation"/>
+            <xs:element ref="r3:audioChannelFormat"/>
+            <xs:element ref="r3:audioFormatExtended"/>
+            <xs:element ref="r3:technicalAttributeFloat"/>
+            <xs:element ref="r3:aspectRatio"/>
+            <xs:element ref="r3:objectType"/>
+            <xs:element ref="r3:periodOfTime"/>
+            <xs:element ref="r3:technicalAttributeInt8"/>
+            <xs:element ref="r3:alternativeTitle"/>
+            <xs:element ref="r3:organization"/>
+            <xs:element ref="r3:dataFormat"/>
+            <xs:element ref="r3:videoNoiseFilter"/>
+            <xs:element ref="r3:audioBlockMatrixCoefficient"/>
+            <xs:element ref="r3:planning"/>
+            <xs:element ref="r3:width"/>
+            <xs:element ref="r3:audioFormat"/>
+            <xs:element ref="r3:targetAudience"/>
+            <xs:element ref="r3:IDRef"/>
+            <xs:element ref="r3:technicalAttributeUInt16"/>
+            <xs:element ref="r3:packageInfo"/>
+            <xs:element ref="r3:formatGroup"/>
+            <xs:element ref="r3:version"/>
+            <xs:element ref="r3:customRelation"/>
+            <xs:element ref="r3:typeGroup"/>
+            <xs:element ref="r3:audioTrackFormat"/>
+            <xs:element ref="r3:entity"/>
+            <xs:element ref="r3:countryType"/>
+            <xs:element ref="r3:subject"/>
+            <xs:element ref="r3:publicationHistory"/>
+            <xs:element ref="r3:videoFormat"/>
+            <xs:element ref="r3:partMetadata"/>
+            <xs:element ref="r3:time"/>
+            <xs:element ref="r3:description"/>
+            <xs:element ref="r3:spatial"/>
+            <xs:element ref="r3:audioContent"/>
+            <xs:element ref="r3:technicalAttributeUInt32"/>
+            <xs:element ref="r3:audioPackFormat"/>
+            <xs:element ref="r3:compoundName"/>
+            <xs:element ref="r3:language"/>
+            <xs:element ref="r3:hash"/>
+            <xs:element ref="r3:publicationMedium"/>
+            <xs:element ref="r3:audioMXFLookup"/>
+            <xs:element ref="r3:rating"/>
+            <xs:element ref="r3:ancillaryData"/>
+            <xs:element ref="r3:coordinates"/>
+            <xs:element ref="r3:coreMetadata"/>
+            <xs:element ref="r3:timecodeFormat"/>
+            <xs:element ref="r3:department"/>
+            <xs:element ref="r3:audioBlockFormat"/>
+            <xs:element ref="r3:basicLink"/>
+            <xs:element ref="r3:technicalAttributeInt64"/>
+            <xs:element ref="r3:containerFormat"/>
+            <xs:element ref="r3:dateType"/>
+            <xs:element ref="r3:technicalAttributeBoolean"/>
+            <xs:element ref="r3:address"/>
+            <xs:element ref="r3:identifier"/>
+            <xs:element ref="r3:rational"/>
+            <xs:element ref="r1:NameValue"/>
+            <xs:element ref="r1:Project"/>
+            <xs:element ref="r1:Processing"/>
+            <xs:element ref="r1:Titles"/>
+            <xs:element ref="r1:CueWords"/>
+            <xs:element ref="r1:DMS1Identification"/>
+            <xs:element ref="r1:GroupRelationship"/>
+            <xs:element ref="r1:Keypoint"/>
+            <xs:element ref="r1:Location"/>
+            <xs:element ref="r1:Organization"/>
+            <xs:element ref="r1:Person"/>
+            <xs:element ref="r1:Rights"/>
+            <xs:element ref="r1:Contract"/>
+            <xs:element ref="r1:DeviceParameters"/>
+            <xs:element ref="r1:DMS1Annotation"/>
+            <xs:element ref="r1:Participant"/>
+            <xs:element ref="r1:DMS1Event"/>
+            <xs:element ref="r1:Classification"/>
+            <xs:element ref="r1:Award"/>
+            <xs:element ref="r1:Scripting"/>
+            <xs:element ref="r1:CaptionsDescription"/>
+            <xs:element ref="r1:SettingPeriod"/>
+            <xs:element ref="r1:Branding"/>
+            <xs:element ref="r1:Shot"/>
+            <xs:element ref="r1:Address"/>
+            <xs:element ref="r1:PictureFormat"/>
+            <xs:element ref="r1:ContactsList"/>
+            <xs:element ref="r1:Communications"/>
+            <xs:element ref="r1:Publication"/>
+            <xs:element ref="r1:TextBasedObject"/>
+            <xs:element ref="r1:GenericStreamTextBasedSet"/>
+            <xs:element ref="r1:UTF8TextBasedSet"/>
+            <xs:element ref="r1:UTF16TextBasedSet"/>
+            <xs:element ref="r1:CryptographicContext"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="DescriptiveObjectStrongReference" type="r0:DescriptiveObjectStrongReference"/>
+    <xs:complexType name="CueWordsStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:CueWords"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="CueWordsStrongReference" type="r0:CueWordsStrongReference"/>
+    <xs:complexType name="GeographicAreaStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:CompositionPackage"/>
+            <xs:element ref="r1:MaterialPackage"/>
+            <xs:element ref="r1:SourcePackage"/>
+            <xs:element ref="r3:contact"/>
+            <xs:element ref="r3:audioStreamFormat"/>
+            <xs:element ref="r3:captioning"/>
+            <xs:element ref="r3:title"/>
+            <xs:element ref="r3:statusGroup"/>
+            <xs:element ref="r3:technicalAttributeUInt8"/>
+            <xs:element ref="r3:temporal"/>
+            <xs:element ref="r3:track"/>
+            <xs:element ref="r3:type"/>
+            <xs:element ref="r3:height"/>
+            <xs:element ref="r3:audioProgramme"/>
+            <xs:element ref="r3:medium"/>
+            <xs:element ref="r3:audioTrackUID"/>
+            <xs:element ref="r3:publicationService"/>
+            <xs:element ref="r3:technicalAttributeRational"/>
+            <xs:element ref="r3:role"/>
+            <xs:element ref="r3:technicalAttributeInt16"/>
+            <xs:element ref="r3:part"/>
+            <xs:element ref="r3:imageFormat"/>
+            <xs:element ref="r3:genre"/>
+            <xs:element ref="r3:dimension"/>
+            <xs:element ref="r3:loudnessMetadata"/>
+            <xs:element ref="r3:rights"/>
+            <xs:element ref="r3:technicalAttributeInt32"/>
+            <xs:element ref="r3:audioObject"/>
+            <xs:element ref="r3:region"/>
+            <xs:element ref="r3:coverage"/>
+            <xs:element ref="r3:basicRelation"/>
+            <xs:element ref="r3:publicationChannel"/>
+            <xs:element ref="r3:technicalAttributeAnyURI"/>
+            <xs:element ref="r3:publicationEvent"/>
+            <xs:element ref="r3:signingFormat"/>
+            <xs:element ref="r3:audioBlockMatrix"/>
+            <xs:element ref="r3:format"/>
+            <xs:element ref="r3:date"/>
+            <xs:element ref="r3:locator"/>
+            <xs:element ref="r3:details"/>
+            <xs:element ref="r3:technicalAttributeUInt64"/>
+            <xs:element ref="r3:metadataSchemaInformation"/>
+            <xs:element ref="r3:technicalAttributeString"/>
+            <xs:element ref="r3:codec"/>
+            <xs:element ref="r3:metadataFormat"/>
+            <xs:element ref="r3:subtitling"/>
+            <xs:element ref="r3:location"/>
+            <xs:element ref="r3:textualAnnotation"/>
+            <xs:element ref="r3:audioChannelFormat"/>
+            <xs:element ref="r3:audioFormatExtended"/>
+            <xs:element ref="r3:technicalAttributeFloat"/>
+            <xs:element ref="r3:aspectRatio"/>
+            <xs:element ref="r3:objectType"/>
+            <xs:element ref="r3:periodOfTime"/>
+            <xs:element ref="r3:technicalAttributeInt8"/>
+            <xs:element ref="r3:alternativeTitle"/>
+            <xs:element ref="r3:organization"/>
+            <xs:element ref="r3:dataFormat"/>
+            <xs:element ref="r3:videoNoiseFilter"/>
+            <xs:element ref="r3:audioBlockMatrixCoefficient"/>
+            <xs:element ref="r3:planning"/>
+            <xs:element ref="r3:width"/>
+            <xs:element ref="r3:audioFormat"/>
+            <xs:element ref="r3:targetAudience"/>
+            <xs:element ref="r3:IDRef"/>
+            <xs:element ref="r3:technicalAttributeUInt16"/>
+            <xs:element ref="r3:packageInfo"/>
+            <xs:element ref="r3:formatGroup"/>
+            <xs:element ref="r3:version"/>
+            <xs:element ref="r3:customRelation"/>
+            <xs:element ref="r3:typeGroup"/>
+            <xs:element ref="r3:audioTrackFormat"/>
+            <xs:element ref="r3:entity"/>
+            <xs:element ref="r3:countryType"/>
+            <xs:element ref="r3:subject"/>
+            <xs:element ref="r3:publicationHistory"/>
+            <xs:element ref="r3:videoFormat"/>
+            <xs:element ref="r3:partMetadata"/>
+            <xs:element ref="r3:time"/>
+            <xs:element ref="r3:description"/>
+            <xs:element ref="r3:spatial"/>
+            <xs:element ref="r3:audioContent"/>
+            <xs:element ref="r3:technicalAttributeUInt32"/>
+            <xs:element ref="r3:audioPackFormat"/>
+            <xs:element ref="r3:compoundName"/>
+            <xs:element ref="r3:language"/>
+            <xs:element ref="r3:hash"/>
+            <xs:element ref="r3:publicationMedium"/>
+            <xs:element ref="r3:audioMXFLookup"/>
+            <xs:element ref="r3:rating"/>
+            <xs:element ref="r3:ancillaryData"/>
+            <xs:element ref="r3:coordinates"/>
+            <xs:element ref="r3:coreMetadata"/>
+            <xs:element ref="r3:timecodeFormat"/>
+            <xs:element ref="r3:department"/>
+            <xs:element ref="r3:audioBlockFormat"/>
+            <xs:element ref="r3:basicLink"/>
+            <xs:element ref="r3:technicalAttributeInt64"/>
+            <xs:element ref="r3:containerFormat"/>
+            <xs:element ref="r3:dateType"/>
+            <xs:element ref="r3:technicalAttributeBoolean"/>
+            <xs:element ref="r3:address"/>
+            <xs:element ref="r3:identifier"/>
+            <xs:element ref="r3:rational"/>
+            <xs:element ref="r1:NameValue"/>
+            <xs:element ref="r1:Project"/>
+            <xs:element ref="r1:Processing"/>
+            <xs:element ref="r1:Titles"/>
+            <xs:element ref="r1:CueWords"/>
+            <xs:element ref="r1:DMS1Identification"/>
+            <xs:element ref="r1:GroupRelationship"/>
+            <xs:element ref="r1:Keypoint"/>
+            <xs:element ref="r1:Location"/>
+            <xs:element ref="r1:Organization"/>
+            <xs:element ref="r1:Person"/>
+            <xs:element ref="r1:Rights"/>
+            <xs:element ref="r1:Contract"/>
+            <xs:element ref="r1:DeviceParameters"/>
+            <xs:element ref="r1:DMS1Annotation"/>
+            <xs:element ref="r1:Participant"/>
+            <xs:element ref="r1:DMS1Event"/>
+            <xs:element ref="r1:Classification"/>
+            <xs:element ref="r1:Award"/>
+            <xs:element ref="r1:Scripting"/>
+            <xs:element ref="r1:CaptionsDescription"/>
+            <xs:element ref="r1:SettingPeriod"/>
+            <xs:element ref="r1:Branding"/>
+            <xs:element ref="r1:Shot"/>
+            <xs:element ref="r1:Address"/>
+            <xs:element ref="r1:PictureFormat"/>
+            <xs:element ref="r1:ContactsList"/>
+            <xs:element ref="r1:Communications"/>
+            <xs:element ref="r1:Publication"/>
+            <xs:element ref="r1:TextBasedObject"/>
+            <xs:element ref="r1:GenericStreamTextBasedSet"/>
+            <xs:element ref="r1:UTF8TextBasedSet"/>
+            <xs:element ref="r1:UTF16TextBasedSet"/>
+            <xs:element ref="r1:CryptographicContext"/>
+            <xs:element ref="r1:ControlPoint"/>
+            <xs:element ref="r1:DCTimedTextResourceSubDescriptor"/>
+            <xs:element ref="r1:StereoscopicPictureSubDescriptor"/>
+            <xs:element ref="r1:JPEG2000SubDescriptor"/>
+            <xs:element ref="r1:MCALabelSubDescriptor"/>
+            <xs:element ref="r1:GroupOfSoundfieldGroupsLabelSubDescriptor"/>
+            <xs:element ref="r1:AudioChannelLabelSubDescriptor"/>
+            <xs:element ref="r1:SoundfieldGroupLabelSubDescriptor"/>
+            <xs:element ref="r1:ContainerConstraintsSubDescriptor"/>
+            <xs:element ref="r1:MPEG4VisualSubDescriptor"/>
+            <xs:element ref="r1:AVCSubDescriptor"/>
+            <xs:element ref="r1:STLSubDescriptor"/>
+            <xs:element ref="r1:OperationsStereoscopicSubDescriptor"/>
+            <xs:element ref="r1:ParameterDefinition"/>
+            <xs:element ref="r1:KLVDataDefinition"/>
+            <xs:element ref="r1:OPDefinition"/>
+            <xs:element ref="r1:PluginDefinition"/>
+            <xs:element ref="r1:CompressionDefinition"/>
+            <xs:element ref="r1:DataDefinition"/>
+            <xs:element ref="r1:OperationDefinition"/>
+            <xs:element ref="r1:TaggedValueDefinition"/>
+            <xs:element ref="r1:InterpolationDefinition"/>
+            <xs:element ref="r1:CodecDefinition"/>
+            <xs:element ref="r1:ContainerDefinition"/>
+            <xs:element ref="r1:ContentStorage"/>
+            <xs:element ref="r1:EventTrack"/>
+            <xs:element ref="r1:StaticTrack"/>
+            <xs:element ref="r1:TimelineTrack"/>
+            <xs:element ref="r1:ConstantValue"/>
+            <xs:element ref="r1:VaryingValue"/>
+            <xs:element ref="r1:TimecodeStream12M"/>
+            <xs:element ref="r1:Timecode"/>
+            <xs:element ref="r1:EssenceGroup"/>
+            <xs:element ref="r1:GPITrigger"/>
+            <xs:element ref="r1:CommentMarker"/>
+            <xs:element ref="r1:DescriptiveMarker"/>
+            <xs:element ref="r1:DynamicMarker"/>
+            <xs:element ref="r1:DynamicClip"/>
+            <xs:element ref="r1:EdgeCode"/>
+            <xs:element ref="r1:Filler"/>
+            <xs:element ref="r1:OperationGroup"/>
+            <xs:element ref="r1:ScopeReference"/>
+            <xs:element ref="r1:Selector"/>
+            <xs:element ref="r1:NestedScope"/>
+            <xs:element ref="r1:Pulldown"/>
+            <xs:element ref="r1:Sequence"/>
+            <xs:element ref="r1:SourceClip"/>
+            <xs:element ref="r1:DescriptiveClip"/>
+            <xs:element ref="r1:HTMLClip"/>
+            <xs:element ref="r1:Transition"/>
+            <xs:element ref="r1:Dictionary"/>
+            <xs:element ref="r1:TaggedValue"/>
+            <xs:element ref="r1:KLVData"/>
+            <xs:element ref="r1:PackageMarker"/>
+            <xs:element ref="r1:ApplicationObject"/>
+            <xs:element ref="r1:ApplicationPlugInObject"/>
+            <xs:element ref="r1:ApplicationReferencedObject"/>
+            <xs:element ref="r1:EssenceData"/>
+            <xs:element ref="r1:AIFCDescriptor"/>
+            <xs:element ref="r1:DateTimeDescriptor"/>
+            <xs:element ref="r1:DataEssenceDescriptor"/>
+            <xs:element ref="r1:RP217Descriptor"/>
+            <xs:element ref="r1:AuxDataEssenceDescriptor"/>
+            <xs:element ref="r1:DCTimedTextDescriptor"/>
+            <xs:element ref="r1:VBIDataDescriptor"/>
+            <xs:element ref="r1:ANCDataDescriptor"/>
+            <xs:element ref="r1:HTMLParsedTextDescriptor"/>
+            <xs:element ref="r1:XMLDescriptor"/>
+            <xs:element ref="r1:STLDescriptor"/>
+            <xs:element ref="r1:MultipleDescriptor"/>
+            <xs:element ref="r1:HTMLDescriptor"/>
+            <xs:element ref="r1:RGBADescriptor"/>
+            <xs:element ref="r1:TIFFPictureEssenceDescriptor"/>
+            <xs:element ref="r1:CDCIDescriptor"/>
+            <xs:element ref="r1:MPEGVideoDescriptor"/>
+            <xs:element ref="r1:VC1VideoDescriptor"/>
+            <xs:element ref="r1:TIFFDescriptor"/>
+            <xs:element ref="r1:WAVEDescriptor"/>
+            <xs:element ref="r1:SoundDescriptor"/>
+            <xs:element ref="r1:WAVEPCMDescriptor"/>
+            <xs:element ref="r1:AES3PCMDescriptor"/>
+            <xs:element ref="r1:DCPCMSoundDescriptor"/>
+            <xs:element ref="r1:MPEGAudioDescriptor"/>
+            <xs:element ref="r1:ImportDescriptor"/>
+            <xs:element ref="r1:BWFImportDescriptor"/>
+            <xs:element ref="r1:AuxiliaryDescriptor"/>
+            <xs:element ref="r1:RecordingDescriptor"/>
+            <xs:element ref="r1:FilmDescriptor"/>
+            <xs:element ref="r1:TapeDescriptor"/>
+            <xs:element ref="r2:DM_AS_11_Segmentation_Framework"/>
+            <xs:element ref="r3:EBUCoreMainFramework"/>
+            <xs:element ref="r1:ProductionFramework"/>
+            <xs:element ref="r1:ClipFramework"/>
+            <xs:element ref="r1:SceneFramework"/>
+            <xs:element ref="r1:CryptographicFramework"/>
+            <xs:element ref="r1:TextBasedFramework"/>
+            <xs:element ref="r1:EIDRFramework"/>
+            <xs:element ref="r2:DM_AS_11_Core_Framework"/>
+            <xs:element ref="r4:DM_AS_11_UKDPP_Framework"/>
+            <xs:element ref="r1:TextLocator"/>
+            <xs:element ref="r1:NetworkLocator"/>
+            <xs:element ref="r1:Preface"/>
+            <xs:element ref="r1:RIFFChunk"/>
+            <xs:element ref="r1:Identification"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="GeographicAreaStrongReference" type="r0:GeographicAreaStrongReference"/>
+    <xs:complexType name="GeographicPolygonStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:CompositionPackage"/>
+            <xs:element ref="r1:MaterialPackage"/>
+            <xs:element ref="r1:SourcePackage"/>
+            <xs:element ref="r3:contact"/>
+            <xs:element ref="r3:audioStreamFormat"/>
+            <xs:element ref="r3:captioning"/>
+            <xs:element ref="r3:title"/>
+            <xs:element ref="r3:statusGroup"/>
+            <xs:element ref="r3:technicalAttributeUInt8"/>
+            <xs:element ref="r3:temporal"/>
+            <xs:element ref="r3:track"/>
+            <xs:element ref="r3:type"/>
+            <xs:element ref="r3:height"/>
+            <xs:element ref="r3:audioProgramme"/>
+            <xs:element ref="r3:medium"/>
+            <xs:element ref="r3:audioTrackUID"/>
+            <xs:element ref="r3:publicationService"/>
+            <xs:element ref="r3:technicalAttributeRational"/>
+            <xs:element ref="r3:role"/>
+            <xs:element ref="r3:technicalAttributeInt16"/>
+            <xs:element ref="r3:part"/>
+            <xs:element ref="r3:imageFormat"/>
+            <xs:element ref="r3:genre"/>
+            <xs:element ref="r3:dimension"/>
+            <xs:element ref="r3:loudnessMetadata"/>
+            <xs:element ref="r3:rights"/>
+            <xs:element ref="r3:technicalAttributeInt32"/>
+            <xs:element ref="r3:audioObject"/>
+            <xs:element ref="r3:region"/>
+            <xs:element ref="r3:coverage"/>
+            <xs:element ref="r3:basicRelation"/>
+            <xs:element ref="r3:publicationChannel"/>
+            <xs:element ref="r3:technicalAttributeAnyURI"/>
+            <xs:element ref="r3:publicationEvent"/>
+            <xs:element ref="r3:signingFormat"/>
+            <xs:element ref="r3:audioBlockMatrix"/>
+            <xs:element ref="r3:format"/>
+            <xs:element ref="r3:date"/>
+            <xs:element ref="r3:locator"/>
+            <xs:element ref="r3:details"/>
+            <xs:element ref="r3:technicalAttributeUInt64"/>
+            <xs:element ref="r3:metadataSchemaInformation"/>
+            <xs:element ref="r3:technicalAttributeString"/>
+            <xs:element ref="r3:codec"/>
+            <xs:element ref="r3:metadataFormat"/>
+            <xs:element ref="r3:subtitling"/>
+            <xs:element ref="r3:location"/>
+            <xs:element ref="r3:textualAnnotation"/>
+            <xs:element ref="r3:audioChannelFormat"/>
+            <xs:element ref="r3:audioFormatExtended"/>
+            <xs:element ref="r3:technicalAttributeFloat"/>
+            <xs:element ref="r3:aspectRatio"/>
+            <xs:element ref="r3:objectType"/>
+            <xs:element ref="r3:periodOfTime"/>
+            <xs:element ref="r3:technicalAttributeInt8"/>
+            <xs:element ref="r3:alternativeTitle"/>
+            <xs:element ref="r3:organization"/>
+            <xs:element ref="r3:dataFormat"/>
+            <xs:element ref="r3:videoNoiseFilter"/>
+            <xs:element ref="r3:audioBlockMatrixCoefficient"/>
+            <xs:element ref="r3:planning"/>
+            <xs:element ref="r3:width"/>
+            <xs:element ref="r3:audioFormat"/>
+            <xs:element ref="r3:targetAudience"/>
+            <xs:element ref="r3:IDRef"/>
+            <xs:element ref="r3:technicalAttributeUInt16"/>
+            <xs:element ref="r3:packageInfo"/>
+            <xs:element ref="r3:formatGroup"/>
+            <xs:element ref="r3:version"/>
+            <xs:element ref="r3:customRelation"/>
+            <xs:element ref="r3:typeGroup"/>
+            <xs:element ref="r3:audioTrackFormat"/>
+            <xs:element ref="r3:entity"/>
+            <xs:element ref="r3:countryType"/>
+            <xs:element ref="r3:subject"/>
+            <xs:element ref="r3:publicationHistory"/>
+            <xs:element ref="r3:videoFormat"/>
+            <xs:element ref="r3:partMetadata"/>
+            <xs:element ref="r3:time"/>
+            <xs:element ref="r3:description"/>
+            <xs:element ref="r3:spatial"/>
+            <xs:element ref="r3:audioContent"/>
+            <xs:element ref="r3:technicalAttributeUInt32"/>
+            <xs:element ref="r3:audioPackFormat"/>
+            <xs:element ref="r3:compoundName"/>
+            <xs:element ref="r3:language"/>
+            <xs:element ref="r3:hash"/>
+            <xs:element ref="r3:publicationMedium"/>
+            <xs:element ref="r3:audioMXFLookup"/>
+            <xs:element ref="r3:rating"/>
+            <xs:element ref="r3:ancillaryData"/>
+            <xs:element ref="r3:coordinates"/>
+            <xs:element ref="r3:coreMetadata"/>
+            <xs:element ref="r3:timecodeFormat"/>
+            <xs:element ref="r3:department"/>
+            <xs:element ref="r3:audioBlockFormat"/>
+            <xs:element ref="r3:basicLink"/>
+            <xs:element ref="r3:technicalAttributeInt64"/>
+            <xs:element ref="r3:containerFormat"/>
+            <xs:element ref="r3:dateType"/>
+            <xs:element ref="r3:technicalAttributeBoolean"/>
+            <xs:element ref="r3:address"/>
+            <xs:element ref="r3:identifier"/>
+            <xs:element ref="r3:rational"/>
+            <xs:element ref="r1:NameValue"/>
+            <xs:element ref="r1:Project"/>
+            <xs:element ref="r1:Processing"/>
+            <xs:element ref="r1:Titles"/>
+            <xs:element ref="r1:CueWords"/>
+            <xs:element ref="r1:DMS1Identification"/>
+            <xs:element ref="r1:GroupRelationship"/>
+            <xs:element ref="r1:Keypoint"/>
+            <xs:element ref="r1:Location"/>
+            <xs:element ref="r1:Organization"/>
+            <xs:element ref="r1:Person"/>
+            <xs:element ref="r1:Rights"/>
+            <xs:element ref="r1:Contract"/>
+            <xs:element ref="r1:DeviceParameters"/>
+            <xs:element ref="r1:DMS1Annotation"/>
+            <xs:element ref="r1:Participant"/>
+            <xs:element ref="r1:DMS1Event"/>
+            <xs:element ref="r1:Classification"/>
+            <xs:element ref="r1:Award"/>
+            <xs:element ref="r1:Scripting"/>
+            <xs:element ref="r1:CaptionsDescription"/>
+            <xs:element ref="r1:SettingPeriod"/>
+            <xs:element ref="r1:Branding"/>
+            <xs:element ref="r1:Shot"/>
+            <xs:element ref="r1:Address"/>
+            <xs:element ref="r1:PictureFormat"/>
+            <xs:element ref="r1:ContactsList"/>
+            <xs:element ref="r1:Communications"/>
+            <xs:element ref="r1:Publication"/>
+            <xs:element ref="r1:TextBasedObject"/>
+            <xs:element ref="r1:GenericStreamTextBasedSet"/>
+            <xs:element ref="r1:UTF8TextBasedSet"/>
+            <xs:element ref="r1:UTF16TextBasedSet"/>
+            <xs:element ref="r1:CryptographicContext"/>
+            <xs:element ref="r1:ControlPoint"/>
+            <xs:element ref="r1:DCTimedTextResourceSubDescriptor"/>
+            <xs:element ref="r1:StereoscopicPictureSubDescriptor"/>
+            <xs:element ref="r1:JPEG2000SubDescriptor"/>
+            <xs:element ref="r1:MCALabelSubDescriptor"/>
+            <xs:element ref="r1:GroupOfSoundfieldGroupsLabelSubDescriptor"/>
+            <xs:element ref="r1:AudioChannelLabelSubDescriptor"/>
+            <xs:element ref="r1:SoundfieldGroupLabelSubDescriptor"/>
+            <xs:element ref="r1:ContainerConstraintsSubDescriptor"/>
+            <xs:element ref="r1:MPEG4VisualSubDescriptor"/>
+            <xs:element ref="r1:AVCSubDescriptor"/>
+            <xs:element ref="r1:STLSubDescriptor"/>
+            <xs:element ref="r1:OperationsStereoscopicSubDescriptor"/>
+            <xs:element ref="r1:ParameterDefinition"/>
+            <xs:element ref="r1:KLVDataDefinition"/>
+            <xs:element ref="r1:OPDefinition"/>
+            <xs:element ref="r1:PluginDefinition"/>
+            <xs:element ref="r1:CompressionDefinition"/>
+            <xs:element ref="r1:DataDefinition"/>
+            <xs:element ref="r1:OperationDefinition"/>
+            <xs:element ref="r1:TaggedValueDefinition"/>
+            <xs:element ref="r1:InterpolationDefinition"/>
+            <xs:element ref="r1:CodecDefinition"/>
+            <xs:element ref="r1:ContainerDefinition"/>
+            <xs:element ref="r1:ContentStorage"/>
+            <xs:element ref="r1:EventTrack"/>
+            <xs:element ref="r1:StaticTrack"/>
+            <xs:element ref="r1:TimelineTrack"/>
+            <xs:element ref="r1:ConstantValue"/>
+            <xs:element ref="r1:VaryingValue"/>
+            <xs:element ref="r1:TimecodeStream12M"/>
+            <xs:element ref="r1:Timecode"/>
+            <xs:element ref="r1:EssenceGroup"/>
+            <xs:element ref="r1:GPITrigger"/>
+            <xs:element ref="r1:CommentMarker"/>
+            <xs:element ref="r1:DescriptiveMarker"/>
+            <xs:element ref="r1:DynamicMarker"/>
+            <xs:element ref="r1:DynamicClip"/>
+            <xs:element ref="r1:EdgeCode"/>
+            <xs:element ref="r1:Filler"/>
+            <xs:element ref="r1:OperationGroup"/>
+            <xs:element ref="r1:ScopeReference"/>
+            <xs:element ref="r1:Selector"/>
+            <xs:element ref="r1:NestedScope"/>
+            <xs:element ref="r1:Pulldown"/>
+            <xs:element ref="r1:Sequence"/>
+            <xs:element ref="r1:SourceClip"/>
+            <xs:element ref="r1:DescriptiveClip"/>
+            <xs:element ref="r1:HTMLClip"/>
+            <xs:element ref="r1:Transition"/>
+            <xs:element ref="r1:Dictionary"/>
+            <xs:element ref="r1:TaggedValue"/>
+            <xs:element ref="r1:KLVData"/>
+            <xs:element ref="r1:PackageMarker"/>
+            <xs:element ref="r1:ApplicationObject"/>
+            <xs:element ref="r1:ApplicationPlugInObject"/>
+            <xs:element ref="r1:ApplicationReferencedObject"/>
+            <xs:element ref="r1:EssenceData"/>
+            <xs:element ref="r1:AIFCDescriptor"/>
+            <xs:element ref="r1:DateTimeDescriptor"/>
+            <xs:element ref="r1:DataEssenceDescriptor"/>
+            <xs:element ref="r1:RP217Descriptor"/>
+            <xs:element ref="r1:AuxDataEssenceDescriptor"/>
+            <xs:element ref="r1:DCTimedTextDescriptor"/>
+            <xs:element ref="r1:VBIDataDescriptor"/>
+            <xs:element ref="r1:ANCDataDescriptor"/>
+            <xs:element ref="r1:HTMLParsedTextDescriptor"/>
+            <xs:element ref="r1:XMLDescriptor"/>
+            <xs:element ref="r1:STLDescriptor"/>
+            <xs:element ref="r1:MultipleDescriptor"/>
+            <xs:element ref="r1:HTMLDescriptor"/>
+            <xs:element ref="r1:RGBADescriptor"/>
+            <xs:element ref="r1:TIFFPictureEssenceDescriptor"/>
+            <xs:element ref="r1:CDCIDescriptor"/>
+            <xs:element ref="r1:MPEGVideoDescriptor"/>
+            <xs:element ref="r1:VC1VideoDescriptor"/>
+            <xs:element ref="r1:TIFFDescriptor"/>
+            <xs:element ref="r1:WAVEDescriptor"/>
+            <xs:element ref="r1:SoundDescriptor"/>
+            <xs:element ref="r1:WAVEPCMDescriptor"/>
+            <xs:element ref="r1:AES3PCMDescriptor"/>
+            <xs:element ref="r1:DCPCMSoundDescriptor"/>
+            <xs:element ref="r1:MPEGAudioDescriptor"/>
+            <xs:element ref="r1:ImportDescriptor"/>
+            <xs:element ref="r1:BWFImportDescriptor"/>
+            <xs:element ref="r1:AuxiliaryDescriptor"/>
+            <xs:element ref="r1:RecordingDescriptor"/>
+            <xs:element ref="r1:FilmDescriptor"/>
+            <xs:element ref="r1:TapeDescriptor"/>
+            <xs:element ref="r2:DM_AS_11_Segmentation_Framework"/>
+            <xs:element ref="r3:EBUCoreMainFramework"/>
+            <xs:element ref="r1:ProductionFramework"/>
+            <xs:element ref="r1:ClipFramework"/>
+            <xs:element ref="r1:SceneFramework"/>
+            <xs:element ref="r1:CryptographicFramework"/>
+            <xs:element ref="r1:TextBasedFramework"/>
+            <xs:element ref="r1:EIDRFramework"/>
+            <xs:element ref="r2:DM_AS_11_Core_Framework"/>
+            <xs:element ref="r4:DM_AS_11_UKDPP_Framework"/>
+            <xs:element ref="r1:TextLocator"/>
+            <xs:element ref="r1:NetworkLocator"/>
+            <xs:element ref="r1:Preface"/>
+            <xs:element ref="r1:RIFFChunk"/>
+            <xs:element ref="r1:Identification"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="GeographicPolygonStrongReference" type="r0:GeographicPolygonStrongReference"/>
+    <xs:complexType name="SubDescriptorStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:DCTimedTextResourceSubDescriptor"/>
+            <xs:element ref="r1:StereoscopicPictureSubDescriptor"/>
+            <xs:element ref="r1:JPEG2000SubDescriptor"/>
+            <xs:element ref="r1:MCALabelSubDescriptor"/>
+            <xs:element ref="r1:GroupOfSoundfieldGroupsLabelSubDescriptor"/>
+            <xs:element ref="r1:AudioChannelLabelSubDescriptor"/>
+            <xs:element ref="r1:SoundfieldGroupLabelSubDescriptor"/>
+            <xs:element ref="r1:ContainerConstraintsSubDescriptor"/>
+            <xs:element ref="r1:MPEG4VisualSubDescriptor"/>
+            <xs:element ref="r1:AVCSubDescriptor"/>
+            <xs:element ref="r1:STLSubDescriptor"/>
+            <xs:element ref="r1:OperationsStereoscopicSubDescriptor"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="SubDescriptorStrongReference" type="r0:SubDescriptorStrongReference"/>
+    <xs:complexType name="MetaDictionaryStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:MetaDictionary"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="MetaDictionaryStrongReference" type="r0:MetaDictionaryStrongReference"/>
+    <xs:complexType name="PrefaceStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:Preface"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="PrefaceStrongReference" type="r0:PrefaceStrongReference"/>
+    <xs:complexType name="NameValueStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:NameValue"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="NameValueStrongReference" type="r0:NameValueStrongReference"/>
+    <xs:complexType name="TextBasedObjectStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:TextBasedObject"/>
+            <xs:element ref="r1:GenericStreamTextBasedSet"/>
+            <xs:element ref="r1:UTF8TextBasedSet"/>
+            <xs:element ref="r1:UTF16TextBasedSet"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="TextBasedObjectStrongReference" type="r0:TextBasedObjectStrongReference"/>
+    <xs:complexType name="EntryStrongReference">
+        <xs:choice>
+            <!--Reference type urn:smpte:ul:060e2b34.027f0101.0c010101.01010300 not found.-->
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="EntryStrongReference" type="r0:EntryStrongReference"/>
+    <xs:complexType name="RegisterAdministrationStrongReference">
+        <xs:choice>
+            <!--Reference type urn:smpte:ul:060e2b34.027f0101.0c010101.01010800 not found.-->
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="RegisterAdministrationStrongReference" type="r0:RegisterAdministrationStrongReference"/>
+    <xs:complexType name="EntryAdministrationStrongReference">
+        <xs:choice>
+            <!--Reference type urn:smpte:ul:060e2b34.027f0101.0c010101.01010400 not found.-->
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="EntryAdministrationStrongReference" type="r0:EntryAdministrationStrongReference"/>
+    <xs:complexType name="PackageMarkerStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:PackageMarker"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="PackageMarkerStrongReference" type="r0:PackageMarkerStrongReference"/>
+    <xs:complexType name="ApplicationPluginObjectStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:ApplicationPlugInObject"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ApplicationPluginObjectStrongReference" type="r0:ApplicationPluginObjectStrongReference"/>
+    <xs:complexType name="ExtensionSchemeStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:ExtensionScheme"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ExtensionSchemeStrongReference" type="r0:ExtensionSchemeStrongReference"/>
+    <xs:complexType name="MetaDefinitionStrongReference">
+        <xs:choice>
+            <xs:element ref="r1:ClassDefinition"/>
+            <xs:element ref="r1:TypeDefinitionRename"/>
+            <xs:element ref="r1:TypeDefinitionStream"/>
+            <xs:element ref="r1:TypeDefinitionRecord"/>
+            <xs:element ref="r1:TypeDefinitionVariableArray"/>
+            <xs:element ref="r1:TypeDefinitionFixedArray"/>
+            <xs:element ref="r1:TypeDefinitionString"/>
+            <xs:element ref="r1:TypeDefinitionSet"/>
+            <xs:element ref="r1:TypeDefinitionStrongObjectReference"/>
+            <xs:element ref="r1:TypeDefinitionInteger"/>
+            <xs:element ref="r1:TypeDefinitionEnumeration"/>
+            <xs:element ref="r1:TypeDefinitionWeakObjectReference"/>
+            <xs:element ref="r1:TypeDefinitionCharacter"/>
+            <xs:element ref="r1:TypeDefinitionExtendibleEnumeration"/>
+            <xs:element ref="r1:TypeDefinitionIndirect"/>
+            <xs:element ref="r1:TypeDefinitionOpaque"/>
+            <xs:element ref="r1:PropertyDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="MetaDefinitionStrongReference" type="r0:MetaDefinitionStrongReference"/>
+    <xs:complexType name="DataDefinitionWeakReferenceSet">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:DataDefinitionWeakReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="DataDefinitionWeakReferenceSet" type="r0:DataDefinitionWeakReferenceSet"/>
+    <xs:complexType name="ParameterDefinitionWeakReferenceSet">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:ParameterDefinitionWeakReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ParameterDefinitionWeakReferenceSet" type="r0:ParameterDefinitionWeakReferenceSet"/>
+    <xs:complexType name="PluginDefinitionWeakReferenceSet">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:PluginDefinitionWeakReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="PluginDefinitionWeakReferenceSet" type="r0:PluginDefinitionWeakReferenceSet"/>
+    <xs:complexType name="PropertyDefinitionWeakReferenceSet">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:PropertyDefinitionWeakReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="PropertyDefinitionWeakReferenceSet" type="r0:PropertyDefinitionWeakReferenceSet"/>
+    <xs:complexType name="TypeDefinitionExtendibleEnumerationWeakReferenceSet">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:TypeDefinitionExtendibleEnumerationWeakReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="TypeDefinitionExtendibleEnumerationWeakReferenceSet"
+                type="r0:TypeDefinitionExtendibleEnumerationWeakReferenceSet"/>
+    <xs:complexType name="OperationDefinitionWeakReferenceVector">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:OperationDefinitionWeakReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="OperationDefinitionWeakReferenceVector" type="r0:OperationDefinitionWeakReferenceVector"/>
+    <xs:complexType name="TypeDefinitionWeakReferenceVector">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:TypeDefinitionWeakReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="TypeDefinitionWeakReferenceVector" type="r0:TypeDefinitionWeakReferenceVector"/>
+    <xs:complexType name="DataDefinitionWeakReferenceVector">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:DataDefinitionWeakReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="DataDefinitionWeakReferenceVector" type="r0:DataDefinitionWeakReferenceVector"/>
+    <xs:complexType name="ClassDefinitionStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:ClassDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ClassDefinitionStrongReferenceSet" type="r0:ClassDefinitionStrongReferenceSet"/>
+    <xs:complexType name="CodecDefinitionStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:CodecDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="CodecDefinitionStrongReferenceSet" type="r0:CodecDefinitionStrongReferenceSet"/>
+    <xs:complexType name="ContainerDefinitionStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:ContainerDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ContainerDefinitionStrongReferenceSet" type="r0:ContainerDefinitionStrongReferenceSet"/>
+    <xs:complexType name="DataDefinitionStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:DataDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="DataDefinitionStrongReferenceSet" type="r0:DataDefinitionStrongReferenceSet"/>
+    <xs:complexType name="EssenceDataStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:EssenceData"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="EssenceDataStrongReferenceSet" type="r0:EssenceDataStrongReferenceSet"/>
+    <xs:complexType name="InterpolationDefinitionStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:InterpolationDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="InterpolationDefinitionStrongReferenceSet" type="r0:InterpolationDefinitionStrongReferenceSet"/>
+    <xs:complexType name="PackageStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:CompositionPackage"/>
+            <xs:element ref="r1:MaterialPackage"/>
+            <xs:element ref="r1:SourcePackage"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="PackageStrongReferenceSet" type="r0:PackageStrongReferenceSet"/>
+    <xs:complexType name="OperationDefinitionStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:OperationDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="OperationDefinitionStrongReferenceSet" type="r0:OperationDefinitionStrongReferenceSet"/>
+    <xs:complexType name="ParameterDefinitionStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:ParameterDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ParameterDefinitionStrongReferenceSet" type="r0:ParameterDefinitionStrongReferenceSet"/>
+    <xs:complexType name="PluginDefinitionStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:PluginDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="PluginDefinitionStrongReferenceSet" type="r0:PluginDefinitionStrongReferenceSet"/>
+    <xs:complexType name="PropertyDefinitionStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:PropertyDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="PropertyDefinitionStrongReferenceSet" type="r0:PropertyDefinitionStrongReferenceSet"/>
+    <xs:complexType name="TypeDefinitionStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:TypeDefinitionRename"/>
+            <xs:element ref="r1:TypeDefinitionStream"/>
+            <xs:element ref="r1:TypeDefinitionRecord"/>
+            <xs:element ref="r1:TypeDefinitionVariableArray"/>
+            <xs:element ref="r1:TypeDefinitionFixedArray"/>
+            <xs:element ref="r1:TypeDefinitionString"/>
+            <xs:element ref="r1:TypeDefinitionSet"/>
+            <xs:element ref="r1:TypeDefinitionStrongObjectReference"/>
+            <xs:element ref="r1:TypeDefinitionInteger"/>
+            <xs:element ref="r1:TypeDefinitionEnumeration"/>
+            <xs:element ref="r1:TypeDefinitionWeakObjectReference"/>
+            <xs:element ref="r1:TypeDefinitionCharacter"/>
+            <xs:element ref="r1:TypeDefinitionExtendibleEnumeration"/>
+            <xs:element ref="r1:TypeDefinitionIndirect"/>
+            <xs:element ref="r1:TypeDefinitionOpaque"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="TypeDefinitionStrongReferenceSet" type="r0:TypeDefinitionStrongReferenceSet"/>
+    <xs:complexType name="KLVDataDefinitionStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:KLVDataDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="KLVDataDefinitionStrongReferenceSet" type="r0:KLVDataDefinitionStrongReferenceSet"/>
+    <xs:complexType name="TaggedValueDefinitionStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:TaggedValueDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="TaggedValueDefinitionStrongReferenceSet" type="r0:TaggedValueDefinitionStrongReferenceSet"/>
+    <xs:complexType name="DescriptiveObjectStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r3:contact"/>
+            <xs:element ref="r3:audioStreamFormat"/>
+            <xs:element ref="r3:captioning"/>
+            <xs:element ref="r3:title"/>
+            <xs:element ref="r3:statusGroup"/>
+            <xs:element ref="r3:technicalAttributeUInt8"/>
+            <xs:element ref="r3:temporal"/>
+            <xs:element ref="r3:track"/>
+            <xs:element ref="r3:type"/>
+            <xs:element ref="r3:height"/>
+            <xs:element ref="r3:audioProgramme"/>
+            <xs:element ref="r3:medium"/>
+            <xs:element ref="r3:audioTrackUID"/>
+            <xs:element ref="r3:publicationService"/>
+            <xs:element ref="r3:technicalAttributeRational"/>
+            <xs:element ref="r3:role"/>
+            <xs:element ref="r3:technicalAttributeInt16"/>
+            <xs:element ref="r3:part"/>
+            <xs:element ref="r3:imageFormat"/>
+            <xs:element ref="r3:genre"/>
+            <xs:element ref="r3:dimension"/>
+            <xs:element ref="r3:loudnessMetadata"/>
+            <xs:element ref="r3:rights"/>
+            <xs:element ref="r3:technicalAttributeInt32"/>
+            <xs:element ref="r3:audioObject"/>
+            <xs:element ref="r3:region"/>
+            <xs:element ref="r3:coverage"/>
+            <xs:element ref="r3:basicRelation"/>
+            <xs:element ref="r3:publicationChannel"/>
+            <xs:element ref="r3:technicalAttributeAnyURI"/>
+            <xs:element ref="r3:publicationEvent"/>
+            <xs:element ref="r3:signingFormat"/>
+            <xs:element ref="r3:audioBlockMatrix"/>
+            <xs:element ref="r3:format"/>
+            <xs:element ref="r3:date"/>
+            <xs:element ref="r3:locator"/>
+            <xs:element ref="r3:details"/>
+            <xs:element ref="r3:technicalAttributeUInt64"/>
+            <xs:element ref="r3:metadataSchemaInformation"/>
+            <xs:element ref="r3:technicalAttributeString"/>
+            <xs:element ref="r3:codec"/>
+            <xs:element ref="r3:metadataFormat"/>
+            <xs:element ref="r3:subtitling"/>
+            <xs:element ref="r3:location"/>
+            <xs:element ref="r3:textualAnnotation"/>
+            <xs:element ref="r3:audioChannelFormat"/>
+            <xs:element ref="r3:audioFormatExtended"/>
+            <xs:element ref="r3:technicalAttributeFloat"/>
+            <xs:element ref="r3:aspectRatio"/>
+            <xs:element ref="r3:objectType"/>
+            <xs:element ref="r3:periodOfTime"/>
+            <xs:element ref="r3:technicalAttributeInt8"/>
+            <xs:element ref="r3:alternativeTitle"/>
+            <xs:element ref="r3:organization"/>
+            <xs:element ref="r3:dataFormat"/>
+            <xs:element ref="r3:videoNoiseFilter"/>
+            <xs:element ref="r3:audioBlockMatrixCoefficient"/>
+            <xs:element ref="r3:planning"/>
+            <xs:element ref="r3:width"/>
+            <xs:element ref="r3:audioFormat"/>
+            <xs:element ref="r3:targetAudience"/>
+            <xs:element ref="r3:IDRef"/>
+            <xs:element ref="r3:technicalAttributeUInt16"/>
+            <xs:element ref="r3:packageInfo"/>
+            <xs:element ref="r3:formatGroup"/>
+            <xs:element ref="r3:version"/>
+            <xs:element ref="r3:customRelation"/>
+            <xs:element ref="r3:typeGroup"/>
+            <xs:element ref="r3:audioTrackFormat"/>
+            <xs:element ref="r3:entity"/>
+            <xs:element ref="r3:countryType"/>
+            <xs:element ref="r3:subject"/>
+            <xs:element ref="r3:publicationHistory"/>
+            <xs:element ref="r3:videoFormat"/>
+            <xs:element ref="r3:partMetadata"/>
+            <xs:element ref="r3:time"/>
+            <xs:element ref="r3:description"/>
+            <xs:element ref="r3:spatial"/>
+            <xs:element ref="r3:audioContent"/>
+            <xs:element ref="r3:technicalAttributeUInt32"/>
+            <xs:element ref="r3:audioPackFormat"/>
+            <xs:element ref="r3:compoundName"/>
+            <xs:element ref="r3:language"/>
+            <xs:element ref="r3:hash"/>
+            <xs:element ref="r3:publicationMedium"/>
+            <xs:element ref="r3:audioMXFLookup"/>
+            <xs:element ref="r3:rating"/>
+            <xs:element ref="r3:ancillaryData"/>
+            <xs:element ref="r3:coordinates"/>
+            <xs:element ref="r3:coreMetadata"/>
+            <xs:element ref="r3:timecodeFormat"/>
+            <xs:element ref="r3:department"/>
+            <xs:element ref="r3:audioBlockFormat"/>
+            <xs:element ref="r3:basicLink"/>
+            <xs:element ref="r3:technicalAttributeInt64"/>
+            <xs:element ref="r3:containerFormat"/>
+            <xs:element ref="r3:dateType"/>
+            <xs:element ref="r3:technicalAttributeBoolean"/>
+            <xs:element ref="r3:address"/>
+            <xs:element ref="r3:identifier"/>
+            <xs:element ref="r3:rational"/>
+            <xs:element ref="r1:NameValue"/>
+            <xs:element ref="r1:Project"/>
+            <xs:element ref="r1:Processing"/>
+            <xs:element ref="r1:Titles"/>
+            <xs:element ref="r1:CueWords"/>
+            <xs:element ref="r1:DMS1Identification"/>
+            <xs:element ref="r1:GroupRelationship"/>
+            <xs:element ref="r1:Keypoint"/>
+            <xs:element ref="r1:Location"/>
+            <xs:element ref="r1:Organization"/>
+            <xs:element ref="r1:Person"/>
+            <xs:element ref="r1:Rights"/>
+            <xs:element ref="r1:Contract"/>
+            <xs:element ref="r1:DeviceParameters"/>
+            <xs:element ref="r1:DMS1Annotation"/>
+            <xs:element ref="r1:Participant"/>
+            <xs:element ref="r1:DMS1Event"/>
+            <xs:element ref="r1:Classification"/>
+            <xs:element ref="r1:Award"/>
+            <xs:element ref="r1:Scripting"/>
+            <xs:element ref="r1:CaptionsDescription"/>
+            <xs:element ref="r1:SettingPeriod"/>
+            <xs:element ref="r1:Branding"/>
+            <xs:element ref="r1:Shot"/>
+            <xs:element ref="r1:Address"/>
+            <xs:element ref="r1:PictureFormat"/>
+            <xs:element ref="r1:ContactsList"/>
+            <xs:element ref="r1:Communications"/>
+            <xs:element ref="r1:Publication"/>
+            <xs:element ref="r1:TextBasedObject"/>
+            <xs:element ref="r1:GenericStreamTextBasedSet"/>
+            <xs:element ref="r1:UTF8TextBasedSet"/>
+            <xs:element ref="r1:UTF16TextBasedSet"/>
+            <xs:element ref="r1:CryptographicContext"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="DescriptiveObjectStrongReferenceSet" type="r0:DescriptiveObjectStrongReferenceSet"/>
+    <xs:complexType name="NameValueStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:NameValue"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="NameValueStrongReferenceSet" type="r0:NameValueStrongReferenceSet"/>
+    <xs:complexType name="ApplicationPluginObjectStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:ApplicationPlugInObject"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ApplicationPluginObjectStrongReferenceSet" type="r0:ApplicationPluginObjectStrongReferenceSet"/>
+    <xs:complexType name="ExtensionSchemeStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:ExtensionScheme"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ExtensionSchemeStrongReferenceSet" type="r0:ExtensionSchemeStrongReferenceSet"/>
+    <xs:complexType name="MetaDefinitionStrongReferenceSet">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:ClassDefinition"/>
+            <xs:element ref="r1:TypeDefinitionRename"/>
+            <xs:element ref="r1:TypeDefinitionStream"/>
+            <xs:element ref="r1:TypeDefinitionRecord"/>
+            <xs:element ref="r1:TypeDefinitionVariableArray"/>
+            <xs:element ref="r1:TypeDefinitionFixedArray"/>
+            <xs:element ref="r1:TypeDefinitionString"/>
+            <xs:element ref="r1:TypeDefinitionSet"/>
+            <xs:element ref="r1:TypeDefinitionStrongObjectReference"/>
+            <xs:element ref="r1:TypeDefinitionInteger"/>
+            <xs:element ref="r1:TypeDefinitionEnumeration"/>
+            <xs:element ref="r1:TypeDefinitionWeakObjectReference"/>
+            <xs:element ref="r1:TypeDefinitionCharacter"/>
+            <xs:element ref="r1:TypeDefinitionExtendibleEnumeration"/>
+            <xs:element ref="r1:TypeDefinitionIndirect"/>
+            <xs:element ref="r1:TypeDefinitionOpaque"/>
+            <xs:element ref="r1:PropertyDefinition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="MetaDefinitionStrongReferenceSet" type="r0:MetaDefinitionStrongReferenceSet"/>
+    <xs:complexType name="ComponentStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:TimecodeStream12M"/>
+            <xs:element ref="r1:Timecode"/>
+            <xs:element ref="r1:EssenceGroup"/>
+            <xs:element ref="r1:GPITrigger"/>
+            <xs:element ref="r1:CommentMarker"/>
+            <xs:element ref="r1:DescriptiveMarker"/>
+            <xs:element ref="r1:DynamicMarker"/>
+            <xs:element ref="r1:DynamicClip"/>
+            <xs:element ref="r1:EdgeCode"/>
+            <xs:element ref="r1:Filler"/>
+            <xs:element ref="r1:OperationGroup"/>
+            <xs:element ref="r1:ScopeReference"/>
+            <xs:element ref="r1:Selector"/>
+            <xs:element ref="r1:NestedScope"/>
+            <xs:element ref="r1:Pulldown"/>
+            <xs:element ref="r1:Sequence"/>
+            <xs:element ref="r1:SourceClip"/>
+            <xs:element ref="r1:DescriptiveClip"/>
+            <xs:element ref="r1:HTMLClip"/>
+            <xs:element ref="r1:Transition"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ComponentStrongReferenceVector" type="r0:ComponentStrongReferenceVector"/>
+    <xs:complexType name="ControlPointStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:ControlPoint"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ControlPointStrongReferenceVector" type="r0:ControlPointStrongReferenceVector"/>
+    <xs:complexType name="IdentificationStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:Identification"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="IdentificationStrongReferenceVector" type="r0:IdentificationStrongReferenceVector"/>
+    <xs:complexType name="LocatorStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:TextLocator"/>
+            <xs:element ref="r1:NetworkLocator"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="LocatorStrongReferenceVector" type="r0:LocatorStrongReferenceVector"/>
+    <xs:complexType name="TrackStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:EventTrack"/>
+            <xs:element ref="r1:StaticTrack"/>
+            <xs:element ref="r1:TimelineTrack"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="TrackStrongReferenceVector" type="r0:TrackStrongReferenceVector"/>
+    <xs:complexType name="SegmentStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:TimecodeStream12M"/>
+            <xs:element ref="r1:Timecode"/>
+            <xs:element ref="r1:EssenceGroup"/>
+            <xs:element ref="r1:GPITrigger"/>
+            <xs:element ref="r1:CommentMarker"/>
+            <xs:element ref="r1:DescriptiveMarker"/>
+            <xs:element ref="r1:DynamicMarker"/>
+            <xs:element ref="r1:DynamicClip"/>
+            <xs:element ref="r1:EdgeCode"/>
+            <xs:element ref="r1:Filler"/>
+            <xs:element ref="r1:OperationGroup"/>
+            <xs:element ref="r1:ScopeReference"/>
+            <xs:element ref="r1:Selector"/>
+            <xs:element ref="r1:NestedScope"/>
+            <xs:element ref="r1:Pulldown"/>
+            <xs:element ref="r1:Sequence"/>
+            <xs:element ref="r1:SourceClip"/>
+            <xs:element ref="r1:DescriptiveClip"/>
+            <xs:element ref="r1:HTMLClip"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="SegmentStrongReferenceVector" type="r0:SegmentStrongReferenceVector"/>
+    <xs:complexType name="SourceReferenceStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:SourceClip"/>
+            <xs:element ref="r1:DescriptiveClip"/>
+            <xs:element ref="r1:HTMLClip"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="SourceReferenceStrongReferenceVector" type="r0:SourceReferenceStrongReferenceVector"/>
+    <xs:complexType name="TaggedValueStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:TaggedValue"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="TaggedValueStrongReferenceVector" type="r0:TaggedValueStrongReferenceVector"/>
+    <xs:complexType name="KLVDataStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:KLVData"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="KLVDataStrongReferenceVector" type="r0:KLVDataStrongReferenceVector"/>
+    <xs:complexType name="ParameterStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:ConstantValue"/>
+            <xs:element ref="r1:VaryingValue"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="ParameterStrongReferenceVector" type="r0:ParameterStrongReferenceVector"/>
+    <xs:complexType name="FileDescriptorStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:AIFCDescriptor"/>
+            <xs:element ref="r1:DateTimeDescriptor"/>
+            <xs:element ref="r1:DataEssenceDescriptor"/>
+            <xs:element ref="r1:RP217Descriptor"/>
+            <xs:element ref="r1:AuxDataEssenceDescriptor"/>
+            <xs:element ref="r1:DCTimedTextDescriptor"/>
+            <xs:element ref="r1:VBIDataDescriptor"/>
+            <xs:element ref="r1:ANCDataDescriptor"/>
+            <xs:element ref="r1:HTMLParsedTextDescriptor"/>
+            <xs:element ref="r1:XMLDescriptor"/>
+            <xs:element ref="r1:STLDescriptor"/>
+            <xs:element ref="r1:MultipleDescriptor"/>
+            <xs:element ref="r1:HTMLDescriptor"/>
+            <xs:element ref="r1:RGBADescriptor"/>
+            <xs:element ref="r1:TIFFPictureEssenceDescriptor"/>
+            <xs:element ref="r1:CDCIDescriptor"/>
+            <xs:element ref="r1:MPEGVideoDescriptor"/>
+            <xs:element ref="r1:VC1VideoDescriptor"/>
+            <xs:element ref="r1:TIFFDescriptor"/>
+            <xs:element ref="r1:WAVEDescriptor"/>
+            <xs:element ref="r1:SoundDescriptor"/>
+            <xs:element ref="r1:WAVEPCMDescriptor"/>
+            <xs:element ref="r1:AES3PCMDescriptor"/>
+            <xs:element ref="r1:DCPCMSoundDescriptor"/>
+            <xs:element ref="r1:MPEGAudioDescriptor"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="FileDescriptorStrongReferenceVector" type="r0:FileDescriptorStrongReferenceVector"/>
+    <xs:complexType name="RIFFChunkStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:RIFFChunk"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="RIFFChunkStrongReferenceVector" type="r0:RIFFChunkStrongReferenceVector"/>
+    <xs:complexType name="DescriptiveObjectStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r3:contact"/>
+            <xs:element ref="r3:audioStreamFormat"/>
+            <xs:element ref="r3:captioning"/>
+            <xs:element ref="r3:title"/>
+            <xs:element ref="r3:statusGroup"/>
+            <xs:element ref="r3:technicalAttributeUInt8"/>
+            <xs:element ref="r3:temporal"/>
+            <xs:element ref="r3:track"/>
+            <xs:element ref="r3:type"/>
+            <xs:element ref="r3:height"/>
+            <xs:element ref="r3:audioProgramme"/>
+            <xs:element ref="r3:medium"/>
+            <xs:element ref="r3:audioTrackUID"/>
+            <xs:element ref="r3:publicationService"/>
+            <xs:element ref="r3:technicalAttributeRational"/>
+            <xs:element ref="r3:role"/>
+            <xs:element ref="r3:technicalAttributeInt16"/>
+            <xs:element ref="r3:part"/>
+            <xs:element ref="r3:imageFormat"/>
+            <xs:element ref="r3:genre"/>
+            <xs:element ref="r3:dimension"/>
+            <xs:element ref="r3:loudnessMetadata"/>
+            <xs:element ref="r3:rights"/>
+            <xs:element ref="r3:technicalAttributeInt32"/>
+            <xs:element ref="r3:audioObject"/>
+            <xs:element ref="r3:region"/>
+            <xs:element ref="r3:coverage"/>
+            <xs:element ref="r3:basicRelation"/>
+            <xs:element ref="r3:publicationChannel"/>
+            <xs:element ref="r3:technicalAttributeAnyURI"/>
+            <xs:element ref="r3:publicationEvent"/>
+            <xs:element ref="r3:signingFormat"/>
+            <xs:element ref="r3:audioBlockMatrix"/>
+            <xs:element ref="r3:format"/>
+            <xs:element ref="r3:date"/>
+            <xs:element ref="r3:locator"/>
+            <xs:element ref="r3:details"/>
+            <xs:element ref="r3:technicalAttributeUInt64"/>
+            <xs:element ref="r3:metadataSchemaInformation"/>
+            <xs:element ref="r3:technicalAttributeString"/>
+            <xs:element ref="r3:codec"/>
+            <xs:element ref="r3:metadataFormat"/>
+            <xs:element ref="r3:subtitling"/>
+            <xs:element ref="r3:location"/>
+            <xs:element ref="r3:textualAnnotation"/>
+            <xs:element ref="r3:audioChannelFormat"/>
+            <xs:element ref="r3:audioFormatExtended"/>
+            <xs:element ref="r3:technicalAttributeFloat"/>
+            <xs:element ref="r3:aspectRatio"/>
+            <xs:element ref="r3:objectType"/>
+            <xs:element ref="r3:periodOfTime"/>
+            <xs:element ref="r3:technicalAttributeInt8"/>
+            <xs:element ref="r3:alternativeTitle"/>
+            <xs:element ref="r3:organization"/>
+            <xs:element ref="r3:dataFormat"/>
+            <xs:element ref="r3:videoNoiseFilter"/>
+            <xs:element ref="r3:audioBlockMatrixCoefficient"/>
+            <xs:element ref="r3:planning"/>
+            <xs:element ref="r3:width"/>
+            <xs:element ref="r3:audioFormat"/>
+            <xs:element ref="r3:targetAudience"/>
+            <xs:element ref="r3:IDRef"/>
+            <xs:element ref="r3:technicalAttributeUInt16"/>
+            <xs:element ref="r3:packageInfo"/>
+            <xs:element ref="r3:formatGroup"/>
+            <xs:element ref="r3:version"/>
+            <xs:element ref="r3:customRelation"/>
+            <xs:element ref="r3:typeGroup"/>
+            <xs:element ref="r3:audioTrackFormat"/>
+            <xs:element ref="r3:entity"/>
+            <xs:element ref="r3:countryType"/>
+            <xs:element ref="r3:subject"/>
+            <xs:element ref="r3:publicationHistory"/>
+            <xs:element ref="r3:videoFormat"/>
+            <xs:element ref="r3:partMetadata"/>
+            <xs:element ref="r3:time"/>
+            <xs:element ref="r3:description"/>
+            <xs:element ref="r3:spatial"/>
+            <xs:element ref="r3:audioContent"/>
+            <xs:element ref="r3:technicalAttributeUInt32"/>
+            <xs:element ref="r3:audioPackFormat"/>
+            <xs:element ref="r3:compoundName"/>
+            <xs:element ref="r3:language"/>
+            <xs:element ref="r3:hash"/>
+            <xs:element ref="r3:publicationMedium"/>
+            <xs:element ref="r3:audioMXFLookup"/>
+            <xs:element ref="r3:rating"/>
+            <xs:element ref="r3:ancillaryData"/>
+            <xs:element ref="r3:coordinates"/>
+            <xs:element ref="r3:coreMetadata"/>
+            <xs:element ref="r3:timecodeFormat"/>
+            <xs:element ref="r3:department"/>
+            <xs:element ref="r3:audioBlockFormat"/>
+            <xs:element ref="r3:basicLink"/>
+            <xs:element ref="r3:technicalAttributeInt64"/>
+            <xs:element ref="r3:containerFormat"/>
+            <xs:element ref="r3:dateType"/>
+            <xs:element ref="r3:technicalAttributeBoolean"/>
+            <xs:element ref="r3:address"/>
+            <xs:element ref="r3:identifier"/>
+            <xs:element ref="r3:rational"/>
+            <xs:element ref="r1:NameValue"/>
+            <xs:element ref="r1:Project"/>
+            <xs:element ref="r1:Processing"/>
+            <xs:element ref="r1:Titles"/>
+            <xs:element ref="r1:CueWords"/>
+            <xs:element ref="r1:DMS1Identification"/>
+            <xs:element ref="r1:GroupRelationship"/>
+            <xs:element ref="r1:Keypoint"/>
+            <xs:element ref="r1:Location"/>
+            <xs:element ref="r1:Organization"/>
+            <xs:element ref="r1:Person"/>
+            <xs:element ref="r1:Rights"/>
+            <xs:element ref="r1:Contract"/>
+            <xs:element ref="r1:DeviceParameters"/>
+            <xs:element ref="r1:DMS1Annotation"/>
+            <xs:element ref="r1:Participant"/>
+            <xs:element ref="r1:DMS1Event"/>
+            <xs:element ref="r1:Classification"/>
+            <xs:element ref="r1:Award"/>
+            <xs:element ref="r1:Scripting"/>
+            <xs:element ref="r1:CaptionsDescription"/>
+            <xs:element ref="r1:SettingPeriod"/>
+            <xs:element ref="r1:Branding"/>
+            <xs:element ref="r1:Shot"/>
+            <xs:element ref="r1:Address"/>
+            <xs:element ref="r1:PictureFormat"/>
+            <xs:element ref="r1:ContactsList"/>
+            <xs:element ref="r1:Communications"/>
+            <xs:element ref="r1:Publication"/>
+            <xs:element ref="r1:TextBasedObject"/>
+            <xs:element ref="r1:GenericStreamTextBasedSet"/>
+            <xs:element ref="r1:UTF8TextBasedSet"/>
+            <xs:element ref="r1:UTF16TextBasedSet"/>
+            <xs:element ref="r1:CryptographicContext"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="DescriptiveObjectStrongReferenceVector" type="r0:DescriptiveObjectStrongReferenceVector"/>
+    <xs:complexType name="SubDescriptorStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="r1:DCTimedTextResourceSubDescriptor"/>
+            <xs:element ref="r1:StereoscopicPictureSubDescriptor"/>
+            <xs:element ref="r1:JPEG2000SubDescriptor"/>
+            <xs:element ref="r1:MCALabelSubDescriptor"/>
+            <xs:element ref="r1:GroupOfSoundfieldGroupsLabelSubDescriptor"/>
+            <xs:element ref="r1:AudioChannelLabelSubDescriptor"/>
+            <xs:element ref="r1:SoundfieldGroupLabelSubDescriptor"/>
+            <xs:element ref="r1:ContainerConstraintsSubDescriptor"/>
+            <xs:element ref="r1:MPEG4VisualSubDescriptor"/>
+            <xs:element ref="r1:AVCSubDescriptor"/>
+            <xs:element ref="r1:STLSubDescriptor"/>
+            <xs:element ref="r1:OperationsStereoscopicSubDescriptor"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="SubDescriptorStrongReferenceVector" type="r0:SubDescriptorStrongReferenceVector"/>
+    <xs:complexType name="RegisterEntryStrongReferenceVector">
+        <xs:choice maxOccurs="unbounded" minOccurs="0"/>
+    </xs:complexType>
+    <!--Subclass urn:smpte:ul:060e2b34.027f0101.0c010101.01010300 not found.-->
+    <xs:element name="RegisterEntryStrongReferenceVector" type="r0:RegisterEntryStrongReferenceVector"/>
+    <xs:complexType name="ParticipantGlobalReferenceSet">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:ParticipantGlobalReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ParticipantGlobalReferenceSet" type="r0:ParticipantGlobalReferenceSet"/>
+    <xs:complexType name="OrganizationGlobalReferenceSet">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:OrganizationGlobalReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="OrganizationGlobalReferenceSet" type="r0:OrganizationGlobalReferenceSet"/>
+    <xs:complexType name="LocationGlobalReferenceSet">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:LocationGlobalReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="LocationGlobalReferenceSet" type="r0:LocationGlobalReferenceSet"/>
+    <xs:complexType name="ParticipantGlobalReferenceVector">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:ParticipantGlobalReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="ParticipantGlobalReferenceVector" type="r0:ParticipantGlobalReferenceVector"/>
+    <xs:complexType name="OrganizationGlobalReferenceVector">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:OrganizationGlobalReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="OrganizationGlobalReferenceVector" type="r0:OrganizationGlobalReferenceVector"/>
+    <xs:complexType name="LocationGlobalReferenceVector">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="r0:LocationGlobalReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="LocationGlobalReferenceVector" type="r0:LocationGlobalReferenceVector"/>
+    <xs:simpleType name="ParticipantGlobalReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="ParticipantGlobalReference" type="r0:ParticipantGlobalReference"/>
+    <xs:simpleType name="OrganizationGlobalReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="OrganizationGlobalReference" type="r0:OrganizationGlobalReference"/>
+    <xs:simpleType name="LocationGlobalReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="LocationGlobalReference" type="r0:LocationGlobalReference"/>
+    <xs:simpleType name="ApplicationPluginObjectGlobalReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="ApplicationPluginObjectGlobalReference" type="r0:ApplicationPluginObjectGlobalReference"/>
+    <xs:simpleType name="DescriptiveMarkerGlobalReference">
+        <xs:restriction base="reg:TargetType"/>
+    </xs:simpleType>
+    <xs:element name="DescriptiveMarkerGlobalReference" type="r0:DescriptiveMarkerGlobalReference"/>
+</xs:schema>
