@@ -30,6 +30,7 @@ public enum SequenceContextParameters {
     UUID("uuid"),
     NUM("num"),
     TYPE("type"),
+    LANGUAGE("language"),
 
     // we assume that all resources within audio sequence has the same number of channels
     CHANNELS_NUM("channels_num");

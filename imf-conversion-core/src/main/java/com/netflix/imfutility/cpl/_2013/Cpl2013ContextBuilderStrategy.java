@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -33,6 +33,9 @@ import com.netflix.imfutility.essencedescriptors.EssenceDescriptorsConstants;
 import com.netflix.imfutility.generated.imf._2013.BaseResourceType;
 import com.netflix.imfutility.generated.imf._2013.CompositionPlaylistType;
 import com.netflix.imfutility.generated.imf._2013.EssenceDescriptorBaseType;
+import com.netflix.imfutility.generated.imf._2013.CompositionPlaylistType.LocaleList;
+import com.netflix.imfutility.generated.imf._2013.LocaleType;
+import com.netflix.imfutility.generated.imf._2013.LocaleType.LanguageList;
 import com.netflix.imfutility.generated.imf._2013.SegmentType;
 import com.netflix.imfutility.generated.imf._2013.SequenceType;
 import com.netflix.imfutility.generated.imf._2013.TrackFileResourceType;
@@ -50,6 +53,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.netflix.imfutility.CoreConstants.CORE_CONSTRAINTS_2013_XSD;
 import static com.netflix.imfutility.CoreConstants.CPL_2013_PACKAGE;
@@ -253,4 +257,33 @@ public class Cpl2013ContextBuilderStrategy extends AbstractCplContextBuilderStra
                 ResourceContextParameters.ESSENCE_DESC_ID, essenceDescId);
     }
 
+    private String getDefaultCplLanguage() {
+        // assume default language to be first language of first locale
+        LocaleList localeList = cpl2013.getLocaleList();
+        //  no locales defined
+        if (localeList == null) {
+            return null;
+        }
+
+        Optional<LocaleType> locale = localeList.getLocale().stream().findFirst();
+        if (!locale.isPresent()) {
+            return null;
+        }
+
+        // no languages defined
+        LanguageList languageList = locale.get().getLanguageList();
+        if (languageList == null) {
+            return null;
+        }
+
+        Optional<String> language = languageList.getLanguage().stream().findFirst();
+        return language.orElse(null);
+    }
+
+    @Override
+    protected String getSequenceLanguage(SequenceUUID seqUuid) {
+        //  TODO: define sequence language from EssenceDescriptor
+        // fallback to default language
+        return getDefaultCplLanguage();
+    }
 }
