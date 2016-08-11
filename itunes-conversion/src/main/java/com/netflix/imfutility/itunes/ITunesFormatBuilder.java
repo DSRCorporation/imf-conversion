@@ -60,6 +60,7 @@ import static com.netflix.imfutility.conversion.templateParameter.context.parame
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.DAR;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.FRAME_RATE;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.INTERLACED;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_END_BLACK_FRAME_COUNT;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_IFRAME_RATE;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_IS_DAR_SPECIFIED;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_ADDITIONAL_AUDIO_COUNT;
@@ -187,12 +188,23 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         // define is dar provided
         destContext.addParameter(DEST_PARAM_VIDEO_IS_DAR_SPECIFIED, Boolean.toString(destContext.getParameterValue(DAR) != null));
 
-        // set frame rate for interlaced scan (for ffmpeg iFrameRate=frameRate*2, for OS X tool iFrameRate=frameRate)
+        // set frame rate for interlaced scan
+        // for ffmpeg iFrameRate=frameRate*2
+        // for prenc iFrameRate=frameRate
         BigFraction frameRate = ConversionHelper.parseEditRate(destContext.getParameterValue(FRAME_RATE));
         if (!SystemUtils.IS_OS_MAC_OSX) {
             frameRate = frameRate.multiply(2);
         }
         destContext.addParameter(DEST_PARAM_VIDEO_IFRAME_RATE, ConversionHelper.toREditRate(frameRate));
+
+        // set end black frame count
+        // for ffmpeg count = 1 (if progressive), count = 2 (if interlace)
+        // for prenc count = 1 always
+        int count = 1;
+        if (!SystemUtils.IS_OS_MAC_OSX) {
+            count = Boolean.valueOf(interlaced) ? 2 : 1;
+        }
+        destContext.addParameter(DEST_PARAM_VIDEO_END_BLACK_FRAME_COUNT, String.valueOf(count));
     }
 
     private void createItmspDir() {

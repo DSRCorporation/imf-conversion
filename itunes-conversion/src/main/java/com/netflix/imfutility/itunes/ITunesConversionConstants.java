@@ -42,6 +42,7 @@ public final class ITunesConversionConstants {
     // video dest parameters:
     public static final String DEST_PARAM_VIDEO_IFRAME_RATE = "iFrameRate";
     public static final String DEST_PARAM_VIDEO_IS_DAR_SPECIFIED = "isDarSpecified";
+    public static final String DEST_PARAM_VIDEO_END_BLACK_FRAME_COUNT = "endBlackFrameCount";
 
     // AudioMap constants
     public static final String GEN_MAIN_SEQ_UUID = "urn:uuid:38d52c00-68d3-4056-8858-28eeaf3238d3";

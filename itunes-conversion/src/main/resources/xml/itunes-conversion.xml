@@ -341,14 +341,7 @@
                                 ,fps=%{dest.iFrameRate},interlace
                             </dynamicParameter>
                             <dynamicParameter name="proresParams" concat="true" concatWhitespace="false" if="%{dest.isDarSpecified}">
-                                ,setdar=dar=%{dest.dar}
-                            </dynamicParameter>
-
-                            <dynamicParameter name="endBlackFrameCount" if="%{dest.interlaced}">
-                                2
-                            </dynamicParameter>
-                            <dynamicParameter name="endBlackFrameCount" unless="%{dest.interlaced}">
-                                1
+                                ,setdar=%{dest.dar}
                             </dynamicParameter>
 
                             <pipe>
@@ -374,13 +367,11 @@
                                             -
                                         </execOnce>
                                     </execEachSegment>
-                                    <!-- prenc insert black frame by itself -->
-                                    <!-- ffmpeg need 2 frames for interlaced and 1 for progressive-->
-                                    <execOnce name="generate_black_frame" unless="%{dynamic.isOSX}">
+                                    <execOnce name="generate_black_frame">
                                         %{tool.ffmpeg} -y
                                         -f lavfi
                                         -i color=c=black:s=%{dest.width}x%{dest.height}:r=%{dest.frameRate}:d=1
-                                        -ss 00:00:00 -vframes %{dynamic.endBlackFrameCount}
+                                        -ss 00:00:00 -vframes %{dest.endBlackFrameCount}
                                         -pix_fmt yuv422p16le
                                         -f rawvideo
                                         -
