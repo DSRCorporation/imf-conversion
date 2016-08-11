@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -52,6 +52,11 @@ public final class ImpUtils {
     public static File getCorrectCplOneEssence() throws URISyntaxException {
         //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL-one-essence.xml").toURI());
+    }
+
+    public static File getCplLanguages() throws URISyntaxException {
+        //noinspection ConstantConditions,ConstantConditions
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL-languages.xml").toURI());
     }
 
     public static File getBrokenXmlCpl() throws URISyntaxException {

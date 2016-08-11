@@ -30,6 +30,7 @@ public enum SequenceContextParameters {
     UUID("uuid"),
     NUM("num"),
     TYPE("type"),
+    LANGUAGE("language"),
 
     // audio
     CHANNELS_NUM("channels_num"),

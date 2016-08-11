@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -24,9 +24,11 @@ import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.DestTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
@@ -42,17 +44,17 @@ import java.util.Map;
 /**
  * The base implementation of CPL context builder strategy common for all namespaces.
  * <ul>
- *     <li>A concrete strategy must implement {@link #buildFromCpl()} method to
- *     init sequence, segment and resource contexts. The method must also fill all resource parameters based on CPL
- *     (such as EditUnit-based parameters and Repeat).</li>
- *     <li>A concrete strategy must also implement {@link #getCompositionTimecodeRate()} and {@link #getCompositionTimecodeStart()}
- *     methods to get information about composition timecode as defined in CPL.</li>
- *     <li>The abstract strategy contains logic (common for all namespaces) to calculate other Resource parameters
- *     (such as millisecond-based parameters and timecode-based parameters) using edit-unit-based parameters filled
- *     by a concrete strategy.</li>
- *     <li>The abstract strategy contains common logic to calculate Offset and edit-unit-frame parameters.
- *     Start timecode is taken into account when calculating offset parameter (the start code specified in conversion.xml's
- *     Destination context has higher priority than the start timecode from CPL's composition).</li>
+ * <li>A concrete strategy must implement {@link #buildFromCpl()} method to
+ * init sequence, segment and resource contexts. The method must also fill all resource parameters based on CPL
+ * (such as EditUnit-based parameters and Repeat).</li>
+ * <li>A concrete strategy must also implement {@link #getCompositionTimecodeRate()} and {@link #getCompositionTimecodeStart()}
+ * methods to get information about composition timecode as defined in CPL.</li>
+ * <li>The abstract strategy contains logic (common for all namespaces) to calculate other Resource parameters
+ * (such as millisecond-based parameters and timecode-based parameters) using edit-unit-based parameters filled
+ * by a concrete strategy.</li>
+ * <li>The abstract strategy contains common logic to calculate Offset and edit-unit-frame parameters.
+ * Start timecode is taken into account when calculating offset parameter (the start code specified in conversion.xml's
+ * Destination context has higher priority than the start timecode from CPL's composition).</li>
  * </ul>
  */
 public abstract class AbstractCplContextBuilderStrategy implements ICplContextBuilderStrategy {
@@ -78,6 +80,9 @@ public abstract class AbstractCplContextBuilderStrategy implements ICplContextBu
         // audio sequences which has essences containing both audio and video
         // (the values must be calculated in video frames in this case)
         buildTimeAndDurationInFrames();
+
+        // 4. define languages for all sequences
+        buildSequenceLanguages();
     }
 
     @Override
@@ -281,5 +286,20 @@ public abstract class AbstractCplContextBuilderStrategy implements ICplContextBu
             }
         }
     }
+
+    private void buildSequenceLanguages() {
+        SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
+        for (SequenceType seqType : sequenceContext.getSequenceTypes()) {
+            for (SequenceUUID seqUuid : sequenceContext.getUuids(seqType)) {
+                String language = getSequenceLanguage(seqUuid);
+
+                if (language != null) {
+                    sequenceContext.addSequenceParameter(seqType, seqUuid, SequenceContextParameters.LANGUAGE, language);
+                }
+            }
+        }
+    }
+
+    protected abstract String getSequenceLanguage(SequenceUUID seqUuid);
 
 }
