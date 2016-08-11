@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
  * <li>A dynamic parameter name may contain template parameters. All template parameters are resolved before adding a parameter.</li>
  * </ul>
  */
-public class DynamicTemplateParameterContext implements ITemplateParameterContext {
+public class DynamicTemplateParameterContext extends AbstractTemplateParameterContext {
 
     private final Map<String, CustomParameterValue> params = new HashMap<>();
     private final TemplateParameterResolver parameterResolver;

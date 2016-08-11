@@ -128,8 +128,8 @@
                             <cycle>
                                 <execEachSegment name="decode_audio">
                                     <execOnce name="decode_audio">
-                                        "%{tool.ffmpeg}" -f s%{seq.bits_per_sample}le -ar %{seq.sample_rate}
-                                        -ac %{seq.channels_num}
+                                        "%{tool.ffmpeg}" -f s%{resource.bits_per_sample}le -ar %{resource.sample_rate}
+                                        -ac %{resource.channels_num}
                                         -i "%{dynamic.audio-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}}" -vn -af
                                         aresample=%{dest.sampleRate}
                                         -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
@@ -137,7 +137,7 @@
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_audio">
-                                "%{tool.ffmpeg}" -f s%{dest.bitsSample}le -ar %{seq.sample_rate} -ac %{seq.channels_num} -i - -vn -c:a
+                                "%{tool.ffmpeg}" -f s%{dest.bitsSample}le -ar %{resource.sample_rate} -ac %{resource.channels_num} -i - -vn -c:a
                                 copy -f wav %{seq.num}-audio-encoded.wav
                             </execOnce>
                         </pipe>

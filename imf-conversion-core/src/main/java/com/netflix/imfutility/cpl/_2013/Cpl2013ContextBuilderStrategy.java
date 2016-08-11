@@ -29,8 +29,10 @@ import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.cpl.uuid.UUID;
+import com.netflix.imfutility.essencedescriptors.EssenceDescriptorsConstants;
 import com.netflix.imfutility.generated.imf._2013.BaseResourceType;
 import com.netflix.imfutility.generated.imf._2013.CompositionPlaylistType;
+import com.netflix.imfutility.generated.imf._2013.EssenceDescriptorBaseType;
 import com.netflix.imfutility.generated.imf._2013.SegmentType;
 import com.netflix.imfutility.generated.imf._2013.SequenceType;
 import com.netflix.imfutility.generated.imf._2013.TrackFileResourceType;
@@ -44,6 +46,10 @@ import javax.xml.bind.JAXBElement;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.netflix.imfutility.CoreConstants.CORE_CONSTRAINTS_2013_XSD;
 import static com.netflix.imfutility.CoreConstants.CPL_2013_PACKAGE;
@@ -76,8 +82,22 @@ public class Cpl2013ContextBuilderStrategy extends AbstractCplContextBuilderStra
     @Override
     public void parse(File cplFile) throws XmlParsingException, FileNotFoundException {
         this.cpl2013 = XmlParser.parse(cplFile,
-                new String[]{XMLDSIG_CORE_SCHEMA_XSD, DCML_TYPES_XSD, CPL_2013_XSD, CORE_CONSTRAINTS_2013_XSD},
-                CPL_2013_PACKAGE, CompositionPlaylistType.class);
+                new String[]{
+                        XMLDSIG_CORE_SCHEMA_XSD, DCML_TYPES_XSD, CPL_2013_XSD, CORE_CONSTRAINTS_2013_XSD
+                },
+                CPL_2013_PACKAGE + ":" + EssenceDescriptorsConstants.ESSENCE_DESCRIPTORS_PACKAGES, CompositionPlaylistType.class);
+    }
+
+    @Override
+    public Map<String, List<Object>> getEssenceDescriptors() {
+        if (cpl2013.getEssenceDescriptorList() == null) {
+            return Collections.emptyMap();
+        }
+        Map<String, List<Object>> result = new HashMap<>();
+        for (EssenceDescriptorBaseType essenceDescriptorBase : cpl2013.getEssenceDescriptorList().getEssenceDescriptor()) {
+            result.put(essenceDescriptorBase.getId(), essenceDescriptorBase.getAny());
+        }
+        return result;
     }
 
     @Override
@@ -221,6 +241,16 @@ public class Cpl2013ContextBuilderStrategy extends AbstractCplContextBuilderStra
                 ? trackFileResource.getRepeatCount() : BigInteger.ONE;
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
                 ResourceContextParameters.REPEAT_COUNT, repeatCount.toString());
+
+        // 8. init trackFile ID
+        contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
+                ResourceContextParameters.TRACK_FILE_ID, trackId.getUuid());
+
+
+        // 9. init essence descriptor ID
+        String essenceDescId = trackFileResource.getSourceEncoding();
+        contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
+                ResourceContextParameters.ESSENCE_DESC_ID, essenceDescId);
     }
 
 }

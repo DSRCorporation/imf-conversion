@@ -31,18 +31,8 @@ public enum SequenceContextParameters {
     NUM("num"),
     TYPE("type"),
 
-    // audio
-    CHANNELS_NUM("channels_num"),
-    BITS_PER_SAMPLE("bits_per_sample"),
-    SAMPLE_RATE("sample_rate"),
-
-    // video
-    WIDTH("width"),
-    HEIGHT("height"),
-    BIT_DEPTH("bit_depth"),
-    PIXEL_FORMAT("pixel_format"),
-    FRAME_RATE("frame_rate");
-
+    // we assume that all resources within audio sequence has the same number of channels
+    CHANNELS_NUM("channels_num");
 
     private final String name;
 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Created: Thu Sep 17 15:28:17 CEST 2015--><!--By: regxmllib build c989a02ac80facc24e018a54c4010dd8c2d27451--><!--See: https://github.com/sandflow/regxmllib--><xs:schema xmlns:r0="http://www.smpte-ra.org/reg/335/2012/13/12/as11" xmlns:r1="http://www.smpte-ra.org/reg/335/2012" xmlns:reg="http://sandflow.com/ns/SMPTEST2001-1/baseline"  attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.smpte-ra.org/reg/395/2014/13/12/as11" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:import namespace="http://www.smpte-ra.org/reg/335/2012"/>
+<xs:import namespace="http://www.smpte-ra.org/reg/335/2012/13/12/as11"/>
+<xs:import namespace="http://sandflow.com/ns/SMPTEST2001-1/baseline"/>
+<xs:element name="DM_AS_11_UKDPP_Framework">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:UKDPP_Sign_Language"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Open_Captions_Language"/>
+<xs:element ref="r0:UKDPP_Open_Captions_Present"/>
+<xs:element ref="r0:UKDPP_Audio_Description_Present"/>
+<xs:element ref="r0:UKDPP_Total_Number_Of_Parts"/>
+<xs:element ref="r0:UKDPP_Line_Up_Start"/>
+<xs:element ref="r0:UKDPP_Audio_Loudness_Standard"/>
+<xs:element ref="r0:UKDPP_Secondary_Audio_Language"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Video_Comments"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_PSE_Manufacturer"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Product_Placement"/>
+<xs:element ref="r0:UKDPP_3D"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Distributor"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Other_Identifier_Type"/>
+<xs:element ref="r0:UKDPP_Contact_Telephone_Number"/>
+<xs:element ref="r0:UKDPP_Copyright_Year"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Programme_Text_Language"/>
+<xs:element ref="r0:UKDPP_Synopsis"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Textless_Elements_Exist"/>
+<xs:element ref="r0:UKDPP_Completion_Date"/>
+<xs:element ref="r0:UKDPP_Signing_Present"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Open_Captions_Type"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Audio_Description_Type"/>
+<xs:element ref="r0:UKDPP_Total_Programme_Duration"/>
+<xs:element ref="r0:UKDPP_Ident_Clock_Start"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Audio_Comments"/>
+<xs:element ref="r0:UKDPP_Tertiary_Audio_Language"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_PSE_Version"/>
+<xs:element ref="r0:UKDPP_PSE_Pass"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_3D_Type"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Picture_Ratio"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Genre"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Other_Identifier"/>
+<xs:element ref="r0:UKDPP_Contact_Email"/>
+<xs:element ref="r0:UKDPP_Originator"/>
+<xs:element minOccurs="0" ref="r0:UKDPP_Programme_Has_Text"/>
+<xs:element ref="r0:UKDPP_Production_Number"/>
+<xs:element ref="r1:LinkedDescriptiveFrameworkPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+</xs:schema>

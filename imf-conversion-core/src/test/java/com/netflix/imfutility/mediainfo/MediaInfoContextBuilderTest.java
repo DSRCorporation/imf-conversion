@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.mediainfo;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.executor.strategy.AbstractExecuteStrategy;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
@@ -47,6 +48,8 @@ import java.util.EnumSet;
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.addResourceContextParameter;
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.createDefaultContextProviderWithCPLContext;
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.createResourceContextInfo;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.getResourceUuid;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.getSegmentUuid;
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.getSequenceUuid;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -122,28 +125,52 @@ public class MediaInfoContextBuilderTest {
         // fill essence context
         TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCPLContext(
                 4, 1, 1, EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO));
+
         addResourceContextParameter(contextProvider, 0, 0, SequenceType.AUDIO, 0,         // essence1 for first audio segment
                 ResourceContextParameters.ESSENCE, "essence1");
+        addResourceContextParameter(contextProvider, 0, 0, SequenceType.AUDIO, 0,
+                ResourceContextParameters.TRACK_FILE_ID, "essence1Id");
+
         addResourceContextParameter(contextProvider, 1, 0, SequenceType.AUDIO, 0,         // essence1 for second audio segment
                 ResourceContextParameters.ESSENCE, "essence1");
+        addResourceContextParameter(contextProvider, 1, 0, SequenceType.AUDIO, 0,
+                ResourceContextParameters.TRACK_FILE_ID, "essence1Id");
+
         addResourceContextParameter(contextProvider, 2, 0, SequenceType.AUDIO, 0,        // essence2 for third audio segment
                 ResourceContextParameters.ESSENCE, "essence2");
+        addResourceContextParameter(contextProvider, 2, 0, SequenceType.AUDIO, 0,
+                ResourceContextParameters.TRACK_FILE_ID, "essence2Id");
+
         addResourceContextParameter(contextProvider, 3, 0, SequenceType.AUDIO, 0,        // essence3 for fourth audio segment
                 ResourceContextParameters.ESSENCE, "essence3");
+        addResourceContextParameter(contextProvider, 3, 0, SequenceType.AUDIO, 0,
+                ResourceContextParameters.TRACK_FILE_ID, "essence3Id");
+
         addResourceContextParameter(contextProvider, 0, 0, SequenceType.VIDEO, 0,        // essence1 for first video segment
                 ResourceContextParameters.ESSENCE, "essence1");
+        addResourceContextParameter(contextProvider, 0, 0, SequenceType.VIDEO, 0,
+                ResourceContextParameters.TRACK_FILE_ID, "essence1Id");
+
         addResourceContextParameter(contextProvider, 1, 0, SequenceType.VIDEO, 0,        // essence2 for second video segment
                 ResourceContextParameters.ESSENCE, "essence2");
+        addResourceContextParameter(contextProvider, 1, 0, SequenceType.VIDEO, 0,
+                ResourceContextParameters.TRACK_FILE_ID, "essence2Id");
+
         addResourceContextParameter(contextProvider, 2, 0, SequenceType.VIDEO, 0,        // essence2 for third video segment
                 ResourceContextParameters.ESSENCE, "essence2");
+        addResourceContextParameter(contextProvider, 2, 0, SequenceType.VIDEO, 0,
+                ResourceContextParameters.TRACK_FILE_ID, "essence2Id");
+
         addResourceContextParameter(contextProvider, 3, 0, SequenceType.VIDEO, 0,        // essence4 for fourth video segment
                 ResourceContextParameters.ESSENCE, "essence4");
+        addResourceContextParameter(contextProvider, 3, 0, SequenceType.VIDEO, 0,
+                ResourceContextParameters.TRACK_FILE_ID, "essence4Id");
 
         // build media info
         TestExecutorLogger testExecutorLogger = new TestExecutorLogger();
         new TestMediaInfoContextBuilder(contextProvider, testExecutorLogger).build();
 
-        // media info command must be run once for each sequenceType-essence pair
+        // media info command must be run once for each trackFileId
         assertEquals(
                 "START: External Process 1: MediaInfoCommandVideoType_essence1, TestExecuteOnceStrategy, mediaInfoCommandVideo FILE",
                 testExecutorLogger.getNext());
@@ -204,38 +231,102 @@ public class MediaInfoContextBuilderTest {
                 .setSequenceType(SequenceType.AUDIO)
                 .setSequenceUuid(getSequenceUuid(0, SequenceType.AUDIO))
                 .build();
-        assertEquals("48000", sequenceContext.getParameterValue(SequenceContextParameters.SAMPLE_RATE, contextInfo));
-        assertEquals("24", sequenceContext.getParameterValue(SequenceContextParameters.BITS_PER_SAMPLE, contextInfo));
+        assertEquals("2", sequenceContext.getParameterValue(SequenceContextParameters.CHANNELS_NUM, contextInfo));
 
         // second audio track
         contextInfo = new ContextInfoBuilder()
                 .setSequenceType(SequenceType.AUDIO)
                 .setSequenceUuid(getSequenceUuid(1, SequenceType.AUDIO))
                 .build();
-        assertEquals("48000", sequenceContext.getParameterValue(SequenceContextParameters.SAMPLE_RATE, contextInfo));
-        assertEquals("24", sequenceContext.getParameterValue(SequenceContextParameters.BITS_PER_SAMPLE, contextInfo));
+        assertEquals("2", sequenceContext.getParameterValue(SequenceContextParameters.CHANNELS_NUM, contextInfo));
+    }
 
-        // first video track
-        contextInfo = new ContextInfoBuilder()
-                .setSequenceType(SequenceType.VIDEO)
-                .setSequenceUuid(getSequenceUuid(0, SequenceType.VIDEO))
-                .build();
-        assertEquals("50 1", sequenceContext.getParameterValue(SequenceContextParameters.FRAME_RATE, contextInfo));
-        assertEquals("yuv422p10le", sequenceContext.getParameterValue(SequenceContextParameters.PIXEL_FORMAT, contextInfo));
-        assertEquals("10", sequenceContext.getParameterValue(SequenceContextParameters.BIT_DEPTH, contextInfo));
-        assertEquals("4096", sequenceContext.getParameterValue(SequenceContextParameters.WIDTH, contextInfo));
-        assertEquals("2160", sequenceContext.getParameterValue(SequenceContextParameters.HEIGHT, contextInfo));
+    @Test
+    public void testFillResourceContext() throws Exception {
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCPLContext(
+                2, 2, 2, EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO));
 
-        // second video track
-        contextInfo = new ContextInfoBuilder()
-                .setSequenceType(SequenceType.VIDEO)
-                .setSequenceUuid(getSequenceUuid(1, SequenceType.VIDEO))
-                .build();
-        assertEquals("50 1", sequenceContext.getParameterValue(SequenceContextParameters.FRAME_RATE, contextInfo));
-        assertEquals("yuv422p10le", sequenceContext.getParameterValue(SequenceContextParameters.PIXEL_FORMAT, contextInfo));
-        assertEquals("10", sequenceContext.getParameterValue(SequenceContextParameters.BIT_DEPTH, contextInfo));
-        assertEquals("4096", sequenceContext.getParameterValue(SequenceContextParameters.WIDTH, contextInfo));
-        assertEquals("2160", sequenceContext.getParameterValue(SequenceContextParameters.HEIGHT, contextInfo));
+        // create a test builder that uses different mediaInfo files with different parameters for the same sequence
+        MediaInfoContextBuilder mediaInfoContextBuilder = new MediaInfoContextBuilder(contextProvider, new TestExecuteStrategyFactory()) {
+
+            @Override
+            FfprobeType parseOutputFile(File outputFile, ContextInfo contextInfo) throws XmlParsingException, FileNotFoundException {
+                try {
+                    switch (contextInfo.getSequenceType()) {
+                        case AUDIO:
+                            outputFile = contextInfo.getResourceUuid().getUuid().endsWith("-0-0")
+                                    ? MediaInfoUtils.getCorrectMediaInfoAudio()
+                                    : MediaInfoUtils.getCorrectMediaInfoAudio2();
+                            break;
+                        case VIDEO:
+                            outputFile = contextInfo.getResourceUuid().getUuid().endsWith("-0-0")
+                                    ? MediaInfoUtils.getCorrectMediaInfoVideo()
+                                    : MediaInfoUtils.getCorrectMediaInfoVideo2();
+                            break;
+                        default:
+                            throw new RuntimeException();
+                    }
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
+                return super.parseOutputFile(outputFile, contextInfo);
+            }
+        };
+        mediaInfoContextBuilder.build();
+
+        ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
+
+        // the values as defined in mediaInfoAudio.xml and mediaInfoAudio2.xml
+        for (int segm = 0; segm < 2; segm++) {
+            for (int seq = 0; seq < 2; seq++) {
+                ContextInfo contextInfo = new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(segm))
+                        .setSequenceUuid(getSequenceUuid(seq, SequenceType.AUDIO))
+                        .setSequenceType(SequenceType.AUDIO)
+                        .setResourceUuid(getResourceUuid(segm, seq, SequenceType.AUDIO, 0, 0))
+                        .build();
+                assertEquals("48000", resourceContext.getParameterValue(ResourceContextParameters.SAMPLE_RATE, contextInfo));
+                assertEquals("24", resourceContext.getParameterValue(ResourceContextParameters.BITS_PER_SAMPLE, contextInfo));
+
+                contextInfo = new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(segm))
+                        .setSequenceUuid(getSequenceUuid(seq, SequenceType.AUDIO))
+                        .setSequenceType(SequenceType.AUDIO)
+                        .setResourceUuid(getResourceUuid(segm, seq, SequenceType.AUDIO, 1, 0))
+                        .build();
+                assertEquals("96000", resourceContext.getParameterValue(ResourceContextParameters.SAMPLE_RATE, contextInfo));
+                assertEquals("20", resourceContext.getParameterValue(ResourceContextParameters.BITS_PER_SAMPLE, contextInfo));
+            }
+        }
+
+        // the values as defined in mediaInfoVideo.xml and mediaInfoVideo2.xml
+        for (int segm = 0; segm < 2; segm++) {
+            for (int seq = 0; seq < 2; seq++) {
+                ContextInfo contextInfo = new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(segm))
+                        .setSequenceUuid(getSequenceUuid(seq, SequenceType.VIDEO))
+                        .setSequenceType(SequenceType.VIDEO)
+                        .setResourceUuid(getResourceUuid(segm, seq, SequenceType.VIDEO, 0, 0))
+                        .build();
+                assertEquals("4096", resourceContext.getParameterValue(ResourceContextParameters.WIDTH, contextInfo));
+                assertEquals("2160", resourceContext.getParameterValue(ResourceContextParameters.HEIGHT, contextInfo));
+                assertEquals("10", resourceContext.getParameterValue(ResourceContextParameters.BIT_DEPTH, contextInfo));
+                assertEquals("50 1", resourceContext.getParameterValue(ResourceContextParameters.FRAME_RATE, contextInfo));
+                assertEquals("yuv422p10le", resourceContext.getParameterValue(ResourceContextParameters.PIXEL_FORMAT, contextInfo));
+
+                contextInfo = new ContextInfoBuilder()
+                        .setSegmentUuid(getSegmentUuid(segm))
+                        .setSequenceUuid(getSequenceUuid(seq, SequenceType.VIDEO))
+                        .setSequenceType(SequenceType.VIDEO)
+                        .setResourceUuid(getResourceUuid(segm, seq, SequenceType.VIDEO, 1, 0))
+                        .build();
+                assertEquals("1920", resourceContext.getParameterValue(ResourceContextParameters.WIDTH, contextInfo));
+                assertEquals("1080", resourceContext.getParameterValue(ResourceContextParameters.HEIGHT, contextInfo));
+                assertEquals("8", resourceContext.getParameterValue(ResourceContextParameters.BIT_DEPTH, contextInfo));
+                assertEquals("30 1", resourceContext.getParameterValue(ResourceContextParameters.FRAME_RATE, contextInfo));
+                assertEquals("yuv420p10le", resourceContext.getParameterValue(ResourceContextParameters.PIXEL_FORMAT, contextInfo));
+            }
+        }
     }
 
     @Test
@@ -326,8 +417,41 @@ public class MediaInfoContextBuilderTest {
                 outputAudio2.getValue());
     }
 
-    @Test(expected = MediaInfoException.class)
-    public void testExceptionOnMismatchedSequenceParameters() throws Exception {
+    @Test(expected = ConversionException.class)
+    public void testExceptionOnMismatchedChannelsWithinSequence() throws Exception {
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCPLContext(
+                2, 2, 2, EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO));
+        // create a test builder that uses different mediaInfo files with different parameters for the same sequence
+        MediaInfoContextBuilder mediaInfoContextBuilder = new MediaInfoContextBuilder(contextProvider, new TestExecuteStrategyFactory()) {
+
+            @Override
+            FfprobeType parseOutputFile(File outputFile, ContextInfo contextInfo) throws XmlParsingException, FileNotFoundException {
+                try {
+                    switch (contextInfo.getSequenceType()) {
+                        case AUDIO:
+                            outputFile = contextInfo.getResourceUuid().getUuid().contains("-0-")
+                                    ? MediaInfoUtils.getCorrectMediaInfoAudio()
+                                    : MediaInfoUtils.getCorrectMediaInfoAudio3();
+                            break;
+                        case VIDEO:
+                            outputFile = contextInfo.getResourceUuid().getUuid().contains("-0-")
+                                    ? MediaInfoUtils.getCorrectMediaInfoVideo()
+                                    : MediaInfoUtils.getCorrectMediaInfoVideo2();
+                            break;
+                        default:
+                            throw new RuntimeException();
+                    }
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
+                return super.parseOutputFile(outputFile, contextInfo);
+            }
+        };
+
+        mediaInfoContextBuilder.build();
+    }
+
+    public void testNoExceptionOnOtherMismatchedParameters() throws Exception {
         TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCPLContext(
                 2, 2, 2, EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO));
         // create a test builder that uses different mediaInfo files with different parameters for the same sequence

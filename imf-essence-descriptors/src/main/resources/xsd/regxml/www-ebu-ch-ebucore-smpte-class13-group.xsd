@@ -1,0 +1,1999 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Created: Thu Sep 17 15:28:16 CEST 2015--><!--By: regxmllib build c989a02ac80facc24e018a54c4010dd8c2d27451--><!--See: https://github.com/sandflow/regxmllib--><xs:schema xmlns:r0="http://www.ebu.ch/ebucore/smpte/class13/element" xmlns:r1="http://www.smpte-ra.org/reg/335/2012" xmlns:reg="http://sandflow.com/ns/SMPTEST2001-1/baseline" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.ebu.ch/ebucore/smpte/class13/group" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:import namespace="http://www.smpte-ra.org/reg/335/2012"/>
+<xs:import namespace="http://www.ebu.ch/ebucore/smpte/class13/element"/>
+<xs:import namespace="http://sandflow.com/ns/SMPTEST2001-1/baseline"/>
+<xs:element name="EBUCoreMainFramework">
+<xs:complexType>
+<xs:all>
+<xs:element ref="r0:coreMetadataObject"/>
+<xs:element minOccurs="0" ref="r0:metadataSchemaInformationObject"/>
+<xs:element minOccurs="0" ref="r0:documentLocator"/>
+<xs:element minOccurs="0" ref="r0:documentId"/>
+<xs:element ref="r1:LinkedDescriptiveFrameworkPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="coreMetadata">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:creatorEntityObjects"/>
+<xs:element minOccurs="0" ref="r0:publisherEntityObjects"/>
+<xs:element minOccurs="0" ref="r0:subjectObjects"/>
+<xs:element minOccurs="0" ref="r0:descriptionObjects"/>
+<xs:element minOccurs="0" ref="r0:alternativeTitleObjects"/>
+<xs:element minOccurs="0" ref="r0:titleObjects"/>
+<xs:element minOccurs="0" ref="r0:identifierObjects"/>
+<xs:element minOccurs="0" ref="r0:publicationHistoryObject"/>
+<xs:element minOccurs="0" ref="r0:planningObject"/>
+<xs:element minOccurs="0" ref="r0:customRelationObjects"/>
+<xs:element minOccurs="0" ref="r0:languageObjects"/>
+<xs:element minOccurs="0" ref="r0:typeObjects"/>
+<xs:element minOccurs="0" ref="r0:formatObjects"/>
+<xs:element minOccurs="0" ref="r0:partObjects"/>
+<xs:element minOccurs="0" ref="r0:contributorEntityObjects"/>
+<xs:element minOccurs="0" ref="r0:ratingObjects"/>
+<xs:element minOccurs="0" ref="r0:basicRelationObjects"/>
+<xs:element minOccurs="0" ref="r0:dateObjects"/>
+<xs:element minOccurs="0" ref="r0:coverageObjects"/>
+<xs:element minOccurs="0" ref="r0:versionObject"/>
+<xs:element minOccurs="0" ref="r0:rightsObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="metadataSchemaInformation">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:metadataDateLastModified"/>
+<xs:element minOccurs="0" ref="r0:metadataTimeLastModified"/>
+<xs:element minOccurs="0" ref="r0:metadataProviderEntityObject"/>
+<xs:element minOccurs="0" ref="r0:metadataSchemaVersion"/>
+<xs:element minOccurs="0" ref="r0:metadataSchema"/>
+<xs:element minOccurs="0" ref="r0:metadataFrameworkTextLanguageCode"/>
+<xs:element minOccurs="0" ref="r0:metadataNamespacePrefix"/>
+<xs:element minOccurs="0" ref="r0:metadataNamespace"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="identifier">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:identifierValue"/>
+<xs:element minOccurs="0" ref="r0:identifierFormatGroupObject"/>
+<xs:element minOccurs="0" ref="r0:identifierAttributorEntityObject"/>
+<xs:element minOccurs="0" ref="r0:identifierNote"/>
+<xs:element minOccurs="0" ref="r0:identifierTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="title">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:titleNote"/>
+<xs:element minOccurs="0" ref="r0:titleAttributionDate"/>
+<xs:element minOccurs="0" ref="r0:titleGeographicalExclusionScope"/>
+<xs:element minOccurs="0" ref="r0:titleGeographicalScope"/>
+<xs:element minOccurs="0" ref="r0:titleValueObjects"/>
+<xs:element minOccurs="0" ref="r0:titleLength"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="alternativeTitle">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:alternativeTitleNote"/>
+<xs:element minOccurs="0" ref="r0:alternativeTitleValueObjects"/>
+<xs:element minOccurs="0" ref="r0:alternativeTitleAttributionDate"/>
+<xs:element minOccurs="0" ref="r0:alternativeTitleGeographicalExclusionScope"/>
+<xs:element minOccurs="0" ref="r0:alternativeTitleStatusGroupObject"/>
+<xs:element minOccurs="0" ref="r0:alternativeTitleTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:alternativeTitleLength"/>
+<xs:element minOccurs="0" ref="r0:alternativeTitleGeographicalScope"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="subject">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:subjectAttributorEntityObject"/>
+<xs:element minOccurs="0" ref="r0:subjectCode"/>
+<xs:element minOccurs="0" ref="r0:subjectDefinitionObjects"/>
+<xs:element minOccurs="0" ref="r0:subjectNote"/>
+<xs:element minOccurs="0" ref="r0:subjectTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:subjectValueObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="description">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:descriptionGeographicalExclusionScope"/>
+<xs:element minOccurs="0" ref="r0:descriptionAttributionDate"/>
+<xs:element minOccurs="0" ref="r0:descriptionCastFlag"/>
+<xs:element minOccurs="0" ref="r0:descriptionTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:descriptionGeographicalScope"/>
+<xs:element minOccurs="0" ref="r0:descriptionLength"/>
+<xs:element minOccurs="0" ref="r0:descriptionAttributorEntityObject"/>
+<xs:element minOccurs="0" ref="r0:descriptionNote"/>
+<xs:element minOccurs="0" ref="r0:descriptionValueObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="date">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:yearCreated"/>
+<xs:element minOccurs="0" ref="r0:dateModified"/>
+<xs:element minOccurs="0" ref="r0:dateIssued"/>
+<xs:element minOccurs="0" ref="r0:yearIssued"/>
+<xs:element minOccurs="0" ref="r0:yearModified"/>
+<xs:element minOccurs="0" ref="r0:dateDigitized"/>
+<xs:element minOccurs="0" ref="r0:alternativeDateObjects"/>
+<xs:element minOccurs="0" ref="r0:precision"/>
+<xs:element minOccurs="0" ref="r0:yearCopyrighted"/>
+<xs:element minOccurs="0" ref="r0:yearReleased"/>
+<xs:element minOccurs="0" ref="r0:dateNote"/>
+<xs:element minOccurs="0" ref="r0:dateCopyrighted"/>
+<xs:element minOccurs="0" ref="r0:dateReleased"/>
+<xs:element minOccurs="0" ref="r0:yearDigitized"/>
+<xs:element minOccurs="0" ref="r0:dateCreated"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="dateType">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:dateFormatGroupObject"/>
+<xs:element minOccurs="0" ref="r0:dateTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:dateValue"/>
+<xs:element minOccurs="0" ref="r0:textualDateObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="type">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:targetAudienceObjects"/>
+<xs:element minOccurs="0" ref="r0:genreObjects"/>
+<xs:element minOccurs="0" ref="r0:typeTypegroupObject"/>
+<xs:element minOccurs="0" ref="r0:typeValueObjects"/>
+<xs:element minOccurs="0" ref="r0:objectTypeObjects"/>
+<xs:element minOccurs="0" ref="r0:typeNote"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="objectType">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:objectTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="genre">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:genreTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:genreLevel"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="targetAudience">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:targetAudienceTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:targetAudienceRegionObjects"/>
+<xs:element minOccurs="0" ref="r0:targetAudienceReason"/>
+<xs:element minOccurs="0" ref="r0:targetAudienceAdultContentFlag"/>
+<xs:element minOccurs="0" ref="r0:targetAudienceLinkToLogo"/>
+<xs:element minOccurs="0" ref="r0:targetAudienceNotRatedFlag"/>
+<xs:element minOccurs="0" ref="r0:targetAudienceFormatGroupObject"/>
+<xs:element minOccurs="0" ref="r0:targetAudienceExclusionRegionObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="language">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:languagePurposeObject"/>
+<xs:element minOccurs="0" ref="r0:languageNote"/>
+<xs:element minOccurs="0" ref="r0:languageCode"/>
+<xs:element minOccurs="0" ref="r0:languageValueObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="coverage">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:temporalObject"/>
+<xs:element minOccurs="0" ref="r0:coverageTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:spatialObject"/>
+<xs:element minOccurs="0" ref="r0:coverageValueObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="spatial">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:locationObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="location">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:locationID"/>
+<xs:element minOccurs="0" ref="r0:locationCode"/>
+<xs:element minOccurs="0" ref="r0:locationRegionObject"/>
+<xs:element minOccurs="0" ref="r0:locationTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:locationDefinitionNote"/>
+<xs:element minOccurs="0" ref="r0:locationNameObjects"/>
+<xs:element minOccurs="0" ref="r0:locationCoordinatesObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="coordinates">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:coordinatesFormatGroupObject"/>
+<xs:element minOccurs="0" ref="r0:posX"/>
+<xs:element minOccurs="0" ref="r0:posY"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="temporal">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:temporalTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:periodOfTimeObjects"/>
+<xs:element minOccurs="0" ref="r0:temporalDefinitionNote"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="periodOfTime">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:periodID"/>
+<xs:element minOccurs="0" ref="r0:periodNameObjects"/>
+<xs:element minOccurs="0" ref="r0:periodStartYear"/>
+<xs:element minOccurs="0" ref="r0:periodStartDate"/>
+<xs:element minOccurs="0" ref="r0:periodStartTime"/>
+<xs:element minOccurs="0" ref="r0:periodEndTime"/>
+<xs:element minOccurs="0" ref="r0:periodEndYear"/>
+<xs:element minOccurs="0" ref="r0:periodEndDate"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="rights">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:disclaimerObjects"/>
+<xs:element minOccurs="0" ref="r0:copyrightStatementObjects"/>
+<xs:element minOccurs="0" ref="r0:rightsCoverageObject"/>
+<xs:element minOccurs="0" ref="r0:rightsHolderEntityObjects"/>
+<xs:element minOccurs="0" ref="r0:rightsLink"/>
+<xs:element minOccurs="0" ref="r0:rightsFormatReferenceObjects"/>
+<xs:element minOccurs="0" ref="r0:rightsID"/>
+<xs:element minOccurs="0" ref="r0:processingRestrictionFlag"/>
+<xs:element minOccurs="0" ref="r0:rightsTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:rightsAttributedIDObjects"/>
+<xs:element minOccurs="0" ref="r0:rightsContactObjects"/>
+<xs:element minOccurs="0" ref="r0:rightsClearanceFlag"/>
+<xs:element minOccurs="0" ref="r0:exploitationIssuesObjects"/>
+<xs:element minOccurs="0" ref="r0:rightsNote"/>
+<xs:element minOccurs="0" ref="r0:rightsValueObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="version">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:versionValueObjects"/>
+<xs:element minOccurs="0" ref="r0:versionTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="rating">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:ratingRegionObject"/>
+<xs:element minOccurs="0" ref="r0:ratingSystem"/>
+<xs:element minOccurs="0" ref="r0:ratingProviderEntityObject"/>
+<xs:element minOccurs="0" ref="r0:ratingFormatGroupObject"/>
+<xs:element minOccurs="0" ref="r0:ratingLink"/>
+<xs:element minOccurs="0" ref="r0:ratingEnvironment"/>
+<xs:element minOccurs="0" ref="r0:ratingScaleMinValueObjects"/>
+<xs:element minOccurs="0" ref="r0:ratingValueObjects"/>
+<xs:element minOccurs="0" ref="r0:ratingScaleMaxValueObjects"/>
+<xs:element minOccurs="0" ref="r0:ratingTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:ratingNotRatedFlag"/>
+<xs:element minOccurs="0" ref="r0:ratingAdultContentFlag"/>
+<xs:element minOccurs="0" ref="r0:ratingLinkToLogo"/>
+<xs:element minOccurs="0" ref="r0:ratingReason"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="publicationEvent">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:publicationServiceObject"/>
+<xs:element minOccurs="0" ref="r0:publicationNote"/>
+<xs:element minOccurs="0" ref="r0:publicationFormatReferenceObject"/>
+<xs:element minOccurs="0" ref="r0:liveProductionFlag"/>
+<xs:element minOccurs="0" ref="r0:publicationRightsReferenceObjects"/>
+<xs:element minOccurs="0" ref="r0:publicationChannelObject"/>
+<xs:element minOccurs="0" ref="r0:publicationRegionObjects"/>
+<xs:element minOccurs="0" ref="r0:publicationMediumObject"/>
+<xs:element minOccurs="0" ref="r0:freePublicationFlag"/>
+<xs:element minOccurs="0" ref="r0:livePublicationFlag"/>
+<xs:element minOccurs="0" ref="r0:publicationTime"/>
+<xs:element minOccurs="0" ref="r0:scheduleDate"/>
+<xs:element minOccurs="0" ref="r0:publicationDate"/>
+<xs:element minOccurs="0" ref="r0:publicationEventName"/>
+<xs:element minOccurs="0" ref="r0:publicationEventId"/>
+<xs:element minOccurs="0" ref="r0:firstShowingFlag"/>
+<xs:element minOccurs="0" ref="r0:lastShowingFlag"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="publicationHistory">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:publicationEventObjects"/>
+<xs:element minOccurs="0" ref="r0:publicationHistoryId"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="publicationChannel">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:publicationChannelTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:publicationChannelName"/>
+<xs:element minOccurs="0" ref="r0:publicationChannelId"/>
+<xs:element minOccurs="0" ref="r0:publicationChannelLinkToLogo"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="publicationMedium">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:publicationMediumTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:publicationMediumName"/>
+<xs:element minOccurs="0" ref="r0:publicationMediumId"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="publicationService">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:publicationServiceName"/>
+<xs:element minOccurs="0" ref="r0:publicationServiceLinkToLogo"/>
+<xs:element minOccurs="0" ref="r0:publicationServiceSourceObject"/>
+<xs:element minOccurs="0" ref="r0:publicationServiceTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:publicationServiceId"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="entity">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:entityID"/>
+<xs:element minOccurs="0" ref="r0:entityContactObjects"/>
+<xs:element minOccurs="0" ref="r0:entityRoleObjects"/>
+<xs:element minOccurs="0" ref="r0:entityOrganizationObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="contact">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:occupation"/>
+<xs:element minOccurs="0" ref="r0:contactID"/>
+<xs:element minOccurs="0" ref="r0:username"/>
+<xs:element minOccurs="0" ref="r0:familiyName"/>
+<xs:element minOccurs="0" ref="r0:suffix"/>
+<xs:element minOccurs="0" ref="r0:givenName"/>
+<xs:element minOccurs="0" ref="r0:salutation"/>
+<xs:element minOccurs="0" ref="r0:genderObject"/>
+<xs:element minOccurs="0" ref="r0:contactRelatedInformationLinkObjects"/>
+<xs:element minOccurs="0" ref="r0:stageNameObjects"/>
+<xs:element minOccurs="0" ref="r0:contactRelatedContactObjects"/>
+<xs:element minOccurs="0" ref="r0:contactNameObjects"/>
+<xs:element minOccurs="0" ref="r0:nationality"/>
+<xs:element minOccurs="0" ref="r0:guestFlag"/>
+<xs:element minOccurs="0" ref="r0:contactTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:contactDetailsObjects"/>
+<xs:element minOccurs="0" ref="r0:birthDate"/>
+<xs:element minOccurs="0" ref="r0:skill"/>
+<xs:element minOccurs="0" ref="r0:contactLastUpdate"/>
+<xs:element minOccurs="0" ref="r0:otherGivenName"/>
+<xs:element minOccurs="0" ref="r0:nickname"/>
+<xs:element minOccurs="0" ref="r0:deathDate"/>
+<xs:element minOccurs="0" ref="r0:birthPlace"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="organization">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:organizationNameObjects"/>
+<xs:element minOccurs="0" ref="r0:organizationDepartmentObject"/>
+<xs:element minOccurs="0" ref="r0:organizationTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:organizationDetailsObjects"/>
+<xs:element minOccurs="0" ref="r0:organizationID"/>
+<xs:element minOccurs="0" ref="r0:organizationRelatedInformationLinkObjects"/>
+<xs:element minOccurs="0" ref="r0:organizationLinkToLogo"/>
+<xs:element minOccurs="0" ref="r0:organizationCodeObjects"/>
+<xs:element minOccurs="0" ref="r0:organizationNationality"/>
+<xs:element minOccurs="0" ref="r0:organizationLastUpdate"/>
+<xs:element minOccurs="0" ref="r0:organizationRelatedContactObjects"/>
+<xs:element minOccurs="0" ref="r0:organizationDescription"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="department">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:departmentID"/>
+<xs:element minOccurs="0" ref="r0:departmentName"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="details">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:webAddress"/>
+<xs:element minOccurs="0" ref="r0:telephoneNumber"/>
+<xs:element minOccurs="0" ref="r0:emailAddress"/>
+<xs:element minOccurs="0" ref="r0:mobileTelephoneNumber"/>
+<xs:element minOccurs="0" ref="r0:detailsTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:addressObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="address">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:deliveryCode"/>
+<xs:element minOccurs="0" ref="r0:townCityObjects"/>
+<xs:element minOccurs="0" ref="r0:countyStateObjects"/>
+<xs:element minOccurs="0" ref="r0:countryObjects"/>
+<xs:element minOccurs="0" ref="r0:addressLineObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="region">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:countryObject"/>
+<xs:element minOccurs="0" ref="r0:countryRegionObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="compoundName">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:compoundNameFormatGroupObject"/>
+<xs:element minOccurs="0" ref="r0:compoundNameTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:compoundNameValue"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="role">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:costCenterReference"/>
+<xs:element minOccurs="0" ref="r0:roleTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="countryType">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:countryTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="customRelation">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:customRelationLink"/>
+<xs:element minOccurs="0" ref="r0:customRelationByName"/>
+<xs:element minOccurs="0" ref="r0:totalNumberOfGroupMembers"/>
+<xs:element minOccurs="0" ref="r0:runningOrderNumber"/>
+<xs:element minOccurs="0" ref="r0:customRelationNote"/>
+<xs:element minOccurs="0" ref="r0:orderedGroupFlag"/>
+<xs:element minOccurs="0" ref="r0:customRelationIdentifierObject"/>
+<xs:element minOccurs="0" ref="r0:customRelationTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="basicRelation">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:followsInSequence"/>
+<xs:element minOccurs="0" ref="r0:isRelatedTo"/>
+<xs:element minOccurs="0" ref="r0:hasSeason"/>
+<xs:element minOccurs="0" ref="r0:isNextInSequence"/>
+<xs:element minOccurs="0" ref="r0:sameAs"/>
+<xs:element minOccurs="0" ref="r0:isVersionOf"/>
+<xs:element minOccurs="0" ref="r0:replaces"/>
+<xs:element minOccurs="0" ref="r0:isRequiredBy"/>
+<xs:element minOccurs="0" ref="r0:hasVersion"/>
+<xs:element minOccurs="0" ref="r0:isReplacedBy"/>
+<xs:element minOccurs="0" ref="r0:hasPart"/>
+<xs:element minOccurs="0" ref="r0:isReferencedBy"/>
+<xs:element minOccurs="0" ref="r0:requires"/>
+<xs:element minOccurs="0" ref="r0:isPartOf"/>
+<xs:element minOccurs="0" ref="r0:hasFormat"/>
+<xs:element minOccurs="0" ref="r0:isEpisodeOf"/>
+<xs:element minOccurs="0" ref="r0:references"/>
+<xs:element minOccurs="0" ref="r0:isFormatOf"/>
+<xs:element minOccurs="0" ref="r0:hasEpisode"/>
+<xs:element minOccurs="0" ref="r0:isSeasonOf"/>
+<xs:element minOccurs="0" ref="r0:isMemberOf"/>
+<xs:element minOccurs="0" ref="r0:hasMember"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="planning">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:planningEventObjects"/>
+<xs:element minOccurs="0" ref="r0:planningId"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="typeGroup">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:typeGroupNamespace"/>
+<xs:element minOccurs="0" ref="r0:typeGroupSource"/>
+<xs:element minOccurs="0" ref="r0:typeGroupDefinition"/>
+<xs:element minOccurs="0" ref="r0:typeGroupLanguageCode"/>
+<xs:element minOccurs="0" ref="r0:typeGroupLink"/>
+<xs:element minOccurs="0" ref="r0:typeGroupUL"/>
+<xs:element minOccurs="0" ref="r0:typeGroupThesaurus"/>
+<xs:element minOccurs="0" ref="r0:typeGroupLabel"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="formatGroup">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:formatGroupSource"/>
+<xs:element minOccurs="0" ref="r0:formatGroupLanguageCode"/>
+<xs:element minOccurs="0" ref="r0:formatGroupNamespace"/>
+<xs:element minOccurs="0" ref="r0:formatGroupUL"/>
+<xs:element minOccurs="0" ref="r0:formatGroupDefinition"/>
+<xs:element minOccurs="0" ref="r0:formatGroupLabel"/>
+<xs:element minOccurs="0" ref="r0:formatGroupLink"/>
+<xs:element minOccurs="0" ref="r0:formatGroupThesaurus"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="statusGroup">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:statusGroupSource"/>
+<xs:element minOccurs="0" ref="r0:statusGroupNamespace"/>
+<xs:element minOccurs="0" ref="r0:statusGroupLanguageCode"/>
+<xs:element minOccurs="0" ref="r0:statusGroupDefinition"/>
+<xs:element minOccurs="0" ref="r0:statusGroupLink"/>
+<xs:element minOccurs="0" ref="r0:statusGroupUL"/>
+<xs:element minOccurs="0" ref="r0:statusGroupThesaurus"/>
+<xs:element minOccurs="0" ref="r0:statusGroupLabel"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="textualAnnotation">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:textLanguageCode"/>
+<xs:element minOccurs="0" ref="r0:text"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="basicLink">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:basicLinkUri"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="format">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:formatDateModifiedObject"/>
+<xs:element minOccurs="0" ref="r0:formatTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:formatStartTimeObjects"/>
+<xs:element minOccurs="0" ref="r0:formatOverallDurationTimeObject"/>
+<xs:element minOccurs="0" ref="r0:formatVideoFormatObjects"/>
+<xs:element minOccurs="0" ref="r0:formatPackageInfoObject"/>
+<xs:element minOccurs="0" ref="r0:formatContainerFormatObject"/>
+<xs:element minOccurs="0" ref="r0:formatDataFormatObjects"/>
+<xs:element minOccurs="0" ref="r0:formatTechnicalAttributeFloatObjects"/>
+<xs:element minOccurs="0" ref="r0:formatDurationTimeObjects"/>
+<xs:element minOccurs="0" ref="r0:formatTechnicalAttributeStringObjects"/>
+<xs:element minOccurs="0" ref="r0:formatTechnicalAttributeAnyURIObjects"/>
+<xs:element minOccurs="0" ref="r0:formatTechnicalAttributeUInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:formatTechnicalAttributeUInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:formatTechnicalAttributeInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:formatTechnicalAttributeInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:formatTimecodeFormatObjects"/>
+<xs:element minOccurs="0" ref="r0:formatYearCreated"/>
+<xs:element minOccurs="0" ref="r0:formatName"/>
+<xs:element minOccurs="0" ref="r0:formatID"/>
+<xs:element minOccurs="0" ref="r0:formatAudioFormatExtendedObjects"/>
+<xs:element minOccurs="0" ref="r0:formatValueObject"/>
+<xs:element minOccurs="0" ref="r0:formatAudioFormatObjects"/>
+<xs:element minOccurs="0" ref="r0:formatDateCreated"/>
+<xs:element minOccurs="0" ref="r0:formatEndTimeObjects"/>
+<xs:element minOccurs="0" ref="r0:formatEditRateObject"/>
+<xs:element minOccurs="0" ref="r0:formatMediumObject"/>
+<xs:element minOccurs="0" ref="r0:formatMetadataFormatObjects"/>
+<xs:element minOccurs="0" ref="r0:formatImageFormatObjects"/>
+<xs:element minOccurs="0" ref="r0:formatSigningFormatObjects"/>
+<xs:element minOccurs="0" ref="r0:formatTechnicalAttributeUInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:formatTechnicalAttributeBooleanObjects"/>
+<xs:element minOccurs="0" ref="r0:formatTechnicalAttributeRationalObjects"/>
+<xs:element minOccurs="0" ref="r0:formatTechnicalAttributeUInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:formatTechnicalAttributeInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:formatTechnicalAttributeInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:formatDefinition"/>
+<xs:element minOccurs="0" ref="r0:formatVersionID"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="videoFormat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:videoFormatID"/>
+<xs:element minOccurs="0" ref="r0:videoFormatName"/>
+<xs:element minOccurs="0" ref="r0:videoTechnicalAttributeBooleanObjects"/>
+<xs:element minOccurs="0" ref="r0:videoBitRateObject"/>
+<xs:element minOccurs="0" ref="r0:videoNoiseFilterFlag"/>
+<xs:element minOccurs="0" ref="r0:videoTechnicalAttributeUInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:video3DFlag"/>
+<xs:element minOccurs="0" ref="r0:videoTechnicalAttributeInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:videoBitRateMode"/>
+<xs:element minOccurs="0" ref="r0:videoTechnicalAttributeUInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:videoScanningOrder"/>
+<xs:element minOccurs="0" ref="r0:videoTechnicalAttributeRationalObjects"/>
+<xs:element minOccurs="0" ref="r0:videoWidthObjects"/>
+<xs:element minOccurs="0" ref="r0:videoTechnicalAttributeStringObjects"/>
+<xs:element minOccurs="0" ref="r0:videoTechnicalAttributeInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:videoFrameRateObject"/>
+<xs:element minOccurs="0" ref="r0:videoFormatProfileLevel"/>
+<xs:element minOccurs="0" ref="r0:videoCodecObject"/>
+<xs:element minOccurs="0" ref="r0:videoPresenceFlag"/>
+<xs:element minOccurs="0" ref="r0:videoRegionDelimYObject"/>
+<xs:element minOccurs="0" ref="r0:videoFormatVersionId"/>
+<xs:element minOccurs="0" ref="r0:videoFormatDefinition"/>
+<xs:element minOccurs="0" ref="r0:videoMaxBitRateObject"/>
+<xs:element minOccurs="0" ref="r0:videoNoiseFilterObject"/>
+<xs:element minOccurs="0" ref="r0:videoTechnicalAttributeUInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:videoTechnicalAttributeUInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:videoAspectRatioObjects"/>
+<xs:element minOccurs="0" ref="r0:videoTechnicalAttributeFloatObjects"/>
+<xs:element minOccurs="0" ref="r0:videoActiveLines"/>
+<xs:element minOccurs="0" ref="r0:videoScanningFormat"/>
+<xs:element minOccurs="0" ref="r0:videoTechnicalAttributeAnyURIObjects"/>
+<xs:element minOccurs="0" ref="r0:videoTechnicalAttributeInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:videoEncodingObject"/>
+<xs:element minOccurs="0" ref="r0:videoHeightObjects"/>
+<xs:element minOccurs="0" ref="r0:videoTechnicalAttributeInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:videoTrackObjects"/>
+<xs:element minOccurs="0" ref="r0:videoNote"/>
+<xs:element minOccurs="0" ref="r0:videoFormatProfile"/>
+<xs:element minOccurs="0" ref="r0:videoRegionDelimXObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="imageFormat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:imageRegionDelimXObject"/>
+<xs:element minOccurs="0" ref="r0:imageFormatProfile"/>
+<xs:element minOccurs="0" ref="r0:imageWidthObject"/>
+<xs:element minOccurs="0" ref="r0:imageCodecObject"/>
+<xs:element minOccurs="0" ref="r0:imageTechnicalAttributeInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:imageTechnicalAttributeBooleanObjects"/>
+<xs:element minOccurs="0" ref="r0:imageNote"/>
+<xs:element minOccurs="0" ref="r0:imageTechnicalAttributeRationalObjects"/>
+<xs:element minOccurs="0" ref="r0:imageTechnicalAttributeInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:imageTechnicalAttributeUInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:imageFormatVersionId"/>
+<xs:element minOccurs="0" ref="r0:imageTechnicalAttributeUInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:imageFormatDefinition"/>
+<xs:element minOccurs="0" ref="r0:imageAspectRatioObject"/>
+<xs:element minOccurs="0" ref="r0:imageFormatProfileLevel"/>
+<xs:element minOccurs="0" ref="r0:imageRegionDelimYObject"/>
+<xs:element minOccurs="0" ref="r0:imagePresenceFlag"/>
+<xs:element minOccurs="0" ref="r0:imageHeightObject"/>
+<xs:element minOccurs="0" ref="r0:imageTechnicalAttributeInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:imageTechnicalAttributeAnyURIObjects"/>
+<xs:element minOccurs="0" ref="r0:imageTechnicalAttributeStringObjects"/>
+<xs:element minOccurs="0" ref="r0:imageTechnicalAttributeUInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:imageTechnicalAttributeInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:imageFormatName"/>
+<xs:element minOccurs="0" ref="r0:imageTechnicalAttributeUInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:imageFormatID"/>
+<xs:element minOccurs="0" ref="r0:imageTechnicalAttributeFloatObjects"/>
+<xs:element minOccurs="0" ref="r0:imageOrientation"/>
+<xs:element minOccurs="0" ref="r0:imageEncodingObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioFormat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioTechnicalAttributeUInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:audioTechnicalAttributeUInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:audioTechnicalAttributeFloatObjects"/>
+<xs:element minOccurs="0" ref="r0:audioFormatVersionId"/>
+<xs:element minOccurs="0" ref="r0:audioTotalNumberOfChannels"/>
+<xs:element minOccurs="0" ref="r0:audioSamplingSize"/>
+<xs:element minOccurs="0" ref="r0:audioFormatDefinition"/>
+<xs:element minOccurs="0" ref="r0:audioPresenceFlag"/>
+<xs:element minOccurs="0" ref="r0:audioCodecObject"/>
+<xs:element minOccurs="0" ref="r0:audioMaxBitRateObject"/>
+<xs:element minOccurs="0" ref="r0:audioTechnicalAttributeBooleanObjects"/>
+<xs:element minOccurs="0" ref="r0:audioSamplingRateObject"/>
+<xs:element minOccurs="0" ref="r0:audioFormatProfileLevel"/>
+<xs:element minOccurs="0" ref="r0:audioTechnicalAttributeInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:audioTechnicalAttributeInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:audioTechnicalAttributeStringObjects"/>
+<xs:element minOccurs="0" ref="r0:audioTechnicalAttributeUInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:audioTechnicalAttributeUInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:audioSamplingType"/>
+<xs:element minOccurs="0" ref="r0:audioFormatID"/>
+<xs:element minOccurs="0" ref="r0:audioTechnicalAttributeRationalObjects"/>
+<xs:element minOccurs="0" ref="r0:audioFormatName"/>
+<xs:element minOccurs="0" ref="r0:audioTrackConfiguration"/>
+<xs:element minOccurs="0" ref="r0:audioTrackObjects"/>
+<xs:element minOccurs="0" ref="r0:audioEncodingObject"/>
+<xs:element minOccurs="0" ref="r0:audioTechnicalAttributeInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:audioBitRateObject"/>
+<xs:element minOccurs="0" ref="r0:audioTechnicalAttributeAnyURIObjects"/>
+<xs:element minOccurs="0" ref="r0:audioBitRateMode"/>
+<xs:element minOccurs="0" ref="r0:audioTechnicalAttributeInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:audioFormatProfile"/>
+<xs:element minOccurs="0" ref="r0:audioNote"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="track">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:trackName"/>
+<xs:element minOccurs="0" ref="r0:trackLanguageCode"/>
+<xs:element minOccurs="0" ref="r0:trackTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:trackID"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="dataFormat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:dataTrackLanguageCode"/>
+<xs:element minOccurs="0" ref="r0:captioningObjects"/>
+<xs:element minOccurs="0" ref="r0:dataTrackId"/>
+<xs:element minOccurs="0" ref="r0:dataTechnicalAttributeBooleanObjects"/>
+<xs:element minOccurs="0" ref="r0:dataTechnicalAttributeInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:dataTechnicalAttributeUInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:dataFormatID"/>
+<xs:element minOccurs="0" ref="r0:dataFormatName"/>
+<xs:element minOccurs="0" ref="r0:dataTechnicalAttributeFloatObjects"/>
+<xs:element minOccurs="0" ref="r0:dataFormatProfile"/>
+<xs:element minOccurs="0" ref="r0:dataTechnicalAttributeUInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:ancillaryDataObjects"/>
+<xs:element minOccurs="0" ref="r0:dataNote"/>
+<xs:element minOccurs="0" ref="r0:dataTechnicalAttributeInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:subtitlingObjects"/>
+<xs:element minOccurs="0" ref="r0:dataPresenceFlag"/>
+<xs:element minOccurs="0" ref="r0:dataTrackName"/>
+<xs:element minOccurs="0" ref="r0:dataTechnicalAttributeAnyURIObjects"/>
+<xs:element minOccurs="0" ref="r0:dataFormatDefinition"/>
+<xs:element minOccurs="0" ref="r0:dataTechnicalAttributeInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:dataFormatVersionID"/>
+<xs:element minOccurs="0" ref="r0:dataFormatProfileLevel"/>
+<xs:element minOccurs="0" ref="r0:dataTechnicalAttributeRationalObjects"/>
+<xs:element minOccurs="0" ref="r0:dataTechnicalAttributeUInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:dataTechnicalAttributeUInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:dataCodecObject"/>
+<xs:element minOccurs="0" ref="r0:dataTechnicalAttributeInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:dataTechnicalAttributeStringObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="captioning">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:captioningPresenceFlag"/>
+<xs:element minOccurs="0" ref="r0:captioningFormatGroupObject"/>
+<xs:element minOccurs="0" ref="r0:captioningTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:captioningFormatName"/>
+<xs:element minOccurs="0" ref="r0:captioningSourceUri"/>
+<xs:element minOccurs="0" ref="r0:captioningFormatID"/>
+<xs:element minOccurs="0" ref="r0:captioningTrackName"/>
+<xs:element minOccurs="0" ref="r0:captioningTrackID"/>
+<xs:element minOccurs="0" ref="r0:captioningLanguageCode"/>
+<xs:element minOccurs="0" ref="r0:closedCaptioningFlag"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="subtitling">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:subtitlingFormatID"/>
+<xs:element minOccurs="0" ref="r0:subtitlingFormatName"/>
+<xs:element minOccurs="0" ref="r0:subtitlingSourceUri"/>
+<xs:element minOccurs="0" ref="r0:subtitlingTrackID"/>
+<xs:element minOccurs="0" ref="r0:closedSubtitlingFlag"/>
+<xs:element minOccurs="0" ref="r0:subtitlingTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:subtitlingTrackName"/>
+<xs:element minOccurs="0" ref="r0:subtitlingLanguageCode"/>
+<xs:element minOccurs="0" ref="r0:subtitlingFormatGroupObject"/>
+<xs:element minOccurs="0" ref="r0:subtitlingPresenceFlag"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="ancillaryData">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:ancillaryDataFormatName"/>
+<xs:element minOccurs="0" ref="r0:lineNumber"/>
+<xs:element minOccurs="0" ref="r0:DID"/>
+<xs:element minOccurs="0" ref="r0:SDID"/>
+<xs:element minOccurs="0" ref="r0:ancillaryDataFormatId"/>
+<xs:element minOccurs="0" ref="r0:ANCWrappingTypeObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="signingFormat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:signingTrackName"/>
+<xs:element minOccurs="0" ref="r0:signingTrackLanguageCode"/>
+<xs:element minOccurs="0" ref="r0:signingTrackID"/>
+<xs:element minOccurs="0" ref="r0:signingFormatName"/>
+<xs:element minOccurs="0" ref="r0:signingFormatID"/>
+<xs:element minOccurs="0" ref="r0:signingFormatVersionID"/>
+<xs:element minOccurs="0" ref="r0:signingTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:signingSourceUri"/>
+<xs:element minOccurs="0" ref="r0:signingFormatGroupObject"/>
+<xs:element minOccurs="0" ref="r0:signingPresenceFlag"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="technicalAttributeString">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:technicalAttributeStringFormatGroupObject"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeStringTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeStringValue"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="technicalAttributeInt8">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:technicalAttributeInt8Unit"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeInt8TypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeInt8Value"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="technicalAttributeInt16">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:technicalAttributeInt16TypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeInt16Unit"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeInt16Value"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="technicalAttributeInt32">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:technicalAttributeInt32Unit"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeInt32Value"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeInt32TypeGroupObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="technicalAttributeInt64">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:technicalAttributeInt64Unit"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeInt64TypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeInt64Value"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="technicalAttributeUInt8">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:technicalAttributeUInt8Unit"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeUInt8TypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeUInt8Value"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="technicalAttributeUInt16">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:technicalAttributeUInt16Unit"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeUInt16TypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeUInt16Value"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="technicalAttributeUInt32">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:technicalAttributeUInt32Value"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeUInt32TypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeUInt32Unit"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="technicalAttributeUInt64">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:technicalAttributeUInt64TypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeUInt64Unit"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeUInt64Value"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="technicalAttributeFloat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:technicalAttributeFloatUnit"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeFloatTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeFloatValue"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="technicalAttributeRational">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:technicalAttributeRationalTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeRationalValueObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="technicalAttributeAnyURI">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:technicalAttributeAnyURIValue"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeAnyURITypeGroupObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="technicalAttributeBoolean">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:technicalAttributeBooleanValue"/>
+<xs:element minOccurs="0" ref="r0:technicalAttributeBooleanTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="dimension">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:dimensionValue"/>
+<xs:element minOccurs="0" ref="r0:dimensionUnit"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="packageInfo">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:packageSize"/>
+<xs:element minOccurs="0" ref="r0:packageLocatorObject"/>
+<xs:element minOccurs="0" ref="r0:packageName"/>
+<xs:element minOccurs="0" ref="r0:mimeTypeObject"/>
+<xs:element minOccurs="0" ref="r0:hashObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="medium">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:mediumID"/>
+<xs:element minOccurs="0" ref="r0:mediumTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="codec">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:codecfamily"/>
+<xs:element minOccurs="0" ref="r0:codecIdentifier"/>
+<xs:element minOccurs="0" ref="r0:codecVersion"/>
+<xs:element minOccurs="0" ref="r0:codecName"/>
+<xs:element minOccurs="0" ref="r0:codecVendor"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="rational">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:nominalValue"/>
+<xs:element minOccurs="0" ref="r0:factorDenominator"/>
+<xs:element minOccurs="0" ref="r0:factorNumerator"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="aspectRatio">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:aspectRatioTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:aspectRatioDenominator"/>
+<xs:element minOccurs="0" ref="r0:aspectRatioNumerator"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="height">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:heightValueObject"/>
+<xs:element minOccurs="0" ref="r0:heightTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="width">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:widthValueObject"/>
+<xs:element minOccurs="0" ref="r0:widthTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="part">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:partMetadataObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="partMetadata">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:partTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:partName"/>
+<xs:element minOccurs="0" ref="r0:partDefinition"/>
+<xs:element minOccurs="0" ref="r0:partMetaObject"/>
+<xs:element minOccurs="0" ref="r0:partStartTimeObject"/>
+<xs:element minOccurs="0" ref="r0:partTotalNumber"/>
+<xs:element minOccurs="0" ref="r0:partDurationTimeObject"/>
+<xs:element minOccurs="0" ref="r0:partNumber"/>
+<xs:element minOccurs="0" ref="r0:partID"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="hash">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:hashValueObject"/>
+<xs:element minOccurs="0" ref="r0:hashFunctionTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="locator">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:locatorTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:locatorValueObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="containerFormat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:containerFormatName"/>
+<xs:element minOccurs="0" ref="r0:containerCodecObject"/>
+<xs:element minOccurs="0" ref="r0:containerFormatVersionId"/>
+<xs:element minOccurs="0" ref="r0:containerFormatProfile"/>
+<xs:element minOccurs="0" ref="r0:containerFormatId"/>
+<xs:element minOccurs="0" ref="r0:containerTechnicalAttributeStringObjects"/>
+<xs:element minOccurs="0" ref="r0:containerTechnicalAttributeAnyURIObjects"/>
+<xs:element minOccurs="0" ref="r0:containerTechnicalAttributeRationalObjects"/>
+<xs:element minOccurs="0" ref="r0:containerTechnicalAttributeInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:containerTechnicalAttributeBooleanObjects"/>
+<xs:element minOccurs="0" ref="r0:containerFormatProfileLevel"/>
+<xs:element minOccurs="0" ref="r0:containerNote"/>
+<xs:element minOccurs="0" ref="r0:containerEncodingFormatGroupObject"/>
+<xs:element minOccurs="0" ref="r0:containerTechnicalAttributeUInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:containerTechnicalAttributeInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:containerTechnicalAttributeInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:containerTechnicalAttributeFloatObjects"/>
+<xs:element minOccurs="0" ref="r0:containerTechnicalAttributeInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:containerTechnicalAttributeUInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:containerTechnicalAttributeUInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:containerTechnicalAttributeUInt16Objects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioFormatExtended">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioFormatExtendedDefinition"/>
+<xs:element minOccurs="0" ref="r0:audioProgrammeObjects"/>
+<xs:element minOccurs="0" ref="r0:audioFormatExtendedVersion"/>
+<xs:element minOccurs="0" ref="r0:audioFormatExtendedPresenceFlag"/>
+<xs:element minOccurs="0" ref="r0:audioFormatExtendedId"/>
+<xs:element minOccurs="0" ref="r0:audioFormatExtendedName"/>
+<xs:element minOccurs="0" ref="r0:audioChannelFormatObjects"/>
+<xs:element minOccurs="0" ref="r0:audioPackFormatObjects"/>
+<xs:element minOccurs="0" ref="r0:audioContentObjects"/>
+<xs:element minOccurs="0" ref="r0:audioObjectObjects"/>
+<xs:element minOccurs="0" ref="r0:audioBlockFormatObjects"/>
+<xs:element minOccurs="0" ref="r0:audioTrackUIDObjects"/>
+<xs:element minOccurs="0" ref="r0:audioStreamFormatObjects"/>
+<xs:element minOccurs="0" ref="r0:audioTrackFormatObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioProgramme">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioProgrammeTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:audioProgrammeFormatGroupObject"/>
+<xs:element minOccurs="0" ref="r0:audioProgrammeEndTimecode"/>
+<xs:element minOccurs="0" ref="r0:audioProgrammeStartTimecode"/>
+<xs:element minOccurs="0" ref="r0:audioProgrammeId"/>
+<xs:element minOccurs="0" ref="r0:audioProgrammeName"/>
+<xs:element minOccurs="0" ref="r0:audioProgrammeLanguageCode"/>
+<xs:element minOccurs="0" ref="r0:audioProgrammeLoudnessMetadataObject"/>
+<xs:element minOccurs="0" ref="r0:audioProgrammeAudioContentIDRefObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="IDRef">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:IDRefValue"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="loudnessMetadata">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:loudnessMethod"/>
+<xs:element minOccurs="0" ref="r0:loudnessMaxMomentary"/>
+<xs:element minOccurs="0" ref="r0:loudnessMaxTruePeak"/>
+<xs:element minOccurs="0" ref="r0:integratedLoudness"/>
+<xs:element minOccurs="0" ref="r0:loudnessRange"/>
+<xs:element minOccurs="0" ref="r0:loudnessMaxShortTerm"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioContent">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioContentId"/>
+<xs:element minOccurs="0" ref="r0:audioContentName"/>
+<xs:element minOccurs="0" ref="r0:audioContentDialogueIndicator"/>
+<xs:element minOccurs="0" ref="r0:audioContentLanguageCode"/>
+<xs:element minOccurs="0" ref="r0:audioContentAudioObjectIDRefObjects"/>
+<xs:element minOccurs="0" ref="r0:audioContentLoudnessMetadataObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioObject">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioObjectAudioObjectIDRefObjects"/>
+<xs:element minOccurs="0" ref="r0:audioObjectAudioPackFormatIDRefObjects"/>
+<xs:element minOccurs="0" ref="r0:audioObjectAudioTrackUIDRefObjects"/>
+<xs:element minOccurs="0" ref="r0:audioObjectImportance"/>
+<xs:element minOccurs="0" ref="r0:audioObjectId"/>
+<xs:element minOccurs="0" ref="r0:audioObjectInteract"/>
+<xs:element minOccurs="0" ref="r0:audioObjectName"/>
+<xs:element minOccurs="0" ref="r0:audioObjectDialogueIndicator"/>
+<xs:element minOccurs="0" ref="r0:audioObjectStartTimecode"/>
+<xs:element minOccurs="0" ref="r0:audioObjectDurationTimecode"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioPackFormat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioPackImportance"/>
+<xs:element minOccurs="0" ref="r0:audioPackAudioChannelFormatIDRefObjects"/>
+<xs:element minOccurs="0" ref="r0:audioPackAudioPackFormatIDRefObjects"/>
+<xs:element minOccurs="0" ref="r0:audioPackFormatId"/>
+<xs:element minOccurs="0" ref="r0:audioPackTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:audioPackFormatName"/>
+<xs:element minOccurs="0" ref="r0:audioPackAbsoluteDistance"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioChannelFormat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioChannelFormatName"/>
+<xs:element minOccurs="0" ref="r0:audioChannelFrequency"/>
+<xs:element minOccurs="0" ref="r0:audioChannelAudioBlockFormatObjects"/>
+<xs:element minOccurs="0" ref="r0:audioChannelTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:audioChannelFormatId"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioBlockFormat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioBlockOrder"/>
+<xs:element minOccurs="0" ref="r0:audioBlockSpeakerLabel"/>
+<xs:element minOccurs="0" ref="r0:audioBlockDurationTimecode"/>
+<xs:element minOccurs="0" ref="r0:audioBlockPosition"/>
+<xs:element minOccurs="0" ref="r0:audioBlockMatrixObject"/>
+<xs:element minOccurs="0" ref="r0:audioBlockFormatId"/>
+<xs:element minOccurs="0" ref="r0:audioBlockRTimecode"/>
+<xs:element minOccurs="0" ref="r0:audioBlockWidth"/>
+<xs:element minOccurs="0" ref="r0:audioBlockHeight"/>
+<xs:element minOccurs="0" ref="r0:audioBlockDiffuse"/>
+<xs:element minOccurs="0" ref="r0:audioBlockGain"/>
+<xs:element minOccurs="0" ref="r0:audioBlockChannelLock"/>
+<xs:element minOccurs="0" ref="r0:audioBlockDepth"/>
+<xs:element minOccurs="0" ref="r0:audioBlockJumpPosition"/>
+<xs:element minOccurs="0" ref="r0:audioBlockEquation"/>
+<xs:element minOccurs="0" ref="r0:audioBlockDegree"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioBlockMatrixCoefficient">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioBlockMatrixCoefficientValue"/>
+<xs:element minOccurs="0" ref="r0:audioBlockMatrixCoefficientGain"/>
+<xs:element minOccurs="0" ref="r0:audioBlockMatrixCoefficientPhase"/>
+<xs:element minOccurs="0" ref="r0:audioBlockMatrixCoefficientPhaseVar"/>
+<xs:element minOccurs="0" ref="r0:audioBlockMatrixCoefficientGainVar"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioStreamFormat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioStreamFormatId"/>
+<xs:element minOccurs="0" ref="r0:audioStreamAudioChannelFormatIDRefObjects"/>
+<xs:element minOccurs="0" ref="r0:audioStreamFormatName"/>
+<xs:element minOccurs="0" ref="r0:audioStreamFormatTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:audioStreamAudioStreamFormatIDRefObjects"/>
+<xs:element minOccurs="0" ref="r0:audioStreamAudioTrackFormatIDRefObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioTrackFormat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioTrackAudioStreamFormatIDRefObjects"/>
+<xs:element minOccurs="0" ref="r0:audioTrackFormatFormatGroupObject"/>
+<xs:element minOccurs="0" ref="r0:audioTrackFormatName"/>
+<xs:element minOccurs="0" ref="r0:audioTrackFormatId"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioTrackUID">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioTrackUIDBitDepth"/>
+<xs:element minOccurs="0" ref="r0:audioTrackMXFLookupObject"/>
+<xs:element minOccurs="0" ref="r0:audioTrackAudioTrackFormatIDRefObjects"/>
+<xs:element minOccurs="0" ref="r0:audioTrackAudioPackFormatIDRefObjects"/>
+<xs:element minOccurs="0" ref="r0:audioTrackUIDValue"/>
+<xs:element minOccurs="0" ref="r0:audioTrackUIDSampleRate"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioMXFLookup">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioMXFLookupPackageUIDRefObject"/>
+<xs:element minOccurs="0" ref="r0:audioMXFLookupChannelIDRefObject"/>
+<xs:element minOccurs="0" ref="r0:audioMXFLookupTrackIDRefObject"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="audioBlockMatrix">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:audioBlockMatrixCoefficientObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="time">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:textTime"/>
+<xs:element minOccurs="0" ref="r0:timeTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:editUnit"/>
+<xs:element minOccurs="0" ref="r0:timecode"/>
+<xs:element minOccurs="0" ref="r0:normalPlayTime"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="metadataFormat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:metadataFormatVersionId"/>
+<xs:element minOccurs="0" ref="r0:metadataFormatDefinition"/>
+<xs:element minOccurs="0" ref="r0:metadataTrackObjects"/>
+<xs:element minOccurs="0" ref="r0:metadataTechnicalAttributeStringObjects"/>
+<xs:element minOccurs="0" ref="r0:metadataFormatName"/>
+<xs:element minOccurs="0" ref="r0:metadataFormatId"/>
+<xs:element minOccurs="0" ref="r0:metadataTechnicalAttributeInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:metadataTechnicalAttributeInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:metadataTechnicalAttributeInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:metadataTechnicalAttributeInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:metadataTechnicalAttributeAnyURIObjects"/>
+<xs:element minOccurs="0" ref="r0:metadataTechnicalAttributeUInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:metadataTechnicalAttributeUInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:metadataTechnicalAttributeBooleanObjects"/>
+<xs:element minOccurs="0" ref="r0:metadataTechnicalAttributeUInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:metadataTechnicalAttributeRationalObjects"/>
+<xs:element minOccurs="0" ref="r0:metadataTechnicalAttributeUInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:metadataTechnicalAttributeFloatObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="timecodeFormat">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:timecodeFormatDefinition"/>
+<xs:element minOccurs="0" ref="r0:timecodeTechnicalAttributeStringObjects"/>
+<xs:element minOccurs="0" ref="r0:timecodeStartTimeObject"/>
+<xs:element minOccurs="0" ref="r0:timecodeTrackObjects"/>
+<xs:element minOccurs="0" ref="r0:timecodeFormatName"/>
+<xs:element minOccurs="0" ref="r0:timecodeFormatVersionId"/>
+<xs:element minOccurs="0" ref="r0:timecodeFormatId"/>
+<xs:element minOccurs="0" ref="r0:timecodeTechnicalAttributeInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:timecodeTechnicalAttributeInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:timecodeTechnicalAttributeInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:timecodeTechnicalAttributeBooleanObjects"/>
+<xs:element minOccurs="0" ref="r0:timecodeTechnicalAttributeInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:timecodeTechnicalAttributeUInt8Objects"/>
+<xs:element minOccurs="0" ref="r0:timecodeTechnicalAttributeUInt64Objects"/>
+<xs:element minOccurs="0" ref="r0:timecodeTechnicalAttributeUInt16Objects"/>
+<xs:element minOccurs="0" ref="r0:timecodeTechnicalAttributeUInt32Objects"/>
+<xs:element minOccurs="0" ref="r0:timecodeTechnicalAttributeFloatObjects"/>
+<xs:element minOccurs="0" ref="r0:timecodeTechnicalAttributeRationalObjects"/>
+<xs:element minOccurs="0" ref="r0:timecodeTechnicalAttributeAnyURIObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="videoNoiseFilter">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:videoNoiseFilterTypeGroupObject"/>
+<xs:element minOccurs="0" ref="r0:videoNoiseFilterVendorId"/>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element abstract="true" name="EBUCoreObject">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r1:LinkedDescriptiveObjectPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+</xs:schema>

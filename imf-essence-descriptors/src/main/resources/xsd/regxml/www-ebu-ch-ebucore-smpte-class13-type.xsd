@@ -1,0 +1,1042 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Created: Thu Sep 17 15:28:17 CEST 2015--><!--By: regxmllib build c989a02ac80facc24e018a54c4010dd8c2d27451--><!--See: https://github.com/sandflow/regxmllib--><xs:schema xmlns:r0="http://www.ebu.ch/ebucore/smpte/class13/group" xmlns:r1="http://www.ebu.ch/ebucore/smpte/class13/type" xmlns:reg="http://sandflow.com/ns/SMPTEST2001-1/baseline"  attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.ebu.ch/ebucore/smpte/class13/type" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:import namespace="http://www.ebu.ch/ebucore/smpte/class13/group"/>
+<xs:import namespace="http://sandflow.com/ns/SMPTEST2001-1/baseline"/>
+<xs:complexType name="coreMetadataStrongReference">
+<xs:choice>
+<xs:element ref="r0:coreMetadata"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="coreMetadataStrongReference" type="r1:coreMetadataStrongReference"/>
+<xs:complexType name="metadataSchemaInformationStrongReference">
+<xs:choice>
+<xs:element ref="r0:metadataSchemaInformation"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="metadataSchemaInformationStrongReference" type="r1:metadataSchemaInformationStrongReference"/>
+<xs:complexType name="versionStrongReference">
+<xs:choice>
+<xs:element ref="r0:version"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="versionStrongReference" type="r1:versionStrongReference"/>
+<xs:complexType name="publicationHistoryStrongReference">
+<xs:choice>
+<xs:element ref="r0:publicationHistory"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="publicationHistoryStrongReference" type="r1:publicationHistoryStrongReference"/>
+<xs:complexType name="planningStrongReference">
+<xs:choice>
+<xs:element ref="r0:planning"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="planningStrongReference" type="r1:planningStrongReference"/>
+<xs:complexType name="typeGroupStrongReference">
+<xs:choice>
+<xs:element ref="r0:typeGroup"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="typeGroupStrongReference" type="r1:typeGroupStrongReference"/>
+<xs:complexType name="formatGroupStrongReference">
+<xs:choice>
+<xs:element ref="r0:formatGroup"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="formatGroupStrongReference" type="r1:formatGroupStrongReference"/>
+<xs:complexType name="statusGroupStrongReference">
+<xs:choice>
+<xs:element ref="r0:statusGroup"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="statusGroupStrongReference" type="r1:statusGroupStrongReference"/>
+<xs:complexType name="spatialStrongReference">
+<xs:choice>
+<xs:element ref="r0:spatial"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="spatialStrongReference" type="r1:spatialStrongReference"/>
+<xs:complexType name="temporalStrongReference">
+<xs:choice>
+<xs:element ref="r0:temporal"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="temporalStrongReference" type="r1:temporalStrongReference"/>
+<xs:complexType name="coordinatesStrongReference">
+<xs:choice>
+<xs:element ref="r0:coordinates"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="coordinatesStrongReference" type="r1:coordinatesStrongReference"/>
+<xs:complexType name="coverageStrongReference">
+<xs:choice>
+<xs:element ref="r0:coverage"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="coverageStrongReference" type="r1:coverageStrongReference"/>
+<xs:complexType name="publicationMediumStrongReference">
+<xs:choice>
+<xs:element ref="r0:publicationMedium"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="publicationMediumStrongReference" type="r1:publicationMediumStrongReference"/>
+<xs:complexType name="publicationChannelStrongReference">
+<xs:choice>
+<xs:element ref="r0:publicationChannel"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="publicationChannelStrongReference" type="r1:publicationChannelStrongReference"/>
+<xs:complexType name="publicationServiceStrongReference">
+<xs:choice>
+<xs:element ref="r0:publicationService"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="publicationServiceStrongReference" type="r1:publicationServiceStrongReference"/>
+<xs:complexType name="departmentStrongReference">
+<xs:choice>
+<xs:element ref="r0:department"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="departmentStrongReference" type="r1:departmentStrongReference"/>
+<xs:complexType name="addressStrongReference">
+<xs:choice>
+<xs:element ref="r0:address"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="addressStrongReference" type="r1:addressStrongReference"/>
+<xs:complexType name="rationalStrongReference">
+<xs:choice>
+<xs:element ref="r0:rational"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="rationalStrongReference" type="r1:rationalStrongReference"/>
+<xs:complexType name="mediumStrongReference">
+<xs:choice>
+<xs:element ref="r0:medium"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="mediumStrongReference" type="r1:mediumStrongReference"/>
+<xs:complexType name="packageInfoStrongReference">
+<xs:choice>
+<xs:element ref="r0:packageInfo"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="packageInfoStrongReference" type="r1:packageInfoStrongReference"/>
+<xs:complexType name="codecStrongReference">
+<xs:choice>
+<xs:element ref="r0:codec"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="codecStrongReference" type="r1:codecStrongReference"/>
+<xs:complexType name="dimensionStrongReference">
+<xs:choice>
+<xs:element ref="r0:dimension"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="dimensionStrongReference" type="r1:dimensionStrongReference"/>
+<xs:complexType name="hashStrongReference">
+<xs:choice>
+<xs:element ref="r0:hash"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="hashStrongReference" type="r1:hashStrongReference"/>
+<xs:complexType name="partMetadataStrongReference">
+<xs:choice>
+<xs:element ref="r0:partMetadata"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="partMetadataStrongReference" type="r1:partMetadataStrongReference"/>
+<xs:complexType name="loudnessMetadataStrongReference">
+<xs:choice>
+<xs:element ref="r0:loudnessMetadata"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="loudnessMetadataStrongReference" type="r1:loudnessMetadataStrongReference"/>
+<xs:complexType name="audioMXFLookupStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioMXFLookup"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioMXFLookupStrongReference" type="r1:audioMXFLookupStrongReference"/>
+<xs:complexType name="locatorStrongReference">
+<xs:choice>
+<xs:element ref="r0:locator"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="locatorStrongReference" type="r1:locatorStrongReference"/>
+<xs:complexType name="containerFormatStrongReference">
+<xs:choice>
+<xs:element ref="r0:containerFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="containerFormatStrongReference" type="r1:containerFormatStrongReference"/>
+<xs:complexType name="audioBlockMatrixStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioBlockMatrix"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioBlockMatrixStrongReference" type="r1:audioBlockMatrixStrongReference"/>
+<xs:complexType name="identifierStrongReference">
+<xs:choice>
+<xs:element ref="r0:identifier"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="identifierStrongReference" type="r1:identifierStrongReference"/>
+<xs:complexType name="titleStrongReference">
+<xs:choice>
+<xs:element ref="r0:title"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="titleStrongReference" type="r1:titleStrongReference"/>
+<xs:complexType name="alternativeTitleStrongReference">
+<xs:choice>
+<xs:element ref="r0:alternativeTitle"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="alternativeTitleStrongReference" type="r1:alternativeTitleStrongReference"/>
+<xs:complexType name="entityStrongReference">
+<xs:choice>
+<xs:element ref="r0:entity"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="entityStrongReference" type="r1:entityStrongReference"/>
+<xs:complexType name="subjectStrongReference">
+<xs:choice>
+<xs:element ref="r0:subject"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="subjectStrongReference" type="r1:subjectStrongReference"/>
+<xs:complexType name="descriptionStrongReference">
+<xs:choice>
+<xs:element ref="r0:description"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="descriptionStrongReference" type="r1:descriptionStrongReference"/>
+<xs:complexType name="dateStrongReference">
+<xs:choice>
+<xs:element ref="r0:date"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="dateStrongReference" type="r1:dateStrongReference"/>
+<xs:complexType name="typeStrongReference">
+<xs:choice>
+<xs:element ref="r0:type"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="typeStrongReference" type="r1:typeStrongReference"/>
+<xs:complexType name="languageStrongReference">
+<xs:choice>
+<xs:element ref="r0:language"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="languageStrongReference" type="r1:languageStrongReference"/>
+<xs:complexType name="rightsStrongReference">
+<xs:choice>
+<xs:element ref="r0:rights"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="rightsStrongReference" type="r1:rightsStrongReference"/>
+<xs:complexType name="ratingStrongReference">
+<xs:choice>
+<xs:element ref="r0:rating"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="ratingStrongReference" type="r1:ratingStrongReference"/>
+<xs:complexType name="customRelationStrongReference">
+<xs:choice>
+<xs:element ref="r0:customRelation"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="customRelationStrongReference" type="r1:customRelationStrongReference"/>
+<xs:complexType name="basicRelationStrongReference">
+<xs:choice>
+<xs:element ref="r0:basicRelation"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="basicRelationStrongReference" type="r1:basicRelationStrongReference"/>
+<xs:complexType name="formatStrongReference">
+<xs:choice>
+<xs:element ref="r0:format"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="formatStrongReference" type="r1:formatStrongReference"/>
+<xs:complexType name="partStrongReference">
+<xs:choice>
+<xs:element ref="r0:part"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="partStrongReference" type="r1:partStrongReference"/>
+<xs:complexType name="textualAnnotationStrongReference">
+<xs:choice>
+<xs:element ref="r0:textualAnnotation"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="textualAnnotationStrongReference" type="r1:textualAnnotationStrongReference"/>
+<xs:complexType name="dateTypeStrongReference">
+<xs:choice>
+<xs:element ref="r0:dateType"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="dateTypeStrongReference" type="r1:dateTypeStrongReference"/>
+<xs:complexType name="objectTypeStrongReference">
+<xs:choice>
+<xs:element ref="r0:objectType"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="objectTypeStrongReference" type="r1:objectTypeStrongReference"/>
+<xs:complexType name="genreStrongReference">
+<xs:choice>
+<xs:element ref="r0:genre"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="genreStrongReference" type="r1:genreStrongReference"/>
+<xs:complexType name="targetAudienceStrongReference">
+<xs:choice>
+<xs:element ref="r0:targetAudience"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="targetAudienceStrongReference" type="r1:targetAudienceStrongReference"/>
+<xs:complexType name="regionStrongReference">
+<xs:choice>
+<xs:element ref="r0:region"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="regionStrongReference" type="r1:regionStrongReference"/>
+<xs:complexType name="locationStrongReference">
+<xs:choice>
+<xs:element ref="r0:location"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="locationStrongReference" type="r1:locationStrongReference"/>
+<xs:complexType name="periodOfTimeStrongReference">
+<xs:choice>
+<xs:element ref="r0:periodOfTime"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="periodOfTimeStrongReference" type="r1:periodOfTimeStrongReference"/>
+<xs:complexType name="contactStrongReference">
+<xs:choice>
+<xs:element ref="r0:contact"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="contactStrongReference" type="r1:contactStrongReference"/>
+<xs:complexType name="publicationEventStrongReference">
+<xs:choice>
+<xs:element ref="r0:publicationEvent"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="publicationEventStrongReference" type="r1:publicationEventStrongReference"/>
+<xs:complexType name="organizationStrongReference">
+<xs:choice>
+<xs:element ref="r0:organization"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="organizationStrongReference" type="r1:organizationStrongReference"/>
+<xs:complexType name="roleStrongReference">
+<xs:choice>
+<xs:element ref="r0:role"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="roleStrongReference" type="r1:roleStrongReference"/>
+<xs:complexType name="basicLinkStrongReference">
+<xs:choice>
+<xs:element ref="r0:basicLink"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="basicLinkStrongReference" type="r1:basicLinkStrongReference"/>
+<xs:complexType name="compoundNameStrongReference">
+<xs:choice>
+<xs:element ref="r0:compoundName"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="compoundNameStrongReference" type="r1:compoundNameStrongReference"/>
+<xs:complexType name="detailsStrongReference">
+<xs:choice>
+<xs:element ref="r0:details"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="detailsStrongReference" type="r1:detailsStrongReference"/>
+<xs:complexType name="countryTypeStrongReference">
+<xs:choice>
+<xs:element ref="r0:countryType"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="countryTypeStrongReference" type="r1:countryTypeStrongReference"/>
+<xs:complexType name="audioFormatStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioFormatStrongReference" type="r1:audioFormatStrongReference"/>
+<xs:complexType name="videoFormatStrongReference">
+<xs:choice>
+<xs:element ref="r0:videoFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="videoFormatStrongReference" type="r1:videoFormatStrongReference"/>
+<xs:complexType name="imageFormatStrongReference">
+<xs:choice>
+<xs:element ref="r0:imageFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="imageFormatStrongReference" type="r1:imageFormatStrongReference"/>
+<xs:complexType name="dataFormatStrongReference">
+<xs:choice>
+<xs:element ref="r0:dataFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="dataFormatStrongReference" type="r1:dataFormatStrongReference"/>
+<xs:complexType name="signingFormatStrongReference">
+<xs:choice>
+<xs:element ref="r0:signingFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="signingFormatStrongReference" type="r1:signingFormatStrongReference"/>
+<xs:complexType name="technicalAttributeStringStrongReference">
+<xs:choice>
+<xs:element ref="r0:technicalAttributeString"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeStringStrongReference" type="r1:technicalAttributeStringStrongReference"/>
+<xs:complexType name="technicalAttributeInt8StrongReference">
+<xs:choice>
+<xs:element ref="r0:technicalAttributeInt8"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeInt8StrongReference" type="r1:technicalAttributeInt8StrongReference"/>
+<xs:complexType name="technicalAttributeInt16StrongReference">
+<xs:choice>
+<xs:element ref="r0:technicalAttributeInt16"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeInt16StrongReference" type="r1:technicalAttributeInt16StrongReference"/>
+<xs:complexType name="technicalAttributeInt32StrongReference">
+<xs:choice>
+<xs:element ref="r0:technicalAttributeInt32"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeInt32StrongReference" type="r1:technicalAttributeInt32StrongReference"/>
+<xs:complexType name="technicalAttributeInt64StrongReference">
+<xs:choice>
+<xs:element ref="r0:technicalAttributeInt64"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeInt64StrongReference" type="r1:technicalAttributeInt64StrongReference"/>
+<xs:complexType name="technicalAttributeUInt8StrongReference">
+<xs:choice>
+<xs:element ref="r0:technicalAttributeUInt8"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeUInt8StrongReference" type="r1:technicalAttributeUInt8StrongReference"/>
+<xs:complexType name="technicalAttributeUInt16StrongReference">
+<xs:choice>
+<xs:element ref="r0:technicalAttributeUInt16"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeUInt16StrongReference" type="r1:technicalAttributeUInt16StrongReference"/>
+<xs:complexType name="technicalAttributeUInt32StrongReference">
+<xs:choice>
+<xs:element ref="r0:technicalAttributeUInt32"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeUInt32StrongReference" type="r1:technicalAttributeUInt32StrongReference"/>
+<xs:complexType name="technicalAttributeUInt64StrongReference">
+<xs:choice>
+<xs:element ref="r0:technicalAttributeUInt64"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeUInt64StrongReference" type="r1:technicalAttributeUInt64StrongReference"/>
+<xs:complexType name="technicalAttributeFloatStrongReference">
+<xs:choice>
+<xs:element ref="r0:technicalAttributeFloat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeFloatStrongReference" type="r1:technicalAttributeFloatStrongReference"/>
+<xs:complexType name="technicalAttributeRationalStrongReference">
+<xs:choice>
+<xs:element ref="r0:technicalAttributeRational"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeRationalStrongReference" type="r1:technicalAttributeRationalStrongReference"/>
+<xs:complexType name="technicalAttributeAnyURIStrongReference">
+<xs:choice>
+<xs:element ref="r0:technicalAttributeAnyURI"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeAnyURIStrongReference" type="r1:technicalAttributeAnyURIStrongReference"/>
+<xs:complexType name="technicalAttributeBooleanStrongReference">
+<xs:choice>
+<xs:element ref="r0:technicalAttributeBoolean"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeBooleanStrongReference" type="r1:technicalAttributeBooleanStrongReference"/>
+<xs:complexType name="audioFormatExtendedStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioFormatExtended"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioFormatExtendedStrongReference" type="r1:audioFormatExtendedStrongReference"/>
+<xs:complexType name="aspectRatioStrongReference">
+<xs:choice>
+<xs:element ref="r0:aspectRatio"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="aspectRatioStrongReference" type="r1:aspectRatioStrongReference"/>
+<xs:complexType name="heightStrongReference">
+<xs:choice>
+<xs:element ref="r0:height"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="heightStrongReference" type="r1:heightStrongReference"/>
+<xs:complexType name="widthStrongReference">
+<xs:choice>
+<xs:element ref="r0:width"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="widthStrongReference" type="r1:widthStrongReference"/>
+<xs:complexType name="trackStrongReference">
+<xs:choice>
+<xs:element ref="r0:track"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="trackStrongReference" type="r1:trackStrongReference"/>
+<xs:complexType name="captioningStrongReference">
+<xs:choice>
+<xs:element ref="r0:captioning"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="captioningStrongReference" type="r1:captioningStrongReference"/>
+<xs:complexType name="subtitlingStrongReference">
+<xs:choice>
+<xs:element ref="r0:subtitling"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="subtitlingStrongReference" type="r1:subtitlingStrongReference"/>
+<xs:complexType name="ancillaryDataStrongReference">
+<xs:choice>
+<xs:element ref="r0:ancillaryData"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="ancillaryDataStrongReference" type="r1:ancillaryDataStrongReference"/>
+<xs:complexType name="audioProgrammeStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioProgramme"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioProgrammeStrongReference" type="r1:audioProgrammeStrongReference"/>
+<xs:complexType name="audioContentStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioContent"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioContentStrongReference" type="r1:audioContentStrongReference"/>
+<xs:complexType name="audioObjectStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioObject"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioObjectStrongReference" type="r1:audioObjectStrongReference"/>
+<xs:complexType name="audioPackFormatStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioPackFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioPackFormatStrongReference" type="r1:audioPackFormatStrongReference"/>
+<xs:complexType name="audioChannelFormatStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioChannelFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioChannelFormatStrongReference" type="r1:audioChannelFormatStrongReference"/>
+<xs:complexType name="audioBlockFormatStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioBlockFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioBlockFormatStrongReference" type="r1:audioBlockFormatStrongReference"/>
+<xs:complexType name="audioStreamFormatStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioStreamFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioStreamFormatStrongReference" type="r1:audioStreamFormatStrongReference"/>
+<xs:complexType name="audioTrackFormatStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioTrackFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioTrackFormatStrongReference" type="r1:audioTrackFormatStrongReference"/>
+<xs:complexType name="audioTrackUIDStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioTrackUID"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioTrackUIDStrongReference" type="r1:audioTrackUIDStrongReference"/>
+<xs:complexType name="IDRefStrongReference">
+<xs:choice>
+<xs:element ref="r0:IDRef"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="IDRefStrongReference" type="r1:IDRefStrongReference"/>
+<xs:complexType name="audioBlockMatrixCoefficientStrongReference">
+<xs:choice>
+<xs:element ref="r0:audioBlockMatrixCoefficient"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioBlockMatrixCoefficientStrongReference" type="r1:audioBlockMatrixCoefficientStrongReference"/>
+<xs:complexType name="timeStrongReference">
+<xs:choice>
+<xs:element ref="r0:time"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="timeStrongReference" type="r1:timeStrongReference"/>
+<xs:complexType name="videoNoiseFilterStrongReference">
+<xs:choice>
+<xs:element ref="r0:videoNoiseFilter"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="videoNoiseFilterStrongReference" type="r1:videoNoiseFilterStrongReference"/>
+<xs:complexType name="metadataFormatStrongReference">
+<xs:choice>
+<xs:element ref="r0:metadataFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="metadataFormatStrongReference" type="r1:metadataFormatStrongReference"/>
+<xs:complexType name="timecodeFormatStrongReference">
+<xs:choice>
+<xs:element ref="r0:timecodeFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="timecodeFormatStrongReference" type="r1:timecodeFormatStrongReference"/>
+<xs:complexType name="identifierStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:identifier"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="identifierStrongReferenceSet" type="r1:identifierStrongReferenceSet"/>
+<xs:complexType name="titleStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:title"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="titleStrongReferenceSet" type="r1:titleStrongReferenceSet"/>
+<xs:complexType name="alternativeTitleStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:alternativeTitle"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="alternativeTitleStrongReferenceSet" type="r1:alternativeTitleStrongReferenceSet"/>
+<xs:complexType name="entityStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:entity"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="entityStrongReferenceSet" type="r1:entityStrongReferenceSet"/>
+<xs:complexType name="subjectStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:subject"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="subjectStrongReferenceSet" type="r1:subjectStrongReferenceSet"/>
+<xs:complexType name="descriptionStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:description"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="descriptionStrongReferenceSet" type="r1:descriptionStrongReferenceSet"/>
+<xs:complexType name="dateStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:date"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="dateStrongReferenceSet" type="r1:dateStrongReferenceSet"/>
+<xs:complexType name="typeStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:type"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="typeStrongReferenceSet" type="r1:typeStrongReferenceSet"/>
+<xs:complexType name="languageStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:language"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="languageStrongReferenceSet" type="r1:languageStrongReferenceSet"/>
+<xs:complexType name="coverageStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:coverage"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="coverageStrongReferenceSet" type="r1:coverageStrongReferenceSet"/>
+<xs:complexType name="rightsStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:rights"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="rightsStrongReferenceSet" type="r1:rightsStrongReferenceSet"/>
+<xs:complexType name="ratingStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:rating"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="ratingStrongReferenceSet" type="r1:ratingStrongReferenceSet"/>
+<xs:complexType name="customRelationStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:customRelation"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="customRelationStrongReferenceSet" type="r1:customRelationStrongReferenceSet"/>
+<xs:complexType name="basicRelationStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:basicRelation"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="basicRelationStrongReferenceSet" type="r1:basicRelationStrongReferenceSet"/>
+<xs:complexType name="formatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:format"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="formatStrongReferenceSet" type="r1:formatStrongReferenceSet"/>
+<xs:complexType name="partStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:part"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="partStrongReferenceSet" type="r1:partStrongReferenceSet"/>
+<xs:complexType name="textualAnnotationStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:textualAnnotation"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="textualAnnotationStrongReferenceSet" type="r1:textualAnnotationStrongReferenceSet"/>
+<xs:complexType name="dateTypeStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:dateType"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="dateTypeStrongReferenceSet" type="r1:dateTypeStrongReferenceSet"/>
+<xs:complexType name="objectTypeStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:objectType"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="objectTypeStrongReferenceSet" type="r1:objectTypeStrongReferenceSet"/>
+<xs:complexType name="genreStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:genre"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="genreStrongReferenceSet" type="r1:genreStrongReferenceSet"/>
+<xs:complexType name="targetAudienceStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:targetAudience"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="targetAudienceStrongReferenceSet" type="r1:targetAudienceStrongReferenceSet"/>
+<xs:complexType name="regionStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:region"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="regionStrongReferenceSet" type="r1:regionStrongReferenceSet"/>
+<xs:complexType name="locationStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:location"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="locationStrongReferenceSet" type="r1:locationStrongReferenceSet"/>
+<xs:complexType name="periodOfTimeStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:periodOfTime"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="periodOfTimeStrongReferenceSet" type="r1:periodOfTimeStrongReferenceSet"/>
+<xs:complexType name="contactStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:contact"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="contactStrongReferenceSet" type="r1:contactStrongReferenceSet"/>
+<xs:complexType name="publicationEventStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:publicationEvent"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="publicationEventStrongReferenceSet" type="r1:publicationEventStrongReferenceSet"/>
+<xs:complexType name="organizationStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:organization"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="organizationStrongReferenceSet" type="r1:organizationStrongReferenceSet"/>
+<xs:complexType name="roleStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:role"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="roleStrongReferenceSet" type="r1:roleStrongReferenceSet"/>
+<xs:complexType name="basicLinkStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:basicLink"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="basicLinkStrongReferenceSet" type="r1:basicLinkStrongReferenceSet"/>
+<xs:complexType name="compoundNameStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:compoundName"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="compoundNameStrongReferenceSet" type="r1:compoundNameStrongReferenceSet"/>
+<xs:complexType name="detailsStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:details"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="detailsStrongReferenceSet" type="r1:detailsStrongReferenceSet"/>
+<xs:complexType name="countryTypeStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:countryType"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="countryTypeStrongReferenceSet" type="r1:countryTypeStrongReferenceSet"/>
+<xs:complexType name="audioFormatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:audioFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioFormatStrongReferenceSet" type="r1:audioFormatStrongReferenceSet"/>
+<xs:complexType name="videoFormatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:videoFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="videoFormatStrongReferenceSet" type="r1:videoFormatStrongReferenceSet"/>
+<xs:complexType name="imageFormatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:imageFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="imageFormatStrongReferenceSet" type="r1:imageFormatStrongReferenceSet"/>
+<xs:complexType name="dataFormatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:dataFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="dataFormatStrongReferenceSet" type="r1:dataFormatStrongReferenceSet"/>
+<xs:complexType name="signingFormatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:signingFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="signingFormatStrongReferenceSet" type="r1:signingFormatStrongReferenceSet"/>
+<xs:complexType name="technicalAttributeStringStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:technicalAttributeString"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeStringStrongReferenceSet" type="r1:technicalAttributeStringStrongReferenceSet"/>
+<xs:complexType name="technicalAttributeInt8StrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:technicalAttributeInt8"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeInt8StrongReferenceSet" type="r1:technicalAttributeInt8StrongReferenceSet"/>
+<xs:complexType name="technicalAttributeInt16StrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:technicalAttributeInt16"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeInt16StrongReferenceSet" type="r1:technicalAttributeInt16StrongReferenceSet"/>
+<xs:complexType name="technicalAttributeInt32StrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:technicalAttributeInt32"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeInt32StrongReferenceSet" type="r1:technicalAttributeInt32StrongReferenceSet"/>
+<xs:complexType name="technicalAttributeInt64StrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:technicalAttributeInt64"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeInt64StrongReferenceSet" type="r1:technicalAttributeInt64StrongReferenceSet"/>
+<xs:complexType name="technicalAttributeUInt8StrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:technicalAttributeUInt8"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeUInt8StrongReferenceSet" type="r1:technicalAttributeUInt8StrongReferenceSet"/>
+<xs:complexType name="technicalAttributeUInt16StrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:technicalAttributeUInt16"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeUInt16StrongReferenceSet" type="r1:technicalAttributeUInt16StrongReferenceSet"/>
+<xs:complexType name="technicalAttributeUInt32StrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:technicalAttributeUInt32"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeUInt32StrongReferenceSet" type="r1:technicalAttributeUInt32StrongReferenceSet"/>
+<xs:complexType name="technicalAttributeUInt64StrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:technicalAttributeUInt64"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeUInt64StrongReferenceSet" type="r1:technicalAttributeUInt64StrongReferenceSet"/>
+<xs:complexType name="technicalAttributeFloatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:technicalAttributeFloat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeFloatStrongReferenceSet" type="r1:technicalAttributeFloatStrongReferenceSet"/>
+<xs:complexType name="technicalAttributeRationalStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:technicalAttributeRational"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeRationalStrongReferenceSet" type="r1:technicalAttributeRationalStrongReferenceSet"/>
+<xs:complexType name="technicalAttributeAnyURIStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:technicalAttributeAnyURI"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeAnyURIStrongReferenceSet" type="r1:technicalAttributeAnyURIStrongReferenceSet"/>
+<xs:complexType name="technicalAttributeBooleanStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:technicalAttributeBoolean"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="technicalAttributeBooleanStrongReferenceSet" type="r1:technicalAttributeBooleanStrongReferenceSet"/>
+<xs:complexType name="audioFormatExtendedStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:audioFormatExtended"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioFormatExtendedStrongReferenceSet" type="r1:audioFormatExtendedStrongReferenceSet"/>
+<xs:complexType name="aspectRatioStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:aspectRatio"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="aspectRatioStrongReferenceSet" type="r1:aspectRatioStrongReferenceSet"/>
+<xs:complexType name="heightStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:height"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="heightStrongReferenceSet" type="r1:heightStrongReferenceSet"/>
+<xs:complexType name="widthStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:width"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="widthStrongReferenceSet" type="r1:widthStrongReferenceSet"/>
+<xs:complexType name="trackStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:track"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="trackStrongReferenceSet" type="r1:trackStrongReferenceSet"/>
+<xs:complexType name="captioningStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:captioning"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="captioningStrongReferenceSet" type="r1:captioningStrongReferenceSet"/>
+<xs:complexType name="subtitlingStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:subtitling"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="subtitlingStrongReferenceSet" type="r1:subtitlingStrongReferenceSet"/>
+<xs:complexType name="ancillaryDataStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:ancillaryData"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="ancillaryDataStrongReferenceSet" type="r1:ancillaryDataStrongReferenceSet"/>
+<xs:complexType name="audioProgrammeStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:audioProgramme"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioProgrammeStrongReferenceSet" type="r1:audioProgrammeStrongReferenceSet"/>
+<xs:complexType name="audioContentStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:audioContent"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioContentStrongReferenceSet" type="r1:audioContentStrongReferenceSet"/>
+<xs:complexType name="audioObjectStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:audioObject"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioObjectStrongReferenceSet" type="r1:audioObjectStrongReferenceSet"/>
+<xs:complexType name="audioPackFormatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:audioPackFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioPackFormatStrongReferenceSet" type="r1:audioPackFormatStrongReferenceSet"/>
+<xs:complexType name="audioChannelFormatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:audioChannelFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioChannelFormatStrongReferenceSet" type="r1:audioChannelFormatStrongReferenceSet"/>
+<xs:complexType name="audioBlockFormatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:audioBlockFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioBlockFormatStrongReferenceSet" type="r1:audioBlockFormatStrongReferenceSet"/>
+<xs:complexType name="audioStreamFormatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:audioStreamFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioStreamFormatStrongReferenceSet" type="r1:audioStreamFormatStrongReferenceSet"/>
+<xs:complexType name="audioTrackFormatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:audioTrackFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioTrackFormatStrongReferenceSet" type="r1:audioTrackFormatStrongReferenceSet"/>
+<xs:complexType name="audioTrackUIDStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:audioTrackUID"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioTrackUIDStrongReferenceSet" type="r1:audioTrackUIDStrongReferenceSet"/>
+<xs:complexType name="IDRefStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:IDRef"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="IDRefStrongReferenceSet" type="r1:IDRefStrongReferenceSet"/>
+<xs:complexType name="audioBlockMatrixCoefficientStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:audioBlockMatrixCoefficient"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="audioBlockMatrixCoefficientStrongReferenceSet" type="r1:audioBlockMatrixCoefficientStrongReferenceSet"/>
+<xs:complexType name="timeStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:time"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="timeStrongReferenceSet" type="r1:timeStrongReferenceSet"/>
+<xs:complexType name="metadataFormatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:metadataFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="metadataFormatStrongReferenceSet" type="r1:metadataFormatStrongReferenceSet"/>
+<xs:complexType name="timecodeFormatStrongReferenceSet">
+<xs:choice maxOccurs="unbounded" minOccurs="0">
+<xs:element ref="r0:timecodeFormat"/>
+</xs:choice>
+</xs:complexType>
+<xs:element name="timecodeFormatStrongReferenceSet" type="r1:timecodeFormatStrongReferenceSet"/>
+</xs:schema>

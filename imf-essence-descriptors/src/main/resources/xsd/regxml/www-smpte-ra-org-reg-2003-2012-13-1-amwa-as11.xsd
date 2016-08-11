@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Created: Thu Sep 17 15:28:16 CEST 2015--><!--By: regxmllib build c989a02ac80facc24e018a54c4010dd8c2d27451--><!--See: https://github.com/sandflow/regxmllib--><xs:schema xmlns:r0="http://www.smpte-ra.org/reg/2003/2012/13/1/amwa/as11" xmlns:r1="http://www.smpte-ra.org/reg/2003/2012" xmlns:reg="http://sandflow.com/ns/SMPTEST2001-1/baseline"  attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.smpte-ra.org/reg/2003/2012/13/1/amwa/as11" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:import namespace="http://www.smpte-ra.org/reg/2003/2012"/>
+<xs:import namespace="http://sandflow.com/ns/SMPTEST2001-1/baseline"/>
+<xs:simpleType name="AS_11_Captions_Type_Enum">
+<xs:restriction base="xs:token">
+<xs:enumeration value="Captions_Hard_of_Hearing"/>
+<xs:enumeration value="Captions_Translation"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:element name="AS_11_Captions_Type_Enum" type="r0:AS_11_Captions_Type_Enum"/>
+<xs:simpleType name="AS_11_Audio_Track_Layout_Enum">
+<xs:restriction base="xs:token">
+<xs:enumeration value="Layout_EBU_R_48_1a"/>
+<xs:enumeration value="Layout_EBU_R_48_1b"/>
+<xs:enumeration value="Layout_EBU_R_48_1c"/>
+<xs:enumeration value="Layout_EBU_R_48_2a"/>
+<xs:enumeration value="Layout_EBU_R_48_2b"/>
+<xs:enumeration value="Layout_EBU_R_48_2c"/>
+<xs:enumeration value="Layout_EBU_R_48_3a"/>
+<xs:enumeration value="Layout_EBU_R_48_3b"/>
+<xs:enumeration value="Layout_EBU_R_48_4a"/>
+<xs:enumeration value="Layout_EBU_R_48_4b"/>
+<xs:enumeration value="Layout_EBU_R_48_4c"/>
+<xs:enumeration value="Layout_EBU_R_48_5a"/>
+<xs:enumeration value="Layout_EBU_R_48_5b"/>
+<xs:enumeration value="Layout_EBU_R_48_6a"/>
+<xs:enumeration value="Layout_EBU_R_48_6b"/>
+<xs:enumeration value="Layout_EBU_R_48_7a"/>
+<xs:enumeration value="Layout_EBU_R_48_7b"/>
+<xs:enumeration value="Layout_EBU_R_48_8a"/>
+<xs:enumeration value="Layout_EBU_R_48_8b"/>
+<xs:enumeration value="Layout_EBU_R_48_8c"/>
+<xs:enumeration value="Layout_EBU_R_48_9a"/>
+<xs:enumeration value="Layout_EBU_R_48_9b"/>
+<xs:enumeration value="Layout_EBU_R_48_10a"/>
+<xs:enumeration value="Layout_EBU_R_48_11a"/>
+<xs:enumeration value="Layout_EBU_R_48_11b"/>
+<xs:enumeration value="Layout_EBU_R_48_11c"/>
+<xs:enumeration value="Layout_EBU_R_123_2a"/>
+<xs:enumeration value="Layout_EBU_R_123_4a"/>
+<xs:enumeration value="Layout_EBU_R_123_4b"/>
+<xs:enumeration value="Layout_EBU_R_123_4c"/>
+<xs:enumeration value="Layout_EBU_R_123_8a"/>
+<xs:enumeration value="Layout_EBU_R_123_8b"/>
+<xs:enumeration value="Layout_EBU_R_123_8c"/>
+<xs:enumeration value="Layout_EBU_R_123_8d"/>
+<xs:enumeration value="Layout_EBU_R_123_8e"/>
+<xs:enumeration value="Layout_EBU_R_123_8f"/>
+<xs:enumeration value="Layout_EBU_R_123_8g"/>
+<xs:enumeration value="Layout_EBU_R_123_8h"/>
+<xs:enumeration value="Layout_EBU_R_123_8i"/>
+<xs:enumeration value="Layout_EBU_R_123_12a"/>
+<xs:enumeration value="Layout_EBU_R_123_12b"/>
+<xs:enumeration value="Layout_EBU_R_123_12c"/>
+<xs:enumeration value="Layout_EBU_R_123_12d"/>
+<xs:enumeration value="Layout_EBU_R_123_12e"/>
+<xs:enumeration value="Layout_EBU_R_123_12f"/>
+<xs:enumeration value="Layout_EBU_R_123_12g"/>
+<xs:enumeration value="Layout_EBU_R_123_12h"/>
+<xs:enumeration value="Layout_EBU_R_123_16a"/>
+<xs:enumeration value="Layout_EBU_R_123_16b"/>
+<xs:enumeration value="Layout_EBU_R_123_16c"/>
+<xs:enumeration value="Layout_EBU_R_123_16d"/>
+<xs:enumeration value="Layout_EBU_R_123_16e"/>
+<xs:enumeration value="Layout_EBU_R_123_16f"/>
+<xs:enumeration value="Layout_Undefined"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:element name="AS_11_Audio_Track_Layout_Enum" type="r0:AS_11_Audio_Track_Layout_Enum"/>
+<xs:complexType name="ISO_639_2_Language_Code">
+<xs:complexContent>
+<xs:extension base="r1:UTF16String"/>
+</xs:complexContent>
+</xs:complexType>
+<xs:element name="ISO_639_2_Language_Code" type="r0:ISO_639_2_Language_Code"/>
+</xs:schema>

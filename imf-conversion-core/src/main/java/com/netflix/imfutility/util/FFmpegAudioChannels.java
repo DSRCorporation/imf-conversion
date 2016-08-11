@@ -18,6 +18,12 @@
  */
 package com.netflix.imfutility.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Describes FFmpeg audio channels.
  */
@@ -47,6 +53,27 @@ public enum FFmpegAudioChannels {
     SDL("surround direct left"),
     SDR("surround direct right"),
     LFE2("low frequency 2");
+
+    private static final String SEPARATOR = "+";
+
+    public static FFmpegAudioChannels[] toFFmpegAudioChannels(String channelLayout) {
+        String[] channels = channelLayout.split("\\" + SEPARATOR);
+        List<FFmpegAudioChannels> ffmpegChannels = new ArrayList<>();
+        for (String channel : channels) {
+            ffmpegChannels.add(FFmpegAudioChannels.valueOf(channel.toUpperCase()));
+        }
+        return ffmpegChannels.toArray(new FFmpegAudioChannels[]{});
+    }
+
+    public static String toChannelsLayoutString(FFmpegAudioChannels[] ffmpegChannels) {
+        return Arrays.stream(ffmpegChannels)
+                .map(FFmpegAudioChannels::name)
+                .collect(Collectors.joining(SEPARATOR));
+    }
+
+    public static String toChannelsLayoutString(Collection<FFmpegAudioChannels> ffmpegChannels) {
+        return toChannelsLayoutString(ffmpegChannels.toArray(new FFmpegAudioChannels[]{}));
+    }
 
     private final String description;
 

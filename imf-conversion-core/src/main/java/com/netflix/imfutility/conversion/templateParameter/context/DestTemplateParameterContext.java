@@ -37,7 +37,8 @@ import java.util.stream.Collectors;
  * <li>May be created dynamically in the code</li>
  * </ul>
  */
-public class DestTemplateParameterContext implements ITemplateParameterContext {
+public class DestTemplateParameterContext extends AbstractTemplateParameterContext {
+
     private DestContextTypeMap destContextMap;
 
     public DestTemplateParameterContext() {
