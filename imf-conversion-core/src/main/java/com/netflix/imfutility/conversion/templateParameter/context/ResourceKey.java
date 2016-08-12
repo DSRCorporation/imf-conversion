@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.conversion.templateParameter.context;
 
+import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
@@ -33,6 +34,11 @@ public final class ResourceKey {
 
     public static ResourceKey create(SegmentUUID segmentUuid, SequenceUUID sequenceUuid, SequenceType sequenceType) {
         return new ResourceKey(segmentUuid, sequenceUuid, sequenceType);
+    }
+
+    public static ResourceKey create(ContextInfo contextInfo) {
+        return new ResourceKey(contextInfo.getSegmentUuid(), contextInfo.getSequenceUuid(),
+                contextInfo.getSequenceType());
     }
 
     private ResourceKey(SegmentUUID segmentUuid, SequenceUUID sequenceUuid, SequenceType sequenceType) {

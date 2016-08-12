@@ -20,10 +20,11 @@ package com.netflix.imfutility.conversion;
 
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
-import com.netflix.imfutility.conversion.templateParameter.context.DestTemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
+import com.netflix.imfutility.cpl.uuid.ResourceUUID;
+import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.config.AllowDisallow;
 import com.netflix.imfutility.generated.config.ConfigType;
@@ -46,13 +47,12 @@ import java.util.function.BiPredicate;
  * as defined in conversion.xml.
  */
 public class SilentConversionChecker {
-    private final SequenceTemplateParameterContext sequenceContext;
-    private final DestTemplateParameterContext destContext;
+
+    private final TemplateParameterContextProvider contextProvider;
     private final ConversionParametersTypeMap configConversionParams;
 
     public SilentConversionChecker(TemplateParameterContextProvider contextProvider, ConfigType config) {
-        this.sequenceContext = contextProvider.getSequenceContext();
-        this.destContext = contextProvider.getDestContext();
+        this.contextProvider = contextProvider;
         this.configConversionParams = config.getConversionParameters();
     }
 
@@ -65,79 +65,88 @@ public class SilentConversionChecker {
      *                                       and config.xml says that silent conversion of fps is not allowed.
      */
     public void check() throws ConversionNotAllowedException {
-        if (destContext == null) {
+        if (contextProvider.getDestContext() == null) {
             return;
         }
         if (configConversionParams == null) {
             return;
         }
 
-        for (SequenceType seqType : sequenceContext.getSequenceTypes()) {
-            for (SequenceUUID seqUuid : sequenceContext.getUuids(seqType)) {
-                switch (seqType) {
-                    case AUDIO:
-                        checkForSilentAudioConversion(seqUuid);
-                        break;
-                    case VIDEO:
-                        checkForSilentVideoConversion(seqUuid);
-                        break;
-                    default:
-                        // nothing for subtitle so far
+        for (SequenceType seqType : contextProvider.getSequenceContext().getSequenceTypes()) {
+            for (SequenceUUID seqUuid : contextProvider.getSequenceContext().getUuids(seqType)) {
+                for (SegmentUUID segmUuid : contextProvider.getSegmentContext().getUuids()) {
+                    for (ResourceUUID resUuid : contextProvider.getResourceContext()
+                            .getUuids(ResourceKey.create(segmUuid, seqUuid, seqType))) {
+                        ContextInfo contextInfo = new ContextInfoBuilder()
+                                .setResourceUuid(resUuid)
+                                .setSegmentUuid(segmUuid)
+                                .setSequenceUuid(seqUuid)
+                                .setSequenceType(seqType).build();
+
+                        switch (seqType) {
+                            case AUDIO:
+                                checkForSilentAudioConversion(contextInfo);
+                                break;
+                            case VIDEO:
+                                checkForSilentVideoConversion(contextInfo);
+                                break;
+                            default:
+                                // nothing for subtitle so far
+                        }
+                    }
                 }
             }
         }
 
     }
 
-    private void checkForSilentAudioConversion(SequenceUUID seqUuid) throws ConversionNotAllowedException {
+    private void checkForSilentAudioConversion(ContextInfo contextInfo) throws ConversionNotAllowedException {
         boolean allowBitSample = isAllow(ConversionParameterNameType.BITS_SAMPLE);
         boolean allowSampleRate = isAllow(ConversionParameterNameType.SAMPLE_RATE);
 
-        ContextInfo contextInfo = new ContextInfoBuilder().setSequenceUuid(seqUuid).setSequenceType(SequenceType.AUDIO).build();
         if (!allowBitSample) {
-            checkParameter(SequenceContextParameters.BITS_PER_SAMPLE, ConversionParameterNameType.BITS_SAMPLE, contextInfo);
+            checkParameter(ResourceContextParameters.BITS_PER_SAMPLE, ConversionParameterNameType.BITS_SAMPLE, contextInfo);
         }
         if (!allowSampleRate) {
-            checkParameter(SequenceContextParameters.SAMPLE_RATE, ConversionParameterNameType.SAMPLE_RATE, contextInfo);
+            checkParameter(ResourceContextParameters.SAMPLE_RATE, ConversionParameterNameType.SAMPLE_RATE, contextInfo);
         }
     }
 
-    private void checkForSilentVideoConversion(SequenceUUID seqUuid) throws ConversionNotAllowedException {
+    private void checkForSilentVideoConversion(ContextInfo contextInfo) throws ConversionNotAllowedException {
         boolean allowFrameRate = isAllow(ConversionParameterNameType.FRAME_RATE);
         boolean allowSize = isAllow(ConversionParameterNameType.SIZE);
         boolean allowPixelFmt = isAllow(ConversionParameterNameType.PIXEL_FORMAT);
         boolean allowBitDepth = isAllow(ConversionParameterNameType.BIT_DEPTH);
 
-        ContextInfo contextInfo = new ContextInfoBuilder().setSequenceUuid(seqUuid).setSequenceType(SequenceType.VIDEO).build();
         if (!allowFrameRate) {
             //  make check regardless to frame rate format (50 1 and 50/1 both allowed)
             checkFrameRate(contextInfo);
         }
         if (!allowBitDepth) {
-            checkParameter(SequenceContextParameters.BIT_DEPTH, ConversionParameterNameType.BIT_DEPTH, contextInfo);
+            checkParameter(ResourceContextParameters.BIT_DEPTH, ConversionParameterNameType.BIT_DEPTH, contextInfo);
         }
         if (!allowPixelFmt) {
-            checkParameter(SequenceContextParameters.PIXEL_FORMAT, ConversionParameterNameType.PIXEL_FORMAT, contextInfo);
+            checkParameter(ResourceContextParameters.PIXEL_FORMAT, ConversionParameterNameType.PIXEL_FORMAT, contextInfo);
         }
         if (!allowSize) {
-            checkParameter(SequenceContextParameters.WIDTH, null, contextInfo);
-            checkParameter(SequenceContextParameters.HEIGHT, null, contextInfo);
+            checkParameter(ResourceContextParameters.WIDTH, null, contextInfo);
+            checkParameter(ResourceContextParameters.HEIGHT, null, contextInfo);
         }
 
     }
 
-    private void checkParameter(SequenceContextParameters param, ConversionParameterNameType conversionParam, ContextInfo contextInfo)
+    private void checkParameter(ResourceContextParameters param, ConversionParameterNameType conversionParam, ContextInfo contextInfo)
             throws ConversionNotAllowedException {
         checkParameter(param, conversionParam, contextInfo, Objects::equals);
     }
 
     private void checkFrameRate(ContextInfo contextInfo)
             throws ConversionNotAllowedException {
-        checkParameter(SequenceContextParameters.FRAME_RATE, ConversionParameterNameType.FRAME_RATE, contextInfo,
+        checkParameter(ResourceContextParameters.FRAME_RATE, ConversionParameterNameType.FRAME_RATE, contextInfo,
                 (f1, f2) -> Objects.equals(ConversionHelper.parseEditRate(f1), ConversionHelper.parseEditRate(f2)));
     }
 
-    private void checkParameter(SequenceContextParameters param, ConversionParameterNameType conversionParam, ContextInfo contextInfo,
+    private void checkParameter(ResourceContextParameters param, ConversionParameterNameType conversionParam, ContextInfo contextInfo,
                                 BiPredicate<String, String> equality)
             throws ConversionNotAllowedException {
         String destinationParamValue = getDestinationValue(conversionParam, param);
@@ -145,19 +154,22 @@ public class SilentConversionChecker {
             return;
         }
 
-        String paramValue = sequenceContext.getParameterValue(param, contextInfo);
-        if (!equality.test(paramValue, destinationParamValue)) {
-            throw new ConversionNotAllowedException(param.getName(), paramValue, destinationParamValue, contextInfo.getSequenceUuid());
+        if (contextProvider.getResourceContext().hasResourceParameter(param, contextInfo)) {
+            String paramValue = contextProvider.getResourceContext().getParameterValue(param, contextInfo);
+            if (!equality.test(paramValue, destinationParamValue)) {
+                throw new ConversionNotAllowedException(param.getName(), paramValue, destinationParamValue, contextInfo.getSequenceUuid());
+            }
         }
     }
 
-    private String getDestinationValue(ConversionParameterNameType conversionParam, SequenceContextParameters sequenceParam) {
+    private String getDestinationValue(ConversionParameterNameType conversionParam, ResourceContextParameters
+            resourceParam) {
         String value = null;
         if (conversionParam != null) {
-            value = destContext.getParameterValue(conversionParam.value());
+            value = contextProvider.getDestContext().getParameterValue(conversionParam.value());
         }
-        if (sequenceParam != null && StringUtils.isBlank(value)) {
-            value = destContext.getParameterValue(sequenceParam.getName());
+        if (resourceParam != null && StringUtils.isBlank(value)) {
+            value = contextProvider.getDestContext().getParameterValue(resourceParam.getName());
         }
         return value;
     }

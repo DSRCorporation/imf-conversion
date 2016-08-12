@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Created: Thu Sep 17 15:28:17 CEST 2015--><!--By: regxmllib build c989a02ac80facc24e018a54c4010dd8c2d27451--><!--See: https://github.com/sandflow/regxmllib--><xs:schema xmlns:r0="http://www.smpte-ra.org/reg/2003/2012" xmlns:r1="http://www.smpte-ra.org/reg/2003/2012/13/12/as11" xmlns:r2="http://www.smpte-ra.org/reg/2003/2012/13/1/amwa/as11" xmlns:reg="http://sandflow.com/ns/SMPTEST2001-1/baseline"  attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.smpte-ra.org/reg/335/2012/13/12/as11" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:import namespace="http://www.smpte-ra.org/reg/2003/2012"/>
+<xs:import namespace="http://www.smpte-ra.org/reg/2003/2012/13/1/amwa/as11"/>
+<xs:import namespace="http://www.smpte-ra.org/reg/2003/2012/13/12/as11"/>
+<xs:import namespace="http://sandflow.com/ns/SMPTEST2001-1/baseline"/>
+<xs:element name="UKDPP_Production_Number" type="r0:UTF16String"/>
+<xs:element name="UKDPP_Synopsis" type="r0:UTF16String"/>
+<xs:element name="UKDPP_Originator" type="r0:UTF16String"/>
+<xs:element name="UKDPP_Copyright_Year" type="r0:UInt16"/>
+<xs:element name="UKDPP_Other_Identifier" type="r0:UTF16String"/>
+<xs:element name="UKDPP_Other_Identifier_Type" type="r0:UTF16String"/>
+<xs:element name="UKDPP_Genre" type="r0:UTF16String"/>
+<xs:element name="UKDPP_Distributor" type="r0:UTF16String"/>
+<xs:element name="UKDPP_Picture_Ratio" type="r0:Rational"/>
+<xs:element name="UKDPP_3D" type="r0:Boolean"/>
+<xs:element name="UKDPP_3D_Type" type="r1:UKDPP_3D_Type_Enum"/>
+<xs:element name="UKDPP_Product_Placement" type="r0:Boolean"/>
+<xs:element name="UKDPP_PSE_Pass" type="r1:UKDPP_PSE_Pass_Enum"/>
+<xs:element name="UKDPP_PSE_Manufacturer" type="r0:UTF16String"/>
+<xs:element name="UKDPP_PSE_Version" type="r0:UTF16String"/>
+<xs:element name="UKDPP_Video_Comments" type="r0:UTF16String"/>
+<xs:element name="UKDPP_Secondary_Audio_Language" type="r2:ISO_639_2_Language_Code"/>
+<xs:element name="UKDPP_Tertiary_Audio_Language" type="r2:ISO_639_2_Language_Code"/>
+<xs:element name="UKDPP_Audio_Loudness_Standard" type="r1:UKDPP_Audio_Loudness_Standard_Enum"/>
+<xs:element name="UKDPP_Audio_Comments" type="r0:UTF16String"/>
+<xs:element name="UKDPP_Line_Up_Start" type="r0:PositionType"/>
+<xs:element name="UKDPP_Ident_Clock_Start" type="r0:PositionType"/>
+<xs:element name="UKDPP_Total_Number_Of_Parts" type="r0:UInt16"/>
+<xs:element name="UKDPP_Total_Programme_Duration" type="r0:LengthType"/>
+<xs:element name="UKDPP_Audio_Description_Present" type="r0:Boolean"/>
+<xs:element name="UKDPP_Audio_Description_Type" type="r1:UKDPP_Audio_Description_Type_Enum"/>
+<xs:element name="UKDPP_Open_Captions_Present" type="r0:Boolean"/>
+<xs:element name="UKDPP_Open_Captions_Type" type="r2:AS_11_Captions_Type_Enum"/>
+<xs:element name="UKDPP_Open_Captions_Language" type="r2:ISO_639_2_Language_Code"/>
+<xs:element name="UKDPP_Signing_Present" type="r1:UKDPP_Signing_Present_Enum"/>
+<xs:element name="UKDPP_Sign_Language" type="r1:UKDPP_Sign_Language_Enum"/>
+<xs:element name="UKDPP_Completion_Date" type="r0:TimeStamp"/>
+<xs:element name="UKDPP_Textless_Elements_Exist" type="r0:Boolean"/>
+<xs:element name="UKDPP_Programme_Has_Text" type="r0:Boolean"/>
+<xs:element name="UKDPP_Programme_Text_Language" type="r2:ISO_639_2_Language_Code"/>
+<xs:element name="UKDPP_Contact_Email" type="r0:UTF16String"/>
+<xs:element name="UKDPP_Contact_Telephone_Number" type="r0:UTF16String"/>
+</xs:schema>

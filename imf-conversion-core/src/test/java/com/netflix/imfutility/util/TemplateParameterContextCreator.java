@@ -119,6 +119,14 @@ public final class TemplateParameterContextCreator {
         return contextProvider;
     }
 
+    public static TemplateParameterContextProvider createDefaultContextProviderWithCplAndDestContext(
+            DestContextTypeMap destContextMap,
+            int segmentCount, int seqCount, int resourceCount, EnumSet<SequenceType> sequenceTypes) throws Exception {
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCPLContext(
+                segmentCount, seqCount, resourceCount, sequenceTypes);
+        contextProvider.getDestContext().setDestContextMap(destContextMap);
+        return contextProvider;
+    }
 
     public static File getCurrentTmpDir() {
         String tempDir = System.getProperty("java.io.tmpdir");
@@ -170,6 +178,8 @@ public final class TemplateParameterContextCreator {
                             // init essence, startTime and duration
                             fillResourceParam(resourceContext, resourceKey, resourceUuid,
                                     ResourceContextParameters.ESSENCE);
+                            fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                    ResourceContextParameters.TRACK_FILE_ID);
                             fillResourceParam(resourceContext, resourceKey, resourceUuid,
                                     ResourceContextParameters.DURATION_TIMECODE);
                             fillResourceParam(resourceContext, resourceKey, resourceUuid,

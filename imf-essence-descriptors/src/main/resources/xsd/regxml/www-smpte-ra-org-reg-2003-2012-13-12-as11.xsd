@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Created: Thu Sep 17 15:28:17 CEST 2015--><!--By: regxmllib build c989a02ac80facc24e018a54c4010dd8c2d27451--><!--See: https://github.com/sandflow/regxmllib--><xs:schema xmlns:r0="http://www.smpte-ra.org/reg/2003/2012/13/12/as11" xmlns:reg="http://sandflow.com/ns/SMPTEST2001-1/baseline"  attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.smpte-ra.org/reg/2003/2012/13/12/as11" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:import namespace="http://sandflow.com/ns/SMPTEST2001-1/baseline"/>
+<xs:simpleType name="UKDPP_PSE_Pass_Enum">
+<xs:restriction base="xs:token">
+<xs:enumeration value="PSE_Yes"/>
+<xs:enumeration value="PSE_No"/>
+<xs:enumeration value="PSE_Not_tested"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:element name="UKDPP_PSE_Pass_Enum" type="r0:UKDPP_PSE_Pass_Enum"/>
+<xs:simpleType name="UKDPP_Signing_Present_Enum">
+<xs:restriction base="xs:token">
+<xs:enumeration value="Signing_Yes"/>
+<xs:enumeration value="Signing_No"/>
+<xs:enumeration value="Signing_Signer_only"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:element name="UKDPP_Signing_Present_Enum" type="r0:UKDPP_Signing_Present_Enum"/>
+<xs:simpleType name="UKDPP_3D_Type_Enum">
+<xs:restriction base="xs:token">
+<xs:enumeration value="ThreeD_Side_by_side"/>
+<xs:enumeration value="ThreeD_Dual"/>
+<xs:enumeration value="ThreeD_Left_eye_only"/>
+<xs:enumeration value="ThreeD_Right_eye_only"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:element name="UKDPP_3D_Type_Enum" type="r0:UKDPP_3D_Type_Enum"/>
+<xs:simpleType name="UKDPP_Audio_Loudness_Standard_Enum">
+<xs:restriction base="xs:token">
+<xs:enumeration value="Loudness_None"/>
+<xs:enumeration value="Loudness_EBU_R_128"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:element name="UKDPP_Audio_Loudness_Standard_Enum" type="r0:UKDPP_Audio_Loudness_Standard_Enum"/>
+<xs:simpleType name="UKDPP_Audio_Description_Type_Enum">
+<xs:restriction base="xs:token">
+<xs:enumeration value="AD_Control_data_Narration"/>
+<xs:enumeration value="AD_Mix"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:element name="UKDPP_Audio_Description_Type_Enum" type="r0:UKDPP_Audio_Description_Type_Enum"/>
+<xs:simpleType name="UKDPP_Sign_Language_Enum">
+<xs:restriction base="xs:token">
+<xs:enumeration value="Sign_Language_BSL_British_Sign_Language"/>
+<xs:enumeration value="Sign_Language_BSL_Makaton"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:element name="UKDPP_Sign_Language_Enum" type="r0:UKDPP_Sign_Language_Enum"/>
+</xs:schema>

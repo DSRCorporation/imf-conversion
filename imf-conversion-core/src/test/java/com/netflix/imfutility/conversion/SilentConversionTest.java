@@ -18,19 +18,29 @@
  */
 package com.netflix.imfutility.conversion;
 
+import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
+import com.netflix.imfutility.conversion.templateParameter.context.ResourceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
-import com.netflix.imfutility.cpl.uuid.SequenceUUID;
+import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.generated.config.AllowDisallow;
 import com.netflix.imfutility.generated.config.ConfigType;
 import com.netflix.imfutility.generated.config.ConversionParameterNameType;
 import com.netflix.imfutility.generated.config.ConversionParameterType;
 import com.netflix.imfutility.generated.conversion.DestContextParamType;
 import com.netflix.imfutility.generated.conversion.SequenceType;
-import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xsd.config.ConversionParametersTypeMap;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import org.junit.Test;
+
+import java.util.EnumSet;
+
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.createDefaultContextProviderWithCplAndDestContext;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.createDefaultContextProviderWithDestContext;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.getResourceUuid;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.getSegmentUuid;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.getSequenceUuid;
 
 /**
  * Tests whether silent conversion is allowed depending on values from config.xml (allow/disallow for each parameter)
@@ -47,8 +57,7 @@ public class SilentConversionTest {
         ConfigType config = new ConfigBuilder().build();
 
         // 3. create context
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator
-                .createDefaultContextProviderWithDestContext(destContextMap);
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithDestContext(destContextMap);
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -69,12 +78,18 @@ public class SilentConversionTest {
         ConfigType config = new ConfigBuilder().build();
 
         // 3. create context with mismatched parameters
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator
-                .createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.BITS_PER_SAMPLE, "16");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.SAMPLE_RATE, "96000");
+        TemplateParameterContextProvider contextProvider =
+                createDefaultContextProviderWithCplAndDestContext(destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.AUDIO), SequenceType.AUDIO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.AUDIO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BITS_PER_SAMPLE, "16");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.SAMPLE_RATE, "96000");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -95,8 +110,7 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator
-                .createDefaultContextProviderWithDestContext(destContextMap);
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithDestContext(destContextMap);
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -120,7 +134,7 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create empty context
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithDestContext(destContextMap);
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -144,11 +158,18 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with audio specified and mismatched
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.BITS_PER_SAMPLE, "20");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.SAMPLE_RATE, "96000");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.AUDIO), SequenceType.AUDIO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.AUDIO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BITS_PER_SAMPLE, "20");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.SAMPLE_RATE, "96000");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -172,11 +193,18 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with video specified and mismatched
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
-                SequenceContextParameters.FRAME_RATE, "30");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
-                SequenceContextParameters.BIT_DEPTH, "8");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.VIDEO), SequenceType.VIDEO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.VIDEO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.FRAME_RATE, "30");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BIT_DEPTH, "8");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -200,11 +228,18 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with audio specified
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.BITS_PER_SAMPLE, "16");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.SAMPLE_RATE, "96000");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.AUDIO), SequenceType.AUDIO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.AUDIO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BITS_PER_SAMPLE, "16");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.SAMPLE_RATE, "96000");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -228,11 +263,18 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with video specified
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
-                SequenceContextParameters.BIT_DEPTH, "8");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
-                SequenceContextParameters.FRAME_RATE, "50");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.VIDEO), SequenceType.VIDEO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.VIDEO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BIT_DEPTH, "8");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.FRAME_RATE, "50");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -256,9 +298,14 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with sample rate specified
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.SAMPLE_RATE, "96000");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.AUDIO), SequenceType.AUDIO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.AUDIO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.SAMPLE_RATE, "96000");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -284,9 +331,14 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with sample rate specified
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.SAMPLE_RATE, "96000");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.AUDIO), SequenceType.AUDIO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.AUDIO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.SAMPLE_RATE, "96000");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -312,9 +364,14 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with bit depth specified
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
-                SequenceContextParameters.BIT_DEPTH, "8");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.VIDEO), SequenceType.VIDEO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.VIDEO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BIT_DEPTH, "8");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -340,9 +397,14 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with bit depth specified
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
-                SequenceContextParameters.BIT_DEPTH, "8");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.VIDEO), SequenceType.VIDEO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.VIDEO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BIT_DEPTH, "8");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -368,9 +430,14 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with mismatched sample rate
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.SAMPLE_RATE, "96000");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.AUDIO), SequenceType.AUDIO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.AUDIO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.SAMPLE_RATE, "96000");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -396,9 +463,14 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with mismatched bit depth
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("111"),
-                SequenceContextParameters.BIT_DEPTH, "8");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.VIDEO), SequenceType.VIDEO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.VIDEO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BIT_DEPTH, "8");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -421,22 +493,42 @@ public class SilentConversionTest {
                 .setFrameRate(false).setBitDepth(true).setSize(false).setPixelFmt(false)
                 .build();
 
-        // 3. create context with mismacthed parameters
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.BITS_PER_SAMPLE, "32");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.SAMPLE_RATE, "96000");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.BIT_DEPTH, "8");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.FRAME_RATE, "30");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.HEIGHT, "720");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.WIDTH, "540");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.PIXEL_FORMAT, "yuv420p10le");
+        // 3. create context with mismatched parameters
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.AUDIO), SequenceType.AUDIO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.AUDIO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BITS_PER_SAMPLE, "32");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.SAMPLE_RATE, "96000");
+
+        resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.VIDEO), SequenceType.VIDEO);
+        resourceUuid = getResourceUuid(0, 0, SequenceType.VIDEO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BIT_DEPTH, "8");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.FRAME_RATE, "30");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.HEIGHT, "720");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.WIDTH, "540");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.PIXEL_FORMAT, "yuv420p10le");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -460,21 +552,41 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with mismatched parameters
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.BITS_PER_SAMPLE, "32");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.SAMPLE_RATE, "96000");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.BIT_DEPTH, "8");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.FRAME_RATE, "30");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.HEIGHT, "720");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.WIDTH, "540");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.PIXEL_FORMAT, "yuv420p10le");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.AUDIO), SequenceType.AUDIO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.AUDIO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BITS_PER_SAMPLE, "32");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.SAMPLE_RATE, "96000");
+
+        resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.VIDEO), SequenceType.VIDEO);
+        resourceUuid = getResourceUuid(0, 0, SequenceType.VIDEO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BIT_DEPTH, "8");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.FRAME_RATE, "30");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.HEIGHT, "720");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.WIDTH, "540");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.PIXEL_FORMAT, "yuv420p10le");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -498,22 +610,272 @@ public class SilentConversionTest {
                 .build();
 
         // 3. create context with matched parameters
-        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator
-                .createDefaultContextProviderWithDestContext(destContextMap);
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.BITS_PER_SAMPLE, "24");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.AUDIO, SequenceUUID.create("111"),
-                SequenceContextParameters.SAMPLE_RATE, "48000");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.BIT_DEPTH, "10");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.FRAME_RATE, "25");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.HEIGHT, "1920");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.WIDTH, "1080");
-        contextProvider.getSequenceContext().addSequenceParameter(SequenceType.VIDEO, SequenceUUID.create("112"),
-                SequenceContextParameters.PIXEL_FORMAT, "yuv422p10le");
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.AUDIO), SequenceType.AUDIO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.AUDIO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BITS_PER_SAMPLE, "24");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.SAMPLE_RATE, "48000");
+
+        resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.VIDEO), SequenceType.VIDEO);
+        resourceUuid = getResourceUuid(0, 0, SequenceType.VIDEO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BIT_DEPTH, "10");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.FRAME_RATE, "25");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.HEIGHT, "1920");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.WIDTH, "1080");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.PIXEL_FORMAT, "yuv422p10le");
+
+        // 4. init checker
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
+
+        // 5. check. no exception expected
+        checker.check();
+    }
+
+    @Test(expected = ConversionNotAllowedException.class)
+    public void exceptionAllAudioResourcesChecked() throws Exception {
+        // 1. create context with all parameters specified and matched
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
+                .setBitsSample("24").setSampleRate("48000")
+                .setBitDepth("10").setFrameRate("25").setHeight("1920").setWidth("1080").setPixelFmt("yuv422p10le")
+                .build();
+
+        // 2. create config that doesn't allow mismatched parameters
+        ConfigType config = new ConfigBuilder()
+                .setBitsSample(false).setSampleRate(false)
+                .setFrameRate(false).setBitDepth(false).setSize(false).setPixelFmt(false)
+                .build();
+
+        // 3. create context with matched parameters for 1st resource and unmatched for 2d
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.AUDIO), SequenceType.AUDIO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.AUDIO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BITS_PER_SAMPLE, "24");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.SAMPLE_RATE, "48000");
+        resourceKey = ResourceKey.create(getSegmentUuid(1), getSequenceUuid(1, SequenceType.AUDIO), SequenceType.AUDIO);
+        resourceUuid = getResourceUuid(1, 1, SequenceType.AUDIO, 1, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BITS_PER_SAMPLE, "20");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.SAMPLE_RATE, "48000");
+
+        // 4. init checker
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
+
+        // 5. check. no exception expected
+        checker.check();
+    }
+
+    @Test
+    public void okAllAudioResourcesChecked() throws Exception {
+        // 1. create context with all parameters specified and matched
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
+                .setBitsSample("24").setSampleRate("48000")
+                .setBitDepth("10").setFrameRate("25").setHeight("1920").setWidth("1080").setPixelFmt("yuv422p10le")
+                .build();
+
+        // 2. create config that doesn't allow mismatched parameters
+        ConfigType config = new ConfigBuilder()
+                .setBitsSample(false).setSampleRate(false)
+                .setFrameRate(false).setBitDepth(false).setSize(false).setPixelFmt(false)
+                .build();
+
+        // 3. create context with matched parameters for 1st resource and unmatched for 2d
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.AUDIO), SequenceType.AUDIO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.AUDIO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BITS_PER_SAMPLE, "24");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.SAMPLE_RATE, "48000");
+        resourceKey = ResourceKey.create(getSegmentUuid(1), getSequenceUuid(1, SequenceType.AUDIO), SequenceType.AUDIO);
+        resourceUuid = getResourceUuid(1, 1, SequenceType.AUDIO, 1, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BITS_PER_SAMPLE, "24");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.SAMPLE_RATE, "48000");
+
+        // 4. init checker
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
+
+        // 5. check. no exception expected
+        checker.check();
+    }
+
+
+    @Test(expected = ConversionNotAllowedException.class)
+    public void exceptionAllVideoResourcesChecked() throws Exception {
+        // 1. create context with all parameters specified and matched
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
+                .setBitsSample("24").setSampleRate("48000")
+                .setBitDepth("10").setFrameRate("25").setHeight("1920").setWidth("1080").setPixelFmt("yuv422p10le")
+                .build();
+
+        // 2. create config that doesn't allow mismatched parameters
+        ConfigType config = new ConfigBuilder()
+                .setBitsSample(false).setSampleRate(false)
+                .setFrameRate(false).setBitDepth(false).setSize(false).setPixelFmt(false)
+                .build();
+
+        // 3. create context with matched parameters for 1st resource and unmatched for 2d
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.VIDEO), SequenceType.VIDEO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.VIDEO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BIT_DEPTH, "10");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.FRAME_RATE, "25");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.HEIGHT, "1920");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.WIDTH, "1080");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.PIXEL_FORMAT, "yuv422p10le");
+
+        resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.VIDEO), SequenceType.VIDEO);
+        resourceUuid = getResourceUuid(0, 0, SequenceType.VIDEO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BIT_DEPTH, "10");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.FRAME_RATE, "30");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.HEIGHT, "1920");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.WIDTH, "1080");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.PIXEL_FORMAT, "yuv422p10le");
+
+        // 4. init checker
+        SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
+
+        // 5. check. no exception expected
+        checker.check();
+    }
+
+    @Test
+    public void okAllVideoResourcesChecked() throws Exception {
+        // 1. create context with all parameters specified and matched
+        DestContextTypeMap destContextMap = new DestContextMapBuilder()
+                .setBitsSample("24").setSampleRate("48000")
+                .setBitDepth("10").setFrameRate("25").setHeight("1920").setWidth("1080").setPixelFmt("yuv422p10le")
+                .build();
+
+        // 2. create config that doesn't allow mismatched parameters
+        ConfigType config = new ConfigBuilder()
+                .setBitsSample(false).setSampleRate(false)
+                .setFrameRate(false).setBitDepth(false).setSize(false).setPixelFmt(false)
+                .build();
+
+        // 3. create context with matched parameters for 1st resource and unmatched for 2d
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCplAndDestContext(
+                destContextMap, 2, 2, 2, EnumSet.allOf(SequenceType.class));
+        ResourceKey resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.VIDEO), SequenceType.VIDEO);
+        ResourceUUID resourceUuid = getResourceUuid(0, 0, SequenceType.VIDEO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BIT_DEPTH, "10");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.FRAME_RATE, "25");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.HEIGHT, "1920");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.WIDTH, "1080");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.PIXEL_FORMAT, "yuv422p10le");
+
+        resourceKey = ResourceKey.create(getSegmentUuid(0), getSequenceUuid(0, SequenceType.VIDEO), SequenceType.VIDEO);
+        resourceUuid = getResourceUuid(0, 0, SequenceType.VIDEO, 0, 0);
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.BIT_DEPTH, "10");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.FRAME_RATE, "25");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.HEIGHT, "1920");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.WIDTH, "1080");
+        contextProvider.getResourceContext()
+                .addResourceParameter(
+                        resourceKey, resourceUuid,
+                        ResourceContextParameters.PIXEL_FORMAT, "yuv422p10le");
 
         // 4. init checker
         SilentConversionChecker checker = new SilentConversionChecker(contextProvider, config);
@@ -614,8 +976,8 @@ public class SilentConversionTest {
                 setContextValue(ConversionParameterNameType.SAMPLE_RATE, sampleRate, map);
             }
             if (nonNullVideo) {
-                setContextValue(SequenceContextParameters.WIDTH, width, map);
-                setContextValue(SequenceContextParameters.HEIGHT, height, map);
+                setContextValue(ResourceContextParameters.WIDTH, width, map);
+                setContextValue(ResourceContextParameters.HEIGHT, height, map);
                 setContextValue(ConversionParameterNameType.BIT_DEPTH, bitDepth, map);
                 setContextValue(ConversionParameterNameType.FRAME_RATE, frameRate, map);
                 setContextValue(ConversionParameterNameType.PIXEL_FORMAT, pixelFmt, map);
@@ -624,7 +986,7 @@ public class SilentConversionTest {
             return map;
         }
 
-        private void setContextValue(SequenceContextParameters seqParam, String value, DestContextTypeMap map) {
+        private void setContextValue(ResourceContextParameters seqParam, String value, DestContextTypeMap map) {
             setContextValue(seqParam.getName(), value, map);
         }
 

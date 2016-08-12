@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'
+  elementFormDefault='qualified' attributeFormDefault='unqualified' targetNamespace="http://sandflow.com/ns/SMPTEST2001-1/baseline" xmlns:reg="http://sandflow.com/ns/SMPTEST2001-1/baseline">
+<xs:simpleType name='TargetType'>
+    <xs:union memberTypes='xs:token'>
+        <xs:simpleType>
+            <xs:restriction base='reg:AUID'/>
+        </xs:simpleType>
+        <xs:simpleType>
+            <xs:restriction base='reg:PackageIDType'/>
+        </xs:simpleType>
+        <xs:simpleType>
+            <xs:restriction base='xs:string'>
+                <xs:pattern value='([^\s]+\s)?[^\s]+'/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:union>
+</xs:simpleType>
+<xs:simpleType name='ByteOrderType'>
+     <xs:restriction base='xs:string'>
+        <xs:enumeration value='BigEndian'/>
+        <xs:enumeration value='LittleEndian'/>
+     </xs:restriction>
+</xs:simpleType>
+<xs:simpleType name='HexByteArrayType'>
+    <xs:restriction base='xs:string'>
+        <xs:pattern value='(\s*[0-9a-fA-F][0-9a-fA-F])*\s*'/>
+    </xs:restriction>
+</xs:simpleType>
+<xs:attribute name='uid' type='reg:TargetType'/>
+<xs:attribute name='byteOrder' type='reg:ByteOrderType'/>
+<xs:attribute name='stream' type='xs:ENTITY'/>
+<xs:attribute name='actualType' type='reg:TargetType'/>
+<xs:attribute name='escaped' type='xs:boolean'/>
+<xs:attribute name='path' type='xs:string'/>
+<xs:simpleType name='AUID'>
+    <xs:restriction base='xs:anyURI'>
+        <xs:pattern 
+                value='urn:smpte:ul:([0-9a-fA-F]{8}\.){3}[0-9a-fA-F]{8}'/>
+        <xs:pattern 
+            value='urn:uuid:[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}'/>
+    </xs:restriction>
+</xs:simpleType>
+<xs:simpleType name='DateStruct'>
+    <xs:union>
+        <xs:simpleType>
+            <xs:restriction base='xs:date'>
+                <xs:pattern value='.+(((\+|\-)\d\d:\d\d)|Z)'/>
+            </xs:restriction>
+        </xs:simpleType>
+        <xs:simpleType>
+            <xs:restriction base='xs:string'>
+                <xs:enumeration value='0000-00-00Z'/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:union>
+</xs:simpleType>
+<xs:simpleType name='PackageIDType'>
+    <xs:restriction base='xs:string'>
+        <xs:pattern value=' urn:smpte:umid:([0-9a-fA-F]{8}\.){7}[0-9a-fA-F]{8}'/>
+    </xs:restriction>
+</xs:simpleType>
+<xs:simpleType name='Rational'>
+    <xs:restriction base='xs:string'>
+        <xs:pattern value='\-?\d{1,10}(/\-?\d{1,10})?'/>
+    </xs:restriction>
+</xs:simpleType>
+<xs:simpleType name='TimeStruct'>
+    <xs:union>
+        <xs:simpleType>
+            <xs:restriction base='xs:time'>
+                <xs:pattern value='.+(((\+|\-)\d\d:\d\d)|Z)'/>
+            </xs:restriction>
+        </xs:simpleType>
+        <xs:simpleType>
+            <xs:restriction base='xs:string'>
+                <xs:enumeration value='00:00:00Z'/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:union>
+</xs:simpleType>
+<xs:simpleType name='TimeStamp'>
+    <xs:union>
+        <xs:simpleType>
+            <xs:restriction base='xs:dateTime'>
+                <xs:pattern value='.+(((\+|\-)\d\d:\d\d)|Z)'/>
+            </xs:restriction>
+        </xs:simpleType>
+        <xs:simpleType>
+            <xs:restriction base='xs:string'>
+                <xs:enumeration value='0000-00-00T00:00:00Z'/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:union>
+</xs:simpleType>
+<xs:simpleType name='VersionType'>
+    <xs:restriction base='xs:string'>
+        <xs:pattern value='\-?\d{1,3}\.\-?\d{1,3}'/>
+    </xs:restriction>
+</xs:simpleType>
+</xs:schema>

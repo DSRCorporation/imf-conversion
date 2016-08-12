@@ -28,6 +28,7 @@ import com.netflix.imfutility.conversion.templateParameter.context.SequenceTempl
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
+import com.netflix.imfutility.cpl.essencedescriptor.EssenceDescriptorProcessor;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
@@ -39,6 +40,7 @@ import org.apache.commons.math3.fraction.BigFraction;
 
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -81,7 +83,10 @@ public abstract class AbstractCplContextBuilderStrategy implements ICplContextBu
         // (the values must be calculated in video frames in this case)
         buildTimeAndDurationInFrames();
 
-        // 4. define languages for all sequences
+        // 4. process essence descriptors
+        new EssenceDescriptorProcessor(getEssenceDescriptors(), contextProvider).build();
+
+        // 5. define languages for all sequences
         buildSequenceLanguages();
     }
 
@@ -95,6 +100,29 @@ public abstract class AbstractCplContextBuilderStrategy implements ICplContextBu
      * (such as EditUnit-based parameters and Repeat)
      */
     protected abstract void buildFromCpl();
+
+    /**
+     * Gets all generic EssenceDescriptors for each resource. May be empty but never null.
+     * The key corresponds to
+     * {@link com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters#TRACK_FILE_ID}.
+     * The value is a list of essence descriptors.
+     *
+     *
+     * @return all generic EssenceDescriptors for each resource. Never null.
+     */
+    protected abstract Map<String, List<Object>> getEssenceDescriptors();
+
+    /**
+     * Gets a composition start timecode as defined in CPL.
+     * @return a composition start timecode as defined in CPL or null it it's absent
+     */
+    protected abstract String getCompositionTimecodeStart();
+
+    /**
+     * Gets a composition timecode rate as defined in CPL.
+     * @return a composition timecode rate as defined in CPL or null it it's absent
+     */
+    protected abstract BigFraction getCompositionTimecodeRate();
 
     /**
      * <ul>
