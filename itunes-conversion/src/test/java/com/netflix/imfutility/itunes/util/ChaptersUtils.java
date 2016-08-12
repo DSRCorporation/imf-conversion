@@ -19,6 +19,7 @@
 package com.netflix.imfutility.itunes.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
@@ -39,5 +40,11 @@ public final class ChaptersUtils {
 
     public static File getBrokenChaptersXml() throws URISyntaxException {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/chapters/broken/broken-test-chapters.xml").toURI());
+    }
+
+    public static void createChapterFile(String chapterName) throws IOException {
+        File file = new File(chapterName);
+        file.createNewFile();
+        file.deleteOnExit();
     }
 }

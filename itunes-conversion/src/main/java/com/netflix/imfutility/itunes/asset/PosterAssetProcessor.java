@@ -20,6 +20,7 @@ package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
+import com.netflix.imfutility.itunes.asset.distribute.CopyAssetStrategy;
 import com.netflix.imfutility.itunes.image.ImageValidationException;
 import com.netflix.imfutility.itunes.image.ImageValidator;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
@@ -28,8 +29,6 @@ import org.apache.commons.math3.fraction.BigFraction;
 
 import java.io.File;
 
-import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.JPG_CONTENT_TYPE;
-import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.JPG_FORMAT_NAME;
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.POSTER_AR_DENOMINATOR;
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.POSTER_AR_NUMERATOR;
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.POSTER_MIN_HEIGHT;
@@ -45,6 +44,7 @@ public class PosterAssetProcessor extends AssetProcessor<DataFileType> {
 
     public PosterAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
+        setDistributeAssetStrategy(new CopyAssetStrategy());
     }
 
     public PosterAssetProcessor setVendorId(String vendorId) {
@@ -62,24 +62,24 @@ public class PosterAssetProcessor extends AssetProcessor<DataFileType> {
         ImageValidator validator = new ImageValidator(assetFile, POSTER_TYPE);
         validator.validateSize(POSTER_MIN_WIDTH, POSTER_MIN_HEIGHT);
         validator.validateAspectRatio(new BigFraction(POSTER_AR_NUMERATOR).divide(POSTER_AR_DENOMINATOR));
-        validator.validateContentType(JPG_CONTENT_TYPE, JPG_FORMAT_NAME);
+        validator.validateJpeg();
         validator.validateRGBColorSpace();
     }
 
     @Override
     protected DataFileType buildMetadata(File assetFile) {
         //  poster do not need locale and role info
-        return new DataFileTagBuilder(assetFile, getFileName())
+        return new DataFileTagBuilder(assetFile, getDestFileName(assetFile))
                 .build();
     }
 
     @Override
     protected void appendMetadata(DataFileType tag) {
-        metadataXmlProvider.appendAsset(tag, AssetTypeType.ARTWORK);
+        metadataXmlProvider.appendAssetDataFile(tag, AssetTypeType.ARTWORK);
     }
 
     @Override
-    protected String getFileName() {
+    protected String getDestFileName(File assetFile) {
         return vendorId + ".jpg";
     }
 }

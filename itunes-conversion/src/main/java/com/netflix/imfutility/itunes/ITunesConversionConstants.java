@@ -26,18 +26,23 @@ public final class ITunesConversionConstants {
     private ITunesConversionConstants() {
     }
 
-    /* Conversion.xml */
-
-    // 1.1. conversion.xml location
+    // conversion.xml location
     public static final String CONVERSION_XML = "xml/itunes-conversion.xml";
 
     // common dynamic parameters:
-    public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "output";
+    public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "outputItmsp";
     public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
-    public static final String DYNAMIC_PARAM_METADATA_XML = "metadata";
+    public static final String DYNAMIC_PARAM_DEST_SOURCE = "destSource";
+    public static final String DYNAMIC_PARAM_IS_OSX = "isOSX";
+
+    // trailer dynamic parameters:
     public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT = "trailerMediaInfoInput";
     public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT = "trailerMediaInfoOutput";
 
+    // video dest parameters:
+    public static final String DEST_PARAM_VIDEO_IFRAME_RATE = "iFrameRate";
+    public static final String DEST_PARAM_VIDEO_IS_DAR_SPECIFIED = "isDarSpecified";
+    public static final String DEST_PARAM_VIDEO_END_BLACK_FRAME_COUNT = "endBlackFrameCount";
 
     // AudioMap constants
     public static final String GEN_MAIN_SEQ_UUID = "urn:uuid:38d52c00-68d3-4056-8858-28eeaf3238d3";
@@ -57,4 +62,7 @@ public final class ITunesConversionConstants {
     public static final String DYNAMIC_MAIN_AUDIO = "mainAudio";
     public static final String DYNAMIC_MAIN_AUDIO_TRACKS = "mainAudioTracks";
     public static final String DYNAMIC_ADDITIONAL_AUDIO_COUNT = "additionalAudioCount";
+
+    // subtitle dynamic parameters:
+    public static final String DYNAMIC_SUBTITLE_IS_TTML = "isTtml";
 }

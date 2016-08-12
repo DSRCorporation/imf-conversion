@@ -78,7 +78,7 @@ public final class AudioMapXmlProvider {
     /**
      * Internal. Describes AudioOption of iTunes audio asset configuration.
      */
-    static class AudioOption extends ArrayList<LinkedHashMap<String, ChannelType>> {
+    public static class AudioOption extends ArrayList<LinkedHashMap<String, ChannelType>> {
         private String fileName = null;
         private String locale = null;
 
@@ -370,7 +370,7 @@ public final class AudioMapXmlProvider {
      *
      * @return alternatives audio for test purposes
      */
-    ArrayList<AudioOption> getAlternativesAudio() {
+    public ArrayList<AudioOption> getAlternativesAudio() {
         return alternativesAudio;
     }
 

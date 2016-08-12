@@ -22,8 +22,7 @@ import com.netflix.imfutility.generated.itunes.metadata.AssetType;
 import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
-import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
-import com.netflix.imfutility.generated.mediainfo.FormatType;
+import com.netflix.imfutility.itunes.util.AssetUtils;
 import com.netflix.imfutility.itunes.util.TestUtils;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
@@ -59,39 +58,14 @@ public class TrailerAssetProcessorTest {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
     }
 
-    private static MetadataXmlProvider createMetadataXmlProvider() {
-        return new MetadataXmlProvider(TemplateParameterContextCreator.getWorkingDir(),
-                MetadataXmlProvider.generateSampleMetadata());
-    }
-
-    private static LocaleType createLocale() {
-        LocaleType locale = new LocaleType();
-        locale.setName("en-US");
-        return locale;
-    }
-
-    private static FormatType createCorrectFormat() {
-        FormatType format = new FormatType();
-        format.setFilename("file_name");
-        format.setFormatLongName("QuickTime / MOV");
-        return format;
-    }
-
-    private static FormatType createIncorrectFormat() {
-        FormatType format = new FormatType();
-        format.setFilename("file_name");
-        format.setFormatLongName("Not MOV");
-        return format;
-    }
-
     @Test
     public void testCorrectTrailer() throws Exception {
-        MetadataXmlProvider metadataXmlProvider = createMetadataXmlProvider();
+        MetadataXmlProvider metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
         TrailerAssetProcessor processor = new TrailerAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
-                .setLocale(createLocale())
-                .setFormat(createCorrectFormat())
+                .setLocale(AssetUtils.createLocale("en-US"))
+                .setFormat(AssetUtils.createCorrectVideoFormat())
                 .process(TestUtils.getTestFile());
 
         File asset = new File(TemplateParameterContextCreator.getWorkingDir(), "vendor_id-preview.mov");
@@ -109,32 +83,32 @@ public class TrailerAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testInvalidFormat() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(createMetadataXmlProvider(),
+        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
-                .setLocale(createLocale())
-                .setFormat(createIncorrectFormat())
+                .setLocale(AssetUtils.createLocale("en-US"))
+                .setFormat(AssetUtils.createIncorrectVideoFormat())
                 .process(TestUtils.getTestFile());
     }
 
     @Test(expected = AssetValidationException.class)
     public void testInvalidPath() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(createMetadataXmlProvider(),
+        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
-                .setLocale(createLocale())
-                .setFormat(createCorrectFormat())
+                .setLocale(AssetUtils.createLocale("en-US"))
+                .setFormat(AssetUtils.createCorrectVideoFormat())
                 .process(new File("invalid_path"));
     }
 
     @Test(expected = AssetValidationException.class)
     public void testParametersNotSet() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(createMetadataXmlProvider(),
+        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
-        //  vendor_id, locale and format required
+        //  vendor_id, locale and format are required
         processor.process(TestUtils.getTestFile());
     }
 }
