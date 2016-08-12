@@ -172,7 +172,7 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
             return value != null && Boolean.parseBoolean(value);
         }
 
-        public <T extends Comparable> int compare(T value, T comp, boolean nullsFirst) {
+        public <T extends Comparable<T>> int compare(T value, T comp, boolean nullsFirst) {
             if (value == null) {
                 return nullsFirst ? 1 : -1;
             }

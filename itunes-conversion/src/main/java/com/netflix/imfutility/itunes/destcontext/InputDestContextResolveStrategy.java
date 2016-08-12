@@ -22,33 +22,29 @@ import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
-import com.netflix.imfutility.conversion.templateParameter.context.ResourceTemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
-import com.netflix.imfutility.cpl.uuid.ResourceUUID;
-import com.netflix.imfutility.cpl.uuid.SegmentUUID;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.util.ConversionHelper;
+import com.netflix.imfutility.util.CplHelper;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 import org.apache.commons.math3.fraction.BigFraction;
 
-import java.math.BigInteger;
-import java.util.Collection;
+import java.time.Duration;
+import java.util.Comparator;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
-import static com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters.DURATION_EDIT_UNIT;
-import static com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters.EDIT_RATE;
-import static com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters.FRAME_RATE;
-import static com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters.HEIGHT;
-import static com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters.WIDTH;
+import static com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters.FRAME_RATE;
+import static com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters.HEIGHT;
+import static com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters.WIDTH;
 
 
 /**
- * Resolve dest context by input video parameters defined in contexts.
- * Width, height, fps extracted from {@link SequenceTemplateParameterContext}.
- * Duration extracted from {@link ResourceTemplateParameterContext}.
+ * Resolve dest context by input video parameters defined for resources.
+ * Values extracted from {@link com.netflix.imfutility.conversion.templateParameter.context.ResourceTemplateParameterContext}.
  */
 public class InputDestContextResolveStrategy implements DestContextResolveStrategy {
     private final TemplateParameterContextProvider contextProvider;
@@ -65,13 +61,19 @@ public class InputDestContextResolveStrategy implements DestContextResolveStrate
     }
 
     @Override
-    public DestContextTypeMap resolveContext(
-            DestContextsTypeMap destContexts)
-            throws ConversionException {
-        Integer width = Integer.parseInt(getSequenceParameterValue(WIDTH));
-        Integer height = Integer.parseInt(getSequenceParameterValue(HEIGHT));
-        BigFraction frameRate = ConversionHelper.parseEditRate(getSequenceParameterValue(FRAME_RATE));
-        Long duration = getSequenceDuration();
+    public DestContextTypeMap resolveContext(DestContextsTypeMap destContexts) throws ConversionException {
+        ContextInfo seqContextInfo = new ContextInfoBuilder()
+                .setSequenceType(SequenceType.VIDEO)
+                .setSequenceUuid(getSequenceUUID())
+                .build();
+
+        Integer width = getMinResourceParameterValue(seqContextInfo, WIDTH, Integer::parseInt);
+        Integer height = getMinResourceParameterValue(seqContextInfo, HEIGHT, Integer::parseInt);
+
+        BigFraction frameRate = getMinResourceParameterValue(seqContextInfo, FRAME_RATE, ConversionHelper::parseEditRate);
+
+        long durationMs = CplHelper.getVirtualTrackDurationMS(contextProvider, SequenceType.VIDEO, getSequenceUUID());
+        Long durationS = Duration.ofMillis(durationMs).getSeconds();
 
         return resolveStrategy
                 .setWidth(width)
@@ -79,54 +81,47 @@ public class InputDestContextResolveStrategy implements DestContextResolveStrate
                 .setFrameRate(frameRate)
                 // assume video scan type is progressive (according to IMF application #2E)
                 .setInterlaced(false)
-                .setDuration(duration)
+                .setDuration(durationS)
                 .resolveContext(destContexts);
     }
 
-    private String getSequenceParameterValue(SequenceContextParameters parameter) {
-        SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
-        return sequenceContext.getParameterValue(parameter, new ContextInfoBuilder()
-                .setSequenceType(SequenceType.VIDEO)
-                .setSequenceUuid(getSequenceUUID())
-                .build());
-    }
-
     private SequenceUUID getSequenceUUID() {
-        Collection<SequenceUUID> uuids = contextProvider.getSequenceContext().getUuids(SequenceType.VIDEO);
-        if (!uuids.isEmpty()) {
-            return uuids.iterator().next();
-        }
-        return null;
+        return contextProvider.getSequenceContext().getUuids(SequenceType.VIDEO).stream()
+                .findFirst()
+                .orElseThrow(() -> new ConversionException("Source must have at least one video sequence"));
     }
 
-    private Long getSequenceDuration() {
-        Long sequenceDuration = 0L;
-        for (SegmentUUID segmUuid : contextProvider.getSegmentContext().getUuids()) {
-            for (ResourceUUID resUuid : contextProvider.getResourceContext()
-                    .getUuids(ResourceKey.create(segmUuid, getSequenceUUID(), SequenceType.VIDEO))) {
-                ContextInfo contextInfo = new ContextInfoBuilder()
+    private <T extends Comparable<T>> T getMinResourceParameterValue(ContextInfo contextInfo,
+                                                                     ResourceContextParameters parameter,
+                                                                     Function<String, T> parser) {
+        return segmentStream(contextInfo)
+                .flatMap(this::resourceStream)
+                .map(info -> getResourceParameterValue(info, parameter, parser))
+                .min(Comparator.naturalOrder())
+                .get();
+    }
+
+    private <T> T getResourceParameterValue(ContextInfo contextInfo, ResourceContextParameters parameter, Function<String, T> parser) {
+        String value = contextProvider.getResourceContext().getParameterValue(parameter, contextInfo);
+        return parser.apply(value);
+    }
+
+    private Stream<ContextInfo> segmentStream(ContextInfo contextInfo) {
+        return contextProvider.getSegmentContext().getUuids().stream()
+                .map(segUuid -> new ContextInfoBuilder()
+                        .setSequenceType(contextInfo.getSequenceType())
+                        .setSequenceUuid(contextInfo.getSequenceUuid())
+                        .setSegmentUuid(segUuid)
+                        .build());
+    }
+
+    private Stream<ContextInfo> resourceStream(ContextInfo contextInfo) {
+        return contextProvider.getResourceContext().getUuids(ResourceKey.create(contextInfo)).stream()
+                .map(resUuid -> new ContextInfoBuilder()
+                        .setSequenceType(contextInfo.getSequenceType())
+                        .setSequenceUuid(contextInfo.getSequenceUuid())
+                        .setSegmentUuid(contextInfo.getSegmentUuid())
                         .setResourceUuid(resUuid)
-                        .setSegmentUuid(segmUuid)
-                        .setSequenceUuid(getSequenceUUID())
-                        .setSequenceType(SequenceType.VIDEO)
-                        .build();
-
-                sequenceDuration += getResourceDuration(contextInfo);
-            }
-        }
-        return sequenceDuration;
+                        .build());
     }
-
-    private Long getResourceDuration(ContextInfo contextInfo) {
-        ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
-
-        BigFraction editRate = ConversionHelper.parseEditRate(resourceContext
-                .getParameterValue(EDIT_RATE, contextInfo));
-        BigInteger durationEU = new BigInteger(resourceContext
-                .getParameterValue(DURATION_EDIT_UNIT, contextInfo));
-
-        //  to get time in seconds
-        return ConversionHelper.toSeconds(durationEU, editRate);
-    }
-
 }

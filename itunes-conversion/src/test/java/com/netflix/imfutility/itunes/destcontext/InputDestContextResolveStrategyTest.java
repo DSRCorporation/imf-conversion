@@ -23,7 +23,6 @@ import com.netflix.imfutility.conversion.templateParameter.context.ResourceTempl
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
@@ -44,10 +43,14 @@ import static junit.framework.TestCase.assertEquals;
  */
 public class InputDestContextResolveStrategyTest {
 
+    private static final int SEQ_COUNT = 1;
     private static final int SEGMENT_COUNT = 2;
-    private static final int SEQ_COUNT = 2;
     private static final int RESOURCE_COUNT = 2;
     private static final int REPEAT_COUNT = 2;
+
+    private static final int[] widths = {4096, 4096, 1920, 1920, 1280, 1280, 720, 720};
+    private static final int[] heights = {2160, 2160, 1080, 1080, 720, 720, 480, 480};
+    private static final String[] frameRates = {"50", "50", "30", "30", "30000/1001", "30000/1001", "25", "25"};
 
     private static TemplateParameterContextProvider contextProvider;
 
@@ -61,47 +64,32 @@ public class InputDestContextResolveStrategyTest {
                 REPEAT_COUNT,
                 EnumSet.of(SequenceType.VIDEO, SequenceType.AUDIO));
 
-        fillMediaInfoVideoParameters();
-        fillVideoResourcesParameters();
+        fillVideoResourceParameters();
     }
 
-    private static void fillVideoResourcesParameters() {
+    private static void fillVideoResourceParameters() {
         ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
 
-        for (SequenceUUID seqUuid : contextProvider.getSequenceContext().getUuids(SequenceType.VIDEO)) {
+        SequenceType seqType = SequenceType.VIDEO;
+
+        int i = 0;
+        for (SequenceUUID seqUuid : contextProvider.getSequenceContext().getUuids(seqType)) {
             for (SegmentUUID segmUuid : contextProvider.getSegmentContext().getUuids()) {
-                for (ResourceUUID resUuid : resourceContext.getUuids(ResourceKey.create(segmUuid, seqUuid, SequenceType.VIDEO))) {
+                ResourceKey resKey = ResourceKey.create(segmUuid, seqUuid, seqType);
+                for (ResourceUUID resUuid : resourceContext.getUuids(resKey)) {
 
-                    ResourceKey resKey = ResourceKey.create(segmUuid, seqUuid, SequenceType.VIDEO);
+                    resourceContext.addResourceParameter(resKey, resUuid,
+                            ResourceContextParameters.DURATION_MS, String.valueOf(4000));
+                    resourceContext.addResourceParameter(resKey, resUuid,
+                            ResourceContextParameters.WIDTH, String.valueOf(widths[i]));
+                    resourceContext.addResourceParameter(resKey, resUuid,
+                            ResourceContextParameters.HEIGHT, String.valueOf(heights[i]));
+                    resourceContext.addResourceParameter(resKey, resUuid,
+                            ResourceContextParameters.FRAME_RATE, frameRates[i]);
 
-                    resourceContext.addResourceParameter(resKey, resUuid,
-                            ResourceContextParameters.DURATION_EDIT_UNIT, String.valueOf(100));
-                    resourceContext.addResourceParameter(resKey, resUuid,
-                            ResourceContextParameters.EDIT_RATE, "100 2");
-                    resourceContext.addResourceParameter(resKey, resUuid,
-                            ResourceContextParameters.REPEAT_COUNT, String.valueOf(REPEAT_COUNT));
+                    i++;
                 }
             }
-        }
-    }
-
-    private static void fillMediaInfoVideoParameters() {
-        for (SequenceUUID seqUuid : contextProvider.getSequenceContext().getUuids(SequenceType.VIDEO)) {
-            contextProvider.getSequenceContext().addSequenceParameter(
-                    SequenceType.VIDEO,
-                    seqUuid,
-                    SequenceContextParameters.WIDTH,
-                    String.valueOf(4096));
-            contextProvider.getSequenceContext().addSequenceParameter(
-                    SequenceType.VIDEO,
-                    seqUuid,
-                    SequenceContextParameters.HEIGHT,
-                    String.valueOf(2160));
-            contextProvider.getSequenceContext().addSequenceParameter(
-                    SequenceType.VIDEO,
-                    seqUuid,
-                    SequenceContextParameters.FRAME_RATE,
-                    "50 1");
         }
     }
 
@@ -113,12 +101,12 @@ public class InputDestContextResolveStrategyTest {
 
         DestContextTypeMap map = strategy.resolveContext(new DestContextsTypeMap());
 
-        assertEquals("4096", map.getMap().get(DestContextParameters.WIDTH.getName()).getValue());
-        assertEquals("2160", map.getMap().get(DestContextParameters.HEIGHT.getName()).getValue());
-        assertEquals("50 1", map.getMap().get(DestContextParameters.FRAME_RATE.getName()).getValue());
+        assertEquals("720", map.getMap().get(DestContextParameters.WIDTH.getName()).getValue());
+        assertEquals("480", map.getMap().get(DestContextParameters.HEIGHT.getName()).getValue());
+        assertEquals("25 1", map.getMap().get(DestContextParameters.FRAME_RATE.getName()).getValue());
         // assume video scan type is progressive (according to IMF application #2E)
         assertEquals("false", map.getMap().get(DestContextParameters.INTERLACED.getName()).getValue());
-        // max duration must be equals 2(segm)*2(res)*2(repeat)*(100(durationEU)/50(unitsInSec))
-        assertEquals("16", map.getMap().get(DestContextParameters.DURATION.getName()).getValue());
+        // max duration must be equals 2(segm)*2(res)*2(repeat)*(4000(millisDuration)/1000(millisInSec))
+        assertEquals("32", map.getMap().get(DestContextParameters.DURATION.getName()).getValue());
     }
 }
