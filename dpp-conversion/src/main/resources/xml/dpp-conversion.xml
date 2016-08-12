@@ -137,7 +137,7 @@
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_audio">
-                                "%{tool.ffmpeg}" -f s%{dest.bitsSample}le -ar %{dest.sample_rate} -ac %{seq.channels_num} -i - -vn -c:a
+                                "%{tool.ffmpeg}" -f s%{dest.bitsSample}le -ar %{dest.sampleRate} -ac %{seq.channels_num} -i - -vn -c:a
                                 copy -f wav %{seq.num}-audio-encoded.wav
                             </execOnce>
                         </pipe>
