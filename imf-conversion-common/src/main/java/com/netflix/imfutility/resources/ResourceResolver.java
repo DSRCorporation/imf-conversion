@@ -70,6 +70,9 @@ public class ResourceResolver implements LSResourceResolver {
     }
 
     private String getResourcePath(String path, String systemId) {
+        if (systemId == null) {
+            systemId = "";
+        }
         if (systemId.startsWith("..")) {
             systemId = systemId.substring(3, systemId.length());
             if (path.contains("/")) {
@@ -86,7 +89,7 @@ public class ResourceResolver implements LSResourceResolver {
 
         private String publicId;
         private String systemId;
-        private BufferedInputStream inputStream;
+        private final BufferedInputStream inputStream;
 
         public Input(String publicId, String systemId, InputStream inputStream) {
             this.publicId = publicId;
@@ -120,8 +123,7 @@ public class ResourceResolver implements LSResourceResolver {
                 try {
                     byte[] input = new byte[inputStream.available()];
                     inputStream.read(input);
-                    String contents = new String(input, "UTF-8");
-                    return contents;
+                    return new String(input, "UTF-8");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

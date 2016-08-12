@@ -19,7 +19,6 @@
 package com.netflix.imfutility.cpl;
 
 import com.netflix.imfutility.xml.XmlParsingException;
-import org.apache.commons.math3.fraction.BigFraction;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,17 +44,5 @@ public interface ICplContextBuilderStrategy {
      * Adds CPL context with information obtained using destination context.
      */
     void buildPostDest();
-
-    /**
-     * Gets a composition start timecode as defined in CPL.
-     * @return a composition start timecode as defined in CPL or null it it's absent
-     */
-    String getCompositionTimecodeStart();
-
-    /**
-     * Gets a composition timecode rate as defined in CPL.
-     * @return a composition timecode rate as defined in CPL or null it it's absent
-     */
-    BigFraction getCompositionTimecodeRate();
 
 }

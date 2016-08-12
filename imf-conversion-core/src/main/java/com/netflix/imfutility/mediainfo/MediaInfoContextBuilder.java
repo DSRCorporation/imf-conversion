@@ -29,6 +29,7 @@ import com.netflix.imfutility.conversion.templateParameter.context.SequenceTempl
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
@@ -46,6 +47,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.netflix.imfutility.CoreConstants.MEDIAINFO_PACKAGE;
 
@@ -53,8 +55,9 @@ import static com.netflix.imfutility.CoreConstants.MEDIAINFO_PACKAGE;
  * Builds template parameters context related to Media Info.
  * <ul>
  * <li>For each resource, get resource parameters (media info) invoking an external analyzing tool from conversion.xml</li>
- * <li>Parameters of each resource within a sequence (virtual track) must be equal.</li>
- * <li>Fill Sequence context with the obtained parameters.</li>
+ * <li>We assume that some parameters of each resource within a sequence (virtual track) must be equal
+ * (in particular, number of channels).</li>
+ * <li>Fill Resource context with the obtained parameters.</li>
  * </ul>
  */
 public class MediaInfoContextBuilder {
@@ -63,8 +66,8 @@ public class MediaInfoContextBuilder {
     private final ExecuteStrategyFactory executeStrategyFactory;
     private final FormatType format;
 
+    // {type-asset-UUID} - AssetInfo map
     private final Map<ImmutablePair<SequenceType, String>, VirtualTrackInfo> processedMediaInfo = new HashMap<>();
-    private final Map<SequenceUUID, VirtualTrackInfo> mediaInfoForTrack = new HashMap<>();
 
     /**
      * Gets a media info XML file name created for the given sequence of the given type. The file is created in the working directory.
@@ -126,6 +129,7 @@ public class MediaInfoContextBuilder {
         SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
         for (SequenceType seqType : sequenceContext.getSequenceTypes()) {
             for (SequenceUUID seqUuid : sequenceContext.getUuids(seqType)) {
+                VirtualTrackInfo prevVirtualTrack = null;
                 for (SegmentUUID segmUuid : contextProvider.getSegmentContext().getUuids()) {
                     for (ResourceUUID resUuid : contextProvider.getResourceContext()
                             .getUuids(ResourceKey.create(segmUuid, seqUuid, seqType))) {
@@ -134,28 +138,44 @@ public class MediaInfoContextBuilder {
                                 .setSegmentUuid(segmUuid)
                                 .setSequenceUuid(seqUuid)
                                 .setSequenceType(seqType).build();
-                        doBuild(contextInfo);
+                        prevVirtualTrack = doBuild(contextInfo, prevVirtualTrack);
                     }
+                }
+                // we assume all resources within an audio sequence have the same number of channels
+                if (prevVirtualTrack.getParameters().containsKey(ResourceContextParameters.CHANNELS_NUM)) {
+                    sequenceContext.addSequenceParameter(
+                            seqType, seqUuid,
+                            SequenceContextParameters.CHANNELS_NUM,
+                            prevVirtualTrack.getParameters().get(ResourceContextParameters.CHANNELS_NUM));
                 }
             }
         }
     }
 
-    private void doBuild(ContextInfo contextInfo) throws IOException, XmlParsingException, MediaInfoException {
+    private VirtualTrackInfo doBuild(ContextInfo contextInfo, VirtualTrackInfo prevVirtualTrack)
+            throws IOException, XmlParsingException, MediaInfoException {
         // 1. get the corresponding essence
         String essence = contextProvider.getResourceContext().getParameterValue(
                 ResourceContextParameters.ESSENCE, contextInfo);
+        String trackFileId = contextProvider.getResourceContext().getParameterValue(
+                ResourceContextParameters.TRACK_FILE_ID, contextInfo);
 
         // 2. check if we already have media info loaded for this track. If no - load it by executing an external program.
-        VirtualTrackInfo processedInfo = processedMediaInfo.get(ImmutablePair.of(contextInfo.getSequenceType(), essence));
+        ImmutablePair<SequenceType, String> key = ImmutablePair.of(contextInfo.getSequenceType(), trackFileId);
+        VirtualTrackInfo processedInfo = processedMediaInfo.get(key);
         if (processedInfo == null) {
             File outputFile = getMediaInfo(contextInfo.getSequenceType(), essence);
             processedInfo = getTrackInfo(outputFile, contextInfo, essence);
-            processedMediaInfo.put(ImmutablePair.of(contextInfo.getSequenceType(), essence), processedInfo);
+            processedMediaInfo.put(key, processedInfo);
         }
 
-        // 3. add to sequence context
-        buildSequenceContext(processedInfo, contextInfo);
+        // 3. we assume that some parameters within a sequence must be equal (for example, channels number).
+        validateSequenceHomogeneous(prevVirtualTrack, processedInfo);
+
+        // 4. add to resource context
+        buildResourceContext(processedInfo, contextInfo);
+
+        return processedInfo;
     }
 
     private File getMediaInfo(SequenceType seqType, String essence) throws IOException {
@@ -209,16 +229,7 @@ public class MediaInfoContextBuilder {
         StreamType stream = mediaInfo.getStreams().getStream().get(0);
 
         // 3. fill info
-        VirtualTrackInfo virtualTrackInfo = new VirtualTrackInfo(contextInfo.getSequenceType(), stream);
-
-        // 4. check that virtual info for all resources within a virtual tracks are the same, that is have the same parameters.
-        VirtualTrackInfo existingInfoForSeq = mediaInfoForTrack.get(contextInfo.getSequenceUuid());
-        if (existingInfoForSeq != null && !existingInfoForSeq.equals(virtualTrackInfo)) {
-            throw new MediaInfoException("All resource tracks within a sequence (virtual track) must have the same parameters!", essence);
-        }
-        mediaInfoForTrack.put(contextInfo.getSequenceUuid(), virtualTrackInfo);
-
-        return virtualTrackInfo;
+        return new VirtualTrackInfo(contextInfo.getSequenceType(), stream);
     }
 
     FfprobeType parseOutputFile(File outputFile, ContextInfo contextInfo) throws XmlParsingException, FileNotFoundException {
@@ -230,15 +241,30 @@ public class MediaInfoContextBuilder {
         return XmlParser.parse(outputFile, null, MEDIAINFO_PACKAGE, FfprobeType.class);
     }
 
-    private void buildSequenceContext(VirtualTrackInfo virtualTrackInfo, ContextInfo contextInfo) {
-        SequenceUUID seqUuid = contextInfo.getSequenceUuid();
+    private void buildResourceContext(VirtualTrackInfo virtualTrackInfo, ContextInfo contextInfo) {
         virtualTrackInfo.getParameters().forEach(
                 (paramName, paramValue) ->
-                        contextProvider.getSequenceContext().addSequenceParameter(
-                                virtualTrackInfo.getSeqType(),
-                                seqUuid,
+                        contextProvider.getResourceContext().addResourceParameter(
+                                ResourceKey.create(contextInfo),
+                                contextInfo.getResourceUuid(),
                                 paramName,
                                 paramValue));
+    }
+
+    private void validateSequenceHomogeneous(VirtualTrackInfo prevVirtualTrackInfo, VirtualTrackInfo nextVirtualTrackInfo) {
+        if (prevVirtualTrackInfo == null) {
+            return;
+        }
+        if (nextVirtualTrackInfo == null) {
+            return;
+        }
+
+        if (!Objects.equals(
+                prevVirtualTrackInfo.getParameters().get(ResourceContextParameters.CHANNELS_NUM),
+                nextVirtualTrackInfo.getParameters().get(ResourceContextParameters.CHANNELS_NUM))) {
+            throw new ConversionException(
+                    "All audio resource tracks within an audio sequence (virtual track) must have the same number of channels!");
+        }
     }
 
 }

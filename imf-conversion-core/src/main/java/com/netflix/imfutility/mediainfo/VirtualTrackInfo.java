@@ -18,7 +18,7 @@
  */
 package com.netflix.imfutility.mediainfo;
 
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.mediainfo.StreamType;
 import com.netflix.imfutility.util.ConversionHelper;
@@ -34,28 +34,28 @@ public class VirtualTrackInfo {
 
     private final SequenceType seqType;
 
-    private final Map<SequenceContextParameters, String> parameters = new HashMap<>();
+    private final Map<ResourceContextParameters, String> parameters = new HashMap<>();
 
     public VirtualTrackInfo(SequenceType seqType, StreamType stream) {
         this.seqType = seqType;
 
         // audio
-        addParameter(SequenceContextParameters.CHANNELS_NUM, stream.getChannels());
-        addParameter(SequenceContextParameters.SAMPLE_RATE, stream.getSampleRate());
-        addParameter(SequenceContextParameters.BITS_PER_SAMPLE, stream.getBitsPerSample());
+        addParameter(ResourceContextParameters.CHANNELS_NUM, stream.getChannels());
+        addParameter(ResourceContextParameters.SAMPLE_RATE, stream.getSampleRate());
+        addParameter(ResourceContextParameters.BITS_PER_SAMPLE, stream.getBitsPerSample());
 
         // video
-        addParameter(SequenceContextParameters.WIDTH, stream.getWidth());
-        addParameter(SequenceContextParameters.HEIGHT, stream.getHeight());
-        addParameter(SequenceContextParameters.BIT_DEPTH, stream.getBitsPerRawSample());
-        addParameter(SequenceContextParameters.PIXEL_FORMAT, stream.getPixFmt());
+        addParameter(ResourceContextParameters.WIDTH, stream.getWidth());
+        addParameter(ResourceContextParameters.HEIGHT, stream.getHeight());
+        addParameter(ResourceContextParameters.BIT_DEPTH, stream.getBitsPerRawSample());
+        addParameter(ResourceContextParameters.PIXEL_FORMAT, stream.getPixFmt());
         String rFrameRate = stream.getRFrameRate();
         if (rFrameRate != null) {
-            addParameter(SequenceContextParameters.FRAME_RATE, ConversionHelper.rFrameRateToEditRate(rFrameRate));
+            addParameter(ResourceContextParameters.FRAME_RATE, ConversionHelper.rFrameRateToEditRate(rFrameRate));
         }
     }
 
-    private void addParameter(SequenceContextParameters paramName, Object paramValue) {
+    private void addParameter(ResourceContextParameters paramName, Object paramValue) {
         if (paramValue != null) {
             parameters.put(paramName, paramValue.toString());
         }
@@ -65,33 +65,8 @@ public class VirtualTrackInfo {
         return seqType;
     }
 
-    public Map<SequenceContextParameters, String> getParameters() {
+    public Map<ResourceContextParameters, String> getParameters() {
         return parameters;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        VirtualTrackInfo that = (VirtualTrackInfo) o;
-
-        if (seqType != that.seqType) {
-            return false;
-        }
-        return parameters != null ? parameters.equals(that.parameters) : that.parameters == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = seqType != null ? seqType.hashCode() : 0;
-        result = 31 * result + (parameters != null ? parameters.hashCode() : 0);
-        return result;
     }
 
 }

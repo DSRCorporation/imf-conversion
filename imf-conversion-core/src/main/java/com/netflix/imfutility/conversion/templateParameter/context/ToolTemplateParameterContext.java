@@ -35,7 +35,7 @@ import java.util.Collection;
  * <li>Created from config.xml (see {@link com.netflix.imfutility.generated.config.ExternalToolsType})</li>
  * </ul>
  */
-public class ToolTemplateParameterContext implements ITemplateParameterContext {
+public class ToolTemplateParameterContext extends AbstractTemplateParameterContext {
 
     private final ConfigType config;
 

@@ -1,0 +1,14 @@
+description = "IMF Essence Descriptor JAXB pre-generated classes"
+
+// exclude form checkstyle and findbugs as it's generated classes.
+findbugs {
+    sourceSets = []
+}
+
+checkstyle {
+    sourceSets = []
+}
+
+license {
+    excludes(["**"])
+}

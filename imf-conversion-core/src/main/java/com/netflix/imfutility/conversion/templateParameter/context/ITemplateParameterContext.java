@@ -40,4 +40,13 @@ public interface ITemplateParameterContext {
      */
     String resolveTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo);
 
+    /**
+     * Whether a given parameter is defined in the context.
+     *
+     * @param templateParameter parameter to check
+     * @param contextInfo context Info
+     * @return true if parameter is defined in the context and false otherwise.
+     */
+    boolean hasTemplateParameter(TemplateParameter templateParameter, ContextInfo contextInfo);
+
 }
