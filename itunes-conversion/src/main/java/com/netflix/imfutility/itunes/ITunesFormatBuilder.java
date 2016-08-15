@@ -21,9 +21,14 @@ package com.netflix.imfutility.itunes;
 import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.ConversionEngine;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.DestTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
+import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
 import com.netflix.imfutility.generated.mediainfo.FfprobeType;
@@ -47,6 +52,7 @@ import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.slf4j.Logger;
@@ -60,6 +66,8 @@ import static com.netflix.imfutility.conversion.templateParameter.context.parame
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.DAR;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.FRAME_RATE;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.INTERLACED;
+import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.SAMPLE_RATE;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_AUDIO_SAMPLES_PER_FRAME;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_END_BLACK_FRAME_COUNT;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_IFRAME_RATE;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_IS_DAR_SPECIFIED;
@@ -69,6 +77,7 @@ import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_AD
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_MAIN_AUDIO;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_MAIN_AUDIO_TRACKS;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PAN_PARAMETER_PREFIX;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_AUDIO_SILENCE_EXPR_PREFIX;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_DEST_SOURCE;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_IS_OSX;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_OUTPUT_ITMSP;
@@ -124,6 +133,8 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         if (contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO) > 0) {
             parseAudioMapAndAddParameters(iTunesInputParameters.getAudiomapFile(), contextProvider);
             logger.info("AudioMap XML has been parsed sucessfully.");
+
+            buildSilenceExprParameters();
         }
 
         //  TODO: define isTtml parameter later
@@ -191,11 +202,11 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         // set frame rate for interlaced scan
         // for ffmpeg iFrameRate=frameRate*2
         // for prenc iFrameRate=frameRate
-        BigFraction frameRate = ConversionHelper.parseEditRate(destContext.getParameterValue(FRAME_RATE));
+        BigFraction iFrameRate = ConversionHelper.parseEditRate(destContext.getParameterValue(FRAME_RATE));
         if (!SystemUtils.IS_OS_MAC_OSX) {
-            frameRate = frameRate.multiply(2);
+            iFrameRate = iFrameRate.multiply(2);
         }
-        destContext.addParameter(DEST_PARAM_VIDEO_IFRAME_RATE, ConversionHelper.toREditRate(frameRate));
+        destContext.addParameter(DEST_PARAM_VIDEO_IFRAME_RATE, ConversionHelper.toREditRate(iFrameRate));
 
         // set end black frame count
         // for ffmpeg count = 1 (if progressive), count = 2 (if interlace)
@@ -205,6 +216,12 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
             count = Boolean.valueOf(interlaced) ? 2 : 1;
         }
         destContext.addParameter(DEST_PARAM_VIDEO_END_BLACK_FRAME_COUNT, String.valueOf(count));
+
+        // set samplesPerFrame (for silence generation)
+        BigFraction sampleRate = ConversionHelper.parseEditRate(destContext.getParameterValue(SAMPLE_RATE));
+        BigFraction frameRate = ConversionHelper.parseEditRate(destContext.getParameterValue(FRAME_RATE));
+        Long samplesPerFrame = sampleRate.divide(frameRate).longValue();
+        destContext.addParameter(DEST_PARAM_AUDIO_SAMPLES_PER_FRAME, String.valueOf(samplesPerFrame));
     }
 
     private void createItmspDir() {
@@ -238,6 +255,8 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
                 : new MetadataXmlProvider(inputParameters.getWorkingDirFile(), metadataFile);
         metadataXmlProvider.updateMetadata(vendorId, locale);
     }
+
+    //  Audio processing
 
     private void parseAudioMapAndAddParameters(File audiomapFile, TemplateParameterContextProvider contextProvider)
             throws XmlParsingException, FileNotFoundException {
@@ -279,6 +298,28 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
             contextProvider.getDynamicContext().addParameter(DYNAMIC_ADDITIONAL_AUDIO_PREFIX + i[0], p);
             i[0]++;
         });
+    }
+
+    private void buildSilenceExprParameters() {
+        contextProvider.getSequenceContext().getUuids(SequenceType.AUDIO).forEach(this::buildSilenceExprParameter);
+    }
+
+    private void buildSilenceExprParameter(SequenceUUID seqUuid) {
+        ContextInfo contextInfo = new ContextInfoBuilder()
+                .setSequenceType(SequenceType.AUDIO)
+                .setSequenceUuid(seqUuid)
+                .build();
+
+        SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
+        String seqNum = sequenceContext.getParameterValue(SequenceContextParameters.NUM, contextInfo);
+        String channelsNum = sequenceContext.getParameterValue(SequenceContextParameters.CHANNELS_NUM, contextInfo);
+
+        contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_AUDIO_SILENCE_EXPR_PREFIX + seqNum,
+                computeSilenceExprParameter(channelsNum));
+    }
+
+    private String computeSilenceExprParameter(String channelsNum) {
+        return StringUtils.repeat("0:", Integer.parseInt(channelsNum));
     }
 
     //  Asset processing
