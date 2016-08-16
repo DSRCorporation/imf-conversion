@@ -199,14 +199,14 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
             if (lastResourceUUID == null) {
                 lastResourceUUID = resourceUUID;
             } else {
-                int lastResourceNum = Integer.valueOf(contextProvider.getResourceContext().
+                int lastResourceNum = Integer.parseInt(contextProvider.getResourceContext().
                         getParameterValue(ResourceContextParameters.NUM,
                                 new ContextInfo(
                                         resourceKey.getSegmentUuid(),
                                         resourceKey.getSequenceUuid(),
                                         resourceKey.getSequenceType(),
                                         lastResourceUUID)));
-                int resourceNum = Integer.valueOf(contextProvider.getResourceContext().
+                int resourceNum = Integer.parseInt(contextProvider.getResourceContext().
                         getParameterValue(ResourceContextParameters.NUM,
                                 new ContextInfo(
                                         resourceKey.getSegmentUuid(),
