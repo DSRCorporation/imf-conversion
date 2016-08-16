@@ -533,28 +533,57 @@
                         %{dynamic.destSource}
                     </execOnce>
 
-                    <!--
-                        Extract each subtitle TTML segment from MXF or just convert external TTML
-                    -->
-                    <execEachSequence type="subtitle" name="convertTTML2ITT" if="%{dynamic.isTTML}">
-                        <execEachSegment name="extract_ttml" if="%{dynamic.isCPL}">
-                            <execOnce name="extract_ttml">
-                                %{tool.asdcp-test} -x "%{seq.num}-%{segm.num}.xml" %{resource.essence}
+                    <!-- Subtitle processing -->
+
+                    <!-- Convert embedded CPL subtitles-->
+                    <if test="%{dynamic.isCplSub}">
+                        <!--
+                            Extract each subtitle TTML segment from MXF and concat TTML for sequence.
+                        -->
+                        <execEachSequence type="subtitle" name="extarct_and_concat_ttml" if="%{dynamic.hasSubtitle}">
+                            <execEachSegment name="extract_ttml">
+                                <execOnce name="extract_ttml">
+                                    %{tool.as-02-unwrap} -x "%{seq.num}-%{segm.num}-%{resource.num}.xml" %{resource.essence}
+                                </execOnce>
+
+                                <!-- to delete intermediate files at the end -->
+                                <dynamicParameter name="ttml-%{seq.num}-%{segm.num}-%{resource.num}" deleteOnExit="true">
+                                    %{seq.num}-%{segm.num}-%{resource.num}.xml
+                                </dynamicParameter>
+
+                                <dynamicParameter name="concatTTML" concat="true">
+                                    --ttml
+                                    %{seq.num}-%{segm.num}-%{resource.num}.xml
+                                    %{resource.offsetTC} %{resource.startTimeTC} %{resource.endTimeTC}
+                                </dynamicParameter>
+                            </execEachSegment>
+
+                            <dynamicParameter name="itt-%{seq.num}" deleteOnExit="true">
+                                itt-%{seq.num}.itt
+                            </dynamicParameter>
+
+                            <execOnce name="convert_ttml_to_itt">
+                                %{dynamic.ttml-to-itt} %{dynamic.concatTTML} --outputITT %{dynamic.itt-%{seq.num}}
                             </execOnce>
-                            <!-- to delete intermediate files at the end -->
-                            <dynamicParameter name="ttml-segment-tmp-%{seq.num}-%{segm.num}" deleteOnExit="true">
-                                %{seq.num}-%{segm.num}.xml
+                        </execEachSequence>
+                    </if>
+
+                    <!--Convert external input subtitles -->
+                    <if test="%{dynamic.isInputParamSub}">
+                        <for iterator="i" count="%{dynamic.ttmlCount}">
+                            <dynamicParameter name="itt-%{i}" deleteOnExit="true">
+                                itt-%{i}.itt
                             </dynamicParameter>
 
-                            <dynamicParameter name="concatTTML" concat="true">--ttml %{seq.num}-%{segm.num}.xml %{resource.offsetTC}
-                                %{resource.startTimeTC} %{resource.endTimeTC}
+                            <dynamicParameter name="exec">
+                                %{dynamic.ttml-to-itt} %{dynamic.ttml-%{i}} --outputITT %{dynamic.itt-%{i}}
                             </dynamicParameter>
-                        </execEachSegment>
 
-                        <execOnce name="convert_ttml_to_itt">
-                            %{tool.java} subtitleConverter.java %{dynamic.concatTTML} --outputITT %{dynamic.vendorId}-%{seq.subLang}.itt
-                        </execOnce>
-                    </execEachSequence>
+                            <execOnce name="convert_ttml_to_itt">
+                                %{dynamic.exec}
+                            </execOnce>
+                        </for>
+                    </if>
 
                 </formatConfiguration>
             </formatConfigurations>

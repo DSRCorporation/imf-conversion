@@ -30,6 +30,7 @@ public final class ITunesConversionConstants {
     public static final String CONVERSION_XML = "xml/itunes-conversion.xml";
 
     // common dynamic parameters:
+    public static final String DYNAMIC_PARAM_TTML_TO_ITT = "ttml-to-itt";
     public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "outputItmsp";
     public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
     public static final String DYNAMIC_PARAM_DEST_SOURCE = "destSource";
@@ -67,5 +68,9 @@ public final class ITunesConversionConstants {
     public static final String DYNAMIC_PARAM_AUDIO_SILENCE_EXPR_PREFIX = "silenceExpr";
 
     // subtitle dynamic parameters:
-    public static final String DYNAMIC_SUBTITLE_IS_TTML = "isTtml";
+    public static final String DYNAMIC_PARAM_SUBTITLE_IS_CPL_SUB = "isCplSub";
+    public static final String DYNAMIC_PARAM_SUBTITLE_IS_INPUT_PARAM_SUB = "isInputParamSub";
+    public static final String DYNAMIC_PARAM_SUBTITLE_TTML_COUNT = "ttmlCount";
+    public static final String DYNAMIC_PARAM_SUBTITLE_TTML_PREFIX = "ttml-";
+    public static final String DYNAMIC_PARAM_SUBTITLE_ITT_PREFIX = "itt-";
 }

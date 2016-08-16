@@ -43,7 +43,6 @@ public class ITunesInputParameters extends ImfUtilityInputParameters {
         this.defaultTools = defaultTools;
     }
 
-
     @Override
     public InputStream getDefaultConversionXml() {
         return ResourceHelper.getResourceInputStream(ITunesConversionConstants.CONVERSION_XML);
@@ -115,7 +114,7 @@ public class ITunesInputParameters extends ImfUtilityInputParameters {
     }
 
     /**
-     * Gets a trailer file as specified via command line arguments or null if it's not specified.
+     * Gets a closed caption files as specified via command line arguments or null if it's not specified.
      *
      * @return a trailer file as specified via command line arguments or null if it's not specified.
      */
@@ -128,8 +127,31 @@ public class ITunesInputParameters extends ImfUtilityInputParameters {
                 .map(File::new).collect(Collectors.toList());
     }
 
+    /**
+     * Gets a subtitle files as specified via command line arguments or null if it's not specified.
+     *
+     * @return a trailer file as specified via command line arguments or null if it's not specified.
+     */
+    public List<File> getSubFiles() {
+        if (cmdLineArgs.getSub() == null || cmdLineArgs.getSub().isEmpty()) {
+            return null;
+        }
+        return cmdLineArgs.getSub().stream()
+                .filter(Predicate.isEqual(null).negate())
+                .map(File::new).collect(Collectors.toList());
+    }
+
     @Override
     public ITunesCmdLineArgs getCmdLineArgs() {
         return cmdLineArgs;
+    }
+
+    /**
+     * Gets an ttml to itt subtitle conversion tool executable.
+     *
+     * @return ttml to itt subtitle conversion tool executable
+     */
+    public String getTtmlToIttTool() {
+        return defaultTools.getTtmlToIttTool();
     }
 }

@@ -23,6 +23,7 @@ import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
 import com.netflix.imfutility.itunes.util.AssetUtils;
+import com.netflix.imfutility.itunes.util.TestUtils;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.apache.commons.io.FileUtils;
@@ -38,11 +39,10 @@ import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
 /**
- * Tests additional audio source asset processing.
- * (see {@link AudioAssetProcessor}).
+ * Tests subtitles asset processing.
+ * (see {@link SubtitlesAssetProcessor}).
  */
-public class AudioAssetProcessorTest {
-
+public class SubtitlesAssetProcessorTest {
     @BeforeClass
     public static void setupAll() throws IOException {
         // create both working directory and logs folder.
@@ -59,39 +59,38 @@ public class AudioAssetProcessorTest {
     }
 
     @Test
-    public void testCorrectSource() throws Exception {
+    public void testCorrectSubtitles() throws Exception {
         File destDir = new File(TemplateParameterContextCreator.getWorkingDir(), "destDir");
         destDir.mkdir();
 
-        File inputAsset = new File(TemplateParameterContextCreator.getWorkingDir(), "audio");
+        File inputAsset = new File(TemplateParameterContextCreator.getWorkingDir(), "subtitles");
         inputAsset.createNewFile();
 
         MetadataXmlProvider metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
-        AudioAssetProcessor processor = new AudioAssetProcessor(metadataXmlProvider, destDir);
+        SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(metadataXmlProvider, destDir);
 
-        processor.setLocale(AssetUtils.createLocale("en-US"))
+        processor.setLocale(AssetUtils.createLocale("fr-CA"))
                 .process(inputAsset);
 
         // input asset must be moved to dest dir
         assertFalse(inputAsset.exists());
 
-        File outputAsset = new File(destDir, "audio");
+        File outputAsset = new File(destDir, "Subtitles_FR_CA.itt");
         assertTrue(outputAsset.exists());
         assertTrue(outputAsset.isFile());
 
+        AssetType subtitlesAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
+        assertEquals(AssetTypeType.FULL, subtitlesAsset.getType());
 
-        AssetType audioAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
-        assertEquals(AssetTypeType.FULL, audioAsset.getType());
-
-        DataFileType audioDataFile = audioAsset.getDataFile().get(0);
-        assertEquals("audio", audioDataFile.getFileName());
-        assertEquals(DataFileRoleType.AUDIO, audioDataFile.getRole());
-        assertEquals("en-US", audioDataFile.getLocale().getName());
+        DataFileType subtitlesDataFile = subtitlesAsset.getDataFile().get(0);
+        assertEquals("Subtitles_FR_CA.itt", subtitlesDataFile.getFileName());
+        assertEquals(DataFileRoleType.SUBTITLES, subtitlesDataFile.getRole());
+        assertEquals("fr-CA", subtitlesDataFile.getLocale().getName());
     }
 
     @Test(expected = AssetValidationException.class)
     public void testInvalidPath() throws Exception {
-        AudioAssetProcessor processor = new AudioAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setLocale(AssetUtils.createLocale("en-US"))
@@ -100,13 +99,13 @@ public class AudioAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testParametersNotSet() throws Exception {
-        File inputAsset = new File(TemplateParameterContextCreator.getWorkingDir(), "audio");
+        File inputAsset = new File(TemplateParameterContextCreator.getWorkingDir(), "subtitles");
         inputAsset.createNewFile();
 
-        AudioAssetProcessor processor = new AudioAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
         //  locale is required
-        processor.process(inputAsset);
+        processor.process(TestUtils.getTestFile());
     }
 }

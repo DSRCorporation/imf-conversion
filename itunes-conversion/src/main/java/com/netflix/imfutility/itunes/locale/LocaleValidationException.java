@@ -16,20 +16,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.inputparameters;
+package com.netflix.imfutility.itunes.locale;
+
+import com.netflix.imfutility.ConversionException;
 
 /**
- * Default tools mock for tests.
+ * Exception to throw when locale validation failed.
  */
-public class ITunesFakeDefaultTools implements ITunesDefaultTools {
+public class LocaleValidationException extends ConversionException {
 
-    @Override
-    public String getImfValidationTool() {
-        return "java -jar somejar.jar";
+    public LocaleValidationException(String message) {
+        super(message);
     }
 
-    @Override
-    public String getTtmlToIttTool() {
-        return "java -jar somejar.jar";
+    public LocaleValidationException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

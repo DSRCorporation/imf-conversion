@@ -108,14 +108,22 @@ public interface ITunesCmdLineArgs extends ImfUtilityCmdLineArgs {
     String getChapters();
 
     @Option(
-            description = "a paths to external caption assets. "
-                    + " ('convert' mode only)."
-                    + " If not set, then only CPL TTML will be processed."
-                    + " Otherwise only the specified TTML will be converted to ITT and SCC will be passed through.",
+            description = "a paths to external closed captions. "
+                    + " ('convert' mode only).",
             longName = {"cc"},
             defaultToNull = true
     )
     List<String> getCc();
+
+    @Option(
+            description = "a paths to external subtitles. "
+                    + " ('convert' mode only)."
+                    + " If not set, then only CPL TTML will be processed."
+                    + " Otherwise only the specified TTML will be converted to ITT.",
+            longName = {"sub"},
+            defaultToNull = true
+    )
+    List<String> getSub();
 
     @Option(
             description = "A main locale of iTunes package. "

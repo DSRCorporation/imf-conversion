@@ -33,9 +33,11 @@ import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
 import com.netflix.imfutility.generated.mediainfo.FfprobeType;
 import com.netflix.imfutility.itunes.asset.AudioAssetProcessor;
+import com.netflix.imfutility.itunes.asset.CaptionsAssetProcessor;
 import com.netflix.imfutility.itunes.asset.ChapterAssetProcessor;
 import com.netflix.imfutility.itunes.asset.PosterAssetProcessor;
 import com.netflix.imfutility.itunes.asset.SourceAssetProcessor;
+import com.netflix.imfutility.itunes.asset.SubtitlesAssetProcessor;
 import com.netflix.imfutility.itunes.asset.TrailerAssetProcessor;
 import com.netflix.imfutility.itunes.destcontext.DestContextResolveStrategy;
 import com.netflix.imfutility.itunes.destcontext.InputDestContextResolveStrategy;
@@ -61,6 +63,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.IntStream;
 
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.ASPECT_RATIO;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.DAR;
@@ -81,10 +85,15 @@ import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PA
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_DEST_SOURCE;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_IS_OSX;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_OUTPUT_ITMSP;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_SUBTITLE_IS_CPL_SUB;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_SUBTITLE_IS_INPUT_PARAM_SUB;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_SUBTITLE_ITT_PREFIX;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_SUBTITLE_TTML_COUNT;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_SUBTITLE_TTML_PREFIX;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_TTML_TO_ITT;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_VENDOR_ID;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_SUBTITLE_IS_TTML;
 
 /**
  * iTunes format builder (see {@link AbstractFormatBuilder}). It's used for conversion to iTunes format ('convert' iTunes mode).
@@ -97,6 +106,8 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     private File itmspDir;
     private MetadataXmlProvider metadataXmlProvider;
     private AudioMapXmlProvider audioMapXmlProvider;
+
+    private List<File> ittFiles;
 
     public ITunesFormatBuilder(ITunesInputParameters inputParameters) {
         super(new ITunesFormat(), inputParameters);
@@ -112,6 +123,9 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     protected void doBuildDynamicContextPreCpl() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
 
+        //  fill ttml-to-itt tool parameter
+        dynamicContext.addParameter(DYNAMIC_PARAM_TTML_TO_ITT, iTunesInputParameters.getTtmlToIttTool());
+
         // fill vendorId parameter
         String vendorId = iTunesInputParameters.getCmdLineArgs().getVendorId();
         dynamicContext.addParameter(DYNAMIC_PARAM_VENDOR_ID, vendorId);
@@ -123,6 +137,11 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         // fill destination main source path
         String destSource = itmspName + File.separator + vendorId + "-source.mov";
         dynamicContext.addParameter(DYNAMIC_PARAM_DEST_SOURCE, destSource, false);
+
+        // fill subtitle input source
+        boolean isCplSub = iTunesInputParameters.getSubFiles() == null;
+        dynamicContext.addParameter(DYNAMIC_PARAM_SUBTITLE_IS_CPL_SUB, Boolean.toString(isCplSub));
+        dynamicContext.addParameter(DYNAMIC_PARAM_SUBTITLE_IS_INPUT_PARAM_SUB, Boolean.toString(!isCplSub));
 
         setOSParameters();
     }
@@ -137,8 +156,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
             buildSilenceExprParameters();
         }
 
-        //  TODO: define isTtml parameter later
-        contextProvider.getDynamicContext().addParameter(DYNAMIC_SUBTITLE_IS_TTML, "false");
+        buildSubtitleInputParameters();
     }
 
     @Override
@@ -160,6 +178,10 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
         // process additional audios (if exists)
         processAdditionalAudios();
+
+        // process subtitles and closed captions (if exists)
+        processCaptions();
+        processSubtitles();
 
         metadataXmlProvider.saveMetadata(itmspDir.getName());
     }
@@ -279,7 +301,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
         // additionalAudioTracks%{i}
         i[0] = 0;
-        audioMapXmlProvider.getAdditionalAudioTracks().stream().forEach((p) -> {
+        audioMapXmlProvider.getAdditionalAudioTracks().forEach((p) -> {
             contextProvider.getDynamicContext().addParameter(DYNAMIC_ADDITIONAL_AUDIO_TRACKS_PREFIX + i[0],
                     p.toString());
             i[0]++;
@@ -287,14 +309,14 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
         // panParameter%{i}
         i[0] = 0;
-        audioMapXmlProvider.getPanParameters().stream().forEach((p) -> {
+        audioMapXmlProvider.getPanParameters().forEach((p) -> {
             contextProvider.getDynamicContext().addParameter(DYNAMIC_PAN_PARAMETER_PREFIX + i[0], p);
             i[0]++;
         });
 
         // additionalAudio%{i}
         i[0] = 0;
-        audioMapXmlProvider.getAdditionalAudioFileNames().stream().forEach((p) -> {
+        audioMapXmlProvider.getAdditionalAudioFileNames().forEach((p) -> {
             contextProvider.getDynamicContext().addParameter(DYNAMIC_ADDITIONAL_AUDIO_PREFIX + i[0], p);
             i[0]++;
         });
@@ -320,6 +342,24 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
     private String computeSilenceExprParameter(String channelsNum) {
         return StringUtils.repeat("0:", Integer.parseInt(channelsNum));
+    }
+
+    //  Subtitle processing
+
+    private void buildSubtitleInputParameters() {
+        if (iTunesInputParameters.getSubFiles() == null) {
+            return;
+        }
+
+        iTunesInputParameters.getSubFiles().forEach(this::buildSubtitleInputParameter);
+
+        int count = iTunesInputParameters.getSubFiles().size();
+        contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_SUBTITLE_TTML_COUNT, String.valueOf(count));
+    }
+
+    private void buildSubtitleInputParameter(File subtitles) {
+        int num = iTunesInputParameters.getSubFiles().indexOf(subtitles);
+        contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_SUBTITLE_TTML_PREFIX + num, subtitles.getAbsolutePath());
     }
 
     //  Asset processing
@@ -416,6 +456,68 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
                 .process(audio);
     }
 
+    // Subtitles and closed captions processing
+
+    private void processSubtitles() {
+        int count = iTunesInputParameters.getSubFiles() == null
+                ? contextProvider.getSequenceContext().getSequenceCount(SequenceType.SUBTITLE)
+                : iTunesInputParameters.getSubFiles().size();
+
+        if (count == 0) {
+            return;
+        }
+
+        IntStream.range(0, count)
+                .mapToObj(i -> DYNAMIC_PARAM_SUBTITLE_ITT_PREFIX + i)
+                .map(fileName -> new File(inputParameters.getWorkingDirFile(), fileName))
+                .forEach(this::safeProcessSubtitles);
+    }
+
+    private void safeProcessSubtitles(File subtitles) {
+        try {
+            processSubtitles(subtitles);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void processSubtitles(File subtitles) throws IOException {
+        new SubtitlesAssetProcessor(metadataXmlProvider, itmspDir)
+                .setLocale(metadataXmlProvider.getDefaultLocale()) // TODO: get locale from itt file
+                .process(subtitles);
+    }
+
+    private void processCaptions() {
+        if (iTunesInputParameters.getCcFiles() == null) {
+            return;
+        }
+
+        iTunesInputParameters.getCcFiles().forEach(this::safeProcessCaptions);
+    }
+
+    private void safeProcessCaptions(File captions) {
+        try {
+            processCaptions(captions);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void processCaptions(File captions) throws IOException {
+        new CaptionsAssetProcessor(metadataXmlProvider, itmspDir)
+                .setVendorId(iTunesInputParameters.getCmdLineArgs().getVendorId())
+                .process(captions);
+    }
+
+    /**
+     * Get ffprobe media info for trailer.
+     * For correct work &lt;mediaInfoCommandOthers&gt; must contain &lt;mediaInfoCommand&gt; with name 'trailer' in conversion.xml
+     *
+     * @param trailer - a trailer file.
+     * @return media info for input trailer.
+     * @throws XmlParsingException
+     * @throws IOException
+     */
     private FfprobeType getTrailerMediaInfo(File trailer) throws XmlParsingException, IOException {
         try {
             return new SimpleMediaInfoBuilder(contextProvider, new ConversionEngine().getExecuteStrategyFactory())

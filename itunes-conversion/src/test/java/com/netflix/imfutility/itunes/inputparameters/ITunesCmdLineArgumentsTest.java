@@ -55,7 +55,8 @@ public class ITunesCmdLineArgumentsTest {
                 "--trailer", "trailer.mov",
                 "--poster", "poster.jpg",
                 "--chapters", "chapters.xml",
-                "--cc", "c0.ttml", "c1.ttml", "c2.ttml", "c3.ttml",
+                "--cc", "c0.scc", "c1.scc", "c2.scc", "c3.scc",
+                "--sub", "t0.ttml", "t1.ttml", "t2.ttml",
                 "--fallback-locale", "en-US",
                 "--output", "output"
         };
@@ -73,10 +74,16 @@ public class ITunesCmdLineArgumentsTest {
 
         assertNotNull(cmdLineArgs.getCc());
         assertEquals(4, cmdLineArgs.getCc().size());
-        assertEquals("c0.ttml", cmdLineArgs.getCc().get(0));
-        assertEquals("c1.ttml", cmdLineArgs.getCc().get(1));
-        assertEquals("c2.ttml", cmdLineArgs.getCc().get(2));
-        assertEquals("c3.ttml", cmdLineArgs.getCc().get(3));
+        assertEquals("c0.scc", cmdLineArgs.getCc().get(0));
+        assertEquals("c1.scc", cmdLineArgs.getCc().get(1));
+        assertEquals("c2.scc", cmdLineArgs.getCc().get(2));
+        assertEquals("c3.scc", cmdLineArgs.getCc().get(3));
+
+        assertNotNull(cmdLineArgs.getSub());
+        assertEquals(3, cmdLineArgs.getSub().size());
+        assertEquals("t0.ttml", cmdLineArgs.getSub().get(0));
+        assertEquals("t1.ttml", cmdLineArgs.getSub().get(1));
+        assertEquals("t2.ttml", cmdLineArgs.getSub().get(2));
     }
 
     @Test(expected = ArgumentValidationException.class)

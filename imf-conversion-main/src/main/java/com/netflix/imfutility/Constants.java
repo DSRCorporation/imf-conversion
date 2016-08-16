@@ -27,6 +27,7 @@ public final class Constants {
 
     public static final String IMF_VALIDATION_PATH = "../tools/imf-validation.jar";
     public static final String TTML_TO_STL_PATH = "../tools/ttml-to-stl.jar";
+    public static final String TTML_TO_ITT_PATH = "../tools/ttml-to-itt.jar";
 
     private Constants() {
     }
