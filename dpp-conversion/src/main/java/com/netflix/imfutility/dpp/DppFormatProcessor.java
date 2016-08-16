@@ -19,10 +19,12 @@
 package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.dpp.audio.AudioMapXmlCreator;
 import com.netflix.imfutility.dpp.inputparameters.DppCmdLineArgs;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParametersValidator;
 import com.netflix.imfutility.dpp.inputparameters.IDppDefaultTools;
+import com.netflix.imfutility.dpp.metadata.MetadataXmlCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +70,7 @@ public class DppFormatProcessor {
     private int processMetadataMode(DppInputParameters inputParameters) {
         logger.info("Metadata mode\n");
         logger.info("Generating a sample Metadata.xml file {}", inputParameters.getCmdLineArgs().getOutput());
-        MetadataXmlProvider.generateEmptyXml(inputParameters.getCmdLineArgs().getOutput());
+        MetadataXmlCreator.generateEmptyXml(inputParameters.getCmdLineArgs().getOutput());
         logger.info("Generated a sample Metadata.xml file: OK");
         return 0;
     }
@@ -76,7 +78,7 @@ public class DppFormatProcessor {
     private int processAudiomapMode(DppInputParameters inputParameters) {
         logger.info("Audiomap mode\n");
         logger.info("Generating a sample Audiomap.xml file {}", inputParameters.getCmdLineArgs().getOutput());
-        AudioMapXmlProvider.generateSampleXml(inputParameters.getCmdLineArgs().getOutput());
+        AudioMapXmlCreator.generateSampleXml(inputParameters.getCmdLineArgs().getOutput());
         logger.info("Generated a sample Audiomap.xml file: OK");
         return 0;
     }

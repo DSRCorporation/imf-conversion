@@ -28,8 +28,8 @@ import com.netflix.imfutility.conversion.templateParameter.context.SequenceTempl
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
-import com.netflix.imfutility.cpl.essencedescriptor.EssenceDescriptorProcessor;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
+import com.netflix.imfutility.cpl.essencedescriptor.EssenceDescriptorProcessor;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
@@ -86,8 +86,9 @@ public abstract class AbstractCplContextBuilderStrategy implements ICplContextBu
         // 4. process essence descriptors
         new EssenceDescriptorProcessor(getEssenceDescriptors(), contextProvider).build();
 
-        // 5. define languages for all sequences
-        buildSequenceLanguages();
+        // 5. define default languages for all sequences from CPL, if it's not defined in essence descriptors
+        buildDefaultSequenceLanguages();
+
     }
 
     @Override
@@ -315,19 +316,20 @@ public abstract class AbstractCplContextBuilderStrategy implements ICplContextBu
         }
     }
 
-    private void buildSequenceLanguages() {
+    private void buildDefaultSequenceLanguages() {
         SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
         for (SequenceType seqType : sequenceContext.getSequenceTypes()) {
             for (SequenceUUID seqUuid : sequenceContext.getUuids(seqType)) {
-                String language = getSequenceLanguage(seqUuid);
+                String language = getDefaultCplLanguage();
 
-                if (language != null) {
+                ContextInfo contextInfo = new ContextInfoBuilder().setSequenceType(seqType).setSequenceUuid(seqUuid).build();
+                if (language != null && !sequenceContext.hasSequenceParameter(SequenceContextParameters.LANGUAGE, contextInfo)) {
                     sequenceContext.addSequenceParameter(seqType, seqUuid, SequenceContextParameters.LANGUAGE, language);
                 }
             }
         }
     }
 
-    protected abstract String getSequenceLanguage(SequenceUUID seqUuid);
+    protected abstract String getDefaultCplLanguage();
 
 }

@@ -24,7 +24,9 @@ import com.netflix.imfutility.conversion.templateParameter.context.DynamicTempla
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.dpp.MetadataXmlProvider.DMFramework;
+import com.netflix.imfutility.dpp.metadata.MetadataXmlProvider;
+import com.netflix.imfutility.dpp.metadata.MetadataXmlProvider.DMFramework;
+import com.netflix.imfutility.dpp.audio.AudioMapXmlProvider;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParametersValidator;
 import com.netflix.imfutility.generated.conversion.SequenceType;

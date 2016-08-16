@@ -257,7 +257,8 @@ public class Cpl2016ContextBuilderStrategy extends AbstractCplContextBuilderStra
                 ResourceContextParameters.ESSENCE_DESC_ID, essenceDescId);
     }
 
-    private String getDefaultCplLanguage() {
+    @Override
+    protected String getDefaultCplLanguage() {
         // assume default language to be first language of first locale
         LocaleList localeList = cpl2016.getLocaleList();
         //  no locales defined
@@ -280,10 +281,4 @@ public class Cpl2016ContextBuilderStrategy extends AbstractCplContextBuilderStra
         return language.orElse(null);
     }
 
-    @Override
-    protected String getSequenceLanguage(SequenceUUID seqUuid) {
-        //  TODO: define sequence language from EssenceDescriptor
-        // fallback to default language
-        return getDefaultCplLanguage();
-    }
 }
