@@ -28,10 +28,13 @@ import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.util.ConfigUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.util.conversion.executor.TestConversionEngine;
-import static org.junit.Assert.assertEquals;
+import com.netflix.imfutility.util.conversion.executor.TestExecutorLogger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Tests 'for' conversion operation.
@@ -39,10 +42,12 @@ import org.junit.Test;
 public class ConversionExecutorForTest {
 
     private static TestConversionEngine conversionEngine;
+    private static TestExecutorLogger executorLogger;
 
     @BeforeClass
     public static void setUpAll() throws Exception {
         conversionEngine = new TestConversionEngine();
+        executorLogger = conversionEngine.getExecutorLogger();
     }
 
     @Before
@@ -62,7 +67,7 @@ public class ConversionExecutorForTest {
                 new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
         TemplateParameterContextProvider contextProvider =
                 new TemplateParameterContextProvider(configProvider, conversionProvider,
-                TemplateParameterContextCreator.getCurrentTmpDir());
+                        TemplateParameterContextCreator.getCurrentTmpDir());
 
         contextProvider.getDynamicContext().addParameter("fromI", "0");
         contextProvider.getDynamicContext().addParameter("toI", "4");
@@ -85,7 +90,7 @@ public class ConversionExecutorForTest {
                 new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
         TemplateParameterContextProvider contextProvider =
                 new TemplateParameterContextProvider(configProvider, conversionProvider,
-                TemplateParameterContextCreator.getCurrentTmpDir());
+                        TemplateParameterContextCreator.getCurrentTmpDir());
 
         contextProvider.getDynamicContext().addParameter("fromI", "3");
         contextProvider.getDynamicContext().addParameter("countI", "4");
@@ -108,7 +113,7 @@ public class ConversionExecutorForTest {
                 new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
         TemplateParameterContextProvider contextProvider =
                 new TemplateParameterContextProvider(configProvider, conversionProvider,
-                TemplateParameterContextCreator.getCurrentTmpDir());
+                        TemplateParameterContextCreator.getCurrentTmpDir());
 
         contextProvider.getDynamicContext().addParameter("fromI", "3");
         contextProvider.getDynamicContext().addParameter("toI", "4");
@@ -132,13 +137,85 @@ public class ConversionExecutorForTest {
                 new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
         TemplateParameterContextProvider contextProvider =
                 new TemplateParameterContextProvider(configProvider, conversionProvider,
-                TemplateParameterContextCreator.getCurrentTmpDir());
+                        TemplateParameterContextCreator.getCurrentTmpDir());
 
         /* PERFORMING */
         conversionEngine.convert(conversionProvider.getFormatConfigurationType("test"), contextProvider);
 
         /* VERIFICATION */
         assertEquals("|2|3|4|5", contextProvider.getDynamicContext().getParameterValueAsString("output"));
+    }
+
+    @Test
+    public void cycleWithExecWorks() throws Exception {
+        /* INITIALIZATION */
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider(
+                "xml/for-operation/test-for-operation-exec.xml");
+
+        /* PERFORMING */
+        conversionEngine.convert(contextProvider.getConversionProvider().getFormatConfigurationType("exec"), contextProvider);
+
+        /* VERIFICATION */
+        executorLogger.assertNextStart("execFor, TestExecuteOnceStrategy, execForExec ERR_LOG", 1);
+        executorLogger.assertNextFinish("execFor, TestExecuteOnceStrategy, execForExec ERR_LOG", 1);
+        executorLogger.assertNextStart("execFor, TestExecuteOnceStrategy, execForExec ERR_LOG", 2);
+        executorLogger.assertNextFinish("execFor, TestExecuteOnceStrategy, execForExec ERR_LOG", 2);
+        assertFalse("There are more executed processes than expected!", executorLogger.hasNext());
+    }
+
+    @Test
+    public void cycleWithFromAndToExecWorks() throws Exception {
+        /* INITIALIZATION */
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider(
+                "xml/for-operation/test-for-operation-exec.xml");
+
+        /* PERFORMING */
+        conversionEngine.convert(contextProvider.getConversionProvider().getFormatConfigurationType("fromTo"), contextProvider);
+
+        /* VERIFICATION */
+        executorLogger.assertNextStart("execFor, TestExecuteOnceStrategy, execFor4Exec ERR_LOG", 1);
+        executorLogger.assertNextFinish("execFor, TestExecuteOnceStrategy, execFor4Exec ERR_LOG", 1);
+        executorLogger.assertNextStart("execFor, TestExecuteOnceStrategy, execFor5Exec ERR_LOG", 2);
+        executorLogger.assertNextFinish("execFor, TestExecuteOnceStrategy, execFor5Exec ERR_LOG", 2);
+        assertFalse("There are more executed processes than expected!", executorLogger.hasNext());
+    }
+
+    @Test
+    public void cycleWithFromAndCountExecWorks() throws Exception {
+        /* INITIALIZATION */
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider(
+                "xml/for-operation/test-for-operation-exec.xml");
+
+        /* PERFORMING */
+        conversionEngine.convert(contextProvider.getConversionProvider().getFormatConfigurationType("fromCount"), contextProvider);
+
+        /* VERIFICATION */
+        executorLogger.assertNextStart("execFor, TestExecuteOnceStrategy, execFor1Exec ERR_LOG", 1);
+        executorLogger.assertNextFinish("execFor, TestExecuteOnceStrategy, execFor1Exec ERR_LOG", 1);
+        executorLogger.assertNextStart("execFor, TestExecuteOnceStrategy, execFor2Exec ERR_LOG", 2);
+        executorLogger.assertNextFinish("execFor, TestExecuteOnceStrategy, execFor2Exec ERR_LOG", 2);
+        executorLogger.assertNextStart("execFor, TestExecuteOnceStrategy, execFor3Exec ERR_LOG", 3);
+        executorLogger.assertNextFinish("execFor, TestExecuteOnceStrategy, execFor3Exec ERR_LOG", 3);
+        assertFalse("There are more executed processes than expected!", executorLogger.hasNext());
+    }
+
+    @Test
+    public void cycleWithFromAndToAndCountExecWorks() throws Exception {
+        /* INITIALIZATION */
+        TemplateParameterContextProvider contextProvider = TemplateParameterContextCreator.createDefaultContextProvider(
+                "xml/for-operation/test-for-operation-exec.xml");
+
+        /* PERFORMING */
+        conversionEngine.convert(contextProvider.getConversionProvider().getFormatConfigurationType("fromToCount"), contextProvider);
+
+        /* VERIFICATION */
+        executorLogger.assertNextStart("execFor, TestExecuteOnceStrategy, execFor0Exec ERR_LOG", 1);
+        executorLogger.assertNextFinish("execFor, TestExecuteOnceStrategy, execFor0Exec ERR_LOG", 1);
+        executorLogger.assertNextStart("execFor, TestExecuteOnceStrategy, execFor1Exec ERR_LOG", 2);
+        executorLogger.assertNextFinish("execFor, TestExecuteOnceStrategy, execFor1Exec ERR_LOG", 2);
+        executorLogger.assertNextStart("execFor, TestExecuteOnceStrategy, execFor2Exec ERR_LOG", 3);
+        executorLogger.assertNextFinish("execFor, TestExecuteOnceStrategy, execFor2Exec ERR_LOG", 3);
+        assertFalse("There are more executed processes than expected!", executorLogger.hasNext());
     }
 
     @Test(expected = ConversionException.class)
@@ -152,7 +229,7 @@ public class ConversionExecutorForTest {
                 new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
         TemplateParameterContextProvider contextProvider =
                 new TemplateParameterContextProvider(configProvider, conversionProvider,
-                TemplateParameterContextCreator.getCurrentTmpDir());
+                        TemplateParameterContextCreator.getCurrentTmpDir());
 
         contextProvider.getDynamicContext().addParameter("fromI", "test");
         contextProvider.getDynamicContext().addParameter("toI", "4");
@@ -175,7 +252,7 @@ public class ConversionExecutorForTest {
                 new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
         TemplateParameterContextProvider contextProvider =
                 new TemplateParameterContextProvider(configProvider, conversionProvider,
-                TemplateParameterContextCreator.getCurrentTmpDir());
+                        TemplateParameterContextCreator.getCurrentTmpDir());
 
         contextProvider.getDynamicContext().addParameter("fromI", "2");
         contextProvider.getDynamicContext().addParameter("toI", "test");
@@ -198,7 +275,7 @@ public class ConversionExecutorForTest {
                 new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
         TemplateParameterContextProvider contextProvider =
                 new TemplateParameterContextProvider(configProvider, conversionProvider,
-                TemplateParameterContextCreator.getCurrentTmpDir());
+                        TemplateParameterContextCreator.getCurrentTmpDir());
 
         contextProvider.getDynamicContext().addParameter("fromI", "3");
         contextProvider.getDynamicContext().addParameter("toI", "4");
@@ -227,7 +304,7 @@ public class ConversionExecutorForTest {
                 new ConfigXmlProvider(ResourceHelper.getResourceInputStream(configXml), configXml);
         TemplateParameterContextProvider contextProvider =
                 new TemplateParameterContextProvider(configProvider, conversionProvider,
-                TemplateParameterContextCreator.getCurrentTmpDir());
+                        TemplateParameterContextCreator.getCurrentTmpDir());
 
         contextProvider.getDynamicContext().addParameter("fromI", "0");
         contextProvider.getDynamicContext().addParameter("toI", "2");
