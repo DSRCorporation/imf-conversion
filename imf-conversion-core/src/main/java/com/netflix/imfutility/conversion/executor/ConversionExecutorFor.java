@@ -24,7 +24,9 @@ import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.generated.conversion.DynamicParameterConcatType;
+import com.netflix.imfutility.generated.conversion.ExecOnceType;
 import com.netflix.imfutility.generated.conversion.ForType;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,13 +41,13 @@ public class ConversionExecutorFor extends AbstractConversionExecutor {
     private final Map<String, Integer> iterators;
 
     public ConversionExecutorFor(TemplateParameterContextProvider contextProvider,
-            ExecuteStrategyFactory executeStrategyFactory, ForType forElem) {
+                                 ExecuteStrategyFactory executeStrategyFactory, ForType forElem) {
 
         this(contextProvider, executeStrategyFactory, forElem, new HashMap<>());
     }
 
     public ConversionExecutorFor(TemplateParameterContextProvider contextProvider,
-            ExecuteStrategyFactory executeStrategyFactory, ForType forElem, Map<String, Integer> iterators) {
+                                 ExecuteStrategyFactory executeStrategyFactory, ForType forElem, Map<String, Integer> iterators) {
 
         super(contextProvider, executeStrategyFactory);
 
@@ -76,10 +78,11 @@ public class ConversionExecutorFor extends AbstractConversionExecutor {
         iterators.put(iterator, from);
         for (int i = 0; i < internalCounter; i++) {
 
-            for (Object operation : forElem.getDynamicParameterOrFor()) {
+            for (Object operation : forElem.getDynamicParameterOrExecOnceOrFor()) {
                 if (operation instanceof ForType) {
-                    new ConversionExecutorFor(contextProvider,
-                            executeStrategyFactory, (ForType) operation, iterators).execute();
+                    new ConversionExecutorFor(contextProvider, executeStrategyFactory, (ForType) operation, iterators).execute();
+                } else if (operation instanceof ExecOnceType) {
+                    new ConversionExecutorOnce(contextProvider, executeStrategyFactory, (ExecOnceType) operation).execute();
                 } else if (operation instanceof DynamicParameterConcatType) {
                     addDynamicParameter((DynamicParameterConcatType) operation, iterators);
                 } else {

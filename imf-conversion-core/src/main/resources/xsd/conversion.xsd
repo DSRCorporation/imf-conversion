@@ -386,6 +386,7 @@
         <xs:sequence>
             <xs:choice maxOccurs="unbounded" minOccurs="1">
                 <xs:element type="dynamicParameterConcatType" name="dynamicParameter"/>
+                <xs:element type="execOnceType" name="execOnce"/>
                 <xs:element type="forType" name="for"/>
             </xs:choice>
         </xs:sequence>
