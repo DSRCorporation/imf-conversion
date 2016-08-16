@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Created: Thu Sep 17 15:28:16 CEST 2015--><!--By: regxmllib build c989a02ac80facc24e018a54c4010dd8c2d27451--><!--See: https://github.com/sandflow/regxmllib--><xs:schema xmlns:r0="http://www.smpte-ra.org/reg/335/2012" xmlns:reg="http://sandflow.com/ns/SMPTEST2001-1/baseline"  attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.smpte-ra.org/reg/395/2014" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:import namespace="http://www.smpte-ra.org/reg/335/2012"/>
+<xs:import namespace="http://sandflow.com/ns/SMPTEST2001-1/baseline"/>
+<xs:element name="LensUnitAcquisitionMetadata">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:LensZoomActualFocalLength"/>
+<xs:element minOccurs="0" ref="r0:LensAttributes"/>
+<xs:element minOccurs="0" ref="r0:IrisFNumber"/>
+<xs:element minOccurs="0" ref="r0:FocusRingPosition"/>
+<xs:element minOccurs="0" ref="r0:ZoomRingPosition"/>
+<xs:element minOccurs="0" ref="r0:IrisRingPosition"/>
+<xs:element minOccurs="0" ref="r0:FocusPositionFromFrontLensVertex"/>
+<xs:element minOccurs="0" ref="r0:IrisTNumber"/>
+<xs:element minOccurs="0" ref="r0:FocusPositionFromImagePlane"/>
+<xs:element minOccurs="0" ref="r0:OpticalExtenderMagnification"/>
+<xs:element minOccurs="0" ref="r0:MacroSetting"/>
+<xs:element minOccurs="0" ref="r0:LensZoom35mmStillCameraEquivalent"/>
+<xs:element minOccurs="0" ref="r0:InstanceID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="CameraUnitAcquisitionMetadata">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:CaptureFrameRate"/>
+<xs:element minOccurs="0" ref="r0:CameraAttributes"/>
+<xs:element minOccurs="0" ref="r0:ASCCDLV12"/>
+<xs:element minOccurs="0" ref="r0:ShutterSpeedTime"/>
+<xs:element minOccurs="0" ref="r0:GammaForCDL"/>
+<xs:element minOccurs="0" ref="r0:CameraLuminanceDynamicRange"/>
+<xs:element minOccurs="0" ref="r0:CameraKneeSlope"/>
+<xs:element minOccurs="0" ref="r0:CameraKneePoint"/>
+<xs:element minOccurs="0" ref="r0:CameraMasterBlackLevel"/>
+<xs:element minOccurs="0" ref="r0:WhiteBalance"/>
+<xs:element minOccurs="0" ref="r0:AutoWhiteBalanceMode"/>
+<xs:element minOccurs="0" ref="r0:CameraSettingFileURI"/>
+<xs:element minOccurs="0" ref="r0:InstanceID"/>
+<xs:element minOccurs="0" ref="r0:ExposureIndexOfPhotoMeter"/>
+<xs:element minOccurs="0" ref="r0:ColorMatrix"/>
+<xs:element minOccurs="0" ref="r0:ISOSensitivity"/>
+<xs:element minOccurs="0" ref="r0:ElectricalExtenderMagnification"/>
+<xs:element minOccurs="0" ref="r0:ShutterSpeedAngle"/>
+<xs:element minOccurs="0" ref="r0:CameraMasterGainAdjustment"/>
+<xs:element minOccurs="0" ref="r0:ImageSensorDimensionEffectiveHeight"/>
+<xs:element minOccurs="0" ref="r0:ImageSensorReadoutMode"/>
+<xs:element minOccurs="0" ref="r0:NeutralDensityFilterWheelSetting"/>
+<xs:element minOccurs="0" ref="r0:ImageSensorDimensionEffectiveWidth"/>
+<xs:element minOccurs="0" ref="r0:AutoFocusSensingAreaSetting"/>
+<xs:element minOccurs="0" ref="r0:ColorCorrectionFilterWheelSetting"/>
+<xs:element minOccurs="0" ref="r0:AutoExposureMode"/>
+<xs:element minOccurs="0" ref="r0:TransferCharacteristic"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="UserDefinedAcquisitionMetadata">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:InstanceID"/>
+<xs:element minOccurs="0" ref="r0:UDAMSetIdentifier"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+</xs:schema>

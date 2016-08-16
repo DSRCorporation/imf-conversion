@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -29,6 +29,11 @@ public final class ImpUtils {
     private ImpUtils() {
     }
 
+    public static File getCplEssenceDesc() throws URISyntaxException {
+        //noinspection ConstantConditions,ConstantConditions
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp-essence-desc/CPL.xml").toURI());
+    }
+
     public static File getCplSequence() throws URISyntaxException {
         //noinspection ConstantConditions,ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL-sequence.xml").toURI());
@@ -54,6 +59,11 @@ public final class ImpUtils {
         return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL-one-essence.xml").toURI());
     }
 
+    public static File getCplLanguages() throws URISyntaxException {
+        //noinspection ConstantConditions,ConstantConditions
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp/CPL-languages.xml").toURI());
+    }
+
     public static File getBrokenXmlCpl() throws URISyntaxException {
         //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/invalid/broken-xml-CPL.xml").toURI());
@@ -68,6 +78,15 @@ public final class ImpUtils {
         return new File(getImpFolder(), file).getAbsolutePath();
     }
 
+    public static String getAbsolutePathEssenceDesc(String file) throws URISyntaxException {
+        return new File(getImpFolderEssenceDesc(), file).getAbsolutePath();
+    }
+
+    public static File getImpFolderEssenceDesc() throws URISyntaxException {
+        //noinspection ConstantConditions
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp-essence-desc").toURI());
+    }
+
     public static File getImpFolder() throws URISyntaxException {
         //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("imp").toURI());
@@ -76,6 +95,11 @@ public final class ImpUtils {
     public static File getCorrectAssetmap() throws URISyntaxException {
         //noinspection ConstantConditions
         return new File(ClassLoader.getSystemClassLoader().getResource("imp/ASSETMAP.xml").toURI());
+    }
+
+    public static File getCorrectAssetmapEssenceDesc() throws URISyntaxException {
+        //noinspection ConstantConditions
+        return new File(ClassLoader.getSystemClassLoader().getResource("imp-essence-desc/ASSETMAP.xml").toURI());
     }
 
     public static File getBrokenXmlAssetmap() throws URISyntaxException {

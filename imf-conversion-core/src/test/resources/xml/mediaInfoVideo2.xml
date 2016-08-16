@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ffprobe:ffprobe xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:ffprobe='http://www.ffmpeg.org/schema/ffprobe' xsi:schemaLocation='http://www.ffmpeg.org/schema/ffprobe ffprobe.xsd'>
     <streams>
-        <stream index="0" codec_name="jpeg2000" codec_long_name="JPEG 2000" codec_type="video" codec_time_base="1/50" codec_tag_string="[0][0][0][0]" codec_tag="0x0000" width="4096" height="2160" coded_width="4096" coded_height="2160" has_b_frames="0" sample_aspect_ratio="1:1" display_aspect_ratio="256:135" pix_fmt="yuv422p10le" level="-99" refs="1" r_frame_rate="25/1" avg_frame_rate="0/0" time_base="1/50" start_pts="0" start_time="0.000000" duration_ts="1697" duration="33.940000" bits_per_raw_sample="10">
+        <stream index="0" codec_name="jpeg2000" codec_long_name="JPEG 2000" codec_type="video" codec_time_base="1/50" codec_tag_string="[0][0][0][0]" codec_tag="0x0000" width="1920" height="1080" coded_width="1920" coded_height="1080" has_b_frames="0" sample_aspect_ratio="1:1" display_aspect_ratio="256:135" pix_fmt="yuv420p10le" level="-99" refs="1" r_frame_rate="30/1" avg_frame_rate="0/0" time_base="1/50" start_pts="0" start_time="0.000000" duration_ts="1697" duration="33.940000" bits_per_raw_sample="8">
             <disposition default="0" dub="0" original="0" comment="0" lyrics="0" karaoke="0" forced="0" hearing_impaired="0" visual_impaired="0" clean_effects="0" attached_pic="0"/>
             <tag key="file_package_umid" value="0x060A2B340101010501010F20130000006A64F1C5629D43BEBEFCBEBAFED2E946"/>
             <tag key="file_package_name" value="File Package"/>
