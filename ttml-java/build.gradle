@@ -1,0 +1,51 @@
+description = "TTML Java Classes (JAXB)"
+version="1.0"
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task generateClasses(type:Exec) {
+    workingDir 'src/main/java'
+
+    commandLine 'xjc',
+        '-b', '../resources/xjb/bindings-ttml.xjb', '../resources/xsd/CR-ttaf1-dfxp-20100223/ttaf1-dfxp.xsd'
+}
+
+compileJava.dependsOn(generateClasses)
+
+artifacts {
+    archives sourcesJar
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': description, 'Implementation-Version': version
+    }
+}
+
+clean {
+    delete 'dist'
+}
+
+uploadArchives {
+    repositories {
+        flatDir {
+            dirs 'dist'
+        }
+    }
+}
