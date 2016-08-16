@@ -145,6 +145,24 @@ public final class AudioMapGuesser {
                                 "All resources within a sequence must have the same channel layout.");
                     }
 
+                    if (!contextProvider.getResourceContext().hasResourceParameter(
+                            ResourceContextParameters.CHANNELS_NUM, contextInfo)) {
+                        // all resources must have a channels num!
+                        throw new InvalidAudioChannelAssignmentException(
+                                "All resources within a sequence must have a channels number set.");
+                    }
+
+                    Integer channelsCount = Integer.parseInt(contextProvider.getResourceContext().getParameterValue(
+                            ResourceContextParameters.CHANNELS_NUM, contextInfo));
+                    if (FFmpegAudioChannels.toFFmpegAudioChannels(nextChannelLayout).length != channelsCount) {
+                        // the number of channels as defined in the channels layout must match the number of channels
+                        // as get from media info tools
+                        throw new InvalidAudioChannelAssignmentException(
+                                String.format(
+                                        "A number of channels in channel layout (%s) must match real number of channels (%d)",
+                                        nextChannelLayout, channelsCount));
+                    }
+
                     channelLayout = nextChannelLayout;
                 }
             }

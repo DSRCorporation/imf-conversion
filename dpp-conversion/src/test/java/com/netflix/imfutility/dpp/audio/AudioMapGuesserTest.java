@@ -91,6 +91,21 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
         new AudioMapGuesser(contextProvider, EBU_R_123_16_C).checkCorrectChannelLayout();
     }
 
+    @Test(expected = InvalidAudioChannelAssignmentException.class)
+    public void check_channelLayoutNotMatchChannelNum() throws Exception {
+        TemplateParameterContextProvider contextProvider = createContext(4, 1, 1,
+                new FFmpegAudioChannels[][]{
+                        {FL, FR}, {FL, FR}, {FL, FR}, {FL, FR},
+                },
+                new String[]{},
+                new int[]{1, 1, 1, 1},
+                new String[]{}
+        );
+
+        new AudioMapGuesser(contextProvider, EBU_R_123_16_C).checkCorrectChannelLayout();
+    }
+
+
     @Test
     public void check_allResourcesEqualChannelLayout() throws Exception {
         TemplateParameterContextProvider contextProvider = createContext(2, 2, 2,
@@ -915,6 +930,14 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
                                                            FFmpegAudioChannels[][] channelsForSeq,
                                                            String[] soundfieldGroups,
                                                            String[] langs) throws Exception {
+        return createContext(audioSeqCount, segmCount, resourceCount, channelsForSeq, soundfieldGroups, null, langs);
+    }
+
+    private TemplateParameterContextProvider createContext(int audioSeqCount, int segmCount, int resourceCount,
+                                                           FFmpegAudioChannels[][] channelsForSeq,
+                                                           String[] soundfieldGroups,
+                                                           int[] channelsNum,
+                                                           String[] langs) throws Exception {
         TemplateParameterContextProvider contextProvider =
                 createDefaultContextProviderWithCPLContext(segmCount, audioSeqCount, resourceCount, EnumSet.of(SequenceType.AUDIO));
         SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
@@ -941,6 +964,11 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
                                 ResourceContextParameters.CHANNELS_LAYOUT,
                                 FFmpegAudioChannels.toChannelsLayoutString(channelsForSeq[j])
                         );
+                        resourceContext.addResourceParameter(
+                                ResourceKey.create(segmUuid, seqUuid, SequenceType.AUDIO), resUuid,
+                                ResourceContextParameters.CHANNELS_NUM,
+                                String.valueOf(channelsForSeq[j].length)
+                        );
                     }
 
                     if (soundfieldGroups != null && j < soundfieldGroups.length) {
@@ -956,6 +984,14 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
                                 ResourceKey.create(segmUuid, seqUuid, SequenceType.AUDIO), resUuid,
                                 ResourceContextParameters.LANG,
                                 langs[i]
+                        );
+                    }
+
+                    if (channelsNum != null && i < channelsNum.length) {
+                        resourceContext.addResourceParameter(
+                                ResourceKey.create(segmUuid, seqUuid, SequenceType.AUDIO), resUuid,
+                                ResourceContextParameters.CHANNELS_NUM,
+                                String.valueOf(channelsNum[i])
                         );
                     }
                     j++;
