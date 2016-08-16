@@ -100,7 +100,7 @@ public final class AudioMapGuesser {
             return null;
         }
 
-        logger.info("Trying to generate an audiomap.xml based on the EssenceDescriptor");
+        logger.info("Trying to generate an audiomap.xml based on the EssenceDescriptor...");
 
         // 1. check that all resources within a sequence have the same channel layout
         checkCorrectChannelLayout();
@@ -109,7 +109,9 @@ public final class AudioMapGuesser {
         prepareSoundfieldGroups();
 
         // 3. create the audio map
-        return createAudioMap();
+        AudioMapType audioMap = createAudioMap();
+        logger.info("Generated an audiomap.xml based on the EssenceDescriptor: OK");
+        return audioMap;
     }
 
     void checkCorrectChannelLayout() throws InvalidAudioChannelAssignmentException {

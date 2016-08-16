@@ -110,9 +110,6 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
                 contextProvider.getWorkingDir());
 
         // 2. load audiomap.xml
-        if (dppInputParameters.getAudiomapFile() == null) {
-            logger.warn("No audiomap.xml specified as a command line argument. A default audiomap.xml will be generated.");
-        }
         AudioTrackLayoutDmAs11Type audioTrackLayout = metadataXmlProvider.getDpp().getTechnical().getAudio().getAudioTrackLayout();
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(dppInputParameters.getAudiomapFile(),
                 audioTrackLayout, contextProvider);

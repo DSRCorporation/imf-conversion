@@ -51,6 +51,9 @@ Chimera50Dir="Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV"
 # multiple
 ./chimera25-multiple-audio "$1/$Chimera25Dir" "$2" "$3";
 
+# essence descriptors
+./chimera25-segments-audio-essence-desc "$1/$Chimera25Dir" "$2" "$3";
+
 # default as-is full CPLs for all test packages
 ./chimera23-default "$1/$Chimera23Dir" "$2" "$3";
 ./chimera25-default "$1/$Chimera25Dir" "$2" "$3";

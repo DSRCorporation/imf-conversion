@@ -97,7 +97,7 @@ public final class AudioMapXmlProvider {
     private AudioMapType getDefaultAudioMap() {
         AudioMapType audioMap = null;
 
-        logger.info("No audiomap.xml provided explicitly");
+        logger.warn("No audiomap.xml specified as a command line argument. A default audiomap.xml will be generated.");
         try {
             audioMap = new AudioMapGuesser(contextProvider, audioLayout).guessAudioMap();
         } catch (InvalidAudioChannelAssignmentException e) {
@@ -105,8 +105,9 @@ public final class AudioMapXmlProvider {
         }
 
         if (audioMap == null) {
-            logger.info("Generating a default audiomap in a sequence order");
+            logger.info("Generating default audiomap in a natural order...");
             audioMap = generateDefaultXml();
+            logger.info("Generated default audiomap in a natural order: OK");
         }
         return audioMap;
     }
