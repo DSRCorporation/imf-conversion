@@ -20,9 +20,16 @@ package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
+import com.netflix.imfutility.conversion.templateParameter.context.ResourceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.SegmentContextParameters;
+import com.netflix.imfutility.cpl.uuid.ResourceUUID;
+import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.dpp.MetadataXmlProvider.DMFramework;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
@@ -41,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_AS11_CORE_FILE;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_AS11_SEGM_FILE;
@@ -131,6 +139,112 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         dynamicContext.addParameter(DYNAMIC_PARAM_AS11_SEGM_FILE,
                 metadataXmlProvider.getBmxDppParameterFile(DMFramework.AS11Segmentation).getAbsolutePath(), true);
 
+        // 6. fill parameters for last frame freeze
+        buildDynamicParametersForVideoFreeze();
+    }
+
+    private void buildDynamicParametersForVideoFreeze() {
+        ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
+        ContextInfo lastResourceContextInfo = getLastResourceContextInfo();
+
+        if (lastResourceContextInfo == null) {
+            return;
+        }
+
+        String essence = resourceContext
+                .getParameterValue(ResourceContextParameters.ESSENCE, lastResourceContextInfo);
+        BigFraction editRate = ConversionHelper.parseEditRate(resourceContext
+                .getParameterValue(ResourceContextParameters.EDIT_RATE, lastResourceContextInfo));
+        BigInteger endTimeEU = new BigInteger(resourceContext
+                .getParameterValue(ResourceContextParameters.END_TIME_EDIT_UNIT, lastResourceContextInfo));
+
+        BigInteger lastFrameTimeEU = endTimeEU.subtract(BigInteger.ONE);
+        String lastFrameTimeTC = ConversionHelper.editUnitToTimecode(lastFrameTimeEU, editRate);
+
+        contextProvider.getDynamicContext().addParameter("last_essence", essence);
+        contextProvider.getDynamicContext().addParameter("last_frame_tc", lastFrameTimeTC);
+    }
+
+    ContextInfo getLastResourceContextInfo() {
+        // Finding the last segment
+        SegmentUUID lastSegmentUUID = getLastSegmentUUID();
+        if (lastSegmentUUID == null) {
+            return null;
+        }
+
+        // Finding video sequence?
+        if (contextProvider.getSequenceContext().getSequenceCount(SequenceType.VIDEO) == 0) {
+            return null;
+        }
+        SequenceUUID videoSequenceUUID = (SequenceUUID) contextProvider.getSequenceContext().
+                getUuids(SequenceType.VIDEO).toArray()[0];
+
+        // Finding the last resource
+        ResourceKey resourceKey = ResourceKey.create(lastSegmentUUID, videoSequenceUUID, SequenceType.VIDEO);
+        ResourceUUID lastResourceUUID = getLastResourceUUID(resourceKey);
+        if (lastResourceUUID == null) {
+            return null;
+        }
+
+        ContextInfo lastResourceContextInfo = new ContextInfo(
+                lastSegmentUUID, videoSequenceUUID, SequenceType.VIDEO, lastResourceUUID);
+
+        return lastResourceContextInfo;
+    }
+
+    ResourceUUID getLastResourceUUID(ResourceKey resourceKey) {
+        ResourceUUID lastResourceUUID = null;
+
+        for (ResourceUUID resourceUUID : contextProvider.getResourceContext().getUuids(resourceKey)) {
+            if (lastResourceUUID == null) {
+                lastResourceUUID = resourceUUID;
+            } else {
+                int lastResourceNum = Integer.valueOf(contextProvider.getResourceContext().
+                        getParameterValue(ResourceContextParameters.NUM,
+                                new ContextInfo(
+                                        resourceKey.getSegmentUuid(),
+                                        resourceKey.getSequenceUuid(),
+                                        resourceKey.getSequenceType(),
+                                        lastResourceUUID)));
+                int resourceNum = Integer.valueOf(contextProvider.getResourceContext().
+                        getParameterValue(ResourceContextParameters.NUM,
+                                new ContextInfo(
+                                        resourceKey.getSegmentUuid(),
+                                        resourceKey.getSequenceUuid(),
+                                        resourceKey.getSequenceType(),
+                                        resourceUUID)));
+
+                if (resourceNum > lastResourceNum) {
+                    lastResourceUUID = resourceUUID;
+                }
+            }
+        }
+
+        return lastResourceUUID;
+    }
+
+    SegmentUUID getLastSegmentUUID() {
+        SegmentUUID lastSegmentUUID = null;
+
+        for (SegmentUUID segmentUUID : contextProvider.getSegmentContext().getUuids()) {
+            if (lastSegmentUUID == null) {
+                lastSegmentUUID = segmentUUID;
+            } else {
+                int lastSegentNum = Integer.parseInt(contextProvider.getSegmentContext().
+                        getParameterValue(SegmentContextParameters.NUM,
+                                new ContextInfo(lastSegmentUUID, null, null, null)));
+
+                int segentNum = Integer.parseInt(contextProvider.getSegmentContext().
+                        getParameterValue(SegmentContextParameters.NUM,
+                                new ContextInfo(segmentUUID, null, null, null)));
+
+                if (segentNum > lastSegentNum) {
+                    lastSegmentUUID = segmentUUID;
+                }
+            }
+        }
+
+        return lastSegmentUUID;
     }
 
     @Override

@@ -77,6 +77,15 @@
                         1. decode each video segment and redirect output to encode's input
                         => flatten encoded video
                     -->
+                    <execOnce name="extract_last_frame">
+                        "%{tool.ffmpeg}"
+                        -ss %{dynamic.last_frame_tc} -i %{dynamic.last_essence}
+                        -vframes 1 -y
+                        last_frame.png
+                    </execOnce>
+                    <dynamicParameter name="last_frame_file" deleteOnExit="true">
+                        last_frame.png
+                    </dynamicParameter>
                     <execEachSequence type="video" name="encodeVideo">
                         <pipe>
                             <cycle>
@@ -114,6 +123,14 @@
                                         -pix_fmt %{dest.pixelFormat} -f rawvideo -
                                     </execOnce>
                                 </execEachSegment>
+                                <execOnce name="loop_last_frame">
+                                    "%{tool.ffmpeg}"
+                                    -loop 1 -i last_frame.png
+                                    -t 5
+                                    -vf
+                                    "scale=iw*sar*min(%{dest.width}/(iw*sar)\,%{dest.height}/ih):ih*min(%{dest.width}/(iw*sar)\,%{dest.height}/ih),pad=%{dest.width}:%{dest.height}:(ow-iw)/2:(oh-ih)/2,fps=%{dest.frameRate}"
+                                    -pix_fmt %{dest.pixelFormat} -f rawvideo -
+                                </execOnce>
                             </cycle>
                             <execOnce name="encode_video">
                                 "%{tool.x264}" --input-res %{dest.width}x%{dest.height} --input-csp %{dest.chromaSubsampling} --input-depth %{dest.bitDepth} -
@@ -173,6 +190,13 @@
                                         -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
                                     </execOnce>
                                 </execEachSegment>
+                                <!--5s-->
+                                <execOnce name="silence">
+                                    %{tool.ffmpeg}
+                                    -f lavfi -i anullsrc=cl=stereo:r=%{dest.sampleRate}
+                                    -vn -t 5
+                                    -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
+                                </execOnce>
                             </cycle>
                             <execOnce name="encode_audio">
                                 "%{tool.ffmpeg}" -f s%{dest.bitsSample}le -ar %{seq.sample_rate} -ac %{seq.channels_num} -i - -vn -c:a
