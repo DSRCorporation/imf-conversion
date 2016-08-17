@@ -18,8 +18,11 @@
  */
 package com.netflix.imfutility.validation;
 
+import com.netflix.imflibrary.IMFErrorLogger.IMFErrors.ErrorLevels;
 import com.netflix.imflibrary.utils.ErrorLogger;
+import com.netflix.imfutility.generated.validation.ErrorType;
 import com.netflix.imfutility.generated.validation.Errors;
+import com.netflix.imfutility.generated.validation.LevelType;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -44,13 +47,32 @@ public class ImfErrorXmlPresenter implements IImfErrorPresenter {
 
             Errors errors = new Errors();
             for (ErrorLogger.ErrorObject errorObj : errorObjs) {
-                errors.getError().add(errorObj.toString());
+                ErrorType error = new ErrorType();
+                error.setValue(errorObj.toString());
+                error.setLevel(getErrorLevel(errorObj));
+                errors.getError().add(error);
             }
 
             jaxbMarshaller.marshal(errors, file);
 
         } catch (JAXBException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private LevelType getErrorLevel(ErrorLogger.ErrorObject errorObj) {
+        if (!(errorObj.getErrorLevel() instanceof ErrorLevels)) {
+            throw new RuntimeException("ErrorLevels enum is expected as error level");
+        }
+        switch ((ErrorLevels) errorObj.getErrorLevel()) {
+            case FATAL:
+                return LevelType.FATAL;
+            case NON_FATAL:
+                return LevelType.NON_FATAL;
+            case WARNING:
+                return LevelType.WARNING;
+            default:
+                throw new RuntimeException("Unknown error level " + errorObj.getErrorLevel().toString());
         }
     }
 }

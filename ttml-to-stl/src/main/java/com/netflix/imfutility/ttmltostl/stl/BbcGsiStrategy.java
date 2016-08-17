@@ -117,8 +117,8 @@ public final class BbcGsiStrategy extends DefaultGsiStrategy {
         }
 
         // CD and RD from metadata.xml
-        if (metadata.getTechnical().getAdditional() != null &&
-                metadata.getTechnical().getAdditional().getCompletionDate() != null) {
+        if (metadata.getTechnical().getAdditional() != null
+                && metadata.getTechnical().getAdditional().getCompletionDate() != null) {
             GregorianCalendar gregorianCalendar = metadata.getTechnical().getAdditional().getCompletionDate().toGregorianCalendar();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
             simpleDateFormat.setCalendar(gregorianCalendar);

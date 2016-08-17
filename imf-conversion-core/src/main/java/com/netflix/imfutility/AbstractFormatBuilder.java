@@ -39,7 +39,6 @@ import com.netflix.imfutility.inputparameters.ImfUtilityInputParametersValidator
 import com.netflix.imfutility.mediainfo.MediaInfoContextBuilder;
 import com.netflix.imfutility.mediainfo.MediaInfoException;
 import com.netflix.imfutility.util.ImfLogger;
-import com.netflix.imfutility.validate.ImfValidationException;
 import com.netflix.imfutility.validate.ImfValidator;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
@@ -347,11 +346,15 @@ public abstract class AbstractFormatBuilder {
         return configProvider.getConfig().isValidateImf();
     }
 
-    private void validateImpAndCpl() throws IOException, ImfValidationException {
+    private void validateImpAndCpl() throws IOException, XmlParsingException {
         logger.info("Validating input IMP and CPL...\n");
         if (isValidateImpAndCpl()) {
-            new ImfValidator(contextProvider, new ConversionEngine().getExecuteStrategyFactory()).validate();
-            logger.info("Validated input IMP and CPL: OK\n");
+            boolean noFatalErrors = new ImfValidator(contextProvider, new ConversionEngine().getExecuteStrategyFactory()).validate();
+            if (noFatalErrors) {
+                logger.info("Validated input IMP and CPL: OK\n");
+            } else {
+                throw new ConversionException("IMF package is not valid. Fatal errors found.");
+            }
         } else {
             logger.info("IMP and CPL validation is DISABLED in config.xml\n");
         }
