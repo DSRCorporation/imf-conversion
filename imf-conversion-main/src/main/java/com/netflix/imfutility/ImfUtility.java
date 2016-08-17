@@ -24,6 +24,8 @@ import com.netflix.imfutility.dpp.DppFormatProcessor;
 import com.netflix.imfutility.dpp.inputparameters.DppCmdLineArgs;
 import com.netflix.imfutility.inputparameters.DppTools;
 import com.netflix.imfutility.inputparameters.ImfUtilityCmdLineArgs;
+import com.netflix.imfutility.util.ImfLogger;
+import com.netflix.imfutility.util.LogHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +40,7 @@ import java.util.Arrays;
  */
 public final class ImfUtility {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImfUtility.class);
+    private static final Logger LOGGER = new ImfLogger(LoggerFactory.getLogger(ImfUtility.class));
 
     private ImfUtility() {
     }
@@ -71,14 +73,18 @@ public final class ImfUtility {
         } catch (HelpRequestedException e) {
             System.out.println(e.getMessage());
             System.exit(0);
+        } catch (ConversionException e) {
+            LOGGER.error("Conversion aborted", e);
         }
     }
 
     private static <T extends ImfUtilityCmdLineArgs> T parseArgs(Class<T> clazz, String[] args) {
-        LOGGER.info("Parsing command line arguments...");
+        LOGGER.debug("Parsing command line arguments...");
         T imfArgs = CliFactory.parseArguments(clazz, Arrays.copyOfRange(args, 1, args.length));
-        LOGGER.info("Parsed command line arguments: OK\n");
+        LogHelper.setLogLevel(imfArgs.getLogLevel().getLogLevel());
+        LOGGER.debug("Parsed command line arguments: OK\n");
         return imfArgs;
     }
+
 
 }

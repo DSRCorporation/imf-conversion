@@ -32,6 +32,7 @@ import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.dpp.audiomap.AudioMapType;
 import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
 import com.netflix.imfutility.util.FFmpegAudioChannels;
+import com.netflix.imfutility.util.ImfLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
@@ -64,7 +65,7 @@ import static com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs
  */
 public final class AudioMapGuesser {
 
-    private final Logger logger = LoggerFactory.getLogger(AudioMapGuesser.class);
+    private final Logger logger = new ImfLogger(LoggerFactory.getLogger(AudioMapGuesser.class));
 
     private final TemplateParameterContextProvider contextProvider;
     private final AudioTrackLayoutDmAs11Type audioLayout;
@@ -100,7 +101,7 @@ public final class AudioMapGuesser {
             return null;
         }
 
-        logger.info("Trying to generate an audiomap.xml based on the EssenceDescriptor...");
+        logger.debug("Trying to generate an audiomap.xml based on the EssenceDescriptor...");
 
         // 1. check that all resources within a sequence have the same channel layout
         checkCorrectChannelLayout();

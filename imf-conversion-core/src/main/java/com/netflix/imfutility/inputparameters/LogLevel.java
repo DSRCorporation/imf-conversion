@@ -18,16 +18,25 @@
  */
 package com.netflix.imfutility.inputparameters;
 
-import com.lexicalscope.jewel.cli.Option;
-import com.netflix.imfutility.Format;
-import com.netflix.imfutility.dpp.inputparameters.DppCmdLineArgs;
+import org.apache.logging.log4j.Level;
 
 /**
- * A mixin of all possible command line arguments for all formats. It's needed for initial parsing to obtain the format.
+ * Log levels supported in the application.
  */
-public interface ImfUtilityAllCmdLineArgs extends DppCmdLineArgs {
+public enum LogLevel {
 
-    @Option(description = "a format for conversion. Possible values: [dpp]", shortName = {"f"}, longName = {"format"})
-    Format getFormat();
+    error(Level.ERROR),
+    warn(Level.WARN),
+    info(Level.INFO),
+    debug(Level.DEBUG);
 
+    private Level logLevel;
+
+    LogLevel(Level logLevel) {
+        this.logLevel = logLevel;
+    }
+
+    public Level getLogLevel() {
+        return logLevel;
+    }
 }

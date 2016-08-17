@@ -18,8 +18,6 @@
  */
 package com.netflix.imfutility.xml;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
@@ -36,8 +34,6 @@ import java.util.Stack;
  * A helper to get human readable errors of an xml when loading and parsing.
  */
 public class XmlParsingHandler implements ContentHandler, ErrorHandler {
-
-    final Logger logger = LoggerFactory.getLogger(XmlParsingHandler.class);
 
     /**
      * Input XML file.
@@ -143,6 +139,5 @@ public class XmlParsingHandler implements ContentHandler, ErrorHandler {
         }
         errorMessage.append(". ").append(exception.getLocalizedMessage());
         errorMessages.add(errorMessage.toString());
-        logger.error(errorMessage.toString());
     }
 }

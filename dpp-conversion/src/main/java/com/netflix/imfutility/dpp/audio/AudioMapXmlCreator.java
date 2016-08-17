@@ -20,6 +20,7 @@ package com.netflix.imfutility.dpp.audio;
 
 import com.netflix.imfutility.generated.dpp.audiomap.AudioMapType;
 import com.netflix.imfutility.generated.dpp.audiomap.EBUTrackType;
+import com.netflix.imfutility.util.ImfLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,7 @@ import java.io.File;
  */
 public final class AudioMapXmlCreator {
 
-    private final Logger logger = LoggerFactory.getLogger(AudioMapXmlCreator.class);
+    private final Logger logger = new ImfLogger(LoggerFactory.getLogger(AudioMapXmlCreator.class));
 
     /**
      * Generates a sample audiomap.xml file.
