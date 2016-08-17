@@ -173,6 +173,11 @@ public abstract class AbstractFormatBuilder {
             logger.info("Conversion to '{}' format: OK\n", format.getName());
 
             return 0;
+        } catch (ConversionException | XmlParsingException | FileNotFoundException e) {
+            // do not log stack trace, as it's 'workflow expected' exceptions
+            logger.error("Conversion to '{}' format aborted: {}", format.getName(), e.getMessage());
+            deleteTmpFilesOnFail();
+            return 1;
         } catch (Exception e) {
             logger.error(String.format("Conversion to '%s' format aborted", format.getName()), e);
             deleteTmpFilesOnFail();

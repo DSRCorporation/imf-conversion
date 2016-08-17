@@ -59,7 +59,7 @@ public final class ImfUtility {
                         "Unsupported format '%s'. Supported formats: %s", args[0], Format.getSupportedFormats()));
             }
 
-            int exitCode = 0;
+            int exitCode;
             switch (format) {
                 case dpp:
                     exitCode = new DppFormatProcessor(new DppTools()).process(parseArgs(DppCmdLineArgs.class, args));
@@ -69,12 +69,12 @@ public final class ImfUtility {
                     throw new ConversionException(String.format(
                             "Unsupported format '%s'. Supported formats: %s", args[0], Format.getSupportedFormats()));
             }
-
         } catch (HelpRequestedException e) {
             System.out.println(e.getMessage());
             System.exit(0);
-        } catch (ConversionException e) {
-            LOGGER.error("Conversion aborted", e);
+        } catch (ConversionException | IllegalArgumentException e) {
+            LOGGER.error("Conversion aborted: {}", e.getMessage());
+            System.exit(1);
         }
     }
 
