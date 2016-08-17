@@ -27,6 +27,7 @@ import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.itunes.xmlprovider.builder.file.DataFileTagBuilder;
 
 import java.io.File;
+import java.util.function.Predicate;
 
 /**
  * Asset processor specified for subtitles managing.
@@ -45,13 +46,13 @@ public class SubtitlesAssetProcessor extends AssetProcessor<DataFileType> {
     }
 
     @Override
-    protected boolean checkInput(File assetFile) {
-        return super.checkInput(assetFile) && locale != null;
+    protected boolean checkMandatoryParams() {
+        return locale != null;
     }
 
     @Override
     protected void validate(File assetFile) throws AssetValidationException {
-        // already validated
+        validateDuplicateLocales();
     }
 
     @Override
@@ -70,5 +71,17 @@ public class SubtitlesAssetProcessor extends AssetProcessor<DataFileType> {
     @Override
     protected String getDestFileName(File assetFile) {
         return "Subtitles_" + locale.getName().replace("-", "_").toUpperCase() + ".itt";
+    }
+
+    private void validateDuplicateLocales() {
+        boolean duplicate = metadataXmlProvider.getFullAssetDataFilesByRole(DataFileRoleType.SUBTITLES).stream()
+                .map(DataFileType::getLocale)
+                .map(LocaleType::getName)
+                .anyMatch(Predicate.isEqual(locale.getName()));
+
+        if (duplicate) {
+            throw new AssetValidationException(String.format(
+                    "Subtitles locale validation failed. Metadata already contains subtitles for %s locale", locale.getName()));
+        }
     }
 }

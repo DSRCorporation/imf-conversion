@@ -24,6 +24,7 @@ import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
@@ -46,7 +47,11 @@ public final class AssetUtils {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/image/test-image-1920-1080.jpg").toURI());
     }
 
-    public static File getTestCorrectCcFile() throws URISyntaxException {
+    public static File getTestCorrectCcUSFile() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/scc/cc-en_US.scc").toURI());
+    }
+
+    public static File getTestCorrectCcGBFile() throws URISyntaxException {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/scc/cc-en_US.scc").toURI());
     }
 
@@ -67,6 +72,24 @@ public final class AssetUtils {
         LocaleType locale = new LocaleType();
         locale.setName(language);
         return locale;
+    }
+
+    public static File createFile(File dir, String name) throws IOException {
+        File file = new File(dir, name);
+        if (!file.createNewFile()) {
+            throw new IOException(String.format("Cannot create test file %s", file.getAbsolutePath()));
+        }
+        file.deleteOnExit();
+        return file;
+    }
+
+    public static File createDirectory(File dir, String name) throws IOException {
+        File destDir = new File(dir, name);
+        if (!destDir.mkdir()) {
+            throw new IOException(String.format("Cannot create test directory %s", destDir.getAbsolutePath()));
+        }
+        destDir.deleteOnExit();
+        return destDir;
     }
 
     public static FormatType createCorrectVideoFormat() {

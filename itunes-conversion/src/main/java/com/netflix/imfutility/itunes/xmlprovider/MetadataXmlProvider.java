@@ -26,6 +26,7 @@ import com.netflix.imfutility.generated.itunes.metadata.AssetsType;
 import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
 import com.netflix.imfutility.generated.itunes.metadata.ChapterType;
 import com.netflix.imfutility.generated.itunes.metadata.ChaptersType;
+import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
 import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
 import com.netflix.imfutility.generated.itunes.metadata.ObjectFactory;
@@ -45,6 +46,8 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.validation.Schema;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.METADATA_PACKAGE;
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.METADATA_XML_SCHEME;
@@ -189,6 +192,12 @@ public class MetadataXmlProvider {
                 : createAsset(assetType, getDefaultTerritories());
 
         asset.getDataFile().add(dataFile);
+    }
+
+    public List<DataFileType> getFullAssetDataFilesByRole(DataFileRoleType role) {
+        return ensureFullAssetCreated().getDataFile().stream()
+                .filter(dataFile -> dataFile.getRole() == role)
+                .collect(Collectors.toList());
     }
 
     private TerritoriesType getDefaultTerritories() {

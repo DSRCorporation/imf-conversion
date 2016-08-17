@@ -39,6 +39,7 @@ public final class ITunesConversionConstants {
     // trailer dynamic parameters:
     public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT = "trailerMediaInfoInput";
     public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_OUTPUT = "trailerMediaInfoOutput";
+    public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_COMMAND = "trailer";
 
     // video dest parameters:
     public static final String DEST_PARAM_VIDEO_IFRAME_RATE = "iFrameRate";
@@ -73,4 +74,11 @@ public final class ITunesConversionConstants {
     public static final String DYNAMIC_PARAM_SUBTITLE_TTML_COUNT = "ttmlCount";
     public static final String DYNAMIC_PARAM_SUBTITLE_TTML_PREFIX = "ttml-";
     public static final String DYNAMIC_PARAM_SUBTITLE_ITT_PREFIX = "itt-";
+
+    // subtitle common constants:
+    public static final String TTML_PACKAGES = "org.w3.ns.ttml"
+            + ":org.w3.ns.ttml_parameter"
+            + ":org.w3.ns.ttml_datatype"
+            + ":org.w3.ns.ttml_metadata";
+    public static final String TTML_SCHEMA = "xsd/CR-ttaf1-dfxp-20100223/ttaf1-dfxp.xsd";
 }

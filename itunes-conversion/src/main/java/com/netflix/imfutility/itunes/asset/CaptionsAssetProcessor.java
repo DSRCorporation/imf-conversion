@@ -35,6 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.DEFAULT_CC_LOCALE;
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.SCC_SIGNATURE;
@@ -56,14 +57,15 @@ public class CaptionsAssetProcessor extends AssetProcessor<DataFileType> {
     }
 
     @Override
-    protected boolean checkInput(File assetFile) {
-        return super.checkInput(assetFile) && vendorId != null;
+    protected boolean checkMandatoryParams() {
+        return vendorId != null;
     }
 
     @Override
     protected void validate(File assetFile) throws AssetValidationException {
         validateFormat(assetFile);
         validateLocale(assetFile);
+        validateDuplicateLanguages(assetFile);
     }
 
     @Override
@@ -99,18 +101,35 @@ public class CaptionsAssetProcessor extends AssetProcessor<DataFileType> {
             LocaleValidator.validateLocale(extractLocale(assetFile));
         } catch (LocaleValidationException e) {
             throw new AssetValidationException("Captions locale validation failed. "
-                    + "Filename must fit pattern <prefix>-xx_XX.scc, where xx_XX existing locale", e);
+                    + "Filename must fit pattern <filename>-xx_XX.scc, where xx_XX - existing locale", e);
+        }
+
+    }
+
+    private void validateDuplicateLanguages(File assetFile) {
+        String language = getLanguageFromFileName(assetFile);
+
+        boolean duplicate = metadataXmlProvider.getFullAssetDataFilesByRole(DataFileRoleType.CAPTIONS).stream()
+                .map(DataFileType::getFileName)
+                .map(this::getPostfix)
+                .anyMatch(Predicate.isEqual(language));
+
+        if (duplicate) {
+            throw new AssetValidationException(String.format(
+                    "Captions locale validation failed. Metadata already contains captions for %s language", language));
         }
     }
 
     private String getLanguageFromFileName(File assetFile) {
-        Locale locale = LocaleUtils.toLocale(extractLocale(assetFile));
+        Locale locale = LocaleUtils.toLocale(getPostfix(assetFile.getName()));
         return locale.getDisplayLanguage(DEFAULT_CC_LOCALE).toLowerCase();
     }
 
     private String extractLocale(File assetFile) {
-        String fileName = assetFile.getName();
+        return getPostfix(assetFile.getName());
+    }
 
+    private String getPostfix(String fileName) {
         if (!fileName.contains("-") || !fileName.contains(".")) {
             return null;
         }

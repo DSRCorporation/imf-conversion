@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.generated.itunes.metadata.AssetType;
 import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
@@ -97,7 +98,7 @@ public class PosterAssetProcessorTest {
                 .process(TestUtils.getTestFile());
     }
 
-    @Test(expected = AssetValidationException.class)
+    @Test(expected = ConversionException.class)
     public void testInvalidPath() throws Exception {
         PosterAssetProcessor processor = new PosterAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());

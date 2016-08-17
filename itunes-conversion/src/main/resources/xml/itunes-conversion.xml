@@ -309,7 +309,7 @@
             <mediaInfoCommandAudio>%{tool.ffprobe} -select_streams a:0 -show_streams -noprivate -print_format xml=x=1
                 %{dynamic.mediaInfoInput}
             </mediaInfoCommandAudio>
-            <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams s:0 -show_streams -noprivate -print_format xml=x=1
+            <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams d:0 -show_streams -noprivate -print_format xml=x=1
                 %{dynamic.mediaInfoInput}
             </mediaInfoCommandSubtitle>
 
@@ -541,9 +541,13 @@
                             Extract each subtitle TTML segment from MXF and concat TTML for sequence.
                         -->
                         <execEachSequence type="subtitle" name="extarct_and_concat_ttml" if="%{dynamic.hasSubtitle}">
+
+                            <dynamicParameter name="concatTtml">
+                            </dynamicParameter>
+
                             <execEachSegment name="extract_ttml">
                                 <execOnce name="extract_ttml">
-                                    %{tool.as-02-unwrap} -x "%{seq.num}-%{segm.num}-%{resource.num}.xml" %{resource.essence}
+                                    %{tool.as-02-unwrap} %{resource.essence} "%{seq.num}-%{segm.num}-%{resource.num}.xml"
                                 </execOnce>
 
                                 <!-- to delete intermediate files at the end -->
@@ -551,10 +555,10 @@
                                     %{seq.num}-%{segm.num}-%{resource.num}.xml
                                 </dynamicParameter>
 
-                                <dynamicParameter name="concatTTML" concat="true">
+                                <dynamicParameter name="concatTtml" concat="true" concatWhitespace="true">
                                     --ttml
                                     %{seq.num}-%{segm.num}-%{resource.num}.xml
-                                    %{resource.offsetTC} %{resource.startTimeTC} %{resource.endTimeTC}
+                                    <!--%{resource.offsetMS} %{resource.startTimeMS} %{resource.endTimeMS}-->
                                 </dynamicParameter>
                             </execEachSegment>
 
@@ -563,24 +567,25 @@
                             </dynamicParameter>
 
                             <execOnce name="convert_ttml_to_itt">
-                                %{dynamic.ttml-to-itt} %{dynamic.concatTTML} --outputITT %{dynamic.itt-%{seq.num}}
+                                %{dynamic.ttml-to-itt} %{dynamic.concatTtml} --outputITT %{dynamic.itt-%{seq.num}}
                             </execOnce>
+
                         </execEachSequence>
                     </if>
 
                     <!--Convert external input subtitles -->
                     <if test="%{dynamic.isInputParamSub}">
-                        <for iterator="i" count="%{dynamic.ttmlCount}">
+                        <for iterator="i" from="0" count="%{dynamic.ttmlCount}">
                             <dynamicParameter name="itt-%{i}" deleteOnExit="true">
                                 itt-%{i}.itt
                             </dynamicParameter>
 
-                            <dynamicParameter name="exec">
-                                %{dynamic.ttml-to-itt} %{dynamic.ttml-%{i}} --outputITT %{dynamic.itt-%{i}}
+                            <dynamicParameter name="ttmlToIttParams">
+                                --ttml %{dynamic.ttml-%{i}} --outputITT %{dynamic.itt-%{i}}
                             </dynamicParameter>
 
                             <execOnce name="convert_ttml_to_itt">
-                                %{dynamic.exec}
+                                %{dynamic.ttml-to-itt} %{dynamic.ttmlToIttParams}
                             </execOnce>
                         </for>
                     </if>

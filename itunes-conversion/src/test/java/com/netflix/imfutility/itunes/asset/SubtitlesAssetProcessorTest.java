@@ -18,16 +18,18 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.generated.itunes.metadata.AssetType;
 import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
 import com.netflix.imfutility.itunes.util.AssetUtils;
-import com.netflix.imfutility.itunes.util.TestUtils;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -35,14 +37,19 @@ import java.io.File;
 import java.io.IOException;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Tests subtitles asset processing.
  * (see {@link SubtitlesAssetProcessor}).
  */
 public class SubtitlesAssetProcessorTest {
+
+    private MetadataXmlProvider metadataXmlProvider;
+    private File destDir;
+    private File inputAsset;
+
     @BeforeClass
     public static void setupAll() throws IOException {
         // create both working directory and logs folder.
@@ -58,15 +65,24 @@ public class SubtitlesAssetProcessorTest {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
     }
 
+    @Before
+    public void setup() throws IOException {
+        destDir = AssetUtils.createDirectory(TemplateParameterContextCreator.getWorkingDir(), "destDir");
+        inputAsset = AssetUtils.createFile(TemplateParameterContextCreator.getWorkingDir(), "subtitles");
+
+        metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
+    }
+
+    @After
+    public void teardown() throws IOException {
+        FileUtils.deleteDirectory(destDir);
+        if (inputAsset.exists()) {
+            FileUtils.forceDelete(inputAsset);
+        }
+    }
+
     @Test
     public void testCorrectSubtitles() throws Exception {
-        File destDir = new File(TemplateParameterContextCreator.getWorkingDir(), "destDir");
-        destDir.mkdir();
-
-        File inputAsset = new File(TemplateParameterContextCreator.getWorkingDir(), "subtitles");
-        inputAsset.createNewFile();
-
-        MetadataXmlProvider metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
         SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(metadataXmlProvider, destDir);
 
         processor.setLocale(AssetUtils.createLocale("fr-CA"))
@@ -88,10 +104,9 @@ public class SubtitlesAssetProcessorTest {
         assertEquals("fr-CA", subtitlesDataFile.getLocale().getName());
     }
 
-    @Test(expected = AssetValidationException.class)
+    @Test(expected = ConversionException.class)
     public void testInvalidPath() throws Exception {
-        SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(AssetUtils.createMetadataXmlProvider(),
-                TemplateParameterContextCreator.getWorkingDir());
+        SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(metadataXmlProvider, destDir);
 
         processor.setLocale(AssetUtils.createLocale("en-US"))
                 .process(new File("invalid_path"));
@@ -99,13 +114,22 @@ public class SubtitlesAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testParametersNotSet() throws Exception {
-        File inputAsset = new File(TemplateParameterContextCreator.getWorkingDir(), "subtitles");
-        inputAsset.createNewFile();
-
-        SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(AssetUtils.createMetadataXmlProvider(),
-                TemplateParameterContextCreator.getWorkingDir());
+        SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(metadataXmlProvider, destDir);
 
         //  locale is required
-        processor.process(TestUtils.getTestFile());
+        processor.process(inputAsset);
+    }
+
+    @Test(expected = AssetValidationException.class)
+    public void testDuplicateLocales() throws Exception {
+        File anotherInputAsset = AssetUtils.createFile(TemplateParameterContextCreator.getWorkingDir(), "anotherSubtitles");
+
+        SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(metadataXmlProvider, destDir);
+
+        //  locale is duplicated
+        processor.setLocale(AssetUtils.createLocale("en-US"))
+                .process(inputAsset);
+        processor.setLocale(AssetUtils.createLocale("en-US"))
+                .process(anotherInputAsset);
     }
 }

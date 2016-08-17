@@ -1,5 +1,11 @@
 description = "iTunes format plugin"
 
+repositories {
+    flatDir {
+        dirs '../ttml-java/dist'
+    }
+}
+
 dependencies {
     compile project(':imf-conversion-core')
     compile project(':itunes-conversion-input-xsd')
@@ -8,4 +14,5 @@ dependencies {
 
 dependencies {
     compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
+    compile name: 'ttml-java-1.0'
 }

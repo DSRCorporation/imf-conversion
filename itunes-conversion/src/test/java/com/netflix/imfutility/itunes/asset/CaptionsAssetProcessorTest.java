@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.generated.itunes.metadata.AssetType;
 import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
@@ -65,7 +66,7 @@ public class CaptionsAssetProcessorTest {
         CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
-                .process(AssetUtils.getTestCorrectCcFile());
+                .process(AssetUtils.getTestCorrectCcUSFile());
 
         File asset = new File(TemplateParameterContextCreator.getWorkingDir(), "vendor_id-english.scc");
         assertTrue(asset.exists());
@@ -107,7 +108,7 @@ public class CaptionsAssetProcessorTest {
                 .process(TestUtils.getTestFile());
     }
 
-    @Test(expected = AssetValidationException.class)
+    @Test(expected = ConversionException.class)
     public void testInvalidPath() throws Exception {
         CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
@@ -121,6 +122,18 @@ public class CaptionsAssetProcessorTest {
         CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
-        processor.process(AssetUtils.getTestCorrectCcFile());
+        processor.process(AssetUtils.getTestCorrectCcUSFile());
+    }
+
+    @Test(expected = AssetValidationException.class)
+    public void testDuplicateLanguages() throws Exception {
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+                TemplateParameterContextCreator.getWorkingDir());
+
+        processor.setVendorId("vendor_id");
+
+        processor.process(AssetUtils.getTestCorrectCcUSFile());
+        processor.process(AssetUtils.getTestCorrectCcGBFile());
+
     }
 }

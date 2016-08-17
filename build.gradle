@@ -57,6 +57,9 @@ configure(project.javaSubprojectList) {
     repositories {
         mavenCentral()
         jcenter()
+        flatDir {
+            dirs '../ttml-java/dist'
+        }
     }
 
     dependencies {

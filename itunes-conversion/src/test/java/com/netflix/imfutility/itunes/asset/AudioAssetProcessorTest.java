@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.generated.itunes.metadata.AssetType;
 import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
@@ -26,7 +27,9 @@ import com.netflix.imfutility.itunes.util.AssetUtils;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -43,6 +46,10 @@ import static junit.framework.TestCase.assertTrue;
  */
 public class AudioAssetProcessorTest {
 
+    private MetadataXmlProvider metadataXmlProvider;
+    private File destDir;
+    private File inputAsset;
+
     @BeforeClass
     public static void setupAll() throws IOException {
         // create both working directory and logs folder.
@@ -58,15 +65,24 @@ public class AudioAssetProcessorTest {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
     }
 
+    @Before
+    public void setup() throws IOException {
+        destDir = AssetUtils.createDirectory(TemplateParameterContextCreator.getWorkingDir(), "destDir");
+        inputAsset = AssetUtils.createFile(TemplateParameterContextCreator.getWorkingDir(), "audio");
+
+        metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
+    }
+
+    @After
+    public void teardown() throws IOException {
+        FileUtils.deleteDirectory(destDir);
+        if (inputAsset.exists()) {
+            FileUtils.forceDelete(inputAsset);
+        }
+    }
+
     @Test
-    public void testCorrectSource() throws Exception {
-        File destDir = new File(TemplateParameterContextCreator.getWorkingDir(), "destDir");
-        destDir.mkdir();
-
-        File inputAsset = new File(TemplateParameterContextCreator.getWorkingDir(), "audio");
-        inputAsset.createNewFile();
-
-        MetadataXmlProvider metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
+    public void testCorrectAudio() throws Exception {
         AudioAssetProcessor processor = new AudioAssetProcessor(metadataXmlProvider, destDir);
 
         processor.setLocale(AssetUtils.createLocale("en-US"))
@@ -89,10 +105,9 @@ public class AudioAssetProcessorTest {
         assertEquals("en-US", audioDataFile.getLocale().getName());
     }
 
-    @Test(expected = AssetValidationException.class)
+    @Test(expected = ConversionException.class)
     public void testInvalidPath() throws Exception {
-        AudioAssetProcessor processor = new AudioAssetProcessor(AssetUtils.createMetadataXmlProvider(),
-                TemplateParameterContextCreator.getWorkingDir());
+        AudioAssetProcessor processor = new AudioAssetProcessor(metadataXmlProvider, destDir);
 
         processor.setLocale(AssetUtils.createLocale("en-US"))
                 .process(new File("invalid_path"));
@@ -100,11 +115,7 @@ public class AudioAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testParametersNotSet() throws Exception {
-        File inputAsset = new File(TemplateParameterContextCreator.getWorkingDir(), "audio");
-        inputAsset.createNewFile();
-
-        AudioAssetProcessor processor = new AudioAssetProcessor(AssetUtils.createMetadataXmlProvider(),
-                TemplateParameterContextCreator.getWorkingDir());
+        AudioAssetProcessor processor = new AudioAssetProcessor(metadataXmlProvider, destDir);
 
         //  locale is required
         processor.process(inputAsset);
