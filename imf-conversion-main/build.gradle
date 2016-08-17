@@ -17,12 +17,14 @@ mainClassName = "com.netflix.imfutility.ImfUtility"
 task copyDefaultTools(type: Copy) {
     from '../imf-validation/build/libs'
     from '../ttml-to-stl/build/libs'
+    from '../ttml2itt/build/libs'
     into "${buildDir}/tools"
 }
 
 evaluationDependsOn(':imf-validation')
 evaluationDependsOn(':ttml-to-stl')
-copyDefaultTools.dependsOn(':imf-validation:assemble', ':ttml-to-stl:assemble')
+evaluationDependsOn(':ttml2itt')
+copyDefaultTools.dependsOn(':imf-validation:assemble', ':ttml-to-stl:assemble', ':ttml2itt:assemble')
 classes.dependsOn(copyDefaultTools)
 
 // 5. customize distribution:

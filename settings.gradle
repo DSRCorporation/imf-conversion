@@ -8,6 +8,7 @@ include 'imf-validation'
 include 'ttml-to-stl'
 include 'itunes-conversion'
 include 'itunes-conversion-input-xsd'
+include 'ttml2itt'
 
 project(":imf-conversion-main").name = "imf-conversion-utility"
 
