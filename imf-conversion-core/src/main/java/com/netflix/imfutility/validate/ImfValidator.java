@@ -102,17 +102,18 @@ public class ImfValidator {
         }
 
         boolean fatalErrors = false;
+        logger.warn("{}IMF Validation result:", LogHelper.TAB);
         for (ErrorType error : errors.getError()) {
             switch (error.getLevel()) {
                 case FATAL:
                     fatalErrors = true;
-                    logger.error("{}IMF Validation FATAL error {}", LogHelper.TAB, error.getValue());
+                    logger.error("{}{}{}", LogHelper.TAB, LogHelper.TAB, error.getValue());
                     break;
                 case NON_FATAL:
-                    logger.warn("{}IMF Validation non-fatal error {}", LogHelper.TAB, error.getValue());
+                    logger.warn("{}{}{}", LogHelper.TAB, LogHelper.TAB, error.getValue());
                     break;
                 case WARNING:
-                    logger.warn("{}IMF Validation warning {}", LogHelper.TAB, error.getValue());
+                    logger.warn("{}{}{}", LogHelper.TAB, LogHelper.TAB, error.getValue());
                     break;
                 default:
                     //nothing
