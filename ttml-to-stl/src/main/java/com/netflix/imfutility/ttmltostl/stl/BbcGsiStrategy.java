@@ -29,14 +29,18 @@ import com.netflix.imfutility.xml.XmlParsingException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 
 import static com.netflix.imfutility.dpp.DppConversionXsdConstants.ISO_639_2_CODES_XML_SCHEME;
 import static com.netflix.imfutility.dpp.DppConversionXsdConstants.TYPES_XML_SCHEME;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.CD;
 import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.ECD;
 import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.EN;
 import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.OET;
 import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.OPT;
 import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.PUB;
+import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.RD;
 import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.TCF;
 import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.TCP;
 
@@ -110,6 +114,17 @@ public final class BbcGsiStrategy extends DefaultGsiStrategy {
             ECD.setValue(metadata.getTechnical().getContactInformation().getContactEmail());
         } else {
             ECD.fillEmptyValue();
+        }
+
+        // CD and RD from metadata.xml
+        if (metadata.getTechnical().getAdditional() != null &&
+                metadata.getTechnical().getAdditional().getCompletionDate() != null) {
+            GregorianCalendar gregorianCalendar = metadata.getTechnical().getAdditional().getCompletionDate().toGregorianCalendar();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
+            simpleDateFormat.setCalendar(gregorianCalendar);
+            String completionDate = simpleDateFormat.format(gregorianCalendar.getTime());
+            CD.setValue(completionDate);
+            RD.setValue(completionDate);
         }
     }
 

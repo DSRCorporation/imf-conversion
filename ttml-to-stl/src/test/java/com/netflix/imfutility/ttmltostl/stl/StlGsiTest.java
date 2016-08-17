@@ -23,9 +23,7 @@ import com.netflix.imfutility.ttmltostl.util.StlTestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
@@ -110,12 +108,15 @@ public class StlGsiTest {
                 slr,
                 Arrays.copyOfRange(gsi, 208, 224));
 
-        byte[] currentDate = new SimpleDateFormat("yyMMdd").format(new Date()).getBytes();
         assertArrayEquals(
-                currentDate,
+                new byte[]{
+                        0x31, 0x36, 0x30, 0x37, 0x30, 0x38 // creation date as in metadata.xml:
+                },
                 Arrays.copyOfRange(gsi, 224, 230));
         assertArrayEquals(
-                currentDate,
+                new byte[]{
+                        0x31, 0x36, 0x30, 0x37, 0x30, 0x38 // revision date as in metadata.xml:
+                },
                 Arrays.copyOfRange(gsi, 230, 236));
 
         assertArrayEquals(
@@ -271,12 +272,15 @@ public class StlGsiTest {
                 slr,
                 Arrays.copyOfRange(gsi, 208, 224));
 
-        byte[] currentDate = new SimpleDateFormat("yyMMdd").format(new Date()).getBytes();
         assertArrayEquals(
-                currentDate,
+                new byte[]{
+                        0x31, 0x36, 0x30, 0x37, 0x30, 0x38 // creation date as in metadata.xml:
+                },
                 Arrays.copyOfRange(gsi, 224, 230));
         assertArrayEquals(
-                currentDate,
+                new byte[]{
+                        0x31, 0x36, 0x30, 0x37, 0x30, 0x38 // revision date as in metadata.xml:
+                },
                 Arrays.copyOfRange(gsi, 230, 236));
 
         assertArrayEquals(
