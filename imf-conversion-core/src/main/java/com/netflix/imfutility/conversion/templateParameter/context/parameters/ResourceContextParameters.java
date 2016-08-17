@@ -88,13 +88,16 @@ public enum ResourceContextParameters {
     BITS_PER_SAMPLE("bits_per_sample"),
     SAMPLE_RATE("sample_rate"),
     CHANNELS_LAYOUT("channels_layout"),
+    SOUNDFIELD_GROUP_ID("soundfield_group_id"),
 
     // video
     WIDTH("width"),
     HEIGHT("height"),
     BIT_DEPTH("bit_depth"),
     PIXEL_FORMAT("pixel_format"),
-    FRAME_RATE("frame_rate");
+    FRAME_RATE("frame_rate"),
+
+    LANG("lang");
 
 
     private final String name;

@@ -24,7 +24,9 @@ import com.netflix.imfutility.conversion.templateParameter.context.DynamicTempla
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.dpp.MetadataXmlProvider.DMFramework;
+import com.netflix.imfutility.dpp.metadata.MetadataXmlProvider;
+import com.netflix.imfutility.dpp.metadata.MetadataXmlProvider.DMFramework;
+import com.netflix.imfutility.dpp.audio.AudioMapXmlProvider;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParametersValidator;
 import com.netflix.imfutility.generated.conversion.SequenceType;
@@ -108,9 +110,6 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
                 contextProvider.getWorkingDir());
 
         // 2. load audiomap.xml
-        if (dppInputParameters.getAudiomapFile() == null) {
-            logger.warn("No audiomap.xml specified as a command line argument. A default audiomap.xml will be generated.");
-        }
         AudioTrackLayoutDmAs11Type audioTrackLayout = metadataXmlProvider.getDpp().getTechnical().getAudio().getAudioTrackLayout();
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(dppInputParameters.getAudiomapFile(),
                 audioTrackLayout, contextProvider);

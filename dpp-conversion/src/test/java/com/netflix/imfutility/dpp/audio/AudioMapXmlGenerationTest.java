@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.dpp;
+package com.netflix.imfutility.dpp.audio;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,38 +28,37 @@ import java.util.UUID;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Unit tests for generation of DPP test-metadata.xml.
+ * Unit tests for generation of audiomap.xml.
  */
-public class MetadataXmlGenerationTest {
+public class AudioMapXmlGenerationTest {
 
-    private File metadataXml;
+    private File audiomapXml;
 
     @Before
     public void setUp() throws Exception {
         //create and delete a temp file
-        metadataXml = File.createTempFile(UUID.randomUUID().toString(), ".xml");
-        metadataXml.deleteOnExit();
-        assertTrue("Temporary file cannot be deleted.", metadataXml.delete());
+        audiomapXml = File.createTempFile(UUID.randomUUID().toString(), ".xml");
+        audiomapXml.deleteOnExit();
+        assertTrue("Temporary file cannot be deleted.", audiomapXml.delete());
     }
 
     @After
     public void tearDown() {
         //remove temp file;
-        assertTrue("Temporary file cannot be deleted.", metadataXml.delete());
+        assertTrue("Temporary file cannot be deleted.", audiomapXml.delete());
     }
 
     /**
-     * Tests empty test-metadata.xml generation.
-     *
+     * Tests sample audiomap.xml generation.
      *
      */
     @Test
-    public void generateEmptyXml() {
-        //try to generate Dpp test-metadata.xml
-        MetadataXmlProvider.generateEmptyXml(metadataXml.getAbsolutePath());
+    public void generateSampleXml() {
+        //try to generate sample audiomap.xml
+        AudioMapXmlCreator.generateSampleXml(audiomapXml.getAbsolutePath());
 
         //check it is not empty
-        assertTrue("Generated test-metadata.xml is zero size.", metadataXml.length() > 0);
+        assertTrue("Generated audiomap.xml is zero size.", audiomapXml.length() > 0);
     }
 
 }
