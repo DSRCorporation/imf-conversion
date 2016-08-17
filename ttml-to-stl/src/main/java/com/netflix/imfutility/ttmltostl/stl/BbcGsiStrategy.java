@@ -89,14 +89,16 @@ public final class BbcGsiStrategy extends DefaultGsiStrategy {
         fillTcf(tto);
 
         // PUB
-        if (metadata.getEditorial().getDistributor() != null) {
-            PUB.setValue(metadata.getEditorial().getDistributor());
+        if (metadata.getEditorial().getOriginator() != null) {
+            PUB.setValue(metadata.getEditorial().getOriginator());
         } else {
             PUB.fillEmptyValue();
         }
 
         // EN
-        if (metadata.getEditorial().getOriginator() != null) {
+        if (metadata.getEditorial().getDistributor() != null) {
+            EN.setValue(metadata.getEditorial().getDistributor());
+        } else if (metadata.getEditorial().getOriginator() != null) {
             EN.setValue(metadata.getEditorial().getOriginator());
         } else {
             EN.fillEmptyValue();
