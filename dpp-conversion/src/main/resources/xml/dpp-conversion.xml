@@ -22,6 +22,7 @@
 <conversion xmlns="http://conversion.imfutility.netflix.com">
 
     <imfValidation>%{dynamic.validateTool} -i "%{dynamic.imp}" -c "%{dynamic.cpl}" -d "%{dynamic.workingDir}"
+        -e %{dynamic.referencedEssences}
         -f "%{dynamic.outputValidationFile}"
     </imfValidation>
 

@@ -48,7 +48,7 @@ public class ImfErrorXmlPresenter implements IImfErrorPresenter {
             Errors errors = new Errors();
             for (ErrorLogger.ErrorObject errorObj : errorObjs) {
                 ErrorType error = new ErrorType();
-                error.setValue(errorObj.toString());
+                error.setValue(getErrorMsg(errorObj));
                 error.setLevel(getErrorLevel(errorObj));
                 errors.getError().add(error);
             }
@@ -58,6 +58,16 @@ public class ImfErrorXmlPresenter implements IImfErrorPresenter {
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String getErrorMsg(ErrorLogger.ErrorObject errorObj) {
+        String errorLevel = errorObj.getErrorLevel().toString();
+        String errorCode = errorObj.getErrorCode().toString();
+        String errorDescr = errorObj.getErrorDescription();
+        if (errorDescr == null) {
+            errorDescr = "<no description>";
+        }
+        return String.format("%s: %s: %s", errorLevel, errorCode, errorDescr);
     }
 
     private LevelType getErrorLevel(ErrorLogger.ErrorObject errorObj) {
