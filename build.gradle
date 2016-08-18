@@ -31,7 +31,7 @@ project.ext {
         it.name == 'dpp-conversion-input-xsd' ||
                 it.name == 'itunes-conversion-input-xsd' ||
                 it.name == 'imf-conversion-core' ||
-                it.name == 'imf-validation'
+                it.name == 'imf-conversion-common'
     }
 
     // Java projects that produce a test artifacts (.jar with tests)

@@ -91,6 +91,7 @@
                                         -pix_fmt %{dest.pixelFormat} -f rawvideo -
                                     </execOnce>
                                 </execEachSegment>
+
                             </cycle>
                             <execOnce name="encode_video">
                                 "%{tool.x264}" --input-res %{dest.width}x%{dest.height} --input-csp %{dest.chromaSubsampling} --input-depth %{dest.bitDepth} -
@@ -212,6 +213,7 @@
                                 %{seq.num}-%{segm.num}-%{resource.num}.xml
                             </dynamicParameter>
 
+                            <dynamicParameter name="concatTTML"></dynamicParameter>
                             <dynamicParameter name="concatTTML" concat="true" concatWhitespace="true">
                                 --ttml
                                 %{seq.num}-%{segm.num}-%{resource.num}.xml %{resource.offsetMS} %{resource.startTimeMS}

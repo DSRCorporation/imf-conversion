@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -16,30 +16,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.validate;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+package com.netflix.imfutility;
 
 /**
- * An Exception class to wrap IMF validation errors.
+ * Common constants.
  */
-public class ImfValidationException extends Exception {
+public final class CommonConstants {
 
-    private List<String> errors;
+    /* XSD */
 
-    public ImfValidationException(List<String> errors) {
-        super();
-        this.errors = errors;
-        if (this.errors == null) {
-            this.errors = new ArrayList<>();
-        }
+    // errors.xml
+    public static final String ERRORS_XML_SCHEME = "xsd/errors.xsd";
+    public static final String ERRORS_PACKAGE = "com.netflix.imfutility.generated.validation";
+
+    private CommonConstants() {
     }
-
-    @Override
-    public String getMessage() {
-        return errors.stream().collect(Collectors.joining("\n", "\n[", "]"));
-    }
-
 }

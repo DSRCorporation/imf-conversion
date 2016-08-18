@@ -34,6 +34,9 @@ call .\chimera25-audiomap-16C "%~1\%Chimera25Dir%" %2 %3
 :: multiple
 call .\chimera25-multiple-audio "%~1\%Chimera25Dir%" %2 %3
 
+:: essence descriptors
+call .\chimera25-segments-audio-essence-desc "%~1\%Chimera25Dir%" %2 %3
+
 :: default as-is full CPLs for all test packages
 call .\chimera23-default "%~1\%Chimera23Dir%" %2 %3
 call .\chimera25-default "%~1\%Chimera25Dir%" %2 %3

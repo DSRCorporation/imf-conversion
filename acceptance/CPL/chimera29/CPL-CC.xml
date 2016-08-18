@@ -67,7 +67,7 @@
                             <EntryPoint>300</EntryPoint>
                             <SourceDuration>600</SourceDuration>
                             <SourceEncoding>urn:uuid:12db7c06-40d2-4963-9039-53905a878acb</SourceEncoding>
-                            <TrackFileId>urn:uuid:14d97197-22c6-4b81-bf72-e39fd3d6d3bb</TrackFileId>
+                            <TrackFileId>urn:uuid:d9fc05c4-bda9-4491-9f4e-853f38893f0e</TrackFileId>
                         </Resource>
                     </ResourceList>
                 </cc:SubtitlesSequence>
@@ -140,7 +140,7 @@
                             <EntryPoint>1500</EntryPoint>
                             <SourceDuration>600</SourceDuration>
                             <SourceEncoding>urn:uuid:12db7c06-40d2-4963-9039-53905a878acb</SourceEncoding>
-                            <TrackFileId>urn:uuid:14d97197-22c6-4b81-bf72-e39fd3d6d3bb</TrackFileId>
+                            <TrackFileId>urn:uuid:d9fc05c4-bda9-4491-9f4e-853f38893f0e</TrackFileId>
                         </Resource>
                         <Resource xsi:type="TrackFileResourceType">
                             <Id>urn:uuid:4422c9ed-6b53-4b67-bd27-5ce68c43e9af</Id>
@@ -150,7 +150,7 @@
                             <SourceDuration>600</SourceDuration>
                             <RepeatCount>3</RepeatCount>
                             <SourceEncoding>urn:uuid:12db7c06-40d2-4963-9039-53905a878acb</SourceEncoding>
-                            <TrackFileId>urn:uuid:14d97197-22c6-4b81-bf72-e39fd3d6d3bb</TrackFileId>
+                            <TrackFileId>urn:uuid:d9fc05c4-bda9-4491-9f4e-853f38893f0e</TrackFileId>
                         </Resource>
                     </ResourceList>
                 </cc:SubtitlesSequence>
