@@ -89,8 +89,8 @@ public class MetadataXmlProvider {
     public static final String DEST_FRAME_RATE = "25 1";
 
     private static final String LINE_UP_START = "09:59:30:00";
-    private static final String IDENT_CLOCK_START = "09:59:30:00";
-    private static final String FIRST_PART_SOM = "09:59:30:00";
+    private static final String IDENT_CLOCK_START = "09:59:50:00";
+    private static final String FIRST_PART_SOM = "09:59:59:24";
 
     /**
      * MXF frameworks enumeration.

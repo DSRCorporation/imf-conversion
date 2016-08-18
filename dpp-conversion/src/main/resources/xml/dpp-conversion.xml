@@ -96,13 +96,21 @@
                                       -t 20 -r %{dest.frameRate}
                                       -pix_fmt %{dest.pixelFormat} -f rawvideo -
                                 </execOnce>
-                                <!--7s 6fr-->
+                                <!--7s-->
                                 <execOnce name="ident_clock">
                                     "%{tool.ffmpeg}"
-                                      -an -f lavfi -i color=c=blue:s=%{dest.width}x%{dest.height}
-                                      -vframes 181
+                                      -an -f lavfi -i color=c=black:s=%{dest.width}x%{dest.height}
+                                      -t 7
                                       -r %{dest.frameRate}
                                       -pix_fmt %{dest.pixelFormat} -f rawvideo -
+                                </execOnce>
+                                <!--5fr-->
+                                <execOnce name="slate">
+                                    "%{tool.ffmpeg}"
+                                    -an -f lavfi -i color=c=white:s=%{dest.width}x%{dest.height}
+                                    -vframes 5
+                                    -r %{dest.frameRate}
+                                    -pix_fmt %{dest.pixelFormat} -f rawvideo -
                                 </execOnce>
                                 <!--2s 19fr-->
                                 <execOnce name="black">
@@ -169,16 +177,16 @@
                                 <!--20s-->
                                 <execOnce name="tone">
                                     "%{tool.ffmpeg}"
-                                       -i "C:\Develop\Netflix\res\Stereo_Programmes_1kHz_GLITS_Lineup.wav"
+                                    -i "%{dynamic.glitsLineup}"
                                        -vn -t 20
                                        -af aresample=%{dest.sampleRate}
                                        -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
                                 </execOnce>
-                                <!--10s (00:00:07:06 + 00:00:02:19)-->
+                                <!--9.960s (00:00:07:00 clock + 00:00:00:05 slate + 00:00:02:19 black)-->
                                 <execOnce name="silence">
                                     %{tool.ffmpeg}
                                      -f lavfi -i anullsrc=cl=stereo:r=%{dest.sampleRate}
-                                     -vn -t 10
+                                     -vn -t 9.960
                                      -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
                                 </execOnce>
                                 <execEachSegment name="decode_audio">
