@@ -39,6 +39,10 @@ public final class MediaInfoUtils {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoAudio2.xml").toURI());
     }
 
+    public static File getCorrectMediaInfoAudio3() throws URISyntaxException {
+        //noinspection ConstantConditions
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/mediaInfoAudio3.xml").toURI());
+    }
 
     public static File getCorrectMediaInfoVideo() throws URISyntaxException {
         //noinspection ConstantConditions

@@ -18,13 +18,14 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
+import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.itunes.asset.distribute.DistributeAssetStrategy;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
 
 /**
  * Abstract class to manage asset processing.
@@ -39,31 +40,46 @@ import java.nio.file.Files;
  * @param <T> metadata tag class
  */
 public abstract class AssetProcessor<T> {
+    private final Logger logger = LoggerFactory.getLogger(AssetProcessor.class);
+
     protected final MetadataXmlProvider metadataXmlProvider;
     protected final File destDir;
+
+    protected DistributeAssetStrategy distributeAssetStrategy;
 
     public AssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
         this.metadataXmlProvider = metadataXmlProvider;
         this.destDir = destDir;
     }
 
+    public void setDistributeAssetStrategy(DistributeAssetStrategy distributeAssetStrategy) {
+        this.distributeAssetStrategy = distributeAssetStrategy;
+    }
+
     public void process(File assetFile) throws AssetValidationException, IOException {
-        if (!checkInput(assetFile)) {
-            throw new AssetValidationException("Mandatory parameters for processor must be set");
+        logger.info("Processing asset {}...", assetFile.getName());
+
+        if (!assetFile.exists() || !assetFile.isFile()) {
+            throw new ConversionException(String.format(
+                    "Asset file '%s' must be an existing file", assetFile.getName()));
         }
+
+        if (!checkMandatoryParams()) {
+            throw new AssetValidationException("Mandatory input parameters for processor must be set");
+        }
+
         validate(assetFile);
         appendMetadata(buildMetadata(assetFile));
         distribute(assetFile);
+
+        logger.info("Processed asset: OK\n");
     }
 
-    protected boolean checkInput(File assetFile) {
-        return assetFile.exists() && assetFile.isFile();
-    }
+    protected abstract boolean checkMandatoryParams();
 
     protected void distribute(File assetFile) throws IOException {
-        File destFile = new File(destDir, getFileName());
-        try (OutputStream destOut = new FileOutputStream(destFile)) {
-            Files.copy(assetFile.toPath(), destOut);
+        if (distributeAssetStrategy != null) {
+            distributeAssetStrategy.distribute(assetFile, destDir, getDestFileName(assetFile));
         }
     }
 
@@ -73,5 +89,5 @@ public abstract class AssetProcessor<T> {
 
     protected abstract void appendMetadata(T tag);
 
-    protected abstract String getFileName();
+    protected abstract String getDestFileName(File assetFile);
 }

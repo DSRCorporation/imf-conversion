@@ -18,8 +18,6 @@
  */
 package com.netflix.imfutility.itunes.inputparameters;
 
-import com.netflix.imfutility.inputparameters.IDefaultTools;
-
 /**
  * Default tools mock for tests.
  */
@@ -30,4 +28,8 @@ public class ITunesFakeDefaultTools implements ITunesDefaultTools {
         return "java -jar somejar.jar";
     }
 
+    @Override
+    public String getTtmlToIttTool() {
+        return "java -jar somejar.jar";
+    }
 }

@@ -20,6 +20,7 @@ package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.generated.itunes.metadata.ArtWorkFileType;
 import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
+import com.netflix.imfutility.itunes.asset.distribute.CopyAssetStrategy;
 import com.netflix.imfutility.itunes.image.ImageValidator;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.itunes.xmlprovider.builder.file.ArtWorkFileTagBuilder;
@@ -31,8 +32,6 @@ import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.CHAPTE
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.CHAPTER_MIN_INDEX;
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.CHAPTER_MIN_WIDTH;
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.CHAPTER_TYPE;
-import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.JPG_CONTENT_TYPE;
-import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.JPG_FORMAT_NAME;
 
 /**
  * Asset processor specified for chapter image managing.
@@ -45,6 +44,7 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
 
     public ChapterAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
+        setDistributeAssetStrategy(new CopyAssetStrategy());
     }
 
     public ChapterAssetProcessor setChapterIndex(Integer chapterIndex) {
@@ -63,9 +63,8 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
     }
 
     @Override
-    protected boolean checkInput(File assetFile) {
-        return super.checkInput(assetFile)
-                && chapterIndex != null
+    protected boolean checkMandatoryParams() {
+        return chapterIndex != null
                 && !(chapterIndex < CHAPTER_MIN_INDEX || chapterIndex > CHAPTER_MAX_INDEX)
                 && aspectRatio != null
                 && inputChapter != null;
@@ -77,13 +76,13 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
         //  validate only chapter width
         validator.validateSize(CHAPTER_MIN_WIDTH, null);
         validator.validateAspectRatio(aspectRatio);
-        validator.validateContentType(JPG_CONTENT_TYPE, JPG_FORMAT_NAME);
+        validator.validateJpeg();
         validator.validateRGBColorSpace();
     }
 
     @Override
     protected ArtWorkFileType buildMetadata(File assetFile) {
-        return new ArtWorkFileTagBuilder(assetFile, getFileName()).build();
+        return new ArtWorkFileTagBuilder(assetFile, getDestFileName(assetFile)).build();
     }
 
     @Override
@@ -92,7 +91,7 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
     }
 
     @Override
-    protected String getFileName() {
+    protected String getDestFileName(File assetFile) {
         return "chapter" + String.format("%02d", chapterIndex) + ".jpg";
     }
 }

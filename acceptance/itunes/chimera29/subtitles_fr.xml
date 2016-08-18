@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tt xml:lang="fr" xmlns="http://www.w3.org/ns/ttml" xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:ttm="http://www.w3.org/ns/ttml#metadata" xmlns:ttp="http://www.w3.org/ns/ttml#parameter" ttp:timeBase="media" ttp:frameRate="30" ttp:frameRateMultiplier="1000 1001" xmlns:smpte="http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt" xmlns:m608="http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt#cea608">
+    <head>
+        <metadata>
+            <ttm:desc>SMPTE Timed Text document created by MacCaption™ version 6.0.03 (16x9)</ttm:desc>
+            <smpte:information xmlns:m608="http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt#cea608" origin="http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt#cea608" mode="Preserved" m608:channel="CC1" m608:programName="Demo" m608:captionService="F1C1CC"/>
+        </metadata>
+        <styling>
+            <style xml:id="basic" tts:color="white" tts:backgroundColor="black" tts:fontFamily="Arial" tts:fontSize="100%" tts:fontWeight="normal" tts:fontStyle="normal"/>
+        </styling>
+        <layout>
+            <region xml:id="pop1" tts:backgroundColor="transparent" tts:showBackground="whenActive"/>
+            <region xml:id="pop2" tts:backgroundColor="transparent" tts:showBackground="whenActive"/>
+            <region xml:id="pop3" tts:backgroundColor="transparent" tts:showBackground="whenActive"/>
+            <region xml:id="pop4" tts:backgroundColor="transparent" tts:showBackground="whenActive"/>
+        </layout>
+    </head>
+    <body>
+        <div>
+            <p begin="00:00:12:24" end="00:00:14:16" region="pop1" style="basic" tts:origin="29.58% 84.77%" tts:extent="40.97% 5.14%">D'accord, vieux. Voilà pour toi.</p>
+            <p begin="00:00:14:18" end="00:00:16:24" region="pop1" style="basic" tts:origin="37.78% 78.81%" tts:extent="24.44% 5.14%">- Merci beaucoup.</p>
+            <p begin="00:00:14:18" end="00:00:16:24" region="pop2" style="basic" tts:origin="34.03% 84.77%" tts:extent="31.94% 5.14%">- Tu veux autre chose ?</p>
+            <p begin="00:00:16:26" end="00:00:19:15" region="pop1" style="basic" tts:origin="26.39% 78.81%" tts:extent="47.36% 5.14%">Je vais prendre la salade jardinière</p>
+            <p begin="00:00:16:26" end="00:00:19:15" region="pop2" style="basic" tts:origin="30.42% 84.77%" tts:extent="39.31% 5.14%">avec de l'huile et du vinaigre.</p>
+            <p begin="00:00:19:17" end="00:00:21:23" region="pop1" style="basic" tts:origin="42.64% 78.81%" tts:extent="14.72% 5.14%">- D'accord.</p>
+            <p begin="00:00:19:17" end="00:00:21:23" region="pop2" style="basic" tts:origin="25.69% 84.77%" tts:extent="48.61% 5.14%">- Attends. Tu as de la mayonnaise ?</p>
+            <p begin="00:00:21:25" end="00:00:24:08" region="pop1" style="basic" tts:origin="37.5% 78.81%" tts:extent="25% 5.14%">- Oui, absolument.</p>
+            <p begin="00:00:21:25" end="00:00:24:08" region="pop2" style="basic" tts:origin="26.94% 84.77%" tts:extent="46.25% 5.14%">- Et de la vinaigrette balsamique ?</p>
+            <p begin="00:00:24:10" end="00:00:26:24" region="pop1" style="basic" tts:origin="27.5% 78.81%" tts:extent="45% 5.14%">Je vais m'en tenir à l'huile d'olive,</p>
+            <p begin="00:00:24:10" end="00:00:26:24" region="pop2" style="basic" tts:origin="32.64% 84.77%" tts:extent="34.86% 5.14%">le vinaigre et la jardinière.</p>
+            <p begin="00:00:26:26" end="00:00:29:08" region="pop1" style="basic" tts:origin="29.86% 78.81%" tts:extent="40.28% 5.14%">D'accord. Comme tu voudras.</p>
+            <p begin="00:00:26:26" end="00:00:29:08" region="pop2" style="basic" tts:origin="41.81% 84.77%" tts:extent="16.53% 5.14%">Et pour toi ?</p>
+            <p begin="00:00:29:10" end="00:00:32:16" region="pop1" style="basic" tts:origin="33.61% 78.81%" tts:extent="32.78% 5.14%">Je vais prendre les ailes</p>
+            <p begin="00:00:29:10" end="00:00:32:16" region="pop2" style="basic" tts:origin="35.42% 84.77%" tts:extent="29.17% 5.14%">épicées au barbecue.</p>
+            <p begin="00:00:32:18" end="00:00:36:01" region="pop1" style="basic" tts:origin="25.42% 78.81%" tts:extent="49.31% 5.14%">- Je peux avoir de la sauce Buffalo ?</p>
+            <p begin="00:00:32:18" end="00:00:36:01" region="pop2" style="basic" tts:origin="37.5% 84.77%" tts:extent="25% 5.14%">- Oui, absolument.</p>
+            <p begin="00:00:36:03" end="00:00:38:14" region="pop1" style="basic" tts:origin="32.08% 78.81%" tts:extent="35.97% 5.14%">- Quelque chose pour toi ?</p>
+            <p begin="00:00:36:03" end="00:00:38:14" region="pop2" style="basic" tts:origin="41.25% 84.77%" tts:extent="17.5% 5.14%">- Non, merci.</p>
+            <p begin="00:00:39:22" end="00:00:41:20" region="pop1" style="basic" tts:origin="37.08% 78.81%" tts:extent="25.83% 5.14%">- Comment ça va ?</p>
+            <p begin="00:00:39:22" end="00:00:41:20" region="pop2" style="basic" tts:origin="37.92% 84.77%" tts:extent="24.31% 5.14%">- Super. Et vous ?</p>
+            <p begin="00:00:41:22" end="00:00:43:29" region="pop1" style="basic" tts:origin="32.78% 78.81%" tts:extent="34.44% 5.14%">- Bien. Content de te voir.</p>
+            <p begin="00:00:41:22" end="00:00:43:29" region="pop2" style="basic" tts:origin="33.19% 84.77%" tts:extent="33.75% 5.14%">- Et le match d'hier soir ?</p>
+            <p begin="00:00:44:01" end="00:00:46:10" region="pop1" style="basic" tts:origin="34.31% 78.81%" tts:extent="31.39% 5.14%">- Ce match était génial.</p>
+            <p begin="00:00:44:01" end="00:00:46:10" region="pop2" style="basic" tts:origin="46.25% 84.77%" tts:extent="7.5% 5.14%">- Oui.</p>
+            <p begin="00:00:53:01" end="00:00:55:16" region="pop1" style="basic" tts:origin="37.08% 78.81%" tts:extent="25.83% 5.14%">Mon Dieu, maman.</p>
+            <p begin="00:00:53:01" end="00:00:55:16" region="pop2" style="basic" tts:origin="42.08% 84.77%" tts:extent="15.97% 5.14%">C'est super.</p>
+            <p begin="00:00:55:18" end="00:00:58:03" region="pop1" style="basic" tts:origin="27.22% 84.77%" tts:extent="45.69% 5.14%">Oui. Je suis si contente de te voir.</p>
+            <p begin="00:00:58:05" end="00:01:00:23" region="pop1" style="basic" tts:origin="32.08% 78.81%" tts:extent="35.83% 5.14%">Je sais. Ça fait longtemps.</p>
+            <p begin="00:00:58:05" end="00:01:00:23" region="pop2" style="basic" tts:origin="43.06% 84.77%" tts:extent="14.03% 5.14%">Six mois ?</p>
+            <p begin="00:01:00:25" end="00:01:03:01" region="pop1" style="basic" tts:origin="46.25% 78.81%" tts:extent="7.5% 5.14%">- Oui.</p>
+            <p begin="00:01:00:25" end="00:01:03:01" region="pop2" style="basic" tts:origin="30.28% 84.77%" tts:extent="39.44% 5.14%">- Ça me semble une éternité.</p>
+            <p begin="00:01:03:03" end="00:01:06:18" region="pop1" style="basic" tts:origin="39.86% 78.81%" tts:extent="20.42% 5.14%">- C'est dingue !</p>
+            <p begin="00:01:03:03" end="00:01:06:18" region="pop2" style="basic" tts:origin="31.81% 84.77%" tts:extent="36.53% 5.14%">- Comment ça va à la fac ?</p>
+            <p begin="00:01:06:20" end="00:01:10:06" region="pop1" style="basic" tts:origin="34.44% 78.81%" tts:extent="31.25% 5.14%">Bien. Je suis si content</p>
+            <p begin="00:01:06:20" end="00:01:10:06" region="pop2" style="basic" tts:origin="34.58% 84.77%" tts:extent="30.83% 5.14%">d'avoir choisi cette fac.</p>
+            <p begin="00:01:11:06" end="00:01:13:06" region="pop1" style="basic" tts:origin="35.56% 78.81%" tts:extent="28.89% 5.14%">C'est le genre de truc</p>
+            <p begin="00:01:11:06" end="00:01:13:06" region="pop2" style="basic" tts:origin="42.64% 84.77%" tts:extent="14.86% 5.14%">qu'on sent.</p>
+            <p begin="00:01:13:08" end="00:01:15:25" region="pop1" style="basic" tts:origin="34.58% 78.81%" tts:extent="30.97% 5.14%">Ça semblait le meilleur</p>
+            <p begin="00:01:13:08" end="00:01:15:25" region="pop2" style="basic" tts:origin="33.19% 84.77%" tts:extent="33.75% 5.14%">des campus qu'on a vus.</p>
+            <p begin="00:01:15:27" end="00:01:18:22" region="pop1" style="basic" tts:origin="34.44% 78.81%" tts:extent="31.11% 5.14%">- Ça s'est avéré génial.</p>
+            <p begin="00:01:15:27" end="00:01:18:22" region="pop2" style="basic" tts:origin="32.22% 84.77%" tts:extent="35.69% 5.14%">- Très bon investissement.</p>
+            <p begin="00:01:18:24" end="00:01:22:10" region="pop1" style="basic" tts:origin="37.78% 78.81%" tts:extent="24.44% 5.14%">- Je le crois aussi.</p>
+            <p begin="00:01:18:24" end="00:01:22:10" region="pop2" style="basic" tts:origin="30.28% 84.77%" tts:extent="39.44% 5.14%">- Tu es heureux à la facutlé ?</p>
+            <p begin="00:01:22:12" end="00:01:24:07" region="pop1" style="basic" tts:origin="39.86% 78.81%" tts:extent="20.42% 5.14%">- Je me régale.</p>
+            <p begin="00:01:22:12" end="00:01:24:07" region="pop2" style="basic" tts:origin="41.81% 84.77%" tts:extent="16.53% 5.14%">- Vraiment ?</p>
+            <p begin="00:01:24:09" end="00:01:26:24" region="pop1" style="basic" tts:origin="28.47% 78.81%" tts:extent="43.06% 5.14%">- Sans dissipation, n'aie crainte.</p>
+            <p begin="00:01:24:09" end="00:01:26:24" region="pop2" style="basic" tts:origin="45.56% 84.77%" tts:extent="8.89% 5.14%">- Bien.</p>
+            <p begin="00:01:26:26" end="00:01:29:25" region="pop1" style="basic" tts:origin="38.61% 78.81%" tts:extent="22.78% 5.14%">- Mais c'est bien.</p>
+            <p begin="00:01:26:26" end="00:01:29:25" region="pop2" style="basic" tts:origin="29.86% 84.77%" tts:extent="40.28% 5.14%">- Tu te débrouilles en maths ?</p>
+            <p begin="00:01:29:27" end="00:01:34:07" region="pop1" style="basic" tts:origin="27.64% 78.81%" tts:extent="44.86% 5.14%">Oui. Ça va. Ça prend un moment</p>
+            <p begin="00:01:29:27" end="00:01:34:07" region="pop2" style="basic" tts:origin="38.47% 84.77%" tts:extent="23.19% 5.14%">pour s'y habituer.</p>
+            <p begin="00:01:34:09" end="00:01:37:11" region="pop1" style="basic" tts:origin="31.25% 78.81%" tts:extent="37.5% 5.14%">Mais je sens que je me suis</p>
+            <p begin="00:01:34:09" end="00:01:37:11" region="pop2" style="basic" tts:origin="38.61% 84.77%" tts:extent="22.78% 5.14%">adapté à tout ça.</p>
+            <p begin="00:01:37:13" end="00:01:40:06" region="pop1" style="basic" tts:origin="29.17% 78.81%" tts:extent="41.81% 5.14%">Tu as déménagé de la maison,</p>
+            <p begin="00:01:37:13" end="00:01:40:06" region="pop2" style="basic" tts:origin="31.53% 84.77%" tts:extent="37.08% 5.14%">trouvé un endroit où vivre...</p>
+            <p begin="00:01:40:08" end="00:01:42:19" region="pop1" style="basic" tts:origin="31.39% 78.81%" tts:extent="37.22% 5.14%">... un nouveau lieu d'études</p>
+            <p begin="00:01:40:08" end="00:01:42:19" region="pop2" style="basic" tts:origin="36.94% 84.77%" tts:extent="26.11% 5.14%">et tout est différent.</p>
+            <p begin="00:01:42:21" end="00:01:46:06" region="pop1" style="basic" tts:origin="29.17% 78.81%" tts:extent="41.67% 5.14%">Et j'apprécie le fait que lorsque</p>
+            <p begin="00:01:42:21" end="00:01:46:06" region="pop2" style="basic" tts:origin="29.58% 84.77%" tts:extent="40.97% 5.14%">j'appelle, tu m'aides et tout ça.</p>
+            <p begin="00:01:46:08" end="00:01:48:12" region="pop1" style="basic" tts:origin="37.08% 78.81%" tts:extent="25.83% 5.14%">- Pas de problème.</p>
+            <p begin="00:01:46:08" end="00:01:48:12" region="pop2" style="basic" tts:origin="27.36% 84.77%" tts:extent="45.28% 5.14%">- Ça m'aide à rester alerte là-bas.</p>
+            <p begin="00:01:48:14" end="00:01:50:23" region="pop1" style="basic" tts:origin="30.28% 78.81%" tts:extent="39.58% 5.14%">Tu es un bon investissement.</p>
+            <p begin="00:01:48:14" end="00:01:50:23" region="pop2" style="basic" tts:origin="32.22% 84.77%" tts:extent="35.69% 5.14%">C'est pour ça qu'on l'a fait.</p>
+            <p begin="00:01:50:25" end="00:01:52:06" region="pop1" style="basic" tts:origin="28.89% 84.77%" tts:extent="42.22% 5.14%">C'est ce que j'adore chez vous.</p>
+            <p begin="00:01:52:08" end="00:01:55:00" region="pop1" style="basic" tts:origin="32.92% 78.81%" tts:extent="34.31% 5.14%">- Alors tu te plais là-bas ?</p>
+            <p begin="00:01:52:08" end="00:01:55:00" region="pop2" style="basic" tts:origin="41.67% 84.77%" tts:extent="16.67% 5.14%">- J'adore ça.</p>
+            <p begin="00:01:55:02" end="00:01:57:04" region="pop1" style="basic" tts:origin="37.36% 78.81%" tts:extent="25.28% 5.14%">Je crois que c'était</p>
+            <p begin="00:01:55:02" end="00:01:57:04" region="pop2" style="basic" tts:origin="31.39% 84.77%" tts:extent="37.36% 5.14%">la bonne décision pour moi.</p>
+            <p begin="00:01:57:06" end="00:01:59:28" region="pop1" style="basic" tts:origin="27.08% 78.81%" tts:extent="45.97% 5.14%">C'est un excellent investissement,</p>
+            <p begin="00:01:57:06" end="00:01:59:28" region="pop2" style="basic" tts:origin="32.78% 84.77%" tts:extent="34.58% 5.14%">Je suis ravi qu'on l'ait fait.</p>
+            <p begin="00:02:00:02" end="00:02:02:04" region="pop1" style="basic" tts:origin="35.14% 78.81%" tts:extent="29.86% 5.14%">Ça donnera ses fruits,</p>
+            <p begin="00:02:00:02" end="00:02:02:04" region="pop2" style="basic" tts:origin="40.14% 84.77%" tts:extent="19.86% 5.14%">soyez-en sûrs.</p>
+            <p begin="00:02:02:06" end="00:02:05:16" region="pop1" style="basic" tts:origin="30.42% 78.81%" tts:extent="39.31% 5.14%">On le sait. On l'a fait pour ça.</p>
+            <p begin="00:02:02:06" end="00:02:05:16" region="pop2" style="basic" tts:origin="36.39% 84.77%" tts:extent="27.36% 5.14%">Tu en vaux la peine.</p>
+            <p begin="00:02:05:18" end="00:02:09:01" region="pop1" style="basic" tts:origin="34.86% 78.81%" tts:extent="30.42% 5.14%">Comment ça se passe</p>
+            <p begin="00:02:05:18" end="00:02:09:01" region="pop2" style="basic" tts:origin="34.44% 84.77%" tts:extent="31.25% 5.14%">sans moi à la maison ?</p>
+            <p begin="00:02:09:03" end="00:02:10:29" region="pop1" style="basic" tts:origin="35.28% 78.81%" tts:extent="29.58% 5.14%">- Tu nous as manqué.</p>
+            <p begin="00:02:09:03" end="00:02:10:29" region="pop2" style="basic" tts:origin="43.19% 84.77%" tts:extent="13.75% 5.14%">- Ah, oui ?</p>
+            <p begin="00:02:11:01" end="00:02:13:20" region="pop1" style="basic" tts:origin="34.44% 78.81%" tts:extent="31.11% 5.14%">- C'est un peu solitaire.</p>
+            <p begin="00:02:11:01" end="00:02:13:20" region="pop2" style="basic" tts:origin="29.17% 84.77%" tts:extent="41.81% 5.14%">- L'oiseau s'est envolé du nid ?</p>
+            <p begin="00:02:13:22" end="00:02:15:26" region="pop1" style="basic" tts:origin="30.28% 84.77%" tts:extent="39.44% 5.14%">Mais on va prendre un chien.</p>
+            <p begin="00:02:15:28" end="00:02:18:10" region="pop1" style="basic" tts:origin="29.03% 78.81%" tts:extent="42.08% 5.14%">- Vous allez prendre un chien ?</p>
+            <p begin="00:02:15:28" end="00:02:18:10" region="pop2" style="basic" tts:origin="38.33% 84.77%" tts:extent="23.47% 5.14%">- Un grand chien.</p>
+            <p begin="00:02:18:12" end="00:02:20:14" region="pop1" style="basic" tts:origin="33.61% 78.81%" tts:extent="32.92% 5.14%">- Un autre grand chien ?</p>
+            <p begin="00:02:18:12" end="00:02:20:14" region="pop2" style="basic" tts:origin="46.25% 84.77%" tts:extent="7.5% 5.14%">- Oui.</p>
+            <p begin="00:02:20:16" end="00:02:23:25" region="pop1" style="basic" tts:origin="30.97% 78.81%" tts:extent="38.19% 5.14%">- C'est une blague ou quoi ?</p>
+            <p begin="00:02:20:16" end="00:02:23:25" region="pop2" style="basic" tts:origin="45.83% 84.77%" tts:extent="8.33% 5.14%">- Non.</p>
+            <p begin="00:02:23:27" end="00:02:26:15" region="pop1" style="basic" tts:origin="31.25% 78.81%" tts:extent="37.64% 5.14%">- Il va manger plus que moi.</p>
+            <p begin="00:02:23:27" end="00:02:26:15" region="pop2" style="basic" tts:origin="37.5% 84.77%" tts:extent="25.14% 5.14%">- Non, pas du tout.</p>
+            <p begin="00:02:26:17" end="00:02:31:02" region="pop1" style="basic" tts:origin="33.33% 78.81%" tts:extent="33.47% 5.14%">C'est ça. On verra ce qui</p>
+            <p begin="00:02:26:17" end="00:02:31:02" region="pop2" style="basic" tts:origin="33.06% 84.77%" tts:extent="34.03% 5.14%">se passera après ce soir.</p>
+            <p begin="00:02:31:04" end="00:02:35:06" region="pop1" style="basic" tts:origin="28.33% 84.77%" tts:extent="43.47% 5.14%">On verra ça à la fin de ce repas.</p>
+            <p begin="00:02:35:08" end="00:02:37:29" region="pop1" style="basic" tts:origin="27.36% 78.81%" tts:extent="45.28% 5.14%">Ce sera aussi cher pour le nourrir</p>
+            <p begin="00:02:35:08" end="00:02:37:29" region="pop2" style="basic" tts:origin="34.86% 84.77%" tts:extent="30.42% 5.14%">que si c'était pour moi.</p>
+            <p begin="00:02:38:01" end="00:02:41:00" region="pop1" style="basic" tts:origin="43.89% 78.81%" tts:extent="12.22% 5.14%">- Je sais.</p>
+            <p begin="00:02:38:01" end="00:02:41:00" region="pop2" style="basic" tts:origin="29.17% 84.77%" tts:extent="41.81% 5.14%">- Non. Peut-être un peu moins.</p>
+            <p begin="00:02:42:22" end="00:02:45:03" region="pop1" style="basic" tts:origin="32.92% 78.81%" tts:extent="34.17% 5.14%">Appelez-le James Junior.</p>
+            <p begin="00:02:42:22" end="00:02:45:03" region="pop2" style="basic" tts:origin="34.31% 84.77%" tts:extent="31.39% 5.14%">Que dites-vous de ça ?</p>
+            <p begin="00:02:45:05" end="00:02:47:27" region="pop1" style="basic" tts:origin="38.89% 78.81%" tts:extent="22.22% 5.14%">- C'est une idée.</p>
+            <p begin="00:02:45:05" end="00:02:47:27" region="pop2" style="basic" tts:origin="28.61% 84.77%" tts:extent="42.78% 5.14%">- Donnez-lui un petit "mini-moi".</p>
+            <p begin="00:02:48:27" end="00:02:50:19" region="pop1" style="basic" tts:origin="33.61% 84.77%" tts:extent="32.78% 5.14%">Ça reste dans la famille.</p>
+            <p begin="00:02:50:21" end="00:02:53:18" region="pop1" style="basic" tts:origin="39.31% 78.81%" tts:extent="21.39% 5.14%">Au fait, maman,</p>
+            <p begin="00:02:50:21" end="00:02:53:18" region="pop2" style="basic" tts:origin="31.81% 84.77%" tts:extent="36.39% 5.14%">c'est incroyable. Trop bon !</p>
+            <p begin="00:02:53:20" end="00:02:56:03" region="pop1" style="basic" tts:origin="30.28% 78.81%" tts:extent="39.44% 5.14%">- C'est super d'être de retour.</p>
+            <p begin="00:02:53:20" end="00:02:56:03" region="pop2" style="basic" tts:origin="45% 84.77%" tts:extent="10.14% 5.14%">- Merci.</p>
+        </div>
+    </body>
+</tt>

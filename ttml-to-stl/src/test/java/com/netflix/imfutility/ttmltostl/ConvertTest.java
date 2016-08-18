@@ -18,7 +18,8 @@
  */
 package com.netflix.imfutility.ttmltostl;
 
-import com.netflix.imfutility.dpp.MetadataXmlProvider;
+import com.netflix.imfutility.dpp.metadata.MetadataXmlCreator;
+import com.netflix.imfutility.dpp.metadata.MetadataXmlProvider;
 import com.netflix.imfutility.ttmltostl.util.TtmlTestUtil;
 import org.junit.Test;
 
@@ -49,7 +50,7 @@ public class ConvertTest {
         tempSTL.deleteOnExit();
         File tempMetadataXml = File.createTempFile(UUID.randomUUID().toString(), ".xml");
         tempMetadataXml.deleteOnExit();
-        MetadataXmlProvider.generateEmptyXml(tempMetadataXml.getAbsolutePath());
+        MetadataXmlCreator.generateEmptyXml(tempMetadataXml.getAbsolutePath());
 
         File xml1 = TtmlTestUtil.getTtml("xml/debate.xml");
 
@@ -86,7 +87,7 @@ public class ConvertTest {
         tempSTL.deleteOnExit();
         File tempMetadataXml = File.createTempFile(UUID.randomUUID().toString(), ".xml");
         tempMetadataXml.deleteOnExit();
-        MetadataXmlProvider.generateEmptyXml(tempMetadataXml.getAbsolutePath());
+        MetadataXmlCreator.generateEmptyXml(tempMetadataXml.getAbsolutePath());
 
         File xml1 = TtmlTestUtil.getTtml("xml/debate.xml");
 
@@ -125,7 +126,7 @@ public class ConvertTest {
         tempSTL.deleteOnExit();
         File tempMetadataXml = File.createTempFile(UUID.randomUUID().toString(), ".xml");
         tempMetadataXml.deleteOnExit();
-        MetadataXmlProvider.generateEmptyXml(tempMetadataXml.getAbsolutePath());
+        MetadataXmlCreator.generateEmptyXml(tempMetadataXml.getAbsolutePath());
 
         File xml1 = TtmlTestUtil.getTtml("xml/debate.xml");
         File xml2 = TtmlTestUtil.getTtml("xml/prueba_angel.xml");

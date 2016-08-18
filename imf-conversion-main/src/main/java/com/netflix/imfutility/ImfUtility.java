@@ -27,6 +27,8 @@ import com.netflix.imfutility.inputparameters.ITunesTools;
 import com.netflix.imfutility.inputparameters.ImfUtilityCmdLineArgs;
 import com.netflix.imfutility.itunes.ITunesFormatProcessor;
 import com.netflix.imfutility.itunes.inputparameters.ITunesCmdLineArgs;
+import com.netflix.imfutility.util.ImfLogger;
+import com.netflix.imfutility.util.LogHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +43,7 @@ import java.util.Arrays;
  */
 public final class ImfUtility {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImfUtility.class);
+    private static final Logger LOGGER = new ImfLogger(LoggerFactory.getLogger(ImfUtility.class));
 
     private ImfUtility() {
     }
@@ -60,7 +62,7 @@ public final class ImfUtility {
                         "Unsupported format '%s'. Supported formats: %s", args[0], Format.getSupportedFormats()));
             }
 
-            int exitCode = 0;
+            int exitCode;
             switch (format) {
                 case dpp:
                     exitCode = new DppFormatProcessor(new DppTools()).process(parseArgs(DppCmdLineArgs.class, args));
@@ -74,17 +76,20 @@ public final class ImfUtility {
                     throw new ConversionException(String.format(
                             "Unsupported format '%s'. Supported formats: %s", args[0], Format.getSupportedFormats()));
             }
-
         } catch (HelpRequestedException e) {
             System.out.println(e.getMessage());
             System.exit(0);
+        } catch (ConversionException | IllegalArgumentException e) {
+            LOGGER.error("Conversion aborted: {}", e.getMessage());
+            System.exit(1);
         }
     }
 
     private static <T extends ImfUtilityCmdLineArgs> T parseArgs(Class<T> clazz, String[] args) {
-        LOGGER.info("Parsing command line arguments...");
+        LOGGER.debug("Parsing command line arguments...");
         T imfArgs = CliFactory.parseArguments(clazz, Arrays.copyOfRange(args, 1, args.length));
-        LOGGER.info("Parsed command line arguments: OK\n");
+        LogHelper.setLogLevel(imfArgs.getLogLevel().getLogLevel());
+        LOGGER.debug("Parsed command line arguments: OK\n");
         return imfArgs;
     }
 

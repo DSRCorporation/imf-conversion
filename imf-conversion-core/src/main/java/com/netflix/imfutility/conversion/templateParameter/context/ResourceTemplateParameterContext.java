@@ -48,7 +48,7 @@ import java.util.Map;
  * </li>
  * </ul>
  */
-public class ResourceTemplateParameterContext implements ITemplateParameterContext {
+public class ResourceTemplateParameterContext extends AbstractTemplateParameterContext {
 
     private static class ResourceData extends ContextData<ResourceUUID, ResourceContextParameters> {
     }
@@ -162,6 +162,19 @@ public class ResourceTemplateParameterContext implements ITemplateParameterConte
         }
 
         return getParameterValue(templateParameter, resourceParameter, contextInfo);
+    }
+
+    /**
+     * Whether a given resource parameter is defined in the context.
+     *
+     * @param resourceParameter parameter to check
+     * @param contextInfo context Info
+     * @return true if parameter is defined in the context and false otherwise.
+     */
+    public boolean hasResourceParameter(ResourceContextParameters resourceParameter, ContextInfo contextInfo) {
+        return hasTemplateParameter(
+                new TemplateParameter(TemplateParameterContext.RESOURCE, resourceParameter.getName()),
+                contextInfo);
     }
 
     private String getParameterValue(TemplateParameter templateParameter, ResourceContextParameters resourceParameter,

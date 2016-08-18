@@ -23,6 +23,7 @@ import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
 import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
 import com.netflix.imfutility.generated.mediainfo.FormatType;
+import com.netflix.imfutility.itunes.asset.distribute.CopyAssetStrategy;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.itunes.xmlprovider.builder.file.DataFileTagBuilder;
 
@@ -41,6 +42,7 @@ public class TrailerAssetProcessor extends AssetProcessor<DataFileType> {
 
     public TrailerAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
+        setDistributeAssetStrategy(new CopyAssetStrategy());
     }
 
     public TrailerAssetProcessor setVendorId(String vendorId) {
@@ -59,9 +61,8 @@ public class TrailerAssetProcessor extends AssetProcessor<DataFileType> {
     }
 
     @Override
-    protected boolean checkInput(File assetFile) {
-        return super.checkInput(assetFile)
-                && vendorId != null
+    protected boolean checkMandatoryParams() {
+        return vendorId != null
                 && format != null
                 && locale != null;
     }
@@ -75,19 +76,20 @@ public class TrailerAssetProcessor extends AssetProcessor<DataFileType> {
 
     @Override
     protected DataFileType buildMetadata(File assetFile) {
-        return new DataFileTagBuilder(assetFile, getFileName())
+        return new DataFileTagBuilder(assetFile, getDestFileName(assetFile))
                 .setLocale(locale)
                 .setRole(DataFileRoleType.SOURCE)
+                .setCropToZero(true)
                 .build();
     }
 
     @Override
     protected void appendMetadata(DataFileType tag) {
-        metadataXmlProvider.appendAsset(tag, AssetTypeType.PREVIEW);
+        metadataXmlProvider.appendAssetDataFile(tag, AssetTypeType.PREVIEW);
     }
 
     @Override
-    protected String getFileName() {
+    protected String getDestFileName(File assetFile) {
         return vendorId + "-preview.mov";
     }
 }

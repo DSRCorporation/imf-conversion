@@ -20,6 +20,9 @@ package com.netflix.imfutility.itunes.inputparameters;
 
 import com.lexicalscope.jewel.cli.ArgumentValidationException;
 import com.netflix.imfutility.itunes.ITunesMode;
+import com.netflix.imfutility.itunes.locale.LocaleValidationException;
+import com.netflix.imfutility.itunes.locale.LocaleValidator;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.List;
@@ -57,6 +60,7 @@ public final class ITunesInputParametersValidator {
 
     private static void validateConvertMode(ITunesInputParameters inputParameters) throws ArgumentValidationException {
         validateVendorId(inputParameters.getCmdLineArgs().getVendorId());
+        validateFallbackLocale(inputParameters.getCmdLineArgs().getFallbackLocale());
 
         // metadata.xml may be null. in this case a default metadata is created.
         validateFile(inputParameters.getMetadataFile(), "Metadata");
@@ -69,7 +73,9 @@ public final class ITunesInputParametersValidator {
         // chapters may be null. in this case a default chapters.xml is created.
         validateFile(inputParameters.getChaptersFile(), "Chapters");
         // cc may be null.
-        validateFiles(inputParameters.getCcFiles(), "Closed caption");
+        validateFiles(inputParameters.getCcFiles(), "Closed captions");
+        // subtitles may be null.
+        validateFiles(inputParameters.getSubFiles(), "Subtitles");
     }
 
     private static void validateVendorId(String vendorId) throws ArgumentValidationException {
@@ -114,9 +120,22 @@ public final class ITunesInputParametersValidator {
 
     private static void validateFiles(List<File> files, String fileType) throws ArgumentValidationException {
         if (files != null && !files.isEmpty()) {
-            files.stream().forEach((file) -> validateFile(file, fileType));
+            files.forEach((file) -> validateFile(file, fileType));
         }
     }
+
+    private static void validateFallbackLocale(String fallbackLocale) throws ArgumentValidationException {
+        if (StringUtils.isBlank(fallbackLocale)) {
+            return;
+        }
+
+        try {
+            LocaleValidator.validateLocale(fallbackLocale);
+        } catch (LocaleValidationException e) {
+            throw new ArgumentValidationException("Fallback locale validation failed.", e);
+        }
+    }
+
 
     private ITunesInputParametersValidator() {
     }

@@ -22,15 +22,18 @@ import org.apache.commons.math3.fraction.BigFraction;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Objects;
 
 /**
  * Validator to check image size, aspect ratio, color model and format.
  */
 public class ImageValidator {
+    private static final int JPEG_START_BYTES = 0xffd8ffe0;
     private final File file;
     private BufferedImage image;
 
@@ -81,10 +84,10 @@ public class ImageValidator {
         }
     }
 
-    public void validateContentType(String contentType, String formatName) throws ImageValidationException {
-        if (!Objects.equals(contentType, getImageContentType(formatName))) {
+    public void validateJpeg() throws ImageValidationException {
+        if (!isJpeg()) {
             throw new ImageValidationException(String.format(
-                    "%s image must be %s file", imageType, formatName));
+                    "%s image must be JPG", imageType));
         }
     }
 
@@ -92,12 +95,12 @@ public class ImageValidator {
         return new BigFraction(image.getWidth()).divide(image.getHeight());
     }
 
-    private String getImageContentType(String expectedFormatName) throws ImageValidationException {
-        try {
-            return Files.probeContentType(file.toPath());
+    private boolean isJpeg() {
+        try (DataInputStream ins = new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+            return ins.readInt() == JPEG_START_BYTES;
         } catch (IOException e) {
             throw new ImageValidationException(String.format(
-                    "Can't define format of %s image. Expected format: %s", imageType, expectedFormatName));
+                    "Can't read file %s", file.getName()), e);
         }
     }
 }

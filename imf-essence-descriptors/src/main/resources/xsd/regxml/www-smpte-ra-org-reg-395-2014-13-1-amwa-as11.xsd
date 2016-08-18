@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Created: Thu Sep 17 15:28:16 CEST 2015--><!--By: regxmllib build c989a02ac80facc24e018a54c4010dd8c2d27451--><!--See: https://github.com/sandflow/regxmllib--><xs:schema xmlns:r0="http://www.smpte-ra.org/reg/335/2012/13/1/amwa/as11" xmlns:r1="http://www.smpte-ra.org/reg/335/2012" xmlns:reg="http://sandflow.com/ns/SMPTEST2001-1/baseline"  attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.smpte-ra.org/reg/395/2014/13/1/amwa/as11" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:import namespace="http://www.smpte-ra.org/reg/335/2012"/>
+<xs:import namespace="http://www.smpte-ra.org/reg/335/2012/13/1/amwa/as11"/>
+<xs:import namespace="http://sandflow.com/ns/SMPTEST2001-1/baseline"/>
+<xs:element name="DM_AS_11_Core_Framework">
+<xs:complexType>
+<xs:all>
+<xs:element minOccurs="0" ref="r0:AS_11_Caption_Language"/>
+<xs:element minOccurs="0" ref="r0:AS_11_Closed_Captions_Type"/>
+<xs:element ref="r0:AS_11_Shim_Version"/>
+<xs:element ref="r0:AS_11_Audio_Track_Layout"/>
+<xs:element ref="r0:AS_11_Shim_Name"/>
+<xs:element ref="r0:AS_11_Closed_Captions_Present"/>
+<xs:element ref="r0:AS_11_Primary_Audio_Language"/>
+<xs:element ref="r0:AS_11_Series_Title"/>
+<xs:element ref="r0:AS_11_Episode_Title_Number"/>
+<xs:element ref="r0:AS_11_Programme_Title"/>
+<xs:element ref="r1:LinkedDescriptiveFrameworkPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+<xs:element name="DM_AS_11_Segmentation_Framework">
+<xs:complexType>
+<xs:all>
+<xs:element ref="r0:AS_11_Part_Total"/>
+<xs:element ref="r0:AS_11_Part_Number"/>
+<xs:element ref="r1:LinkedDescriptiveFrameworkPluginID"/>
+<xs:element minOccurs="0" ref="r1:InstanceID"/>
+<xs:element minOccurs="0" ref="r1:ObjectClass"/>
+<xs:element minOccurs="0" ref="r1:ApplicationPlugInObjects"/>
+<xs:element minOccurs="0" ref="r1:LinkedGenerationID"/>
+</xs:all>
+<xs:attribute ref="reg:path" use="optional"/>
+</xs:complexType>
+</xs:element>
+</xs:schema>

@@ -37,13 +37,7 @@ public class ImageValidatorTest {
         validator.validateSize(1920, 1080);
         validator.validateAspectRatio(new BigFraction(16).divide(9));
         validator.validateRGBColorSpace();
-        validator.validateContentType("image/jpeg", "JPG");
-
-        validator = new ImageValidator(ImageUtils.getTestImagePngFile(), "Test");
-        validator.validateSize(1280, 720);
-        validator.validateAspectRatio(new BigFraction(16).divide(9));
-        validator.validateRGBColorSpace();
-        validator.validateContentType("image/png", "PNG");
+        validator.validateJpeg();
     }
 
     @Test(expected = ImageValidationException.class)
@@ -65,8 +59,8 @@ public class ImageValidatorTest {
 
     @Test(expected = ImageValidationException.class)
     public void testInvalidContentType() throws Exception {
-        ImageValidator validator = new ImageValidator(ImageUtils.getTestImageJpgFile(), "Test");
-        validator.validateContentType("image/png", "PNG");
+        ImageValidator validator = new ImageValidator(ImageUtils.getTestImagePngFile(), "Test");
+        validator.validateJpeg();
     }
 
     @Test(expected = ImageValidationException.class)

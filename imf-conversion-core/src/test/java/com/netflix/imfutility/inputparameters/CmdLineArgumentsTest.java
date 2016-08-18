@@ -33,7 +33,7 @@ public class CmdLineArgumentsTest {
     @Test
     public void testParseCorrectCmdLineArgumentsShortName() {
         String[] args = new String[]{
-                "--cpl", "cpl.xml", "--imp", "pathToImp", "-c", "config.xml", "-w", "pathToWorkingDir"
+                "--cpl", "cpl.xml", "--imp", "pathToImp", "-c", "config.xml", "-w", "pathToWorkingDir", "-l", "error"
         };
         ImfUtilityCmdLineArgs cmdLineArgs = CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args);
 
@@ -41,12 +41,14 @@ public class CmdLineArgumentsTest {
         assertEquals("pathToImp", cmdLineArgs.getImp());
         assertEquals("config.xml", cmdLineArgs.getConfig());
         assertEquals("pathToWorkingDir", cmdLineArgs.getWorkingDirectory());
+        assertEquals(LogLevel.error, cmdLineArgs.getLogLevel());
     }
 
     @Test
     public void testParseCorrectCmdLineArgumentsLongName() {
         String[] args = new String[]{
-                "--cpl", "cpl.xml", "--imp", "pathToImp", "--config", "config.xml", "--working-dir", "pathToWorkingDir"
+                "--cpl", "cpl.xml", "--imp", "pathToImp", "--config", "config.xml", "--working-dir", "pathToWorkingDir",
+                "--log-level", "debug"
         };
         ImfUtilityCmdLineArgs cmdLineArgs = CliFactory.parseArguments(ImfUtilityCmdLineArgs.class, args);
 
@@ -54,6 +56,7 @@ public class CmdLineArgumentsTest {
         assertEquals("pathToImp", cmdLineArgs.getImp());
         assertEquals("config.xml", cmdLineArgs.getConfig());
         assertEquals("pathToWorkingDir", cmdLineArgs.getWorkingDirectory());
+        assertEquals(LogLevel.debug, cmdLineArgs.getLogLevel());
     }
 
     @Test(expected = HelpRequestedException.class)

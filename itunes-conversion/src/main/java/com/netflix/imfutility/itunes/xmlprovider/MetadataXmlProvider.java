@@ -26,13 +26,16 @@ import com.netflix.imfutility.generated.itunes.metadata.AssetsType;
 import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
 import com.netflix.imfutility.generated.itunes.metadata.ChapterType;
 import com.netflix.imfutility.generated.itunes.metadata.ChaptersType;
+import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
+import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
 import com.netflix.imfutility.generated.itunes.metadata.ObjectFactory;
 import com.netflix.imfutility.generated.itunes.metadata.PackageType;
 import com.netflix.imfutility.generated.itunes.metadata.TerritoriesType;
 import com.netflix.imfutility.itunes.xmlprovider.builder.MetadataXmlSampleBuilder;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBContext;
@@ -43,6 +46,8 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.validation.Schema;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.METADATA_PACKAGE;
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.METADATA_XML_SCHEME;
@@ -92,6 +97,45 @@ public class MetadataXmlProvider {
         return packageType.getLanguage();
     }
 
+
+    /**
+     * Get default locale based on language set in language tag.
+     *
+     * @return default locale
+     */
+    public LocaleType getDefaultLocale() {
+        return getLocale(packageType.getLanguage());
+    }
+
+    /**
+     * Get default locale based on provided language.
+     *
+     * @return locale
+     */
+    public LocaleType getLocale(String language) {
+        LocaleType locale = new LocaleType();
+        locale.setName(language);
+        return locale;
+    }
+
+    /**
+     * Update metadata info. Set specified vendorId and locale (if not empty).
+     * Ensures creating empty chapters section and asset with for full-type asset.
+     *
+     * @param vendorId vendor identifier
+     * @param locale   locale
+     */
+    public void updateMetadata(String vendorId, String locale) {
+        packageType.getVideo().setVendorId(vendorId);
+
+        if (!StringUtils.isBlank(locale)) {
+            packageType.setLanguage(locale);
+        }
+
+        ensureChaptersCreated();
+        ensureFullAssetCreated();
+    }
+
     //  Chapters processing
 
     private ChaptersType ensureChaptersCreated() {
@@ -126,17 +170,41 @@ public class MetadataXmlProvider {
         return packageType.getVideo().getAssets();
     }
 
-    public void appendAsset(DataFileType dataFile, AssetTypeType assetType) {
-        //  set WW territory by default
-        TerritoriesType territories = new TerritoriesType();
-        territories.getTerritory().add("WW");
-
+    private AssetType createAsset(AssetTypeType assetType, TerritoriesType territories) {
         AssetType asset = new AssetType();
         asset.setType(assetType);
         asset.setTerritories(territories);
-        asset.getDataFile().add(dataFile);
 
         ensureAssetsCreated().getAsset().add(asset);
+        return asset;
+    }
+
+    private AssetType ensureFullAssetCreated() {
+        return ensureAssetsCreated().getAsset().stream()
+                .filter(asset -> asset.getType() == AssetTypeType.FULL)
+                .findFirst()
+                .orElseGet(() -> createAsset(AssetTypeType.FULL, null));
+    }
+
+    public void appendAssetDataFile(DataFileType dataFile, AssetTypeType assetType) {
+        AssetType asset = assetType == AssetTypeType.FULL
+                ? ensureFullAssetCreated()
+                : createAsset(assetType, getDefaultTerritories());
+
+        asset.getDataFile().add(dataFile);
+    }
+
+    public List<DataFileType> getFullAssetDataFilesByRole(DataFileRoleType role) {
+        return ensureFullAssetCreated().getDataFile().stream()
+                .filter(dataFile -> dataFile.getRole() == role)
+                .collect(Collectors.toList());
+    }
+
+    private TerritoriesType getDefaultTerritories() {
+        //  get WW territory by default
+        TerritoriesType territories = new TerritoriesType();
+        territories.getTerritory().add("WW");
+        return territories;
     }
 
     /**

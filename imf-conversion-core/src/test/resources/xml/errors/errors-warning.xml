@@ -1,0 +1,3 @@
+<errors xmlns="http://validation.imfutility.netflix.com">
+    <error level="warning">warning</error>
+</errors>

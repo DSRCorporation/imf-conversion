@@ -208,7 +208,7 @@
     <xs:complexType name="ChaptersType">
         <xs:sequence>
             <xs:element name="timecode_format" type="TimecodeFormatType" minOccurs="0"/>
-            <xs:element name="chapter" type="ChapterType" maxOccurs="99" minOccurs="1"/>
+            <xs:element name="chapter" type="ChapterType" maxOccurs="99" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 

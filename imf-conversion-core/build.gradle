@@ -2,6 +2,7 @@ description = "IMF conversion core project containing main IMF processing and co
 
 dependencies {
     compile project(':imf-conversion-common')
+    compile project(':imf-essence-descriptors')
 }
 
 dependencies {

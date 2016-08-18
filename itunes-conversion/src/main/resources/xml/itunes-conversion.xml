@@ -51,7 +51,7 @@
                 <destContext name="hd1080p30">
                     <param name="width">1920</param>
                     <param name="height">1080</param>
-                    <param name="frameRate">30</param>
+                    <param name="frameRate">30/1</param>
                     <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd1080i2997">
@@ -96,7 +96,7 @@
                 <destContext name="hd720p30">
                     <param name="width">1280</param>
                     <param name="height">720</param>
-                    <param name="frameRate">30</param>
+                    <param name="frameRate">30/1</param>
                     <param name="aspectRatio">16/9</param>
                 </destContext>
                 <destContext name="hd720i2997">
@@ -147,24 +147,28 @@
                     <param name="frameRate">30000/1001</param>
                     <param name="interlaced">true</param>
                     <param name="aspectRatio">4/3</param>
+                    <param name="duration">3600</param>
                 </destContext>
                 <destContext name="sdtvntsc480p2997">
                     <param name="width">640</param>
                     <param name="height">480</param>
                     <param name="frameRate">30000/1001</param>
                     <param name="aspectRatio">4/3</param>
+                    <param name="duration">3600</param>
                 </destContext>
                 <destContext name="sdtvntsc480p24">
                     <param name="width">640</param>
                     <param name="height">480</param>
                     <param name="frameRate">24/1</param>
                     <param name="aspectRatio">4/3</param>
+                    <param name="duration">3600</param>
                 </destContext>
                 <destContext name="sdtvntsc480p23976">
                     <param name="width">640</param>
                     <param name="height">480</param>
                     <param name="frameRate">24000/1001</param>
                     <param name="aspectRatio">4/3</param>
+                    <param name="duration">3600</param>
                 </destContext>
                 <!-- PAL -->
                 <destContext name="sdtvpal576p25">
@@ -172,18 +176,21 @@
                     <param name="height">576</param>
                     <param name="frameRate">25/1</param>
                     <param name="aspectRatio">5/4</param>
+                    <param name="duration">3600</param>
                 </destContext>
                 <destContext name="sdtvpal576p24">
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">24/1</param>
                     <param name="aspectRatio">5/4</param>
+                    <param name="duration">3600</param>
                 </destContext>
                 <destContext name="sdtvpal576p23976">
                     <param name="width">720</param>
                     <param name="height">576</param>
                     <param name="frameRate">24000/1001</param>
                     <param name="aspectRatio">5/4</param>
+                    <param name="duration">3600</param>
                 </destContext>
 
                 <!-- SD Film -->
@@ -195,28 +202,28 @@
                     <param name="height">480</param>
                     <param name="frameRate">30000/1001</param>
                     <param name="interlaced">true</param>
-                    <param name="aspectRatio">16/9</param>
+                    <param name="aspectRatio">3/2</param>
                     <param name="dar">16/9</param>
                 </destContext>
                 <destContext name="sdfilmntsc480p2997_16_9">
                     <param name="width">720</param>
                     <param name="height">480</param>
                     <param name="frameRate">30000/1001</param>
-                    <param name="aspectRatio">16/9</param>
+                    <param name="aspectRatio">3/2</param>
                     <param name="dar">16/9</param>
                 </destContext>
                 <destContext name="sdfilmntsc480p24_16_9">
                     <param name="width">720</param>
                     <param name="height">480</param>
                     <param name="frameRate">24/1</param>
-                    <param name="aspectRatio">16/9</param>
+                    <param name="aspectRatio">3/2</param>
                     <param name="dar">16/9</param>
                 </destContext>
                 <destContext name="sdfilmntsc480p23976_16_9">
                     <param name="width">720</param>
                     <param name="height">480</param>
                     <param name="frameRate">24000/1001</param>
-                    <param name="aspectRatio">16/9</param>
+                    <param name="aspectRatio">3/2</param>
                     <param name="dar">16/9</param>
                 </destContext>
                 <!-- 4:3 -->
@@ -225,28 +232,28 @@
                     <param name="height">480</param>
                     <param name="frameRate">30000/1001</param>
                     <param name="interlaced">true</param>
-                    <param name="aspectRatio">16/9</param>
+                    <param name="aspectRatio">3/2</param>
                     <param name="dar">4/3</param>
                 </destContext>
                 <destContext name="sdfilmntsc480p2997_4_3">
                     <param name="width">720</param>
                     <param name="height">480</param>
                     <param name="frameRate">30000/1001</param>
-                    <param name="aspectRatio">16/9</param>
+                    <param name="aspectRatio">3/2</param>
                     <param name="dar">4/3</param>
                 </destContext>
                 <destContext name="sdfilmntsc480p24_4_3">
                     <param name="width">720</param>
                     <param name="height">480</param>
                     <param name="frameRate">24/1</param>
-                    <param name="aspectRatio">16/9</param>
+                    <param name="aspectRatio">3/2</param>
                     <param name="dar">4/3</param>
                 </destContext>
                 <destContext name="sdfilmntsc480p23976_4_3">
                     <param name="width">720</param>
                     <param name="height">480</param>
                     <param name="frameRate">24000/1001</param>
-                    <param name="aspectRatio">16/9</param>
+                    <param name="aspectRatio">3/2</param>
                     <param name="dar">4/3</param>
                 </destContext>
                 <!-- PAL -->
@@ -302,7 +309,7 @@
             <mediaInfoCommandAudio>%{tool.ffprobe} -select_streams a:0 -show_streams -noprivate -print_format xml=x=1
                 %{dynamic.mediaInfoInput}
             </mediaInfoCommandAudio>
-            <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams s:0 -show_streams -noprivate -print_format xml=x=1
+            <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams d:0 -show_streams -noprivate -print_format xml=x=1
                 %{dynamic.mediaInfoInput}
             </mediaInfoCommandSubtitle>
 
@@ -315,167 +322,273 @@
             <formatConfigurations>
                 <formatConfiguration name="main">
 
-                    <!--
-                        1. decode each video segment and redirect output to encode's input
-                        => flatten encoded video
-                    -->
+                    <!-- check if video exists for current conversion -->
+                    <if test="%{dynamic.hasVideo}">
 
-                    <execEachSequence type="video" name="encodeVideo">
-                        <pipe>
-                            <cycle>
-                                <execEachSegment name="decode_video">
-                                    <execOnce name="decode_video">
-                                        %{tool.ffmpeg} -y -i %{resource.essence} -map 0:0 -ss %{resource.startTimeTC}
-                                        -t %{resource.durationTC} -an
-                                        -vf scale=%{dest.width}:%{dest.height},fps=%{dest.frame_rate},setdar=%{ .aspect_ratio}
-                                        -pix_fmt yuv422p10le -f rawvideo -
-                                    </execOnce>
-                                </execEachSegment>
-                            </cycle>
-
-                            <!--
-                                includes Linux/Windows and OS X command line to encode with ProRes encoder
-                                Linux/Windows -> ffmpeg, OS X -> prenc (uses native/system ProRes codec on OS X)
-                            -->
-                            <execOnce name="encode_video" unless="%{dynamic.isOSX}">
-                                %{tool.ffmpeg} -y -i -
-                                -c:v prores_ks
-                                -pix_fmt yuv422p10le
-                                -vf %{dynamic.proresParams}
-                                %{tmp.videoEncoded}
-                            </execOnce>
-                            <execOnce name="encode_video" if="%{dynamic.isOSX}">
-                                %{tool.prenc} -f %{dynamic.proresParams} -o %{tmp.videoEncoded}
-                            </execOnce>
-                        </pipe>
-                    </execEachSequence>
-
-                    <!--
-                        2. Extract each audio segment from MXF due to FFMPEG mxf reading issue
-                    -->
-                    <execEachSequence type="audio" name="extractAudioSegments">
-                        <execEachSegment name="extract_audio">
-                            <execOnce name="extract_audio">
-                                %{tool.mxf2raw} -p "%{seq.num}-%{segm.num}" --start %{resource.startTimeFrameEU}
-                                --dur %{resource.durationFrameEU} "%{resource.essence}"
-                            </execOnce>
-                            <!-- to delete intermediate files at the end -->
-                            <dynamicParameter name="audio-segment-tmp-%{seq.num}-%{segm.num}" deleteOnExit="true">
-                                %{seq.num}-%{segm.num}_a0.raw
+                        <!--
+                            decode each video segment and redirect output to encode's input
+                            => flatten encoded video
+                        -->
+                        <execEachSequence type="video" name="encodeVideo">
+                            <!-- calculate params for prores codec encoding -->
+                            <dynamicParameter name="proresParams">
+                                scale=%{dest.width}:%{dest.height}
                             </dynamicParameter>
-                        </execEachSegment>
-                    </execEachSequence>
+                            <dynamicParameter name="proresParams" concat="true" concatWhitespace="false" unless="%{dest.interlaced}">
+                                ,fps=%{dest.frameRate}
+                            </dynamicParameter>
+                            <dynamicParameter name="proresParams" concat="true" concatWhitespace="false" if="%{dest.interlaced}">
+                                ,fps=%{dest.iFrameRate},interlace
+                            </dynamicParameter>
+                            <dynamicParameter name="proresParams" concat="true" concatWhitespace="false" if="%{dest.isDarSpecified}">
+                                ,setdar=%{dest.dar}
+                            </dynamicParameter>
 
-                    <!--
-                        3. decode each audio segment and redirect output to encode's input
-                           => flatten encoded audio
-                    -->
-                    <execEachSequence type="audio" name="encodeAudio">
-                        <pipe>
-                            <cycle>
-                                <execEachSegment name="decode_audio">
-                                    <execOnce name="decode_audio">
-                                        %{tool.ffmpeg} -f s%{seq.bits_per_sample}le -ar %{seq.sample_rate} -ac %{seq.channels_num}
-                                        -i %{seq.num}-%{segm.num}_a0.raw -vn -af aresample=%{dest.sampleRate}
-                                        -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
+                            <pipe>
+                                <cycle>
+                                    <execOnce name="generate_black_frame">
+                                        %{tool.ffmpeg} -y
+                                        -f lavfi
+                                        -i color=c=black:s=%{dest.width}x%{dest.height}:r=%{dest.frameRate}:d=1
+                                        -ss 00:00:00 -vframes 1
+                                        -pix_fmt yuv422p16le
+                                        -f rawvideo
+                                        -
                                     </execOnce>
-                                </execEachSegment>
-                            </cycle>
-                            <execOnce name="encode_audio">
-                                %{tool.ffmpeg} -f s%{dest.bitsSample}le -ar %{dest.sampleRate} -ac %{seq.channels_num} -i - -vn -c:a
-                                copy -f wav %{seq.num}-audio-encoded.wav
-                            </execOnce>
-                        </pipe>
-                        <dynamicParameter name="concatAudioInput" concat="true" concatWhitespace="true">
-                            -i "%{seq.num}-audio-encoded.wav"
-                        </dynamicParameter>
-                        <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false">
-                            [%{seq.num}:a]
-                        </dynamicParameter>
-                        <!-- to delete intermediate files at the end -->
-                        <dynamicParameter name="audio-virtual-track-wav-%{seq.num}" deleteOnExit="true">
-                            %{seq.num}-audio-encoded.wav
-                        </dynamicParameter>
-                    </execEachSequence>
+                                    <execEachSegment name="decode_video">
+                                        <execOnce name="decode_video">
+                                            %{tool.ffmpeg} -y
+                                            -ss %{resource.startTimeTC} -t %{resource.durationTC}
+                                            -i %{resource.essence}
+                                            -map 0:0 -an
+                                            -vf scale=%{dest.width}:%{dest.height},fps=%{dest.frameRate}
+                                            -pix_fmt yuv422p16le
+                                            -f rawvideo
+                                            -
+                                        </execOnce>
+                                    </execEachSegment>
+                                    <execOnce name="generate_black_frame">
+                                        %{tool.ffmpeg} -y
+                                        -f lavfi
+                                        -i color=c=black:s=%{dest.width}x%{dest.height}:r=%{dest.frameRate}:d=1
+                                        -ss 00:00:00 -vframes %{dest.endBlackFrameCount}
+                                        -pix_fmt yuv422p16le
+                                        -f rawvideo
+                                        -
+                                    </execOnce>
+                                </cycle>
+                                <!--
+                                    includes Linux/Windows and OS X command line to encode with ProRes encoder
+                                    Linux/Windows -> ffmpeg, OS X -> prenc (uses native/system ProRes codec on OS X)
+                                -->
+                                <execOnce name="encode_video" unless="%{dynamic.isOSX}">
+                                    %{tool.ffmpeg} -y
+                                    -f rawvideo
+                                    -pix_fmt yuv422p16le
+                                    -s:v %{dest.width}:%{dest.height} -r %{dest.frameRate}
+                                    -i -
+                                    -c:v prores_ks
+                                    -profile:v 3
+                                    -vendor apl0
+                                    -vf %{dynamic.proresParams}
+                                    -pix_fmt yuv422p10le
+                                    -f mov
+                                    %{tmp.videoEncoded}
+                                </execOnce>
+                                <execOnce name="encode_video" if="%{dynamic.isOSX}">
+                                    %{tool.prenc} -f %{dynamic.proresParams} -o %{tmp.videoEncoded}
+                                </execOnce>
+                            </pipe>
+                        </execEachSequence>
 
-                    <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
-                    <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false"
-                                      if="%{dynamic.singleAudio}">[0:a]
-                    </dynamicParameter>
+                    </if>
+
+                    <!-- check if audio exists for current conversion -->
+                    <if test="%{dynamic.hasAudio}">
+
+                        <!--
+                            Extract each audio segment from MXF due to FFMPEG mxf reading issue
+                        -->
+                        <execEachSequence type="audio" name="extractAudioSegments">
+                            <execEachSegment name="extract_audio">
+                                <execOnce name="extract_audio">
+                                    %{tool.mxf2raw} -p "%{seq.num}-%{segm.num}" --start %{resource.startTimeFrameEU}
+                                    --dur %{resource.durationFrameEU} "%{resource.essence}"
+                                </execOnce>
+                                <!-- to delete intermediate files at the end -->
+                                <dynamicParameter name="audio-segment-tmp-%{seq.num}-%{segm.num}" deleteOnExit="true">
+                                    %{seq.num}-%{segm.num}_a0.raw
+                                </dynamicParameter>
+                            </execEachSegment>
+                        </execEachSequence>
+
+                        <!--
+                            decode each audio segment and redirect output to encode's input
+                               => flatten encoded audio
+                        -->
+                        <execEachSequence type="audio" name="encodeAudio">
+                            <pipe>
+                                <cycle>
+                                    <execOnce name="generate_silence">
+                                        %{tool.ffmpeg} -y
+                                        -f lavfi
+                                        -i aevalsrc=%{dynamic.silenceExpr%{seq.num}}:s=%{dest.sampleRate}:n=%{dest.samplesPerFrame}
+                                        -aframes 1
+                                        -f s%{dest.bitsSample}le
+                                        -
+                                    </execOnce>
+                                    <execEachSegment name="decode_audio">
+                                        <execOnce name="decode_audio">
+                                            %{tool.ffmpeg} -f s%{resource.bits_per_sample}le -ar %{resource.sample_rate} -ac
+                                            %{seq.channels_num}
+                                            -i %{seq.num}-%{segm.num}_a0.raw -vn -af aresample=%{dest.sampleRate}
+                                            -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
+                                        </execOnce>
+                                    </execEachSegment>
+                                </cycle>
+                                <execOnce name="encode_audio">
+                                    %{tool.ffmpeg} -f s%{dest.bitsSample}le -ar %{dest.sampleRate} -ac %{seq.channels_num} -i - -vn -c:a
+                                    copy -f wav %{seq.num}-audio-encoded.wav
+                                </execOnce>
+                            </pipe>
+                            <dynamicParameter name="concatAudioInput" concat="true" concatWhitespace="true">
+                                -i "%{seq.num}-audio-encoded.wav"
+                            </dynamicParameter>
+                            <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false">
+                                [%{seq.num}:a]
+                            </dynamicParameter>
+                            <!-- to delete intermediate files at the end -->
+                            <dynamicParameter name="audio-virtual-track-wav-%{seq.num}" deleteOnExit="true">
+                                %{seq.num}-audio-encoded.wav
+                            </dynamicParameter>
+                        </execEachSequence>
+
+                        <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
+                        <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false"
+                                          if="%{dynamic.singleAudio}">[0:a]
+                        </dynamicParameter>
 
 
-                    <!--
-                        4. Remap audio in accordance with AudioMap.xml
-                    -->
-                    <dynamicParameter name="audioSplitCount" add="%{dynamic.mainAudioTracks}" />
-                    <for iterator="i" count="%{dynamic.additionalAudioCount}">
-                        <dynamicParameter name="audioSplitCount" add="%{dynamic.additionalAudioTracks%{i}}" />
-                    </for>
-                    <for iterator="i" to="%{dynamic.audioSplitCount}">
-                        <dynamicParameter name="audioInLabels" concat="true" concatWhitespace="false">
-                            [in%{i}]
-                        </dynamicParameter>
-                        <dynamicParameter name="audioOutPanConfigurations" concat="true" concatWhitespace="false">
-                            ;[in%{i}]%{dynamic.panParameter%{i}}[out%{i}]
-                        </dynamicParameter>
-                    </for>
-                    <for iterator="i" to="%{dynamic.mainAudioTracks}">
-                        <dynamicParameter name="mainAudioOutputMap" concat="true" concatWhitespace="true">
-                            -map "[out%{i}]"
-                        </dynamicParameter>
-                    </for>
-                    <dynamicParameter name="additionalAudioOutputMapStart" add="%{dynamic.mainAudioTracks}" />
-                    <dynamicParameter name="additionalAudioOutputs" />
-                    <for iterator="i" count="%{dynamic.additionalAudioCount}">
-                        <for iterator="j" from="%{dynamic.additionalAudioOutputMapStart}" count="%{dynamic.additionalAudioTracks%{i}}">
-                            <dynamicParameter name="additionalAudioOutputMap%{i}" concat="true" concatWhitespace="true">
-                                -map "[out%{j}]"
+                        <!--
+                            Remap audio in accordance with AudioMap.xml
+                        -->
+                        <dynamicParameter name="audioSplitCount" add="%{dynamic.mainAudioTracks}"/>
+                        <for iterator="i" count="%{dynamic.additionalAudioCount}">
+                            <dynamicParameter name="audioSplitCount" add="%{dynamic.additionalAudioTracks%{i}}"/>
+                        </for>
+                        <for iterator="i" to="%{dynamic.audioSplitCount}">
+                            <dynamicParameter name="audioInLabels" concat="true" concatWhitespace="false">
+                                [in%{i}]
+                            </dynamicParameter>
+                            <dynamicParameter name="audioOutPanConfigurations" concat="true" concatWhitespace="false">
+                                ;[in%{i}]%{dynamic.panParameter%{i}}[out%{i}]
                             </dynamicParameter>
                         </for>
-                        <dynamicParameter name="additionalAudioOutputMapStart" add="%{dynamic.additionalAudioTracks%{i}}" />
-                        <dynamicParameter name="additionalAudioOutputs" concat="true" concatWhitespace="true">
-                            %{dynamic.additionalAudioOutputMap%{i}} -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f mov %{dynamic.additionalAudio%{i}}
-                        </dynamicParameter>
-                    </for>
-
-                    <execOnce name="audioMaping">
-                        %{tool.ffmpeg} %{dynamic.concatAudioInput} -filter_complex
-                        "%{dynamic.concatAudioMap}amerge,asplit=%{dynamic.audioSplitCount}%{dynamic.audioInLabels}%{dynamic.audioOutPanConfigurations}"
-                        %{dynamic.mainAudioOutputMap} -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f mov %{dynamic.mainAudio}
-                        %{dynamic.additionalAudioOutputs}
-                    </execOnce>
-
-                    <!--
-                        5. create output .mov from flatten encoded video and audio
-                    -->
-                    <execOnce name="muxing_mov">
-                        %{tool.ffmpeg} -i %{tmp.videoEncoded} -i %{dynamic.mainAudio}
-                        -c:v copy -c:a copy %{dynamic.vendorId}-source.mov
-                    </execOnce>
-
-                    <!--
-                        6. Extract each subtitle TTML segment from MXF or just convert external TTML
-                    -->
-                    <execEachSequence type="subtitle" name="convertTTML2ITT" if="%{dynamic.isTTML}">
-                        <execEachSegment name="extract_ttml" if="%{dynamic.isCPL}">
-                            <execOnce name="extract_ttml">
-                                %{tool.asdcp-test} -x "%{seq.num}-%{segm.num}.xml" %{resource.essence}
-                            </execOnce>
-                            <!-- to delete intermediate files at the end -->
-                            <dynamicParameter name="ttml-segment-tmp-%{seq.num}-%{segm.num}" deleteOnExit="true">
-                                %{seq.num}-%{segm.num}.xml
+                        <for iterator="i" to="%{dynamic.mainAudioTracks}">
+                            <dynamicParameter name="mainAudioOutputMap" concat="true" concatWhitespace="true">
+                                -map "[out%{i}]"
                             </dynamicParameter>
-
-                            <dynamicParameter name="concatTTML" concat="true">--ttml %{seq.num}-%{segm.num}.xml %{resource.offsetTC}
-                                %{resource.startTimeTC} %{resource.endTimeTC}
+                        </for>
+                        <dynamicParameter name="additionalAudioOutputMapStart" add="%{dynamic.mainAudioTracks}"/>
+                        <dynamicParameter name="additionalAudioOutputs"/>
+                        <for iterator="i" count="%{dynamic.additionalAudioCount}">
+                            <for iterator="j" from="%{dynamic.additionalAudioOutputMapStart}" count="%{dynamic.additionalAudioTracks%{i}}">
+                                <dynamicParameter name="additionalAudioOutputMap%{i}" concat="true" concatWhitespace="true">
+                                    -map "[out%{j}]"
+                                </dynamicParameter>
+                            </for>
+                            <dynamicParameter name="additionalAudioOutputMapStart" add="%{dynamic.additionalAudioTracks%{i}}"/>
+                            <dynamicParameter name="additionalAudioOutputs" concat="true" concatWhitespace="true">
+                                %{dynamic.additionalAudioOutputMap%{i}} -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f mov
+                                %{dynamic.additionalAudio%{i}}
                             </dynamicParameter>
+                        </for>
 
-                        </execEachSegment>
-
-                        <execOnce name="convert_ttml_to_itt">
-                            %{tool.java} subtitleConverter.java %{dynamic.concatTTML} --outputITT %{dynamic.vendorId}-%{seq.subLang}.itt
+                        <execOnce name="audioMaping">
+                            %{tool.ffmpeg} %{dynamic.concatAudioInput} -filter_complex
+                            "%{dynamic.concatAudioMap}amerge,asplit=%{dynamic.audioSplitCount}%{dynamic.audioInLabels}%{dynamic.audioOutPanConfigurations}"
+                            %{dynamic.mainAudioOutputMap} -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f mov
+                            %{dynamic.mainAudio}
+                            %{dynamic.additionalAudioOutputs}
                         </execOnce>
-                    </execEachSequence>
+
+                    </if>
+
+                    <!--
+                        create output.mov from flatten encoded video and audio
+                    -->
+                    <execOnce name="muxing_mov" if="%{dynamic.hasAudioAndVideo}">
+                        %{tool.ffmpeg} -i %{tmp.videoEncoded} -i %{dynamic.mainAudio}
+                        -c:v copy -c:a copy
+                        %{dynamic.destSource}
+                    </execOnce>
+                    <execOnce name="muxing_mov_audio_only" if="%{dynamic.hasAudioOnly}">
+                        %{tool.ffmpeg} -i %{dynamic.mainAudio}
+                        -c:a copy
+                        %{dynamic.destSource}
+                    </execOnce>
+                    <execOnce name="muxing_mov_video_only" if="%{dynamic.hasVideoOnly}">
+                        %{tool.ffmpeg} -i %{tmp.videoEncoded}
+                        -c:v copy
+                        %{dynamic.destSource}
+                    </execOnce>
+
+                    <!-- Subtitle processing -->
+
+                    <!-- Convert embedded CPL subtitles-->
+                    <if test="%{dynamic.isCplSub}">
+                        <!--
+                            Extract each subtitle TTML segment from MXF and concat TTML for sequence.
+                        -->
+                        <execEachSequence type="subtitle" name="extarct_and_concat_ttml" if="%{dynamic.hasSubtitle}">
+
+                            <dynamicParameter name="concatTtml">
+                            </dynamicParameter>
+
+                            <execEachSegment name="extract_ttml">
+                                <execOnce name="extract_ttml">
+                                    %{tool.as-02-unwrap} %{resource.essence} "%{seq.num}-%{segm.num}-%{resource.num}.xml"
+                                </execOnce>
+
+                                <!-- to delete intermediate files at the end -->
+                                <dynamicParameter name="ttml-%{seq.num}-%{segm.num}-%{resource.num}" deleteOnExit="true">
+                                    %{seq.num}-%{segm.num}-%{resource.num}.xml
+                                </dynamicParameter>
+
+                                <dynamicParameter name="concatTtml" concat="true" concatWhitespace="true">
+                                    --ttml
+                                    %{seq.num}-%{segm.num}-%{resource.num}.xml
+                                    <!--%{resource.offsetMS} %{resource.startTimeMS} %{resource.endTimeMS}-->
+                                </dynamicParameter>
+                            </execEachSegment>
+
+                            <dynamicParameter name="itt-%{seq.num}" deleteOnExit="true">
+                                itt-%{seq.num}.itt
+                            </dynamicParameter>
+
+                            <execOnce name="convert_ttml_to_itt">
+                                %{dynamic.ttml-to-itt} %{dynamic.concatTtml} --outputITT %{dynamic.itt-%{seq.num}}
+                            </execOnce>
+
+                        </execEachSequence>
+                    </if>
+
+                    <!--Convert external input subtitles -->
+                    <if test="%{dynamic.isInputParamSub}">
+                        <for iterator="i" from="0" count="%{dynamic.ttmlCount}">
+                            <dynamicParameter name="itt-%{i}" deleteOnExit="true">
+                                itt-%{i}.itt
+                            </dynamicParameter>
+
+                            <dynamicParameter name="ttmlToIttParams">
+                                --ttml %{dynamic.ttml-%{i}} --outputITT %{dynamic.itt-%{i}}
+                            </dynamicParameter>
+
+                            <execOnce name="convert_ttml_to_itt">
+                                %{dynamic.ttml-to-itt} %{dynamic.ttmlToIttParams}
+                            </execOnce>
+                        </for>
+                    </if>
 
                 </formatConfiguration>
             </formatConfigurations>

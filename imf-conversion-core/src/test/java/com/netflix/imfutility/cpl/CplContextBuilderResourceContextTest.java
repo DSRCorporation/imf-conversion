@@ -386,6 +386,10 @@ public class CplContextBuilderResourceContextTest {
 
             assertEquals("urn:uuid:895820ef-e379-4021-a69e-8a898b0a9094",
                     resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
+            assertEquals("urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0",
+                    resourceContext.getParameterValue(ResourceContextParameters.TRACK_FILE_ID, contextInfo));
+            assertEquals("urn:uuid:9b2134be-c510-478a-9210-5bd187602794",
+                    resourceContext.getParameterValue(ResourceContextParameters.ESSENCE_DESC_ID, contextInfo));
             assertEquals(String.valueOf(0 + repeat),
                     resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
             assertEquals(ImpUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio.mxf"),
@@ -435,6 +439,10 @@ public class CplContextBuilderResourceContextTest {
 
             assertEquals("urn:uuid:895820ef-e379-4021-a69e-8a898b0a9095",
                     resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
+            assertEquals("urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0",
+                    resourceContext.getParameterValue(ResourceContextParameters.TRACK_FILE_ID, contextInfo));
+            assertEquals("urn:uuid:9b2134be-c510-478a-9210-5bd187602795",
+                    resourceContext.getParameterValue(ResourceContextParameters.ESSENCE_DESC_ID, contextInfo));
             assertEquals(String.valueOf(0 + repeat),
                     resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
             assertEquals(ImpUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio.mxf"),
@@ -484,6 +492,10 @@ public class CplContextBuilderResourceContextTest {
 
             assertEquals("urn:uuid:895820ef-e379-4021-a69e-8a898b0a9096",
                     resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
+            assertEquals("urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b1",
+                    resourceContext.getParameterValue(ResourceContextParameters.TRACK_FILE_ID, contextInfo));
+            assertEquals("urn:uuid:9b2134be-c510-478a-9210-5bd187602796",
+                    resourceContext.getParameterValue(ResourceContextParameters.ESSENCE_DESC_ID, contextInfo));
             assertEquals(String.valueOf(1 + repeat),
                     resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
             assertEquals(ImpUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio_2.mxf"),
@@ -535,6 +547,10 @@ public class CplContextBuilderResourceContextTest {
 
             assertEquals("urn:uuid:895820ef-e379-4021-a69e-8a898b0a9094",
                     resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
+            assertEquals("urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0",
+                    resourceContext.getParameterValue(ResourceContextParameters.TRACK_FILE_ID, contextInfo));
+            assertEquals("urn:uuid:9b2134be-c510-478a-9210-5bd187602797",
+                    resourceContext.getParameterValue(ResourceContextParameters.ESSENCE_DESC_ID, contextInfo));
             assertEquals(String.valueOf(0 + repeat),
                     resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
             assertEquals(ImpUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio.mxf"),
@@ -584,6 +600,10 @@ public class CplContextBuilderResourceContextTest {
 
             assertEquals("urn:uuid:895820ef-e379-4021-a69e-8a898b0a9097",
                     resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
+            assertEquals("urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b1",
+                    resourceContext.getParameterValue(ResourceContextParameters.TRACK_FILE_ID, contextInfo));
+            assertEquals("urn:uuid:9b2134be-c510-478a-9210-5bd187602795",
+                    resourceContext.getParameterValue(ResourceContextParameters.ESSENCE_DESC_ID, contextInfo));
             assertEquals(String.valueOf(0 + repeat),
                     resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
             assertEquals(ImpUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_Audio_2.mxf"),
@@ -642,6 +662,10 @@ public class CplContextBuilderResourceContextTest {
 
             assertEquals("urn:uuid:2404d06b-4d65-4511-9cac-42d41196a1ea",
                     resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
+            assertEquals("urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e946",
+                    resourceContext.getParameterValue(ResourceContextParameters.TRACK_FILE_ID, contextInfo));
+            assertEquals("urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f8",
+                    resourceContext.getParameterValue(ResourceContextParameters.ESSENCE_DESC_ID, contextInfo));
             assertEquals(String.valueOf(0 + repeat),
                     resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
             assertEquals(ImpUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV.mxf"),
@@ -691,6 +715,10 @@ public class CplContextBuilderResourceContextTest {
 
             assertEquals("urn:uuid:2404d06b-4d65-4511-9cac-42d41196a1eb",
                     resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
+            assertEquals("urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e947",
+                    resourceContext.getParameterValue(ResourceContextParameters.TRACK_FILE_ID, contextInfo));
+            assertEquals("urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f9",
+                    resourceContext.getParameterValue(ResourceContextParameters.ESSENCE_DESC_ID, contextInfo));
             assertEquals(String.valueOf(1 + repeat),
                     resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
             assertEquals(ImpUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_2.mxf"),
@@ -740,6 +768,10 @@ public class CplContextBuilderResourceContextTest {
 
             assertEquals("urn:uuid:2404d06b-4d65-4511-9cac-42d41196a1ec",
                     resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
+            assertEquals("urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e947",
+                    resourceContext.getParameterValue(ResourceContextParameters.TRACK_FILE_ID, contextInfo));
+            assertEquals("urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f0",
+                    resourceContext.getParameterValue(ResourceContextParameters.ESSENCE_DESC_ID, contextInfo));
             assertEquals(String.valueOf(2 + repeat),
                     resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
             assertEquals(ImpUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_2.mxf"),
@@ -791,6 +823,10 @@ public class CplContextBuilderResourceContextTest {
 
             assertEquals("urn:uuid:2404d06b-4d65-4511-9cac-42d41196a1ea",
                     resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
+            assertEquals("urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e946",
+                    resourceContext.getParameterValue(ResourceContextParameters.TRACK_FILE_ID, contextInfo));
+            assertEquals("urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f8",
+                    resourceContext.getParameterValue(ResourceContextParameters.ESSENCE_DESC_ID, contextInfo));
             assertEquals(String.valueOf(0 + repeat),
                     resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
             assertEquals(ImpUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV.mxf"),
@@ -840,6 +876,10 @@ public class CplContextBuilderResourceContextTest {
 
             assertEquals("urn:uuid:2404d06b-4d65-4511-9cac-42d41196a1eb",
                     resourceContext.getParameterValue(ResourceContextParameters.UUID, contextInfo));
+            assertEquals("urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e947",
+                    resourceContext.getParameterValue(ResourceContextParameters.TRACK_FILE_ID, contextInfo));
+            assertEquals("urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f1",
+                    resourceContext.getParameterValue(ResourceContextParameters.ESSENCE_DESC_ID, contextInfo));
             assertEquals(String.valueOf(1 + repeat),
                     resourceContext.getParameterValue(ResourceContextParameters.NUM, contextInfo));
             assertEquals(ImpUtils.getAbsolutePath("Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV_2.mxf"),

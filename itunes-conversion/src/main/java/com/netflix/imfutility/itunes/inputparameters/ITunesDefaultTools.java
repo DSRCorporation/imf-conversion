@@ -24,4 +24,10 @@ import com.netflix.imfutility.inputparameters.IDefaultTools;
  * Default executables distributed with the utility for iTunes format.
  */
 public interface ITunesDefaultTools extends IDefaultTools {
+    /**
+     * Default TTML to ITT subtitles conversion executable.
+     *
+     * @return default TTML to ITT subtitles conversion executable as 'java -jar path-to-jar' form.
+     */
+    String getTtmlToIttTool();
 }

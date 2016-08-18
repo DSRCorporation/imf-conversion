@@ -6,6 +6,7 @@ if [%3]==[] goto third-missing
 if [%4]==[] goto fourth-missing
 if [%5]==[] goto fifth-missing
 if [%6]==[] goto sixth-missing
+if [%7]==[] goto seventh-missing
 
 SET PROG=%8
 if [%8]==[] SET PROG="..\..\..\install\imf-conversion-utility\bin\imf-conversion-utility"
@@ -46,6 +47,12 @@ goto :usage
 goto :usage
 
 :sixth-missing
+@echo on
+@echo Missing argument: a trailer path.
+@echo off
+goto :usage
+
+:seventh-missing
 @echo on
 @echo Missing argument: a chapters.xml path.
 @echo off

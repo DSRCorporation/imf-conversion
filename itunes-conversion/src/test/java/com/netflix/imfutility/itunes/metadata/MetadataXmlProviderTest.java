@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.itunes.metadata;
 
+import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.itunes.util.MetadataUtils;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.itunes.xmlprovider.builder.MetadataXmlSampleBuilder;
@@ -155,5 +156,20 @@ public class MetadataXmlProviderTest {
 
         // sample package will fail strict validation
         provider.saveMetadata("vendor_id");
+    }
+
+    @Test
+    public void testUpdateMetadata() throws Exception {
+        MetadataXmlProvider provider = new MetadataXmlProvider(TemplateParameterContextCreator.getWorkingDir(),
+                MetadataXmlSampleBuilder.buildPackage());
+
+        provider.updateMetadata("vendor_id", "fr-CA");
+
+        assertEquals("fr-CA", provider.getPackageType().getLanguage());
+        assertEquals("vendor_id", provider.getPackageType().getVideo().getVendorId());
+
+        assertNotNull(provider.getPackageType().getVideo().getChapters());
+        assertNotNull(provider.getPackageType().getVideo().getAssets().getAsset());
+        assertEquals(AssetTypeType.FULL, provider.getPackageType().getVideo().getAssets().getAsset().get(0).getType());
     }
 }

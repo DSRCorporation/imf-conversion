@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (C) 2016 Netflix, Inc.
+  ~
+  ~     This file is part of IMF Conversion Utility.
+  ~
+  ~     IMF Conversion Utility is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     IMF Conversion Utility is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<conversion xmlns="http://conversion.imfutility.netflix.com">
+
+    <imfValidation>%{dynamic.validateTool} -i %{dynamic.imp} -c %{dynamic.cpl} -d %{dynamic.workingDir} -f %{dynamic.outputValidationFile}
+    </imfValidation>
+
+    <formats>
+        <!--
+            specific configuration for each format
+        -->
+        <format name="fakeFormat">
+            <tmpContext/>
+            <defaultDestContext name="1"/>
+
+            <mediaInfoCommandVideo/>
+            <mediaInfoCommandAudio/>
+            <mediaInfoCommandSubtitle/>
+
+            <formatConfigurations>
+
+                <formatConfiguration name="exec">
+
+                    <for iterator="i" to="2">
+                        <execOnce name="execFor">
+                            execForExec -param
+                        </execOnce>
+                    </for>
+
+                </formatConfiguration>
+
+                <formatConfiguration name="fromTo">
+
+                    <for iterator="i" from="4" to="6">
+                        <dynamicParameter name="exec">
+                            execFor%{i}Exec -param
+                        </dynamicParameter>
+                        <execOnce name="execFor">
+                            %{dynamic.exec}
+                        </execOnce>
+                    </for>
+
+                </formatConfiguration>
+
+                <formatConfiguration name="fromCount">
+
+                    <for iterator="i" from="1" count="3">
+                        <dynamicParameter name="exec">
+                            execFor%{i}Exec -param
+                        </dynamicParameter>
+                        <execOnce name="execFor">
+                            %{dynamic.exec}
+                        </execOnce>
+                    </for>
+
+                </formatConfiguration>
+
+                <formatConfiguration name="fromToCount">
+
+                    <for iterator="i" from="0" to="5" count="3">
+                        <dynamicParameter name="exec">
+                            execFor%{i}Exec -param
+                        </dynamicParameter>
+                        <execOnce name="execFor">
+                            %{dynamic.exec}
+                        </execOnce>
+                    </for>
+
+                </formatConfiguration>
+
+            </formatConfigurations>
+
+        </format>
+    </formats>
+</conversion>
+

@@ -30,6 +30,10 @@ public enum ResourceContextParameters {
 
     UUID("uuid"),
 
+    TRACK_FILE_ID("trackFileId"),
+
+    ESSENCE_DESC_ID("essenceDescId"),
+
     ESSENCE("essence"),
 
     EDIT_RATE("editRate"),
@@ -77,7 +81,23 @@ public enum ResourceContextParameters {
 
     // in frame edit units (audio samples if essence contains audio only; video frames if essence contains video only
     // or both video and audio)
-    DURATION_FRAME_EDIT_UNIT("durationFrameEU");
+    DURATION_FRAME_EDIT_UNIT("durationFrameEU"),
+
+    // audio
+    CHANNELS_NUM("channels_num"),
+    BITS_PER_SAMPLE("bits_per_sample"),
+    SAMPLE_RATE("sample_rate"),
+    CHANNELS_LAYOUT("channels_layout"),
+    SOUNDFIELD_GROUP_ID("soundfield_group_id"),
+
+    // video
+    WIDTH("width"),
+    HEIGHT("height"),
+    BIT_DEPTH("bit_depth"),
+    PIXEL_FORMAT("pixel_format"),
+    FRAME_RATE("frame_rate"),
+
+    LANG("lang");
 
 
     private final String name;

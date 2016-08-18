@@ -45,8 +45,8 @@ public class CheckSumTagBuilder extends FileTagBuilder<CheckSumType> {
     }
 
     private static byte[] md5(File file) {
-        try {
-            return DigestUtils.md5(new FileInputStream(file));
+        try (FileInputStream stream = new FileInputStream(file)) {
+            return DigestUtils.md5(stream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
