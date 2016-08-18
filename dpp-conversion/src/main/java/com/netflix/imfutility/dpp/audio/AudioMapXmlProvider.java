@@ -28,6 +28,7 @@ import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.dpp.audiomap.AudioMapType;
 import com.netflix.imfutility.generated.dpp.audiomap.EBUTrackType;
 import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
+import com.netflix.imfutility.util.ImfLogger;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.slf4j.Logger;
@@ -51,7 +52,7 @@ import static com.netflix.imfutility.dpp.DppConversionXsdConstants.AUDIOMAP_XML_
  */
 public final class AudioMapXmlProvider {
 
-    private final Logger logger = LoggerFactory.getLogger(AudioMapXmlProvider.class);
+    private final Logger logger = new ImfLogger(LoggerFactory.getLogger(AudioMapXmlProvider.class));
 
     private final TemplateParameterContextProvider contextProvider;
     private final AudioTrackLayoutDmAs11Type audioLayout;
@@ -105,7 +106,7 @@ public final class AudioMapXmlProvider {
         }
 
         if (audioMap == null) {
-            logger.info("Generating default audiomap in a natural order...");
+            logger.debug("Generating default audiomap in a natural order...");
             audioMap = generateDefaultXml();
             logger.info("Generated default audiomap in a natural order: OK");
         }

@@ -30,9 +30,25 @@
     <xs:element name="errors">
         <xs:complexType>
             <xs:sequence>
-                <xs:element type="xs:string" name="error" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element type="errorType" name="error" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <xs:complexType name="errorType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="levelType" name="level" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="levelType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="fatal"/>
+            <xs:enumeration value="non-fatal"/>
+            <xs:enumeration value="warning"/>
+        </xs:restriction>
+    </xs:simpleType>
 
 </xs:schema>

@@ -106,7 +106,7 @@ public class ImfValidator {
                     default:
                         // nothing
                 }
-            } else if (file.getName().endsWith(".mxf")) {
+            } else if (file.getName().endsWith(".mxf") || file.getName().endsWith(".mxf.hdr")) {
                 mxfs.add(file);
             }
         }
@@ -138,9 +138,7 @@ public class ImfValidator {
         }
 
         // 3.7 validate CPL conformance
-        if (shouldCheckCplConformance(cpl)) {
-            result.addAll(validateCplConformance(cpl, mxfs));
-        }
+        result.addAll(validateCplConformance(cpl, mxfs));
 
         return result;
     }
@@ -265,6 +263,9 @@ public class ImfValidator {
     }
 
     private PayloadRecord getHeaderPartition(File mxf, IMFErrorLogger imfErrorLogger) throws IOException {
+        if (mxf.getName().endsWith(".hdr")) {
+            return fromHeaderPartition(mxf, imfErrorLogger);
+        }
         ResourceByteRangeProvider resourceByteRangeProvider = new FileByteRangeProvider(mxf);
         long archiveFileSize = resourceByteRangeProvider.getResourceSize();
         long rangeEnd = archiveFileSize - 1;
@@ -293,17 +294,10 @@ public class ImfValidator {
         return new PayloadRecord(headerPartitionBytes, PayloadRecord.PayloadAssetType.EssencePartition, headerRangeStart, headerRangeEnd);
     }
 
-    private boolean shouldCheckCplConformance(File cpl) {
-        // check for conformance only if the CPL has EssenceDescriptorList
-        try {
-            new Composition(cpl, new IMFErrorLoggerImpl()).getEssenceDescriptorListMap();
-            // if there ae no essence descriptor list, then the method below throws a NullPointerException...
-            return true;
-        } catch (IOException | JAXBException | URISyntaxException | SAXException | IMFException | MXFException e) {
-            return false;
-        } catch (NullPointerException e) {
-            return false;
-        }
+    private PayloadRecord fromHeaderPartition(File mxfHdr, IMFErrorLogger imfErrorLogger) throws IOException {
+        ResourceByteRangeProvider resourceByteRangeProvider = new FileByteRangeProvider(mxfHdr);
+        byte[] headerPartitionBytes = resourceByteRangeProvider.getByteRangeAsBytes(0, resourceByteRangeProvider.getResourceSize() - 1);
+        return new PayloadRecord(headerPartitionBytes, PayloadRecord.PayloadAssetType.EssencePartition, 0L, 0L);
     }
 
     private interface IValidator {

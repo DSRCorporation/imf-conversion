@@ -213,6 +213,7 @@
                                 %{seq.num}-%{segm.num}-%{resource.num}.xml
                             </dynamicParameter>
 
+                            <dynamicParameter name="concatTTML"></dynamicParameter>
                             <dynamicParameter name="concatTTML" concat="true" concatWhitespace="true">
                                 --ttml
                                 %{seq.num}-%{segm.num}-%{resource.num}.xml %{resource.offsetMS} %{resource.startTimeMS}

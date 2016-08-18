@@ -2,7 +2,11 @@ description = "IMF validation wrapper on Photon lib (default IMF validation tool
 version = ""
 
 dependencies {
-    compile group: 'com.netflix.photon', name: 'Photon', version: '0.2.8'
+    compile project(':imf-conversion-common')
+}
+
+dependencies {
+    compile group: 'com.netflix.photon', name: 'Photon', version: '1.0.0'
     compile group: 'com.lexicalscope.jewelcli', name: 'jewelcli', version: '0.8.9'
 }
 

@@ -68,4 +68,14 @@ public interface ImfUtilityCmdLineArgs {
     )
     String getWorkingDirectory();
 
+    @Option(
+            description =
+                    "Log level."
+                            + "\n\t\tPossible values: [error, warn, info (default), debug].",
+            shortName = {"l"},
+            longName = {"log-level"},
+            defaultValue = "info"
+    )
+    LogLevel getLogLevel();
+
 }
