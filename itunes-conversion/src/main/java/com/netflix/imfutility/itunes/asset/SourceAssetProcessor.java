@@ -44,8 +44,8 @@ public class SourceAssetProcessor extends AssetProcessor<DataFileType> {
     }
 
     @Override
-    protected boolean checkInput(File assetFile) {
-        return super.checkInput(assetFile) && locale != null;
+    protected boolean checkMandatoryParams() {
+        return locale != null;
     }
 
     @Override

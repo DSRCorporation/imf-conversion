@@ -36,13 +36,14 @@ import java.io.File;
 import java.io.IOException;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 
 /**
- * Tests trailer asset processing.
- * (see {@link TrailerAssetProcessor}).
+ * Tests closed captions asset processing.
+ * (see {@link CaptionsAssetProcessor}).
  */
-public class TrailerAssetProcessorTest {
+public class CaptionsAssetProcessorTest {
 
     @BeforeClass
     public static void setupAll() throws IOException {
@@ -60,56 +61,79 @@ public class TrailerAssetProcessorTest {
     }
 
     @Test
-    public void testCorrectTrailer() throws Exception {
+    public void testCorrectCaptions() throws Exception {
         MetadataXmlProvider metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
-                .setLocale(AssetUtils.createLocale("en-US"))
-                .setFormat(AssetUtils.createCorrectVideoFormat())
-                .process(TestUtils.getTestFile());
+                .process(AssetUtils.getTestCorrectCcUSFile());
 
-        File asset = new File(TemplateParameterContextCreator.getWorkingDir(), "vendor_id-preview.mov");
+        File asset = new File(TemplateParameterContextCreator.getWorkingDir(), "vendor_id-english.scc");
         assertTrue(asset.exists());
         assertTrue(asset.isFile());
 
-        AssetType trailerAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
-        assertEquals(AssetTypeType.PREVIEW, trailerAsset.getType());
+        AssetType captionsAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
+        assertEquals(AssetTypeType.FULL, captionsAsset.getType());
 
-        DataFileType trailerDataFile = trailerAsset.getDataFile().get(0);
-        assertEquals("vendor_id-preview.mov", trailerDataFile.getFileName());
-        assertEquals(DataFileRoleType.SOURCE, trailerDataFile.getRole());
-        assertEquals("en-US", trailerDataFile.getLocale().getName());
+        DataFileType captionsDataFile = captionsAsset.getDataFile().get(0);
+        assertEquals("vendor_id-english.scc", captionsDataFile.getFileName());
+        assertEquals(DataFileRoleType.CAPTIONS, captionsDataFile.getRole());
+        assertNull(captionsDataFile.getLocale());
     }
 
     @Test(expected = AssetValidationException.class)
-    public void testInvalidFormat() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+    public void testInvalidLocaleFile() throws Exception {
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
-                .setLocale(AssetUtils.createLocale("en-US"))
-                .setFormat(AssetUtils.createIncorrectVideoFormat())
+                .process(AssetUtils.getTestInvalidLocaleCcFile());
+    }
+
+    @Test(expected = AssetValidationException.class)
+    public void testInvalidSignatureFile() throws Exception {
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+                TemplateParameterContextCreator.getWorkingDir());
+
+        processor.setVendorId("vendor_id")
+                .process(AssetUtils.getTestInvalidSignatureCcFile());
+    }
+
+    @Test(expected = AssetValidationException.class)
+    public void testEmptyFile() throws Exception {
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+                TemplateParameterContextCreator.getWorkingDir());
+
+        processor.setVendorId("vendor_id")
                 .process(TestUtils.getTestFile());
     }
 
     @Test(expected = ConversionException.class)
     public void testInvalidPath() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
-                .setLocale(AssetUtils.createLocale("en-US"))
-                .setFormat(AssetUtils.createCorrectVideoFormat())
                 .process(new File("invalid_path"));
     }
 
     @Test(expected = AssetValidationException.class)
     public void testParametersNotSet() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
                 TemplateParameterContextCreator.getWorkingDir());
 
-        //  vendor_id, locale and format are required
-        processor.process(TestUtils.getTestFile());
+        processor.process(AssetUtils.getTestCorrectCcUSFile());
+    }
+
+    @Test(expected = AssetValidationException.class)
+    public void testDuplicateLanguages() throws Exception {
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+                TemplateParameterContextCreator.getWorkingDir());
+
+        processor.setVendorId("vendor_id");
+
+        processor.process(AssetUtils.getTestCorrectCcUSFile());
+        processor.process(AssetUtils.getTestCorrectCcGBFile());
+
     }
 }

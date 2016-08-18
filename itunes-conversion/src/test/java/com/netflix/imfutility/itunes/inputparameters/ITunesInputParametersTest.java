@@ -137,4 +137,13 @@ public class ITunesInputParametersTest {
         validate(new String[]{"-m", "convert", "--vendor-id", "abc12"});
     }
 
+    @Test
+    public void testValidateFallbackLocaleCorrect() throws Exception {
+        validate(new String[]{"-m", "convert", "--vendor-id", "abc12_", "--fallback-locale", "fr_FR"});
+    }
+
+    @Test(expected = ArgumentValidationException.class)
+    public void testValidateFallbackLocaleNotExist() throws Exception {
+        validate(new String[]{"-m", "convert", "--vendor-id", "abc12_", "--fallback-locale", "fr_XX"});
+    }
 }

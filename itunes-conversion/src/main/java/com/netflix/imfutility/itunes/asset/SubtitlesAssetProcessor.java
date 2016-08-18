@@ -27,20 +27,20 @@ import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.itunes.xmlprovider.builder.file.DataFileTagBuilder;
 
 import java.io.File;
+import java.util.function.Predicate;
 
 /**
- * Asset processor specified for additional audio managing.
+ * Asset processor specified for subtitles managing.
  */
-public class AudioAssetProcessor extends AssetProcessor<DataFileType> {
-
+public class SubtitlesAssetProcessor extends AssetProcessor<DataFileType> {
     private LocaleType locale;
 
-    public AudioAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
+    public SubtitlesAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
         setDistributeAssetStrategy(new MoveAssetStrategy());
     }
 
-    public AudioAssetProcessor setLocale(LocaleType locale) {
+    public SubtitlesAssetProcessor setLocale(LocaleType locale) {
         this.locale = locale;
         return this;
     }
@@ -52,14 +52,14 @@ public class AudioAssetProcessor extends AssetProcessor<DataFileType> {
 
     @Override
     protected void validate(File assetFile) throws AssetValidationException {
-        // already validated
+        validateDuplicateLocales();
     }
 
     @Override
     protected DataFileType buildMetadata(File assetFile) {
         return new DataFileTagBuilder(assetFile, getDestFileName(assetFile))
                 .setLocale(locale)
-                .setRole(DataFileRoleType.AUDIO)
+                .setRole(DataFileRoleType.SUBTITLES)
                 .build();
     }
 
@@ -70,6 +70,18 @@ public class AudioAssetProcessor extends AssetProcessor<DataFileType> {
 
     @Override
     protected String getDestFileName(File assetFile) {
-        return assetFile.getName();
+        return "subtitles_" + locale.getName().replace("-", "_").toUpperCase() + ".itt";
+    }
+
+    private void validateDuplicateLocales() {
+        boolean duplicate = metadataXmlProvider.getFullAssetDataFilesByRole(DataFileRoleType.SUBTITLES).stream()
+                .map(DataFileType::getLocale)
+                .map(LocaleType::getName)
+                .anyMatch(Predicate.isEqual(locale.getName()));
+
+        if (duplicate) {
+            throw new AssetValidationException(String.format(
+                    "Subtitles locale validation failed. Metadata already contains subtitles for %s locale", locale.getName()));
+        }
     }
 }

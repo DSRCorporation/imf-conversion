@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
+import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.itunes.asset.distribute.DistributeAssetStrategy;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import org.slf4j.Logger;
@@ -58,9 +59,15 @@ public abstract class AssetProcessor<T> {
     public void process(File assetFile) throws AssetValidationException, IOException {
         logger.info("Processing asset {}...", assetFile.getName());
 
-        if (!checkInput(assetFile)) {
-            throw new AssetValidationException("Mandatory parameters for processor must be set");
+        if (!assetFile.exists() || !assetFile.isFile()) {
+            throw new ConversionException(String.format(
+                    "Asset file '%s' must be an existing file", assetFile.getName()));
         }
+
+        if (!checkMandatoryParams()) {
+            throw new AssetValidationException("Mandatory input parameters for processor must be set");
+        }
+
         validate(assetFile);
         appendMetadata(buildMetadata(assetFile));
         distribute(assetFile);
@@ -68,9 +75,7 @@ public abstract class AssetProcessor<T> {
         logger.info("Processed asset: OK\n");
     }
 
-    protected boolean checkInput(File assetFile) {
-        return assetFile.exists() && assetFile.isFile();
-    }
+    protected abstract boolean checkMandatoryParams();
 
     protected void distribute(File assetFile) throws IOException {
         if (distributeAssetStrategy != null) {

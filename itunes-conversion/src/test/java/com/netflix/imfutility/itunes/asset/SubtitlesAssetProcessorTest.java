@@ -37,14 +37,14 @@ import java.io.File;
 import java.io.IOException;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 /**
- * Tests additional audio source asset processing.
- * (see {@link AudioAssetProcessor}).
+ * Tests subtitles asset processing.
+ * (see {@link SubtitlesAssetProcessor}).
  */
-public class AudioAssetProcessorTest {
+public class SubtitlesAssetProcessorTest {
 
     private MetadataXmlProvider metadataXmlProvider;
     private File destDir;
@@ -68,7 +68,7 @@ public class AudioAssetProcessorTest {
     @Before
     public void setup() throws IOException {
         destDir = AssetUtils.createDirectory(TemplateParameterContextCreator.getWorkingDir(), "destDir");
-        inputAsset = AssetUtils.createFile(TemplateParameterContextCreator.getWorkingDir(), "audio");
+        inputAsset = AssetUtils.createFile(TemplateParameterContextCreator.getWorkingDir(), "subtitles");
 
         metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
     }
@@ -82,32 +82,31 @@ public class AudioAssetProcessorTest {
     }
 
     @Test
-    public void testCorrectAudio() throws Exception {
-        AudioAssetProcessor processor = new AudioAssetProcessor(metadataXmlProvider, destDir);
+    public void testCorrectSubtitles() throws Exception {
+        SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(metadataXmlProvider, destDir);
 
-        processor.setLocale(AssetUtils.createLocale("en-US"))
+        processor.setLocale(AssetUtils.createLocale("fr-CA"))
                 .process(inputAsset);
 
         // input asset must be moved to dest dir
         assertFalse(inputAsset.exists());
 
-        File outputAsset = new File(destDir, "audio");
+        File outputAsset = new File(destDir, "subtitles_FR_CA.itt");
         assertTrue(outputAsset.exists());
         assertTrue(outputAsset.isFile());
 
+        AssetType subtitlesAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
+        assertEquals(AssetTypeType.FULL, subtitlesAsset.getType());
 
-        AssetType audioAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
-        assertEquals(AssetTypeType.FULL, audioAsset.getType());
-
-        DataFileType audioDataFile = audioAsset.getDataFile().get(0);
-        assertEquals("audio", audioDataFile.getFileName());
-        assertEquals(DataFileRoleType.AUDIO, audioDataFile.getRole());
-        assertEquals("en-US", audioDataFile.getLocale().getName());
+        DataFileType subtitlesDataFile = subtitlesAsset.getDataFile().get(0);
+        assertEquals("subtitles_FR_CA.itt", subtitlesDataFile.getFileName());
+        assertEquals(DataFileRoleType.SUBTITLES, subtitlesDataFile.getRole());
+        assertEquals("fr-CA", subtitlesDataFile.getLocale().getName());
     }
 
     @Test(expected = ConversionException.class)
     public void testInvalidPath() throws Exception {
-        AudioAssetProcessor processor = new AudioAssetProcessor(metadataXmlProvider, destDir);
+        SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(metadataXmlProvider, destDir);
 
         processor.setLocale(AssetUtils.createLocale("en-US"))
                 .process(new File("invalid_path"));
@@ -115,9 +114,22 @@ public class AudioAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testParametersNotSet() throws Exception {
-        AudioAssetProcessor processor = new AudioAssetProcessor(metadataXmlProvider, destDir);
+        SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(metadataXmlProvider, destDir);
 
         //  locale is required
         processor.process(inputAsset);
+    }
+
+    @Test(expected = AssetValidationException.class)
+    public void testDuplicateLocales() throws Exception {
+        File anotherInputAsset = AssetUtils.createFile(TemplateParameterContextCreator.getWorkingDir(), "anotherSubtitles");
+
+        SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(metadataXmlProvider, destDir);
+
+        //  locale is duplicated
+        processor.setLocale(AssetUtils.createLocale("en-US"))
+                .process(inputAsset);
+        processor.setLocale(AssetUtils.createLocale("en-US"))
+                .process(anotherInputAsset);
     }
 }

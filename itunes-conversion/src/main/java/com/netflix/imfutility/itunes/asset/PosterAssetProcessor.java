@@ -53,8 +53,8 @@ public class PosterAssetProcessor extends AssetProcessor<DataFileType> {
     }
 
     @Override
-    protected boolean checkInput(File assetFile) {
-        return super.checkInput(assetFile) && vendorId != null;
+    protected boolean checkMandatoryParams() {
+        return vendorId != null;
     }
 
     @Override

@@ -18,6 +18,8 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
+import java.util.Locale;
+
 /**
  * Constants for all asset processors.
  */
@@ -41,4 +43,8 @@ public final class AssetProcessorConstants {
 
     // trailer constants
     public static final String MOV_FORMAT = "QuickTime / MOV";
+
+    // captions constants
+    public static final String SCC_SIGNATURE = "Scenarist_SCC V1.0";
+    public static final Locale DEFAULT_CC_LOCALE = Locale.US;
 }

@@ -309,7 +309,7 @@
             <mediaInfoCommandAudio>%{tool.ffprobe} -select_streams a:0 -show_streams -noprivate -print_format xml=x=1
                 %{dynamic.mediaInfoInput}
             </mediaInfoCommandAudio>
-            <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams s:0 -show_streams -noprivate -print_format xml=x=1
+            <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams d:0 -show_streams -noprivate -print_format xml=x=1
                 %{dynamic.mediaInfoInput}
             </mediaInfoCommandSubtitle>
 
@@ -533,28 +533,62 @@
                         %{dynamic.destSource}
                     </execOnce>
 
-                    <!--
-                        Extract each subtitle TTML segment from MXF or just convert external TTML
-                    -->
-                    <execEachSequence type="subtitle" name="convertTTML2ITT" if="%{dynamic.isTTML}">
-                        <execEachSegment name="extract_ttml" if="%{dynamic.isCPL}">
-                            <execOnce name="extract_ttml">
-                                %{tool.asdcp-test} -x "%{seq.num}-%{segm.num}.xml" %{resource.essence}
+                    <!-- Subtitle processing -->
+
+                    <!-- Convert embedded CPL subtitles-->
+                    <if test="%{dynamic.isCplSub}">
+                        <!--
+                            Extract each subtitle TTML segment from MXF and concat TTML for sequence.
+                        -->
+                        <execEachSequence type="subtitle" name="extarct_and_concat_ttml" if="%{dynamic.hasSubtitle}">
+
+                            <dynamicParameter name="concatTtml">
+                            </dynamicParameter>
+
+                            <execEachSegment name="extract_ttml">
+                                <execOnce name="extract_ttml">
+                                    %{tool.as-02-unwrap} %{resource.essence} "%{seq.num}-%{segm.num}-%{resource.num}.xml"
+                                </execOnce>
+
+                                <!-- to delete intermediate files at the end -->
+                                <dynamicParameter name="ttml-%{seq.num}-%{segm.num}-%{resource.num}" deleteOnExit="true">
+                                    %{seq.num}-%{segm.num}-%{resource.num}.xml
+                                </dynamicParameter>
+
+                                <dynamicParameter name="concatTtml" concat="true" concatWhitespace="true">
+                                    --ttml
+                                    %{seq.num}-%{segm.num}-%{resource.num}.xml
+                                    <!--%{resource.offsetMS} %{resource.startTimeMS} %{resource.endTimeMS}-->
+                                </dynamicParameter>
+                            </execEachSegment>
+
+                            <dynamicParameter name="itt-%{seq.num}" deleteOnExit="true">
+                                itt-%{seq.num}.itt
+                            </dynamicParameter>
+
+                            <execOnce name="convert_ttml_to_itt">
+                                %{dynamic.ttml-to-itt} %{dynamic.concatTtml} --outputITT %{dynamic.itt-%{seq.num}}
                             </execOnce>
-                            <!-- to delete intermediate files at the end -->
-                            <dynamicParameter name="ttml-segment-tmp-%{seq.num}-%{segm.num}" deleteOnExit="true">
-                                %{seq.num}-%{segm.num}.xml
+
+                        </execEachSequence>
+                    </if>
+
+                    <!--Convert external input subtitles -->
+                    <if test="%{dynamic.isInputParamSub}">
+                        <for iterator="i" from="0" count="%{dynamic.ttmlCount}">
+                            <dynamicParameter name="itt-%{i}" deleteOnExit="true">
+                                itt-%{i}.itt
                             </dynamicParameter>
 
-                            <dynamicParameter name="concatTTML" concat="true">--ttml %{seq.num}-%{segm.num}.xml %{resource.offsetTC}
-                                %{resource.startTimeTC} %{resource.endTimeTC}
+                            <dynamicParameter name="ttmlToIttParams">
+                                --ttml %{dynamic.ttml-%{i}} --outputITT %{dynamic.itt-%{i}}
                             </dynamicParameter>
-                        </execEachSegment>
 
-                        <execOnce name="convert_ttml_to_itt">
-                            %{tool.java} subtitleConverter.java %{dynamic.concatTTML} --outputITT %{dynamic.vendorId}-%{seq.subLang}.itt
-                        </execOnce>
-                    </execEachSequence>
+                            <execOnce name="convert_ttml_to_itt">
+                                %{dynamic.ttml-to-itt} %{dynamic.ttmlToIttParams}
+                            </execOnce>
+                        </for>
+                    </if>
 
                 </formatConfiguration>
             </formatConfigurations>

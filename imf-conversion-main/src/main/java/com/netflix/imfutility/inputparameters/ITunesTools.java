@@ -18,10 +18,18 @@
  */
 package com.netflix.imfutility.inputparameters;
 
+import com.netflix.imfutility.Constants;
 import com.netflix.imfutility.itunes.inputparameters.ITunesDefaultTools;
+
+import java.io.File;
 
 /**
  * Defines executables for iTunes-related default tools.
  */
 public class ITunesTools extends DefaultTools implements ITunesDefaultTools {
+    @Override
+    public String getTtmlToIttTool() {
+        return String.format("java -jar '%s'",
+                new File(getCurrentLocation(), Constants.TTML_TO_ITT_PATH).getAbsolutePath());
+    }
 }

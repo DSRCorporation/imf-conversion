@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -16,19 +16,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility;
+package com.netflix.imfutility.itunes.locale;
+
+import com.netflix.imfutility.ConversionException;
 
 /**
- * Constants.
+ * Exception to throw when locale validation failed.
  */
-public final class Constants {
+public class LocaleValidationException extends ConversionException {
 
-/* 1. paths to default tools. must correspond to the build script*/
+    public LocaleValidationException(String message) {
+        super(message);
+    }
 
-    public static final String IMF_VALIDATION_PATH = "../tools/imf-validation.jar";
-    public static final String TTML_TO_STL_PATH = "../tools/ttml-to-stl.jar";
-    public static final String TTML_TO_ITT_PATH = "../tools/ttml2itt.jar";
-
-    private Constants() {
+    public LocaleValidationException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

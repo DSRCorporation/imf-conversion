@@ -61,9 +61,8 @@ public class TrailerAssetProcessor extends AssetProcessor<DataFileType> {
     }
 
     @Override
-    protected boolean checkInput(File assetFile) {
-        return super.checkInput(assetFile)
-                && vendorId != null
+    protected boolean checkMandatoryParams() {
+        return vendorId != null
                 && format != null
                 && locale != null;
     }

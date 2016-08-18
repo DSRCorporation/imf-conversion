@@ -63,9 +63,8 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
     }
 
     @Override
-    protected boolean checkInput(File assetFile) {
-        return super.checkInput(assetFile)
-                && chapterIndex != null
+    protected boolean checkMandatoryParams() {
+        return chapterIndex != null
                 && !(chapterIndex < CHAPTER_MIN_INDEX || chapterIndex > CHAPTER_MAX_INDEX)
                 && aspectRatio != null
                 && inputChapter != null;
