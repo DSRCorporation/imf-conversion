@@ -70,7 +70,7 @@ public class SubtitlesAssetProcessor extends AssetProcessor<DataFileType> {
 
     @Override
     protected String getDestFileName(File assetFile) {
-        return "Subtitles_" + locale.getName().replace("-", "_").toUpperCase() + ".itt";
+        return "subtitles_" + locale.getName().replace("-", "_").toUpperCase() + ".itt";
     }
 
     private void validateDuplicateLocales() {

@@ -91,7 +91,7 @@ public class SubtitlesAssetProcessorTest {
         // input asset must be moved to dest dir
         assertFalse(inputAsset.exists());
 
-        File outputAsset = new File(destDir, "Subtitles_FR_CA.itt");
+        File outputAsset = new File(destDir, "subtitles_FR_CA.itt");
         assertTrue(outputAsset.exists());
         assertTrue(outputAsset.isFile());
 
@@ -99,7 +99,7 @@ public class SubtitlesAssetProcessorTest {
         assertEquals(AssetTypeType.FULL, subtitlesAsset.getType());
 
         DataFileType subtitlesDataFile = subtitlesAsset.getDataFile().get(0);
-        assertEquals("Subtitles_FR_CA.itt", subtitlesDataFile.getFileName());
+        assertEquals("subtitles_FR_CA.itt", subtitlesDataFile.getFileName());
         assertEquals(DataFileRoleType.SUBTITLES, subtitlesDataFile.getRole());
         assertEquals("fr-CA", subtitlesDataFile.getLocale().getName());
     }
