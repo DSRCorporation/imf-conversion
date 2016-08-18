@@ -482,7 +482,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
                 .process(audio);
     }
 
-    // Subtitles and closed captions processing
+    // Subtitles processing
 
     private void processSubtitles() {
         int count = iTunesInputParameters.getSubFiles() == null
