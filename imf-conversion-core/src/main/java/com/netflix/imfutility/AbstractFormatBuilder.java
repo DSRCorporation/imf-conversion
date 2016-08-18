@@ -32,6 +32,7 @@ import com.netflix.imfutility.conversion.templateParameter.context.SequenceTempl
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.cpl.CplContextBuilder;
+import com.netflix.imfutility.exception.ConversionHelperException;
 import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.inputparameters.ImfUtilityInputParameters;
@@ -173,7 +174,7 @@ public abstract class AbstractFormatBuilder {
             logger.info("Conversion to '{}' format: OK\n", format.getName());
 
             return 0;
-        } catch (ConversionException | XmlParsingException | FileNotFoundException e) {
+        } catch (ConversionException | ConversionHelperException | XmlParsingException | FileNotFoundException e) {
             // do not log stack trace, as it's 'workflow expected' exceptions
             logger.error("Conversion to '{}' format aborted: {}", format.getName(), e.getMessage());
             deleteTmpFilesOnFail();
