@@ -44,6 +44,14 @@ public class ImfValidationTest {
     }
 
     @Test
+    public void testValidationPassNoEssenceDescriptor() throws Exception {
+        List<ErrorLogger.ErrorObject> result = new ImfValidator().validate(
+                getResource("imp-validate-correct"),
+                getResource("imp-validate-correct/CPL_a453b63a-cf4d-454a-8c34-141f560c0100-no-essence-desc.xml"));
+        assertTrue(getFatalResults(result).isEmpty());
+    }
+
+    @Test
     public void testValidationFailed() throws Exception {
         List<ErrorLogger.ErrorObject> result = new ImfValidator().validate(
                 getResource("imp-validate-invalid"),
