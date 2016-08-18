@@ -38,6 +38,9 @@ public final class DppConversionConstants {
     public static final String DYNAMIC_PARAM_OUTPUT_MXF = "output";
     public static final String DYNAMIC_PARAM_TTML_TO_STL = "ttml-to-stl";
     public static final String DYNAMIC_PARAM_METADATA_XML = "metadataXml";
+    public static final String DYNAMIC_PARAM_GLITS_LINEUP = "glitsLineup";
+    public static final String DYNAMIC_PARAM_LAST_ESSENCE = "last_essence";
+    public static final String DYNAMIC_PARAM_LAST_FRAME_TC = "last_frame_tc";
 
     // 1.3 dynamic parameters default values:
     public static final String DYNAMIC_PARAM_VALUE_OUTPUT_MXF = "output";
@@ -56,6 +59,11 @@ public final class DppConversionConstants {
 /* 4. config.xml */
 
     public static final String TTML_TO_STL_TOOL = "ttml-to-stl";
+
+/* 5. layout */
+
+    public static final String RESOURCE_GLITS_LINEUP = "sample/Stereo_Programmes_1kHz_GLITS_Lineup.wav";
+    public static final String UNPACKED_GLITS_LINEUP = "Stereo_Programmes_1kHz_GLITS_Lineup.wav";
 
     private DppConversionConstants() {
 

@@ -36,6 +36,7 @@ import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParametersValidator;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
+import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.util.CplHelper;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -46,19 +47,10 @@ import org.apache.commons.math3.fraction.BigFraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigInteger;
 
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_AS11_CORE_FILE;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_AS11_SEGM_FILE;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_EBU_AUDIO_TRACKS;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_METADATA_XML;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_OUTPUT_MXF;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PAN;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_TTML_TO_STL;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_UK_DPP_FILE;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_VALUE_OUTPUT_MXF;
+import static com.netflix.imfutility.dpp.DppConversionConstants.*;
 
 /**
  * DPP format builder (see {@link AbstractFormatBuilder}). It's used for conversion to DPP format ('convert' DPP mode).
@@ -139,17 +131,37 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         dynamicContext.addParameter(DYNAMIC_PARAM_AS11_SEGM_FILE,
                 metadataXmlProvider.getBmxDppParameterFile(DMFramework.AS11Segmentation).getAbsolutePath(), true);
 
-        // 6. fill parameters for last frame freeze
-        buildDynamicParametersForVideoFreeze();
+        // 6. prepare for creating layout
+        unpackLayoutResources();
+        buildLayoutParameters();
     }
 
-    private void buildDynamicParametersForVideoFreeze() {
+    private void unpackLayoutResources() throws IOException {
+        InputStream inputStream = ResourceHelper.getResourceInputStream(RESOURCE_GLITS_LINEUP);
+
+        File outputFile = new File(contextProvider.getWorkingDir(), UNPACKED_GLITS_LINEUP);
+        if (outputFile.exists()) {
+            outputFile.delete();
+        }
+        OutputStream outputStream = new FileOutputStream(outputFile);
+
+        int read;
+        byte[] bytes = new byte[1024];
+
+        while ((read = inputStream.read(bytes)) != -1) {
+            outputStream.write(bytes, 0, read);
+        }
+
+        inputStream.close();
+        outputStream.close();
+    }
+
+    private void buildLayoutParameters() {
+        contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_GLITS_LINEUP, UNPACKED_GLITS_LINEUP, true);
+
         ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
         ContextInfo lastResourceContextInfo = getLastResourceContextInfo();
 
-        if (lastResourceContextInfo == null) {
-            return;
-        }
 
         String essence = resourceContext
                 .getParameterValue(ResourceContextParameters.ESSENCE, lastResourceContextInfo);
@@ -161,90 +173,26 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         BigInteger lastFrameTimeEU = endTimeEU.subtract(BigInteger.ONE);
         String lastFrameTimeTC = ConversionHelper.editUnitToTimecode(lastFrameTimeEU, editRate);
 
-        contextProvider.getDynamicContext().addParameter("last_essence", essence);
-        contextProvider.getDynamicContext().addParameter("last_frame_tc", lastFrameTimeTC);
+        contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_LAST_ESSENCE, essence);
+        contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_LAST_FRAME_TC, lastFrameTimeTC);
     }
 
     ContextInfo getLastResourceContextInfo() {
-        // Finding the last segment
-        SegmentUUID lastSegmentUUID = getLastSegmentUUID();
-        if (lastSegmentUUID == null) {
-            return null;
-        }
+        Object[] segmentUUIDs = contextProvider.getSegmentContext().getUuids().toArray();
+        SegmentUUID lastSegmentUUID = (SegmentUUID) segmentUUIDs[segmentUUIDs.length - 1];
 
-        // Finding video sequence?
-        if (contextProvider.getSequenceContext().getSequenceCount(SequenceType.VIDEO) == 0) {
-            return null;
-        }
-        SequenceUUID videoSequenceUUID = (SequenceUUID) contextProvider.getSequenceContext().
-                getUuids(SequenceType.VIDEO).toArray()[0];
+        SequenceUUID videoSequenceUUID = (SequenceUUID)
+                contextProvider.getSequenceContext().getUuids(SequenceType.VIDEO).toArray()[0];
 
-        // Finding the last resource
         ResourceKey resourceKey = ResourceKey.create(lastSegmentUUID, videoSequenceUUID, SequenceType.VIDEO);
-        ResourceUUID lastResourceUUID = getLastResourceUUID(resourceKey);
-        if (lastResourceUUID == null) {
-            return null;
-        }
+
+        Object[] resourceUUIDs = contextProvider.getResourceContext().getUuids(resourceKey).toArray();
+        ResourceUUID lastResourceUUID = (ResourceUUID) resourceUUIDs[resourceUUIDs.length - 1];
 
         ContextInfo lastResourceContextInfo = new ContextInfo(
                 lastSegmentUUID, videoSequenceUUID, SequenceType.VIDEO, lastResourceUUID);
 
         return lastResourceContextInfo;
-    }
-
-    ResourceUUID getLastResourceUUID(ResourceKey resourceKey) {
-        ResourceUUID lastResourceUUID = null;
-
-        for (ResourceUUID resourceUUID : contextProvider.getResourceContext().getUuids(resourceKey)) {
-            if (lastResourceUUID == null) {
-                lastResourceUUID = resourceUUID;
-            } else {
-                int lastResourceNum = Integer.parseInt(contextProvider.getResourceContext().
-                        getParameterValue(ResourceContextParameters.NUM,
-                                new ContextInfo(
-                                        resourceKey.getSegmentUuid(),
-                                        resourceKey.getSequenceUuid(),
-                                        resourceKey.getSequenceType(),
-                                        lastResourceUUID)));
-                int resourceNum = Integer.parseInt(contextProvider.getResourceContext().
-                        getParameterValue(ResourceContextParameters.NUM,
-                                new ContextInfo(
-                                        resourceKey.getSegmentUuid(),
-                                        resourceKey.getSequenceUuid(),
-                                        resourceKey.getSequenceType(),
-                                        resourceUUID)));
-
-                if (resourceNum > lastResourceNum) {
-                    lastResourceUUID = resourceUUID;
-                }
-            }
-        }
-
-        return lastResourceUUID;
-    }
-
-    SegmentUUID getLastSegmentUUID() {
-        SegmentUUID lastSegmentUUID = null;
-
-        for (SegmentUUID segmentUUID : contextProvider.getSegmentContext().getUuids()) {
-            if (lastSegmentUUID == null) {
-                lastSegmentUUID = segmentUUID;
-            } else {
-                int lastSegentNum = Integer.parseInt(contextProvider.getSegmentContext().
-                        getParameterValue(SegmentContextParameters.NUM,
-                                new ContextInfo(lastSegmentUUID, null, null, null)));
-
-                int segentNum = Integer.parseInt(contextProvider.getSegmentContext().
-                        getParameterValue(SegmentContextParameters.NUM,
-                                new ContextInfo(segmentUUID, null, null, null)));
-
-                if (segentNum > lastSegentNum) {
-                    lastSegmentUUID = segmentUUID;
-                }
-            }
-        }
-
-        return lastSegmentUUID;
     }
 
     @Override
