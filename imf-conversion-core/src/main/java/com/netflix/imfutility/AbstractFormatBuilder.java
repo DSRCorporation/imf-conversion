@@ -133,11 +133,11 @@ public abstract class AbstractFormatBuilder {
             // 10. fill dynamic context before parsing CPL
             buildDynamicContextPreCpl();
 
-            // 11. perform validation of the input IMP and CPL (after dynamic context is filled).
-            validateImpAndCpl();
-
-            // 12. build IMF CPL contexts
+            // 11. build IMF CPL contexts
             buildCplContext();
+
+            // 12. perform validation of the input IMP and CPL (after dynamic and CPL contexts are filled!).
+            validateImpAndCpl();
 
             // 13. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
             buildMediaInfoContext();
@@ -354,6 +354,8 @@ public abstract class AbstractFormatBuilder {
     private void validateImpAndCpl() throws IOException, XmlParsingException {
         logger.info("Validating input IMP and CPL...\n");
         if (isValidateImpAndCpl()) {
+            contextProvider.getDynamicContext().addParameter(
+                    DynamicContextParameters.REFERENCED_ESSENCES, assetMap.getReferencedAssets());
             boolean noFatalErrors = new ImfValidator(contextProvider, new ConversionEngine().getExecuteStrategyFactory()).validate();
             if (noFatalErrors) {
                 logger.info("Validated input IMP and CPL: OK\n");

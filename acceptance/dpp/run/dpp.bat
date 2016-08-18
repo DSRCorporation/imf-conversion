@@ -11,7 +11,10 @@ SET PROG=%6
 if [%6]==[] SET PROG="..\..\..\install\imf-conversion-utility\bin\imf-conversion-utility"
 
 @echo on
-%PROG% dpp -c ..\..\config.xml -m convert --imp %1 --cpl %2 -w %3 --metadata %4 -o %5 -l info
+@echo STARTING: %~5
+%PROG% dpp -c ..\..\config.xml -m convert --imp %1 --cpl %2 -w %3 --metadata %4 -o %5 -l debug
+@echo FINISHED: %~5
+@echo
 @echo off
 exit /b 0
 

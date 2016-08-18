@@ -25,6 +25,7 @@ import org.junit.Test;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
@@ -36,10 +37,23 @@ import static org.junit.Assert.assertFalse;
 public class ImfValidationTest {
 
     @Test
-    public void testValidationPass() throws Exception {
+    public void testValidationPassNoExplicitEssenceFiles() throws Exception {
         List<ErrorLogger.ErrorObject> result = new ImfValidator().validate(
                 getResource("imp-validate-correct"),
-                getResource("imp-validate-correct/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml"));
+                getResource("imp-validate-correct/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml"),
+                null);
+        assertTrue(getFatalResults(result).isEmpty());
+    }
+
+    @Test
+    public void testValidationPassWithExplicitEssenceFiles() throws Exception {
+        List<ErrorLogger.ErrorObject> result = new ImfValidator().validate(
+                getResource("imp-validate-correct"),
+                getResource("imp-validate-correct/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml"),
+                Arrays.asList(new String[]{
+                        getResource("imp-validate-correct/NYCbCrLT_3840x2160x2chx24bitx30.03sec.mxf.hdr"),
+                        getResource("imp-validate-correct/NYCbCrLT_3840x2160x2398_full_full.mxf.hdr")
+                }));
         assertTrue(getFatalResults(result).isEmpty());
     }
 
@@ -47,15 +61,29 @@ public class ImfValidationTest {
     public void testValidationPassNoEssenceDescriptor() throws Exception {
         List<ErrorLogger.ErrorObject> result = new ImfValidator().validate(
                 getResource("imp-validate-correct"),
-                getResource("imp-validate-correct/CPL_a453b63a-cf4d-454a-8c34-141f560c0100-no-essence-desc.xml"));
+                getResource("imp-validate-correct/CPL_a453b63a-cf4d-454a-8c34-141f560c0100-no-essence-desc.xml"),
+                null);
         assertTrue(getFatalResults(result).isEmpty());
     }
 
     @Test
-    public void testValidationFailed() throws Exception {
+    public void testValidationFailedNoExplicitEssenceFiles() throws Exception {
         List<ErrorLogger.ErrorObject> result = new ImfValidator().validate(
                 getResource("imp-validate-invalid"),
-                getResource("imp-validate-invalid/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml"));
+                getResource("imp-validate-invalid/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml"),
+                null);
+        assertFalse(getFatalResults(result).isEmpty());
+    }
+
+    @Test
+    public void testValidationFailedWithExplicitEssenceFiles() throws Exception {
+        List<ErrorLogger.ErrorObject> result = new ImfValidator().validate(
+                getResource("imp-validate-invalid"),
+                getResource("imp-validate-invalid/CPL_a453b63a-cf4d-454a-8c34-141f560c0100.xml"),
+                Arrays.asList(new String[]{
+                        getResource("imp-validate-correct/NYCbCrLT_3840x2160x2chx24bitx30.03sec.mxf.hdr"),
+                        getResource("imp-validate-correct/NYCbCrLT_3840x2160x2398_full_full.mxf.hdr")
+                }));
         assertFalse(getFatalResults(result).isEmpty());
     }
 

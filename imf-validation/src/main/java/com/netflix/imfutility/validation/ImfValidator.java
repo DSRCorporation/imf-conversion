@@ -64,9 +64,10 @@ public class ImfValidator {
             String cpl = imfValidationCmdLineArgs.getCpl();
             String workingDir = imfValidationCmdLineArgs.getOutputDirectory();
             String outputFile = imfValidationCmdLineArgs.getOutputFileName();
+            List<String> essenceFiles = imfValidationCmdLineArgs.getEssence();
 
             // 2. do validate
-            List<ErrorObject> result = new ImfValidator().validate(impFolder, cpl);
+            List<ErrorObject> result = new ImfValidator().validate(impFolder, cpl, essenceFiles);
 
             // 3. print result in xml
             new ImfErrorXmlPresenter().printErrors(result, workingDir, outputFile);
@@ -81,7 +82,7 @@ public class ImfValidator {
         }
     }
 
-    public List<ErrorObject> validate(String impFolder, String cplFullPath) throws IOException {
+    public List<ErrorObject> validate(String impFolder, String cplFullPath, List<String> essenceFiles) throws IOException {
         // 1. get the content of the IMP
         File impFile = new File(impFolder);
         File[] files = impFile.listFiles();
@@ -89,11 +90,14 @@ public class ImfValidator {
             return Collections.emptyList();
         }
 
-        // 2. prepare the files to be validated
+        // 2. prepare files to be validated
+
+        // 2.1 CPL
+        File cpl = new File(cplFullPath);
+
+        // 2.2 PKLs and Assetmap
         File assetmap = null;
         List<File> pkls = new ArrayList<>();
-        List<File> mxfs = new ArrayList<>();
-        File cpl = new File(cplFullPath);
         for (File file : files) {
             if (file.getName().endsWith(".xml")) {
                 switch (IMPValidator.getPayloadType(createPayloadRecord(file))) {
@@ -106,8 +110,20 @@ public class ImfValidator {
                     default:
                         // nothing
                 }
-            } else if (file.getName().endsWith(".mxf") || file.getName().endsWith(".mxf.hdr")) {
-                mxfs.add(file);
+            }
+        }
+
+        // 2.3 essence resources (either explicitly provided or all .mxf files are validated).
+        List<File> mxfs = new ArrayList<>();
+        if (essenceFiles != null && !essenceFiles.isEmpty()) {
+            for (String essenceResource : essenceFiles) {
+                mxfs.add(new File(essenceResource));
+            }
+        } else {
+            for (File file : files) {
+                if (file.getName().endsWith(".mxf") || file.getName().endsWith(".mxf.hdr")) {
+                    mxfs.add(file);
+                }
             }
         }
 
@@ -168,7 +184,6 @@ public class ImfValidator {
             return imfErrorLogger.getErrors();
         }
     }
-
 
     private List<ErrorObject> validateCpl(File cpl) {
         return doValidate(ErrorCodes.IMF_CPL_ERROR,
