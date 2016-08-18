@@ -54,7 +54,9 @@ public enum DynamicContextParameters {
 
     SINGLE_AUDIO("singleAudio"),
 
-    SINGLE_SUBTITLE("singleSubtitle");
+    SINGLE_SUBTITLE("singleSubtitle"),
+
+    REFERENCED_ESSENCES("referencedEssences");
 
     private final String name;
 

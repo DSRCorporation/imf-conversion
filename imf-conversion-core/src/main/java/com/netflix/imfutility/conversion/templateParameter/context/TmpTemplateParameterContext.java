@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  * <li>Created from conversion.xml (see {@link com.netflix.imfutility.generated.conversion.TmpContextType})</li>
  * </ul>
  */
-public class TmpTemplateParameterContext implements ITemplateParameterContext {
+public class TmpTemplateParameterContext extends AbstractTemplateParameterContext {
 
     private final FormatType format;
 

@@ -65,6 +65,9 @@ public final class CoreConstants {
     public static final String PACKING_LIST_XSD = "xsd/imf/packing-list.xsd";
     public static final String XMLDSIG_CORE_SCHEMA_XSD = "xsd/imf/xmldsig-core-schema.xsd";
 
+    // 3.8 IMF Essence Descriptors
+    public static final String ESSENCE_DESCRIPTORS_XSD = "xsd/regxml/include.xsd";
+
 /* 4. Command line args*/
 
     public static final boolean DEFAULT_VALIDATE_IMF = true;
@@ -75,7 +78,6 @@ public final class CoreConstants {
 /* 5. Default values */
 
     public static final String DEFAULT_OUTPUT_VALIDATION_FILE = "errors.xml";
-    public static final String VALIDATION_OUTPUT_XML_ERROR_TAG = "error";
     public static final String MEDIA_INFO_SUFFIX = "mediaInfo";
 
 

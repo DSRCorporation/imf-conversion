@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -21,6 +21,7 @@ package com.netflix.imfutility.conversion;
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorDynamicParameter;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorFor;
+import com.netflix.imfutility.conversion.executor.ConversionExecutorIf;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorOnce;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorPipe;
 import com.netflix.imfutility.conversion.executor.ConversionExecutorSegment;
@@ -33,6 +34,7 @@ import com.netflix.imfutility.generated.conversion.ExecEachSequenceSegmentType;
 import com.netflix.imfutility.generated.conversion.ExecOnceType;
 import com.netflix.imfutility.generated.conversion.ForType;
 import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
+import com.netflix.imfutility.generated.conversion.IfType;
 import com.netflix.imfutility.generated.conversion.PipeType;
 
 import java.io.IOException;
@@ -64,6 +66,8 @@ public class ConversionEngine {
                         (DynamicParameterConcatType) operation).execute();
             } else if (operation instanceof ForType) {
                 new ConversionExecutorFor(contextProvider, getExecuteStrategyFactory(), (ForType) operation).execute();
+            } else if (operation instanceof IfType) {
+                new ConversionExecutorIf(contextProvider, getExecuteStrategyFactory(), (IfType) operation).execute();
             } else {
                 throw new ConversionException(String.format("Unknown Conversion Operation type: %s", operation.toString()));
             }

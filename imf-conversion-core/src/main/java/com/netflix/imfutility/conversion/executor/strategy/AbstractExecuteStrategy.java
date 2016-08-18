@@ -25,6 +25,7 @@ import com.netflix.imfutility.conversion.executor.OutputRedirect;
 import com.netflix.imfutility.conversion.executor.ProcessStarter;
 import com.netflix.imfutility.conversion.templateParameter.TemplateParameterResolver;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.util.ImfLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,11 +40,14 @@ import java.util.stream.Collectors;
  */
 public class AbstractExecuteStrategy {
 
+    private final Logger logger = new ImfLogger(LoggerFactory.getLogger(AbstractExecuteStrategy.class));
+
     private static int count = 1; // the current number of executed conversion operations.
+
     protected final ConversionOperationParser conversionOperationParser;
     protected final TemplateParameterResolver parameterResolver;
     protected final ProcessStarter processStarter;
-    private final Logger logger = LoggerFactory.getLogger(AbstractExecuteStrategy.class);
+
 
     public AbstractExecuteStrategy(TemplateParameterContextProvider contextProvider, ProcessStarter processStarter) {
         this.parameterResolver = new TemplateParameterResolver(contextProvider);
@@ -93,7 +97,7 @@ public class AbstractExecuteStrategy {
     }
 
     protected void logSkipped(OperationInfo operationInfo) {
-        logger.info("Skipped {}: OK\n", operationInfo.toString());
+        logger.debug("Skipped {}: OK\n", operationInfo.toString());
     }
 
 }

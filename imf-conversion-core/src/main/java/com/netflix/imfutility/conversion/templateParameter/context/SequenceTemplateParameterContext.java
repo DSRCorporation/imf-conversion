@@ -53,7 +53,7 @@ import java.util.Map;
  * <li>It's assumed that all segments from a sequence (virtual track) must have equal audio and video parameters.</li>
  * </ul>
  */
-public class SequenceTemplateParameterContext implements ITemplateParameterContext {
+public class SequenceTemplateParameterContext extends AbstractTemplateParameterContext {
 
     private static class SequenceData extends ContextData<SequenceUUID, SequenceContextParameters> {
     }
@@ -168,6 +168,19 @@ public class SequenceTemplateParameterContext implements ITemplateParameterConte
         }
 
         return getParameterValue(templateParameter, sequenceParameter, contextInfo);
+    }
+
+    /**
+     * Whether a given sequence parameter is defined in the context.
+     *
+     * @param seqParameter parameter to check
+     * @param contextInfo context Info
+     * @return true if parameter is defined in the context and false otherwise.
+     */
+    public boolean hasSequenceParameter(SequenceContextParameters seqParameter, ContextInfo contextInfo) {
+        return hasTemplateParameter(
+                new TemplateParameter(TemplateParameterContext.SEQUENCE, seqParameter.getName()),
+                contextInfo);
     }
 
     private String getParameterValue(TemplateParameter templateParameter, SequenceContextParameters seqParameter, ContextInfo contextInfo) {

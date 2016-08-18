@@ -18,6 +18,8 @@
  */
 package com.netflix.imfutility.conversion.executor;
 
+import com.netflix.imfutility.util.ImfLogger;
+import com.netflix.imfutility.util.LogHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +34,7 @@ import java.util.stream.Collectors;
  */
 public final class ExternalProcess {
 
-    private final Logger logger = LoggerFactory.getLogger(ExternalProcess.class);
+    private final Logger logger = new ImfLogger(LoggerFactory.getLogger(ExternalProcess.class));
 
     private final Process process;
     private final ExternalProcessInfo processInfo;
@@ -77,21 +79,21 @@ public final class ExternalProcess {
     }
 
     private void logStarted() {
-        logger.info("Started {}: OK\n", toString());
+        logger.info("{}Started {}: OK\n", LogHelper.TAB, toString());
     }
 
     private void logFinishedSuccess() {
-        logger.info("Finished {}: OK\n", toString());
+        logger.info("{}Finished {}: OK\n", LogHelper.TAB, toString());
     }
 
     private void finishedFailureWithException(Exception e) {
-        logger.info("Finished {}: FAILURE\n", toString());
+        logger.error("{}Finished {}: FAILURE\n", LogHelper.TAB, toString());
         String errorDesc = String.format("Exception while finishing %s. External Process may be not finished correctly.", toString());
         throw new ProcessFailedException(errorDesc, e);
     }
 
     private void finishedFailureWithExitCode(int exitCode) {
-        logger.info("Finished {}: FAILURE\n", toString());
+        logger.error("{}Finished {}: FAILURE\n", LogHelper.TAB, toString());
         throw new ProcessFailedException(this, exitCode);
     }
 

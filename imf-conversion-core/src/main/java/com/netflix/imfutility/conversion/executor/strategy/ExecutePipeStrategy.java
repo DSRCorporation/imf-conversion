@@ -22,6 +22,7 @@ import com.netflix.imfutility.conversion.executor.ExternalProcess;
 import com.netflix.imfutility.conversion.executor.OutputRedirect;
 import com.netflix.imfutility.conversion.executor.ProcessStarter;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
+import com.netflix.imfutility.util.ImfLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +58,7 @@ import java.util.List;
  */
 public class ExecutePipeStrategy extends AbstractExecuteStrategy {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExecutePipeStrategy.class);
+    private static final Logger LOGGER = new ImfLogger(LoggerFactory.getLogger(ExecutePipeStrategy.class));
 
     public ExecutePipeStrategy(TemplateParameterContextProvider contextProvider, ProcessStarter processStarter) {
         super(contextProvider, processStarter);

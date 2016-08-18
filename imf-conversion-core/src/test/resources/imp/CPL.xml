@@ -45,7 +45,7 @@
                             <EntryPoint>300</EntryPoint>
                             <SourceDuration>150</SourceDuration>
                             <RepeatCount>1</RepeatCount>
-                            <SourceEncoding>urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f8</SourceEncoding>
+                            <SourceEncoding>urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f9</SourceEncoding>
                             <TrackFileId>urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e947</TrackFileId>
                         </Resource>
                         <Resource xsi:type="TrackFileResourceType">
@@ -55,7 +55,7 @@
                             <EntryPoint>300</EntryPoint>
                             <SourceDuration>150</SourceDuration>
                             <RepeatCount>3</RepeatCount>
-                            <SourceEncoding>urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f8</SourceEncoding>
+                            <SourceEncoding>urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f0</SourceEncoding>
                             <TrackFileId>urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e947</TrackFileId>
                         </Resource>
                     </ResourceList>
@@ -87,7 +87,7 @@
                             <IntrinsicDuration>1629120</IntrinsicDuration>
                             <SourceDuration>288000</SourceDuration>
                             <RepeatCount>1</RepeatCount>
-                            <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602794</SourceEncoding>
+                            <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602795</SourceEncoding>
                             <TrackFileId>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0</TrackFileId>
                         </Resource>
                         <Resource xsi:type="TrackFileResourceType">
@@ -96,7 +96,7 @@
                             <IntrinsicDuration>1629120</IntrinsicDuration>
                             <EntryPoint>288000</EntryPoint>
                             <SourceDuration>144000</SourceDuration>
-                            <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602794</SourceEncoding>
+                            <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602796</SourceEncoding>
                             <TrackFileId>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b1</TrackFileId>
                         </Resource>
                     </ResourceList>
@@ -125,7 +125,7 @@
                             <IntrinsicDuration>1697</IntrinsicDuration>
                             <EntryPoint>600</EntryPoint>
                             <RepeatCount>2</RepeatCount>
-                            <SourceEncoding>urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f8</SourceEncoding>
+                            <SourceEncoding>urn:uuid:5bedb41e-0bad-425f-abd5-2696c87f35f1</SourceEncoding>
                             <TrackFileId>urn:uuid:6a64f1c5-629d-43be-befc-bebafed2e947</TrackFileId>
                         </Resource>
                     </ResourceList>
@@ -140,7 +140,7 @@
                             <EditRate>48000 1</EditRate>
                             <IntrinsicDuration>1629120</IntrinsicDuration>
                             <EntryPoint>576000</EntryPoint>
-                            <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602794</SourceEncoding>
+                            <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602797</SourceEncoding>
                             <TrackFileId>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b0</TrackFileId>
                         </Resource>
                     </ResourceList>
@@ -154,7 +154,7 @@
                             <Id>urn:uuid:895820ef-e379-4021-a69e-8a898b0a9097</Id>
                             <EditRate>48000 1</EditRate>
                             <IntrinsicDuration>1629120</IntrinsicDuration>
-                            <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602794</SourceEncoding>
+                            <SourceEncoding>urn:uuid:9b2134be-c510-478a-9210-5bd187602795</SourceEncoding>
                             <TrackFileId>urn:uuid:559452f0-9b31-4df7-a9c0-6b16d43bd8b1</TrackFileId>
                         </Resource>
                     </ResourceList>

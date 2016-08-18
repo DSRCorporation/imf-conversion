@@ -45,7 +45,7 @@ import java.util.Map;
  * </li>
  * </ul>
  */
-public class SegmentTemplateParameterContext implements ITemplateParameterContext {
+public class SegmentTemplateParameterContext extends AbstractTemplateParameterContext {
 
     private static class SegmentParameterData extends ContextParameterData<SegmentContextParameters> {
     }
@@ -145,6 +145,19 @@ public class SegmentTemplateParameterContext implements ITemplateParameterContex
         }
 
         return getParameterValue(templateParameter, segmentParameter, contextInfo);
+    }
+
+    /**
+     * Whether a given segment parameter is defined in the context.
+     *
+     * @param segmParameter parameter to check
+     * @param contextInfo context Info
+     * @return true if parameter is defined in the context and false otherwise.
+     */
+    public boolean hasSegmentParameter(SegmentContextParameters segmParameter, ContextInfo contextInfo) {
+        return hasTemplateParameter(
+                new TemplateParameter(TemplateParameterContext.SEGMENT, segmParameter.getName()),
+                contextInfo);
     }
 
     private String getParameterValue(TemplateParameter templateParameter, SegmentContextParameters segmParameter, ContextInfo contextInfo) {

@@ -36,6 +36,7 @@ import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.DestContextParamType;
 import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 
 import java.io.File;
@@ -107,6 +108,25 @@ public final class TemplateParameterContextCreator {
         return contextProvider;
     }
 
+    public static TemplateParameterContextProvider createDefaultContextProvider(
+            String conversionXmlPath) throws Exception {
+        ConfigXmlProvider configProvider = new ConfigXmlProvider(ConfigUtils.getCorrectConfigXml(), ConfigUtils.getCorrectConfigXmlPath());
+        ConversionXmlProvider conversionProvider = new ConversionXmlProvider(ResourceHelper.getResourceInputStream(conversionXmlPath),
+                conversionXmlPath, new FakeFormat());
+        TemplateParameterContextProvider contextProvider = new TemplateParameterContextProvider(configProvider, conversionProvider,
+                getWorkingDir());
+        initEmptyDestContext(contextProvider);
+        return contextProvider;
+    }
+
+    public static TemplateParameterContextProvider createDefaultContextProviderWithCplAndDestContext(
+            DestContextTypeMap destContextMap,
+            int segmentCount, int seqCount, int resourceCount, EnumSet<SequenceType> sequenceTypes) throws Exception {
+        TemplateParameterContextProvider contextProvider = createDefaultContextProviderWithCPLContext(
+                segmentCount, seqCount, resourceCount, sequenceTypes);
+        contextProvider.getDestContext().setDestContextMap(destContextMap);
+        return contextProvider;
+    }
 
     public static File getCurrentTmpDir() {
         String tempDir = System.getProperty("java.io.tmpdir");
@@ -158,6 +178,8 @@ public final class TemplateParameterContextCreator {
                             // init essence, startTime and duration
                             fillResourceParam(resourceContext, resourceKey, resourceUuid,
                                     ResourceContextParameters.ESSENCE);
+                            fillResourceParam(resourceContext, resourceKey, resourceUuid,
+                                    ResourceContextParameters.TRACK_FILE_ID);
                             fillResourceParam(resourceContext, resourceKey, resourceUuid,
                                     ResourceContextParameters.DURATION_TIMECODE);
                             fillResourceParam(resourceContext, resourceKey, resourceUuid,

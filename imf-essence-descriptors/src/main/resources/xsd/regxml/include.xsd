@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://sandflow.com/ns/SMPTEST2001-1/baseline" schemaLocation="reg.xsd"/>
+<import namespace="http://www.smpte-ra.org/reg/395/2014" schemaLocation="www-smpte-ra-org-reg-395-2014.xsd"/>
+<import namespace="http://www.ebu.ch/ebucore/smpte/class13/element" schemaLocation="www-ebu-ch-ebucore-smpte-class13-element.xsd"/>
+<import namespace="http://www.smpte-ra.org/reg/395/2014/13/1/amwa/as_common" schemaLocation="www-smpte-ra-org-reg-395-2014-13-1-amwa-as-common.xsd"/>
+<import namespace="http://www.smpte-ra.org/reg/2003/2012/13/1/amwa/as11" schemaLocation="www-smpte-ra-org-reg-2003-2012-13-1-amwa-as11.xsd"/>
+<import namespace="http://www.smpte-ra.org/reg/335/2012/13/1/amwa/as11" schemaLocation="www-smpte-ra-org-reg-335-2012-13-1-amwa-as11.xsd"/>
+<import namespace="http://www.smpte-ra.org/reg/335/2012" schemaLocation="www-smpte-ra-org-reg-335-2012.xsd"/>
+<import namespace="http://www.smpte-ra.org/reg/2003/2012" schemaLocation="www-smpte-ra-org-reg-2003-2012.xsd"/>
+<import namespace="http://www.ebu.ch/ebucore/smpte/class13/group" schemaLocation="www-ebu-ch-ebucore-smpte-class13-group.xsd"/>
+<import namespace="http://www.smpte-ra.org/reg/395/2014/13/1/aaf" schemaLocation="www-smpte-ra-org-reg-395-2014-13-1-aaf.xsd"/>
+<import namespace="http://www.smpte-ra.org/reg/395/2014/13/1/amwa/as11" schemaLocation="www-smpte-ra-org-reg-395-2014-13-1-amwa-as11.xsd"/>
+<import namespace="http://www.smpte-ra.org/reg/2003/2012/13/12/as11" schemaLocation="www-smpte-ra-org-reg-2003-2012-13-12-as11.xsd"/>
+<import namespace="http://www.smpte-ra.org/reg/335/2012/13/12/as11" schemaLocation="www-smpte-ra-org-reg-335-2012-13-12-as11.xsd"/>
+<import namespace="http://www.ebu.ch/ebucore/smpte/class13/type" schemaLocation="www-ebu-ch-ebucore-smpte-class13-type.xsd"/>
+<import namespace="http://www.smpte-ra.org/reg/335/2012/13/1/aaf" schemaLocation="www-smpte-ra-org-reg-335-2012-13-1-aaf.xsd"/>
+<import namespace="http://www.smpte-ra.org/reg/395/2014/13/12/as11" schemaLocation="www-smpte-ra-org-reg-395-2014-13-12-as11.xsd"/>
+</schema>

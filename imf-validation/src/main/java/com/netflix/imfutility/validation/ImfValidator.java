@@ -64,9 +64,10 @@ public class ImfValidator {
             String cpl = imfValidationCmdLineArgs.getCpl();
             String workingDir = imfValidationCmdLineArgs.getOutputDirectory();
             String outputFile = imfValidationCmdLineArgs.getOutputFileName();
+            List<String> essenceFiles = imfValidationCmdLineArgs.getEssence();
 
             // 2. do validate
-            List<ErrorObject> result = new ImfValidator().validate(impFolder, cpl);
+            List<ErrorObject> result = new ImfValidator().validate(impFolder, cpl, essenceFiles);
 
             // 3. print result in xml
             new ImfErrorXmlPresenter().printErrors(result, workingDir, outputFile);
@@ -81,7 +82,7 @@ public class ImfValidator {
         }
     }
 
-    public List<ErrorObject> validate(String impFolder, String cplFullPath) throws IOException {
+    public List<ErrorObject> validate(String impFolder, String cplFullPath, List<String> essenceFiles) throws IOException {
         // 1. get the content of the IMP
         File impFile = new File(impFolder);
         File[] files = impFile.listFiles();
@@ -89,11 +90,14 @@ public class ImfValidator {
             return Collections.emptyList();
         }
 
-        // 2. prepare the files to be validated
+        // 2. prepare files to be validated
+
+        // 2.1 CPL
+        File cpl = new File(cplFullPath);
+
+        // 2.2 PKLs and Assetmap
         File assetmap = null;
         List<File> pkls = new ArrayList<>();
-        List<File> mxfs = new ArrayList<>();
-        File cpl = new File(cplFullPath);
         for (File file : files) {
             if (file.getName().endsWith(".xml")) {
                 switch (IMPValidator.getPayloadType(createPayloadRecord(file))) {
@@ -106,8 +110,20 @@ public class ImfValidator {
                     default:
                         // nothing
                 }
-            } else if (file.getName().endsWith(".mxf")) {
-                mxfs.add(file);
+            }
+        }
+
+        // 2.3 essence resources (either explicitly provided or all .mxf files are validated).
+        List<File> mxfs = new ArrayList<>();
+        if (essenceFiles != null && !essenceFiles.isEmpty()) {
+            for (String essenceResource : essenceFiles) {
+                mxfs.add(new File(essenceResource));
+            }
+        } else {
+            for (File file : files) {
+                if (file.getName().endsWith(".mxf") || file.getName().endsWith(".mxf.hdr")) {
+                    mxfs.add(file);
+                }
             }
         }
 
@@ -138,9 +154,7 @@ public class ImfValidator {
         }
 
         // 3.7 validate CPL conformance
-        if (shouldCheckCplConformance(cpl)) {
-            result.addAll(validateCplConformance(cpl, mxfs));
-        }
+        result.addAll(validateCplConformance(cpl, mxfs));
 
         return result;
     }
@@ -170,7 +184,6 @@ public class ImfValidator {
             return imfErrorLogger.getErrors();
         }
     }
-
 
     private List<ErrorObject> validateCpl(File cpl) {
         return doValidate(ErrorCodes.IMF_CPL_ERROR,
@@ -265,6 +278,9 @@ public class ImfValidator {
     }
 
     private PayloadRecord getHeaderPartition(File mxf, IMFErrorLogger imfErrorLogger) throws IOException {
+        if (mxf.getName().endsWith(".hdr")) {
+            return fromHeaderPartition(mxf, imfErrorLogger);
+        }
         ResourceByteRangeProvider resourceByteRangeProvider = new FileByteRangeProvider(mxf);
         long archiveFileSize = resourceByteRangeProvider.getResourceSize();
         long rangeEnd = archiveFileSize - 1;
@@ -293,17 +309,10 @@ public class ImfValidator {
         return new PayloadRecord(headerPartitionBytes, PayloadRecord.PayloadAssetType.EssencePartition, headerRangeStart, headerRangeEnd);
     }
 
-    private boolean shouldCheckCplConformance(File cpl) {
-        // check for conformance only if the CPL has EssenceDescriptorList
-        try {
-            new Composition(cpl, new IMFErrorLoggerImpl()).getEssenceDescriptorListMap();
-            // if there ae no essence descriptor list, then the method below throws a NullPointerException...
-            return true;
-        } catch (IOException | JAXBException | URISyntaxException | SAXException | IMFException | MXFException e) {
-            return false;
-        } catch (NullPointerException e) {
-            return false;
-        }
+    private PayloadRecord fromHeaderPartition(File mxfHdr, IMFErrorLogger imfErrorLogger) throws IOException {
+        ResourceByteRangeProvider resourceByteRangeProvider = new FileByteRangeProvider(mxfHdr);
+        byte[] headerPartitionBytes = resourceByteRangeProvider.getByteRangeAsBytes(0, resourceByteRangeProvider.getResourceSize() - 1);
+        return new PayloadRecord(headerPartitionBytes, PayloadRecord.PayloadAssetType.EssencePartition, 0L, 0L);
     }
 
     private interface IValidator {

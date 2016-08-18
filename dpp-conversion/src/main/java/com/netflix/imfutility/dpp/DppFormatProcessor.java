@@ -19,10 +19,13 @@
 package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.dpp.audio.AudioMapXmlCreator;
 import com.netflix.imfutility.dpp.inputparameters.DppCmdLineArgs;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParametersValidator;
 import com.netflix.imfutility.dpp.inputparameters.IDppDefaultTools;
+import com.netflix.imfutility.dpp.metadata.MetadataXmlCreator;
+import com.netflix.imfutility.util.ImfLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +35,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DppFormatProcessor {
 
-    private final Logger logger = LoggerFactory.getLogger(DppFormatProcessor.class);
+    private final Logger logger = new ImfLogger(LoggerFactory.getLogger(DppFormatProcessor.class));
 
     private final IDppDefaultTools defaultTools;
 
@@ -47,9 +50,9 @@ public class DppFormatProcessor {
         DppInputParameters inputParameters = new DppInputParameters(cmdLineArgs, defaultTools);
 
         // 2. validate cmd line arguments
-        logger.info("Validating command line arguments...");
+        logger.debug("Validating command line arguments...");
         DppInputParametersValidator.validateCmdLineArguments(inputParameters);
-        logger.info("Validated command line arguments: OK\n");
+        logger.debug("Validated command line arguments: OK\n");
 
         // 3. execute the specified mode
         switch (inputParameters.getCmdLineArgs().getMode()) {
@@ -66,18 +69,18 @@ public class DppFormatProcessor {
     }
 
     private int processMetadataMode(DppInputParameters inputParameters) {
-        logger.info("Metadata mode\n");
+        logger.info("Metadata mode");
         logger.info("Generating a sample Metadata.xml file {}", inputParameters.getCmdLineArgs().getOutput());
-        MetadataXmlProvider.generateEmptyXml(inputParameters.getCmdLineArgs().getOutput());
-        logger.info("Generated a sample Metadata.xml file: OK");
+        MetadataXmlCreator.generateEmptyXml(inputParameters.getCmdLineArgs().getOutput());
+        logger.info("Generated a sample Metadata.xml file: OK\n");
         return 0;
     }
 
     private int processAudiomapMode(DppInputParameters inputParameters) {
-        logger.info("Audiomap mode\n");
+        logger.info("Audiomap mode");
         logger.info("Generating a sample Audiomap.xml file {}", inputParameters.getCmdLineArgs().getOutput());
-        AudioMapXmlProvider.generateSampleXml(inputParameters.getCmdLineArgs().getOutput());
-        logger.info("Generated a sample Audiomap.xml file: OK");
+        AudioMapXmlCreator.generateSampleXml(inputParameters.getCmdLineArgs().getOutput());
+        logger.info("Generated a sample Audiomap.xml file: OK\n");
         return 0;
     }
 

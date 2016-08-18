@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><!--Created: Thu Sep 17 15:28:16 CEST 2015--><!--By: regxmllib build c989a02ac80facc24e018a54c4010dd8c2d27451--><!--See: https://github.com/sandflow/regxmllib--><xs:schema xmlns:r0="http://www.smpte-ra.org/reg/2003/2012" xmlns:r1="http://www.smpte-ra.org/reg/2003/2012/13/1/amwa/as11" xmlns:reg="http://sandflow.com/ns/SMPTEST2001-1/baseline"  attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.smpte-ra.org/reg/335/2012/13/1/amwa/as11" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:import namespace="http://www.smpte-ra.org/reg/2003/2012"/>
+<xs:import namespace="http://www.smpte-ra.org/reg/2003/2012/13/1/amwa/as11"/>
+<xs:import namespace="http://sandflow.com/ns/SMPTEST2001-1/baseline"/>
+<xs:element name="AS_11_Series_Title" type="r0:UTF16String"/>
+<xs:element name="AS_11_Programme_Title" type="r0:UTF16String"/>
+<xs:element name="AS_11_Episode_Title_Number" type="r0:UTF16String"/>
+<xs:element name="AS_11_Shim_Name" type="r0:UTF16String"/>
+<xs:element name="AS_11_Shim_Version" type="r0:VersionType"/>
+<xs:element name="AS_11_Audio_Track_Layout" type="r1:AS_11_Audio_Track_Layout_Enum"/>
+<xs:element name="AS_11_Primary_Audio_Language" type="r1:ISO_639_2_Language_Code"/>
+<xs:element name="AS_11_Closed_Captions_Present" type="r0:Boolean"/>
+<xs:element name="AS_11_Closed_Captions_Type" type="r1:AS_11_Captions_Type_Enum"/>
+<xs:element name="AS_11_Caption_Language" type="r1:ISO_639_2_Language_Code"/>
+<xs:element name="AS_11_Part_Number" type="r0:UInt16"/>
+<xs:element name="AS_11_Part_Total" type="r0:UInt16"/>
+</xs:schema>
