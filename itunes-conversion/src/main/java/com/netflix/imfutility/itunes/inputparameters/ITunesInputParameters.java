@@ -25,7 +25,6 @@ import com.netflix.imfutility.resources.ResourceHelper;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -123,7 +122,6 @@ public class ITunesInputParameters extends ImfUtilityInputParameters {
             return null;
         }
         return cmdLineArgs.getCc().stream()
-                .filter(Predicate.isEqual(null).negate())
                 .map(File::new).collect(Collectors.toList());
     }
 
@@ -137,7 +135,6 @@ public class ITunesInputParameters extends ImfUtilityInputParameters {
             return null;
         }
         return cmdLineArgs.getSub().stream()
-                .filter(Predicate.isEqual(null).negate())
                 .map(File::new).collect(Collectors.toList());
     }
 

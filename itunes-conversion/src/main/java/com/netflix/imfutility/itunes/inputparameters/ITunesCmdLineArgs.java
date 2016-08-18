@@ -109,28 +109,37 @@ public interface ITunesCmdLineArgs extends ImfUtilityCmdLineArgs {
 
     @Option(
             description = "a paths to external closed captions. "
-                    + " ('convert' mode only).",
+                    + " ('convert' mode only)."
+                    + " Filenames must fit pattern <filename>-xx_XX.scc, where xx_XX - existing locale.",
             longName = {"cc"},
-            defaultToNull = true
+            defaultToNull = true,
+            pattern = ".*\\-[a-z]{2}(_[A-Z]{2})?.scc"
     )
     List<String> getCc();
 
     @Option(
             description = "a paths to external subtitles. "
                     + " ('convert' mode only)."
+                    + " Input files must have one of extensions: xml, ttml, itt."
+                    + " Option takes from 1 to 13 files."
                     + " If not set, then only CPL TTML will be processed."
                     + " Otherwise only the specified TTML will be converted to ITT.",
             longName = {"sub"},
-            defaultToNull = true
+            defaultToNull = true,
+            minimum = 1,
+            maximum = 13,
+            pattern = ".*\\.xml|.*\\.ttml|.*\\.itt"
     )
     List<String> getSub();
 
     @Option(
             description = "A main locale of iTunes package. "
                     + " ('convert' mode only)."
+                    + " Locale must fit pattern xx, xx_XX (or xx-XX)."
                     + " It's used if CPL or metadata locale is not set.",
             longName = {"fallback-locale"},
-            defaultToNull = true
+            defaultToNull = true,
+            pattern = "[a-z]{2}((-|_)[A-Z]{2})?$"
     )
     String getFallbackLocale();
 
