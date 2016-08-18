@@ -21,7 +21,10 @@ package com.netflix.imfutility.asset;
 import com.netflix.imfutility.cpl.uuid.UUID;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Asset Map containing a path to an asset (resource, essence) for each asset UUID.
@@ -30,6 +33,7 @@ import java.util.Map;
 public class AssetMap {
 
     private final Map<UUID, String> assetMap = new HashMap<>();
+    private final Set<String> referencedAssets = new HashSet<>();
 
     /**
      * Adds asset.
@@ -37,7 +41,7 @@ public class AssetMap {
      * @param uuid      asset UUID
      * @param assetPath asset absolute path
      */
-    public final void addAsset(UUID uuid, String assetPath) {
+    public void addAsset(UUID uuid, String assetPath) {
         assetMap.put(uuid, assetPath);
     }
 
@@ -47,8 +51,33 @@ public class AssetMap {
      * @param uuid asset UUID
      * @return asset absolute path
      */
-    public final String getAsset(UUID uuid) {
+    public String getAsset(UUID uuid) {
         return assetMap.get(uuid);
+    }
+
+    /**
+     * Mark the asset as referenced by CPL.
+     *
+     * @param uuid asset UUID.
+     */
+    public void markAssetReferenced(UUID uuid) {
+        if (!assetMap.containsKey(uuid)) {
+            return;
+        }
+        referencedAssets.add(assetMap.get(uuid));
+    }
+
+    /**
+     * A list of full paths to all assets referenced from CPL.
+     * The list is separated by whitespaces.
+     * Quotes are added to all pathsAll paths are
+     *
+     * @return a list of full paths to all assets referenced from CPL.
+     */
+    public String getReferencedAssets() {
+        return referencedAssets.stream()
+                .map(s -> "\"" + s + "\"")
+                .collect(Collectors.joining(" "));
     }
 
 }

@@ -32,6 +32,7 @@ import com.netflix.imfutility.conversion.templateParameter.context.SequenceTempl
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DynamicContextParameters;
 import com.netflix.imfutility.cpl.CplContextBuilder;
+import com.netflix.imfutility.exception.ConversionHelperException;
 import com.netflix.imfutility.generated.conversion.FormatConfigurationType;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.inputparameters.ImfUtilityInputParameters;
@@ -133,11 +134,11 @@ public abstract class AbstractFormatBuilder {
             // 10. fill dynamic context before parsing CPL
             buildDynamicContextPreCpl();
 
-            // 11. perform validation of the input IMP and CPL (after dynamic context is filled).
-            validateImpAndCpl();
-
-            // 12. build IMF CPL contexts
+            // 11. build IMF CPL contexts
             buildCplContext();
+
+            // 12. perform validation of the input IMP and CPL (after dynamic and CPL contexts are filled!).
+            validateImpAndCpl();
 
             // 13. build Media Info contexts (get resource parameters such as channels_num, fps, sample_rate, etc.)
             buildMediaInfoContext();
@@ -173,7 +174,7 @@ public abstract class AbstractFormatBuilder {
             logger.info("Conversion to '{}' format: OK\n", format.getName());
 
             return 0;
-        } catch (ConversionException | XmlParsingException | FileNotFoundException e) {
+        } catch (ConversionException | ConversionHelperException | XmlParsingException | FileNotFoundException e) {
             // do not log stack trace, as it's 'workflow expected' exceptions
             logger.error("Conversion to '{}' format aborted: {}", format.getName(), e.getMessage());
             deleteTmpFilesOnFail();
@@ -354,6 +355,8 @@ public abstract class AbstractFormatBuilder {
     private void validateImpAndCpl() throws IOException, XmlParsingException {
         logger.info("Validating input IMP and CPL...\n");
         if (isValidateImpAndCpl()) {
+            contextProvider.getDynamicContext().addParameter(
+                    DynamicContextParameters.REFERENCED_ESSENCES, assetMap.getReferencedAssets());
             boolean noFatalErrors = new ImfValidator(contextProvider, new ConversionEngine().getExecuteStrategyFactory()).validate();
             if (noFatalErrors) {
                 logger.info("Validated input IMP and CPL: OK\n");

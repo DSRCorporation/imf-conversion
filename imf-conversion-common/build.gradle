@@ -1,1 +1,5 @@
 description = "Common logic for all Java projects"
+
+dependencies {
+    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+}

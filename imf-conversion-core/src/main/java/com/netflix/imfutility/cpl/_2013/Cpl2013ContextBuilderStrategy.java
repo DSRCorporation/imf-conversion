@@ -32,8 +32,8 @@ import com.netflix.imfutility.cpl.uuid.UUID;
 import com.netflix.imfutility.essencedescriptors.EssenceDescriptorsConstants;
 import com.netflix.imfutility.generated.imf._2013.BaseResourceType;
 import com.netflix.imfutility.generated.imf._2013.CompositionPlaylistType;
-import com.netflix.imfutility.generated.imf._2013.EssenceDescriptorBaseType;
 import com.netflix.imfutility.generated.imf._2013.CompositionPlaylistType.LocaleList;
+import com.netflix.imfutility.generated.imf._2013.EssenceDescriptorBaseType;
 import com.netflix.imfutility.generated.imf._2013.LocaleType;
 import com.netflix.imfutility.generated.imf._2013.LocaleType.LanguageList;
 import com.netflix.imfutility.generated.imf._2013.SegmentType;
@@ -210,6 +210,7 @@ public class Cpl2013ContextBuilderStrategy extends AbstractCplContextBuilderStra
             throw new ConversionException(String.format(
                     "Resource track file '%s' isn't present in assetmap.xml", trackId));
         }
+        assetMap.markAssetReferenced(trackId);
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
                 ResourceContextParameters.ESSENCE, assetPath);
 
