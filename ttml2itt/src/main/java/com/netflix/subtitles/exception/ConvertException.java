@@ -16,22 +16,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.subtitles;
+package com.netflix.subtitles.exception;
 
 /**
- * Contains project constants.
+ * Converts TTML to tTT exception.
  */
-public final class TtmlConverterConstants {
+public class ConvertException extends RuntimeException {
 
-    public static final String TTML_PACKAGES =
-            "org.w3.ns.ttml:org.w3.ns.ttml_parameter:org.w3.ns.ttml_datatype:org.w3.ns.ttml_metadata";
+    public ConvertException(String string) {
+        super(string);
+    }
 
-    public static final String TTML_SCHEMA = "xsd/CR-ttaf1-dfxp-20100223/ttaf1-dfxp.xsd";
+    public ConvertException(String string, Throwable thrwbl) {
+        super(string, thrwbl);
+    }
 
-    public static final String XSLT2_TRANSFORMER_IMPLEMENTATION = "net.sf.saxon.TransformerFactoryImpl";
-    public static final String TTML_TO_ITT_TRANSFORMATION = "xslt/ttml2itt.xsl";
-
-
-    private TtmlConverterConstants() {
+    public ConvertException(Throwable thrwbl) {
+        super(thrwbl);
     }
 }
