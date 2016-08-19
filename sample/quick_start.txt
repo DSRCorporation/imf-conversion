@@ -13,8 +13,9 @@ Quick Start Guide:
 
     1.4. Get BMX: bmx2raw and raw2bmx applications (https://sourceforge.net/projects/bmxlib/).
 
-    1.5. Get ASDCP tool. Use the explicitly provided one which is enhanced to work properly with TTML wrapped in MXF.
-         There is a Windows distribution there which can be used out of the box on Windows.
+    1.5. Get ASDCP tool. Please build it from https://github.com/DSRCorporation/asdcplib-as02 repository.
+         This is a fork from from http://www.cinecert.com/asdcplib/ which is enhanced to work properly with TTML wrapped in MXF.
+         There is a Windows distribution there which can be used out of the box on Windows (TBD).
 
 2. Download the source code of IMF Conversion Utility.
 
