@@ -38,7 +38,8 @@ public final class DppConversionConstants {
     public static final String DYNAMIC_PARAM_OUTPUT_MXF = "output";
     public static final String DYNAMIC_PARAM_TTML_TO_STL = "ttml-to-stl";
     public static final String DYNAMIC_PARAM_METADATA_XML = "metadataXml";
-    public static final String DYNAMIC_PARAM_GLITS_LINEUP = "glitsLineup";
+    public static final String DYNAMIC_PARAM_EBU_LINEUP = "EBULineup";
+    public static final String DYNAMIC_PARAM_SLATE = "slate";
     public static final String DYNAMIC_PARAM_LAST_ESSENCE = "last_essence";
     public static final String DYNAMIC_PARAM_LAST_FRAME_TC = "last_frame_tc";
 
@@ -62,8 +63,10 @@ public final class DppConversionConstants {
 
 /* 5. layout */
 
-    public static final String RESOURCE_GLITS_LINEUP = "sample/Stereo_Programmes_1kHz_GLITS_Lineup.wav";
-    public static final String UNPACKED_GLITS_LINEUP = "Stereo_Programmes_1kHz_GLITS_Lineup.wav";
+    public static final String RESOURCE_EBU_LINEUP = "sample/Stereo_Programmes_1kHz_EBU_Lineup.wav";
+    public static final String UNPACKED_EBU_LINEUP = "Stereo_Programmes_1kHz_EBU_Lineup.wav";
+    public static final String RESOURCE_SLATE = "sample/slate.png";
+    public static final String UNPACKED_SLATE = "slate.png";
 
     private DppConversionConstants() {
 

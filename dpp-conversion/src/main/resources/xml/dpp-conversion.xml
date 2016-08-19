@@ -97,18 +97,19 @@
                                       -pix_fmt %{dest.pixelFormat} -f rawvideo -
                                 </execOnce>
                                 <!--7s-->
-                                <execOnce name="ident_clock">
+                                <execOnce name="black">
                                     "%{tool.ffmpeg}"
                                       -an -f lavfi -i color=c=black:s=%{dest.width}x%{dest.height}
                                       -t 7
                                       -r %{dest.frameRate}
                                       -pix_fmt %{dest.pixelFormat} -f rawvideo -
                                 </execOnce>
-                                <!--5fr-->
+                                <!--6fr-->
                                 <execOnce name="slate">
                                     "%{tool.ffmpeg}"
-                                    -an -f lavfi -i color=c=white:s=%{dest.width}x%{dest.height}
-                                    -vframes 5
+                                    -loop 1 -i %{dynamic.slate}
+                                    -vframes 6
+                                    -s %{dest.width}x%{dest.height}
                                     -r %{dest.frameRate}
                                     -pix_fmt %{dest.pixelFormat} -f rawvideo -
                                 </execOnce>
@@ -131,6 +132,7 @@
                                         -pix_fmt %{dest.pixelFormat} -f rawvideo -
                                     </execOnce>
                                 </execEachSegment>
+                                <!--5s freeze-->
                                 <execOnce name="loop_last_frame">
                                     "%{tool.ffmpeg}"
                                     -loop 1 -i last_frame.png
@@ -177,16 +179,16 @@
                                 <!--20s-->
                                 <execOnce name="tone">
                                     "%{tool.ffmpeg}"
-                                    -i "%{dynamic.glitsLineup}"
+                                       -stream_loop 3 -i "%{dynamic.EBULineup}"
                                        -vn -t 20
                                        -af aresample=%{dest.sampleRate}
                                        -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
                                 </execOnce>
-                                <!--9.960s (00:00:07:00 clock + 00:00:00:05 slate + 00:00:02:19 black)-->
+                                <!--10s (00:00:07:00 black + 00:00:00:06 slate + 00:00:02:19 black)-->
                                 <execOnce name="silence">
                                     %{tool.ffmpeg}
                                      -f lavfi -i anullsrc=cl=stereo:r=%{dest.sampleRate}
-                                     -vn -t 9.960
+                                     -vn -t 10
                                      -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
                                 </execOnce>
                                 <execEachSegment name="decode_audio">

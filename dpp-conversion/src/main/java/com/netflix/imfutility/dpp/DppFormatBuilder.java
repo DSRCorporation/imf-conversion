@@ -27,7 +27,6 @@ import com.netflix.imfutility.conversion.templateParameter.context.ResourceTempl
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.SegmentContextParameters;
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
@@ -137,9 +136,17 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     }
 
     private void unpackLayoutResources() throws IOException {
-        InputStream inputStream = ResourceHelper.getResourceInputStream(RESOURCE_GLITS_LINEUP);
+        unpackResource(RESOURCE_EBU_LINEUP, UNPACKED_EBU_LINEUP);
+        unpackResource(RESOURCE_SLATE, UNPACKED_SLATE);
 
-        File outputFile = new File(contextProvider.getWorkingDir(), UNPACKED_GLITS_LINEUP);
+        contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_EBU_LINEUP, UNPACKED_EBU_LINEUP, true);
+        contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_SLATE, UNPACKED_SLATE, true);
+    }
+
+    private void unpackResource(String resource, String unpackedName) throws IOException {
+        InputStream inputStream = ResourceHelper.getResourceInputStream(resource);
+
+        File outputFile = new File(contextProvider.getWorkingDir(), unpackedName);
         if (outputFile.exists()) {
             outputFile.delete();
         }
@@ -157,8 +164,6 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     }
 
     private void buildLayoutParameters() {
-        contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_GLITS_LINEUP, UNPACKED_GLITS_LINEUP, true);
-
         ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
         ContextInfo lastResourceContextInfo = getLastResourceContextInfo();
 

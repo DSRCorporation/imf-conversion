@@ -90,7 +90,7 @@ public class MetadataXmlProvider {
 
     private static final String LINE_UP_START = "09:59:30:00";
     private static final String IDENT_CLOCK_START = "09:59:50:00";
-    private static final String FIRST_PART_SOM = "09:59:59:24";
+    private static final String FIRST_PART_SOM = "10:00:00:00";
 
     /**
      * MXF frameworks enumeration.
