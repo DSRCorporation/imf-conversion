@@ -97,7 +97,8 @@ Note 1:
 
 3. Get BMX: bmx2raw and raw2bmx applications [BMX](https://sourceforge.net/projects/bmxlib/).
 
-4. Get ASDCP tool. Use the one from (TBD) repository which is enhanced to work properly with TTML wrapped in MXF.
+4. Get ASDCP tool. Please build it from https://github.com/DSRCorporation/asdcplib-as02 repository.
+This is a fork from from http://www.cinecert.com/asdcplib/ which is enhanced to work properly with TTML wrapped in MXF.
 There is a Windows distribution there which can be used out of the box on Windows (TBD).
 
 #### Prepare config.xml
