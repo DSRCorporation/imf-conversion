@@ -13,9 +13,9 @@ Quick Start Guide for MAC OS X.
         1.7 Copies pre-build BMX (raw2bmx and mxf2raw) and as-02-unwrap with required libraries to /usr/local/bin and /use/local/lib
             (so, they will be added to the PATH automatically).
 
-2. Extract the distribution (imf-conversion-utility-1.0-beta.tar.gz) to some place.
+2. Extract the distribution (imf-conversion-utility-1.0.0.tar.gz) to some place.
 
-3. Go to 'imf-conversion-utility-1.0-beta' folder.
+3. Go to 'imf-conversion-utility-1.0.0' folder.
    
 4. [Optional] Edit sample/config.xml if needed. It can be used as is, if all external tools are installed successfully at step 1.
    Please see README for a full description of config.xml.
