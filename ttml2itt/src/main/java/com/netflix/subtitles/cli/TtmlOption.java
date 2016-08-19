@@ -24,7 +24,7 @@ package com.netflix.subtitles.cli;
 public class TtmlOption {
     private String fileName;
     private long startMS = 0;
-    private long endMS = 0;
+    private long endMS = Long.MAX_VALUE;
     private long offsetMS = 0;
 
     public String getFileName() {
