@@ -49,10 +49,31 @@ import org.apache.commons.math3.fraction.BigFraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 
-import static com.netflix.imfutility.dpp.DppConversionConstants.*;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_AS11_CORE_FILE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_AS11_SEGM_FILE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_EBU_AUDIO_TRACKS;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_METADATA_XML;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_OUTPUT_MXF;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PAN;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_TTML_TO_STL;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_UK_DPP_FILE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_VALUE_OUTPUT_MXF;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_EBU_LINEUP;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_SLATE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_LAST_ESSENCE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_LAST_FRAME_TC;
+import static com.netflix.imfutility.dpp.DppConversionConstants.RESOURCE_EBU_LINEUP;
+import static com.netflix.imfutility.dpp.DppConversionConstants.UNPACKED_EBU_LINEUP;
+import static com.netflix.imfutility.dpp.DppConversionConstants.RESOURCE_SLATE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.UNPACKED_SLATE;
+
 
 /**
  * DPP format builder (see {@link AbstractFormatBuilder}). It's used for conversion to DPP format ('convert' DPP mode).
@@ -144,23 +165,19 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     }
 
     private void unpackResource(String resource, String unpackedName) throws IOException {
-        InputStream inputStream = ResourceHelper.getResourceInputStream(resource);
-
         File outputFile = new File(contextProvider.getWorkingDir(), unpackedName);
-        if (outputFile.exists()) {
-            outputFile.delete();
+
+        try (
+                InputStream inputStream = ResourceHelper.getResourceInputStream(resource);
+                OutputStream outputStream = new FileOutputStream(outputFile)
+        ) {
+            int read;
+            byte[] bytes = new byte[1024];
+
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
         }
-        OutputStream outputStream = new FileOutputStream(outputFile);
-
-        int read;
-        byte[] bytes = new byte[1024];
-
-        while ((read = inputStream.read(bytes)) != -1) {
-            outputStream.write(bytes, 0, read);
-        }
-
-        inputStream.close();
-        outputStream.close();
     }
 
     private void buildLayoutParameters() {
@@ -182,7 +199,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_LAST_FRAME_TC, lastFrameTimeTC);
     }
 
-    ContextInfo getLastResourceContextInfo() {
+    private ContextInfo getLastResourceContextInfo() {
         Object[] segmentUUIDs = contextProvider.getSegmentContext().getUuids().toArray();
         SegmentUUID lastSegmentUUID = (SegmentUUID) segmentUUIDs[segmentUUIDs.length - 1];
 
