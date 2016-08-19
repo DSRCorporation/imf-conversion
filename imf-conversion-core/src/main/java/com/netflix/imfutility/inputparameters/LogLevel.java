@@ -16,30 +16,27 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.validate;
+package com.netflix.imfutility.inputparameters;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.apache.logging.log4j.Level;
 
 /**
- * An Exception class to wrap IMF validation errors.
+ * Log levels supported in the application.
  */
-public class ImfValidationException extends Exception {
+public enum LogLevel {
 
-    private List<String> errors;
+    error(Level.ERROR),
+    warn(Level.WARN),
+    info(Level.INFO),
+    debug(Level.DEBUG);
 
-    public ImfValidationException(List<String> errors) {
-        super();
-        this.errors = errors;
-        if (this.errors == null) {
-            this.errors = new ArrayList<>();
-        }
+    private Level logLevel;
+
+    LogLevel(Level logLevel) {
+        this.logLevel = logLevel;
     }
 
-    @Override
-    public String getMessage() {
-        return errors.stream().collect(Collectors.joining("\n", "\n[", "]"));
+    public Level getLogLevel() {
+        return logLevel;
     }
-
 }

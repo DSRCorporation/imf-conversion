@@ -32,8 +32,8 @@ import com.netflix.imfutility.cpl.uuid.UUID;
 import com.netflix.imfutility.essencedescriptors.EssenceDescriptorsConstants;
 import com.netflix.imfutility.generated.imf._2016.BaseResourceType;
 import com.netflix.imfutility.generated.imf._2016.CompositionPlaylistType;
-import com.netflix.imfutility.generated.imf._2016.EssenceDescriptorBaseType;
 import com.netflix.imfutility.generated.imf._2016.CompositionPlaylistType.LocaleList;
+import com.netflix.imfutility.generated.imf._2016.EssenceDescriptorBaseType;
 import com.netflix.imfutility.generated.imf._2016.LocaleType;
 import com.netflix.imfutility.generated.imf._2016.LocaleType.LanguageList;
 import com.netflix.imfutility.generated.imf._2016.SegmentType;
@@ -211,6 +211,7 @@ public class Cpl2016ContextBuilderStrategy extends AbstractCplContextBuilderStra
             throw new ConversionException(String.format(
                     "Resource track file '%s' isn't present in assetmap.xml", trackId));
         }
+        assetMap.markAssetReferenced(trackId);
         contextProvider.getResourceContext().addResourceParameter(resourceKey, resourceId,
                 ResourceContextParameters.ESSENCE, assetPath);
 
@@ -257,7 +258,8 @@ public class Cpl2016ContextBuilderStrategy extends AbstractCplContextBuilderStra
                 ResourceContextParameters.ESSENCE_DESC_ID, essenceDescId);
     }
 
-    private String getDefaultCplLanguage() {
+    @Override
+    protected String getDefaultCplLanguage() {
         // assume default language to be first language of first locale
         LocaleList localeList = cpl2016.getLocaleList();
         //  no locales defined
@@ -280,10 +282,4 @@ public class Cpl2016ContextBuilderStrategy extends AbstractCplContextBuilderStra
         return language.orElse(null);
     }
 
-    @Override
-    protected String getSequenceLanguage(SequenceUUID seqUuid) {
-        //  TODO: define sequence language from EssenceDescriptor
-        // fallback to default language
-        return getDefaultCplLanguage();
-    }
 }

@@ -16,8 +16,9 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.dpp;
+package com.netflix.imfutility.dpp.metadata;
 
+import com.netflix.imfutility.dpp.metadata.MetadataXmlProvider;
 import com.netflix.imfutility.util.MetadataUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xml.XmlParsingException;

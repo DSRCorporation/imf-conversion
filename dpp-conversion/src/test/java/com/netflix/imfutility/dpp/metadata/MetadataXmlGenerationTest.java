@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.dpp;
+package com.netflix.imfutility.dpp.metadata;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,37 +28,38 @@ import java.util.UUID;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Unit tests for generation of audiomap.xml.
+ * Unit tests for generation of DPP test-metadata.xml.
  */
-public class AudioMapXmlGenerationTest {
+public class MetadataXmlGenerationTest {
 
-    private File audiomapXml;
+    private File metadataXml;
 
     @Before
     public void setUp() throws Exception {
         //create and delete a temp file
-        audiomapXml = File.createTempFile(UUID.randomUUID().toString(), ".xml");
-        audiomapXml.deleteOnExit();
-        assertTrue("Temporary file cannot be deleted.", audiomapXml.delete());
+        metadataXml = File.createTempFile(UUID.randomUUID().toString(), ".xml");
+        metadataXml.deleteOnExit();
+        assertTrue("Temporary file cannot be deleted.", metadataXml.delete());
     }
 
     @After
     public void tearDown() {
         //remove temp file;
-        assertTrue("Temporary file cannot be deleted.", audiomapXml.delete());
+        assertTrue("Temporary file cannot be deleted.", metadataXml.delete());
     }
 
     /**
-     * Tests sample audiomap.xml generation.
+     * Tests empty test-metadata.xml generation.
+     *
      *
      */
     @Test
-    public void generateSampleXml() {
-        //try to generate sample audiomap.xml
-        AudioMapXmlProvider.generateSampleXml(audiomapXml.getAbsolutePath());
+    public void generateEmptyXml() {
+        //try to generate Dpp test-metadata.xml
+        MetadataXmlCreator.generateEmptyXml(metadataXml.getAbsolutePath());
 
         //check it is not empty
-        assertTrue("Generated audiomap.xml is zero size.", audiomapXml.length() > 0);
+        assertTrue("Generated test-metadata.xml is zero size.", metadataXml.length() > 0);
     }
 
 }

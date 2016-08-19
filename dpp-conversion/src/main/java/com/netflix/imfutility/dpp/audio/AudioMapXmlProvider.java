@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.dpp;
+package com.netflix.imfutility.dpp.audio;
 
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
@@ -27,15 +27,13 @@ import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.dpp.audiomap.AudioMapType;
 import com.netflix.imfutility.generated.dpp.audiomap.EBUTrackType;
-import com.netflix.imfutility.generated.dpp.audiomap.ObjectFactory;
 import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
+import com.netflix.imfutility.util.ImfLogger;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -48,72 +46,22 @@ import static com.netflix.imfutility.dpp.DppConversionXsdConstants.AUDIOMAP_PACK
 import static com.netflix.imfutility.dpp.DppConversionXsdConstants.AUDIOMAP_XML_SCHEME;
 
 /**
- * Created by Alexandr on 5/12/2016.
  * <p>
  * Basic functionality for audiomap.xml handling.
  * </p>
  */
 public final class AudioMapXmlProvider {
 
-    /**
-     * Generates a sample audiomap.xml file.
-     *
-     * @param path a path to the output audiomap.xml file
-     */
-    public static void generateSampleXml(String path) {
-        File file = new File(path);
-        JAXBContext jaxbContext;
-        try {
-            jaxbContext = JAXBContext.newInstance(AudioMapType.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            String cplTrackId = "urn:uuid:38d52c00-68d3-4056-8858-28eeaf3238d3";
-            // Channel Map
-            // Sample with EBU R48: 2a  (2 stereo and 2 silence channels)
-            EBUTrackType ebuTrack1 = new EBUTrackType();
-            ebuTrack1.setNumber(1);
-            ebuTrack1.setCPLVirtualTrackId(cplTrackId);
-            ebuTrack1.setCPLVirtualTrackChannel(1);
-
-            EBUTrackType ebuTrack2 = new EBUTrackType();
-            ebuTrack2.setNumber(2);
-            ebuTrack2.setCPLVirtualTrackId(cplTrackId);
-            ebuTrack2.setCPLVirtualTrackChannel(2);
-
-            EBUTrackType ebuTrack3 = new EBUTrackType();
-            ebuTrack3.setNumber(3);
-            ebuTrack3.setCPLVirtualTrackId(null);
-            ebuTrack3.setCPLVirtualTrackChannel(null);
-
-            EBUTrackType ebuTrack4 = new EBUTrackType();
-            ebuTrack4.setNumber(4);
-            ebuTrack4.setCPLVirtualTrackId(null);
-            ebuTrack4.setCPLVirtualTrackChannel(null);
-
-            // Audiomap XML structure
-            AudioMapType audioMap = new AudioMapType();
-            audioMap.getEBUTrack().add(ebuTrack1);
-            audioMap.getEBUTrack().add(ebuTrack2);
-            audioMap.getEBUTrack().add(ebuTrack3);
-            audioMap.getEBUTrack().add(ebuTrack4);
-
-            JAXBElement<AudioMapType> audioMapJaxb = new ObjectFactory().createAudioMap(audioMap);
-            jaxbMarshaller.marshal(audioMapJaxb, file);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private final Logger logger = new ImfLogger(LoggerFactory.getLogger(AudioMapXmlProvider.class));
 
     private final TemplateParameterContextProvider contextProvider;
     private final AudioTrackLayoutDmAs11Type audioLayout;
-    private final File audioMapFile;
 
     private final AudioMapType audioMap;
     private final LinkedHashMap<String, Integer> channelsForTracks;
 
     /**
-     * Creates a default audiomap.xml (see {@link #generateDefaultXml()}, loads it and validates.
+     * Creates a default audiomap.xml (see {@link #getDefaultAudioMap()}, loads it and validates.
      *
      * @param contextProvider context provider.
      * @throws XmlParsingException   an exception in case of audiomap.xml parsing error
@@ -125,7 +73,7 @@ public final class AudioMapXmlProvider {
     }
 
     /**
-     * Loads and validates audiomap.xml. Creates a default audiomap.xml (see {@link #generateDefaultXml()} if audioMapXml is null.
+     * Loads and validates audiomap.xml. Creates a default audiomap.xml (see {@link #getDefaultAudioMap()} if audioMapXml is null.
      *
      * @param audioMapFile    a path to audiomap.xml file. May be null.
      * @param contextProvider context provider.
@@ -141,41 +89,40 @@ public final class AudioMapXmlProvider {
 
         if (audioMapFile == null) {
             // if no audiomap.xml is provided - create a default one for the given input and audio layout specified in metadata.xml
-            audioMapFile = generateDefaultXml();
-            // add as dynamic parameter to delete at the end.
-            contextProvider.getDynamicContext().addParameter(DppConversionConstants.DYNAMIC_AUDIO_MAP_XML,
-                    audioMapFile.getAbsolutePath(), true);
+            this.audioMap = getDefaultAudioMap();
+        } else {
+            this.audioMap = loadAudioMapXml(audioMapFile);
         }
-        this.audioMapFile = audioMapFile;
-        this.audioMap = loadAudioMapXml();
     }
 
-    /**
-     * Gets the corresponding audiomap.xml (either generated or provided).
-     *
-     * @return a path to audiomap xml.
-     */
-    public File getAudioMapFile() {
-        return audioMapFile;
-    }
+    private AudioMapType getDefaultAudioMap() {
+        AudioMapType audioMap = null;
 
-    /**
-     * Gets the loaded AudioMap instances created from a provided audiomap.xml.
-     *
-     * @return a loaded AudioMap instances created from a provided audiomap.xml
-     */
-    public AudioMapType getAudioMap() {
-        return this.audioMap;
+        logger.warn("No audiomap.xml specified as a command line argument. A default audiomap.xml will be generated.");
+        try {
+            audioMap = new AudioMapGuesser(contextProvider, audioLayout).guessAudioMap();
+        } catch (InvalidAudioChannelAssignmentException e) {
+            logger.warn("Could not generate an audiomap based on EssenceDescriptor: " + e.getMessage());
+        }
+
+        if (audioMap == null) {
+            logger.debug("Generating default audiomap in a natural order...");
+            audioMap = generateDefaultXml();
+            logger.info("Generated default audiomap in a natural order: OK");
+        }
+        return audioMap;
     }
 
     /**
      * Loads and validates audiomap.xml.
      *
+     * @param  audioMapFile auidomap.xml location
+     *
      * @return AudioMapType with loaded and mapped audiomap.xml
      * @throws XmlParsingException   an exception in case of audiomap.xml parsing error
      * @throws FileNotFoundException if the audioMapXml doesn't define an existing file.
      */
-    private AudioMapType loadAudioMapXml() throws XmlParsingException, FileNotFoundException {
+    private AudioMapType loadAudioMapXml(File audioMapFile) throws XmlParsingException, FileNotFoundException {
         if (!audioMapFile.isFile()) {
             throw new FileNotFoundException(String.format("Invalid audiomap.xml file: '%s' not found", audioMapFile.getAbsolutePath()));
         }
@@ -199,63 +146,44 @@ public final class AudioMapXmlProvider {
      * for the number of audio tracks as defined by the audio layout specified in metadata.xml.
      * If the number of input channels is less than required number of audio tracks, the remaining audio tracks are filled with silence.
      *
-     * @return an audiomap.xml file in the provided working directory.
+     * @return an audio map
      */
-    public File generateDefaultXml() {
-        return generateDefaultXml(DppConversionConstants.DEFAULT_AUDIO_MAP);
+    private AudioMapType generateDefaultXml() {
+        AudioMapType newAudioMap = new AudioMapType();
+
+        Integer ebuAudioTracks = getEBUAudioTracks();
+        final int[] currentAudioTrack = {1};
+        channelsForTracks.forEach((String trackId, Integer trackChannelCount) -> {
+            for (int i = 0; i < trackChannelCount; i++) {
+                if (currentAudioTrack[0] <= ebuAudioTracks) {
+                    EBUTrackType ebuTrack = new EBUTrackType();
+                    ebuTrack.setNumber(currentAudioTrack[0]);
+                    ebuTrack.setCPLVirtualTrackId(trackId);
+                    ebuTrack.setCPLVirtualTrackChannel(i + 1);
+                    newAudioMap.getEBUTrack().add(ebuTrack);
+                    currentAudioTrack[0]++;
+                }
+            }
+        });
+
+        while (currentAudioTrack[0] <= ebuAudioTracks) {
+            EBUTrackType ebuTrack = new EBUTrackType();
+            ebuTrack.setNumber(currentAudioTrack[0]);
+            newAudioMap.getEBUTrack().add(ebuTrack);
+            currentAudioTrack[0]++;
+        }
+
+        return newAudioMap;
     }
 
     /**
-     * Generates a sample audiomap.xml file that maps all channels of all virtual tracks (sequencedTracks parameter) sequentially 1:1
-     * for the number of audio tracks as defined by the audio layout specified in metadata.xml.
-     * If the number of input channels is less than required number of audio tracks, the remaining audio tracks are filled with silence.
+     * Gets the loaded AudioMap instances created from a provided audiomap.xml.
      *
-     * @param audioMapName audiomap file name.
-     * @return an audiomap.xml file in the provided working directory.
+     * @return a loaded AudioMap instances created from a provided audiomap.xml
      */
-    public File generateDefaultXml(String audioMapName) {
-        File audiomapFile = new File(contextProvider.getWorkingDir(), audioMapName);
-
-        Integer ebuAudioTracks = getEBUAudioTracks();
-
-        JAXBContext jaxbContext;
-        try {
-            jaxbContext = JAXBContext.newInstance(AudioMapType.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            AudioMapType newAudioMap = new AudioMapType();
-
-            final int[] currentAudioTrack = {1};
-            channelsForTracks.forEach((String trackId, Integer trackChannelCount) -> {
-                for (int i = 0; i < trackChannelCount; i++) {
-                    if (currentAudioTrack[0] <= ebuAudioTracks) {
-                        EBUTrackType ebuTrack = new EBUTrackType();
-                        ebuTrack.setNumber(currentAudioTrack[0]);
-                        ebuTrack.setCPLVirtualTrackId(trackId);
-                        ebuTrack.setCPLVirtualTrackChannel(i + 1);
-                        newAudioMap.getEBUTrack().add(ebuTrack);
-                        currentAudioTrack[0]++;
-                    }
-                }
-            });
-
-            while (currentAudioTrack[0] <= ebuAudioTracks) {
-                EBUTrackType ebuTrack = new EBUTrackType();
-                ebuTrack.setNumber(currentAudioTrack[0]);
-                newAudioMap.getEBUTrack().add(ebuTrack);
-                currentAudioTrack[0]++;
-            }
-
-            JAXBElement<AudioMapType> audioMapJaxb = new ObjectFactory().createAudioMap(newAudioMap);
-            jaxbMarshaller.marshal(audioMapJaxb, audiomapFile);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
-
-        return audiomapFile;
+    public AudioMapType getAudioMap() {
+        return this.audioMap;
     }
-
 
     /**
      * Return string pan parameter like: 4c|c0=c0|c1=c1|c2=0*c0|c3=0*c0.

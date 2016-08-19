@@ -20,6 +20,8 @@ package com.netflix.imfutility.validation;
 
 import com.lexicalscope.jewel.cli.Option;
 
+import java.util.List;
+
 /**
  * An interface describing all Command Line arguments (Jewel CLI framework).
  */
@@ -30,6 +32,10 @@ public interface ImfValidationCmdLineArgs {
 
     @Option(description = "a full path to a CPL within the IMP folder to be validated", shortName = {"c"}, longName = {"cpl"})
     String getCpl();
+
+    @Option(description = "a list of full paths to all essence resources referenced by the CPL",
+            shortName = {"e"}, longName = {"essence"})
+    List<String> getEssence();
 
     @Option(description = "a working directory where the output xml file with result of validation is created",
             shortName = {"d"}, longName = {"outdir"})

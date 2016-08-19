@@ -35,6 +35,8 @@ import static com.netflix.imfutility.ttmltostl.stl.GsiAttribute.TNS;
  */
 public class DefaultGsiStrategy extends AbstractStlStrategy implements IGsiStrategy {
 
+    protected static final String DATE_FORMAT = "yyMMdd";
+
     @Override
     public String getCharset() {
         if ("850".equals(CPN.getStringValue())) {
@@ -70,7 +72,7 @@ public class DefaultGsiStrategy extends AbstractStlStrategy implements IGsiStrat
     }
 
     private String getCurrentDate() {
-        return new SimpleDateFormat("yyMMdd").format(new Date());
+        return new SimpleDateFormat(DATE_FORMAT).format(new Date());
     }
 
     @Override

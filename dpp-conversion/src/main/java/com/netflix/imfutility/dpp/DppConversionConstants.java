@@ -34,7 +34,6 @@ public final class DppConversionConstants {
     public static final String DYNAMIC_PARAM_UK_DPP_FILE = "ukDppFramework";
     public static final String DYNAMIC_PARAM_AS11_CORE_FILE = "as11CoreFramework";
     public static final String DYNAMIC_PARAM_AS11_SEGM_FILE = "as11SegmentationFramework";
-    public static final String DYNAMIC_AUDIO_MAP_XML = "audioMapXml";
     public static final String DYNAMIC_PARAM_OUTPUT_MXF = "output";
     public static final String DYNAMIC_PARAM_TTML_TO_STL = "ttml-to-stl";
     public static final String DYNAMIC_PARAM_METADATA_XML = "metadataXml";

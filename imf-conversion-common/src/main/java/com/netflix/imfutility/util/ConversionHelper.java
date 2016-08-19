@@ -18,7 +18,7 @@
  */
 package com.netflix.imfutility.util;
 
-import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.exception.ConversionHelperException;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.math.BigInteger;
@@ -50,16 +50,17 @@ public final class ConversionHelper {
     /**
      * Transforms a timecode string (hh:mm:ss:ff) to milliseconds according to the given edit rate (frame rate).
      * <p>
-     *     Currently works with non-drop timecodes only.
+     * Currently works with non-drop timecodes only.
      * </p>
-     * @param tc an SMPTE timecode (hh:mm:ss:ff)
+     *
+     * @param tc         an SMPTE timecode (hh:mm:ss:ff)
      * @param unitsInSec edit unit rate in a form "25 1"
      * @return a number of milliseconds
      */
     public static long smpteTimecodeToMilliSeconds(String tc, BigFraction unitsInSec) {
         String[] parts = tc.split("[:;\\.]");
         if (parts.length != 4) {
-            throw new ConversionException(
+            throw new ConversionHelperException(
                     String.format("Incorrect SMPTE timecode '%s'. Expected in a form 'HH[:;.]MM[:;.]SS[:;.]FF'", tc));
         }
 
@@ -73,7 +74,7 @@ public final class ConversionHelper {
             secs = Integer.parseInt(parts[2]);
             frames = Integer.parseInt(parts[3]);
         } catch (NumberFormatException e) {
-            throw new ConversionException(
+            throw new ConversionHelperException(
                     String.format("Incorrect SMPTE timecode '%s'! Expected in a form 'HH[:;.]MM[:;.]SS[:;.]FF'"
                             + " where HH,MM,SS and FF are non-negative integers", tc),
                     e);
@@ -132,8 +133,8 @@ public final class ConversionHelper {
      * <li>The output timecode has the following format 'hh:mm:ss:ff'.</li>
      * </ul>
      *
-     * @param milliseconds         milliseconds to be transformed
-     * @param unitsInSec edit unit rate
+     * @param milliseconds milliseconds to be transformed
+     * @param unitsInSec   edit unit rate
      * @return timecode as a string in "hh:mm:ss:ff" format.
      */
     public static String msToSmpteTimecode(long milliseconds, BigFraction unitsInSec) {
@@ -213,7 +214,7 @@ public final class ConversionHelper {
      */
     public static BigFraction parseEditRate(List<Long> editRate) {
         if (editRate.size() != 2) {
-            throw new ConversionException("Incorrect edit rate! Edit rate must consist of two values.");
+            throw new ConversionHelperException("Incorrect edit rate! Edit rate must consist of two values.");
         }
         return new BigFraction(editRate.get(0), editRate.get(1));
     }
@@ -254,9 +255,9 @@ public final class ConversionHelper {
                 return new BigFraction(Long.parseLong(parts[0]));
             }
         } catch (NumberFormatException e) {
-            throw new ConversionException("Incorrect edit rate! Edit rate must consist of two numbers.", e);
+            throw new ConversionHelperException("Incorrect edit rate! Edit rate must consist of two numbers.", e);
         }
-        throw new ConversionException("Incorrect edit rate! Edit rate must consist of two values.");
+        throw new ConversionHelperException("Incorrect edit rate! Edit rate must consist of two values.");
     }
 
     /**
@@ -288,9 +289,9 @@ public final class ConversionHelper {
                 return new BigFraction(Long.parseLong(parts[0]));
             }
         } catch (NumberFormatException e) {
-            throw new ConversionException("Incorrect aspect ratio! Aspect ratio must consist of two numbers.", e);
+            throw new ConversionHelperException("Incorrect aspect ratio! Aspect ratio must consist of two numbers.", e);
         }
-        throw new ConversionException("Incorrect aspect ratio! Aspect ratio must consist of two values.");
+        throw new ConversionHelperException("Incorrect aspect ratio! Aspect ratio must consist of two values.");
     }
 
     public static String zeroTimecode() {

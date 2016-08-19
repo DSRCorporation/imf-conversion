@@ -30,14 +30,17 @@ import com.netflix.imfutility.conversion.templateParameter.context.parameters.Re
 import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
-import com.netflix.imfutility.dpp.MetadataXmlProvider.DMFramework;
+import com.netflix.imfutility.dpp.audio.AudioMapXmlProvider;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParametersValidator;
+import com.netflix.imfutility.dpp.metadata.MetadataXmlProvider;
+import com.netflix.imfutility.dpp.metadata.MetadataXmlProvider.DMFramework;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
 import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.util.CplHelper;
+import com.netflix.imfutility.util.LogHelper;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
@@ -74,7 +77,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     @Override
     protected void doBuildDynamicContextPreCpl() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
-        logger.info("Output file name: '{}.mxf'.", getOutputName());
+        logger.debug("Output file name: '{}.mxf'.", getOutputName());
         dynamicContext.addParameter(DYNAMIC_PARAM_OUTPUT_MXF, getOutputName(), false);
         dynamicContext.addParameter(DYNAMIC_PARAM_TTML_TO_STL, dppInputParameters.getTtmlToStlTool());
         dynamicContext.addParameter(DYNAMIC_PARAM_METADATA_XML, dppInputParameters.getMetadataFile().getAbsolutePath());
@@ -107,9 +110,6 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
                 contextProvider.getWorkingDir());
 
         // 2. load audiomap.xml
-        if (dppInputParameters.getAudiomapFile() == null) {
-            logger.warn("No audiomap.xml specified as a command line argument. A default audiomap.xml will be generated.");
-        }
         AudioTrackLayoutDmAs11Type audioTrackLayout = metadataXmlProvider.getDpp().getTechnical().getAudio().getAudioTrackLayout();
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(dppInputParameters.getAudiomapFile(),
                 audioTrackLayout, contextProvider);
@@ -258,15 +258,17 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
     protected void postConvert() throws IOException, XmlParsingException {
         logger.info("Conversion output:");
         String fileName = getOutputName() + ".mxf";
-        logger.info("   {}", new File(inputParameters.getWorkingDirFile(), fileName).getAbsoluteFile());
+        logger.info("{}{}", LogHelper.TAB, new File(inputParameters.getWorkingDirFile(), fileName).getAbsoluteFile());
         int subtitleCount = contextProvider.getSequenceContext().getSequenceCount(SequenceType.SUBTITLE);
         if (subtitleCount == 1) {
             fileName = getOutputName() + ".stl";
-            logger.info("   {}", new File(inputParameters.getWorkingDirFile(), fileName).getAbsoluteFile());
+            logger.info("{}{}\n", LogHelper.TAB, new File(inputParameters.getWorkingDirFile(), fileName).getAbsoluteFile());
         } else {
             for (int i = 0; i < subtitleCount; i++) {
                 fileName = getOutputName() + "-" + i + ".stl";
-                logger.info("   {}", new File(inputParameters.getWorkingDirFile(), fileName).getAbsoluteFile());
+                logger.info(i < subtitleCount - 1 ? "{}{}" : "{}{}\n",
+                        LogHelper.TAB,
+                        new File(inputParameters.getWorkingDirFile(), fileName).getAbsoluteFile());
             }
         }
     }

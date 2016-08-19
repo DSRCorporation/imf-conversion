@@ -16,13 +16,14 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.dpp;
+package com.netflix.imfutility.dpp.audio;
 
 import com.netflix.imfutility.ImfUtilityTest;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
+import com.netflix.imfutility.dpp.audio.AudioMapXmlProvider;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.dpp.audiomap.AudioMapType;
 import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
@@ -185,7 +186,6 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
 
         // create and read default audio map files
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(AudioTrackLayoutDmAs11Type.EBU_R_48_2_A, contextProvider);
-        audioMapXmlProvider.getAudioMapFile().deleteOnExit();
         AudioMapType audioMap2A = audioMapXmlProvider.getAudioMap();
 
 
@@ -219,7 +219,6 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
 
         // create and read default audio map files
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(AudioTrackLayoutDmAs11Type.EBU_R_48_2_A, contextProvider);
-        audioMapXmlProvider.getAudioMapFile().deleteOnExit();
         AudioMapType audioMap2A = audioMapXmlProvider.getAudioMap();
 
 
@@ -254,7 +253,6 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
 
         // create and read default audio map files
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(AudioTrackLayoutDmAs11Type.EBU_R_48_2_A, contextProvider);
-        audioMapXmlProvider.getAudioMapFile().deleteOnExit();
         AudioMapType audioMap2A = audioMapXmlProvider.getAudioMap();
 
         // check that audio map is correct
@@ -287,7 +285,6 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
 
         // create and read default audio map files
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(AudioTrackLayoutDmAs11Type.EBU_R_48_2_A, contextProvider);
-        audioMapXmlProvider.getAudioMapFile().deleteOnExit();
         AudioMapType audioMap2A = audioMapXmlProvider.getAudioMap();
 
         // check that audio map is correct
@@ -321,7 +318,6 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
 
         // create and read default audio map files
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(AudioTrackLayoutDmAs11Type.EBU_R_48_2_A, contextProvider);
-        audioMapXmlProvider.getAudioMapFile().deleteOnExit();
         AudioMapType audioMap2A = audioMapXmlProvider.getAudioMap();
 
         // check that audio map is correct
@@ -359,7 +355,6 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // create and read default audio map files
         AudioMapXmlProvider audioMapXmlProvider = new AudioMapXmlProvider(
                 AudioTrackLayoutDmAs11Type.EBU_R_123_16_C, contextProvider);
-        audioMapXmlProvider.getAudioMapFile().deleteOnExit();
         AudioMapType audioMap16C = audioMapXmlProvider.getAudioMap();
 
         // check that audio map is correct

@@ -22,6 +22,7 @@
 <conversion xmlns="http://conversion.imfutility.netflix.com">
 
     <imfValidation>%{dynamic.validateTool} -i "%{dynamic.imp}" -c "%{dynamic.cpl}" -d "%{dynamic.workingDir}"
+        -e %{dynamic.referencedEssences}
         -f "%{dynamic.outputValidationFile}"
     </imfValidation>
 
@@ -284,6 +285,7 @@
                                 %{seq.num}-%{segm.num}-%{resource.num}.xml
                             </dynamicParameter>
 
+                            <dynamicParameter name="concatTTML"></dynamicParameter>
                             <dynamicParameter name="concatTTML" concat="true" concatWhitespace="true">
                                 --ttml
                                 %{seq.num}-%{segm.num}-%{resource.num}.xml %{resource.offsetMS} %{resource.startTimeMS}

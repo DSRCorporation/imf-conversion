@@ -20,6 +20,8 @@ package com.netflix.imfutility.conversion.executor;
 
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.CoreConstants;
+import com.netflix.imfutility.util.ImfLogger;
+import com.netflix.imfutility.util.LogHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,11 +36,12 @@ import java.util.List;
  */
 public class ProcessStarter {
 
-    private final Logger logger = LoggerFactory.getLogger(ProcessStarter.class);
+    private final Logger logger = new ImfLogger(LoggerFactory.getLogger(ProcessStarter.class));
 
     public Process startProcess(ExternalProcess.ExternalProcessInfo processInfo, List<String> execAndParams) throws IOException {
-        logger.info("Starting {}", processInfo.toString());
-        logger.info("\t{}", processInfo.getProcessString());
+        logger.debug("{}Starting {}", LogHelper.TAB, processInfo.toString());
+        logger.debug("{}{}{}", LogHelper.TAB, LogHelper.TAB,
+                processInfo.getProcessString());
 
         // 1. create process builder
         ProcessBuilder pb = new ProcessBuilder(execAndParams);
@@ -51,7 +54,8 @@ public class ProcessStarter {
 
         // 3. redirect stderr
         File logFile = getLogFile(processInfo);
-        logger.info("\tRedirecting stderr to {}", logFile.getAbsolutePath());
+        logger.debug("{}{}Redirecting stderr to {}", LogHelper.TAB, LogHelper.TAB,
+                logFile.getAbsolutePath());
         pb.redirectError(ProcessBuilder.Redirect.to(logFile));
 
         // 4. redirect stdout
@@ -64,7 +68,8 @@ public class ProcessStarter {
     private void redirectStdout(ProcessBuilder pb, ExternalProcess.ExternalProcessInfo processInfo, File logFile) {
         switch (processInfo.getOutputRedirect()) {
             case ERR_LOG:
-                logger.info("\tRedirecting stdout to {}", logFile.getAbsolutePath());
+                logger.debug("{}{}Redirecting stdout to {}", LogHelper.TAB, LogHelper.TAB,
+                        logFile.getAbsolutePath());
                 pb.redirectOutput(ProcessBuilder.Redirect.to(logFile));
                 break;
             case FILE:
@@ -73,15 +78,16 @@ public class ProcessStarter {
                             "stdout must be redirected to a file, but the file is not specified (process: %s)",
                             processInfo.toString()));
                 }
-                logger.info("\tRedirecting stdout to {}", processInfo.getOutputRedirectFile().getAbsolutePath());
+                logger.debug("{}{}Redirecting stdout to {}", LogHelper.TAB, LogHelper.TAB,
+                        processInfo.getOutputRedirectFile().getAbsolutePath());
                 pb.redirectOutput(ProcessBuilder.Redirect.to(processInfo.getOutputRedirectFile()));
                 break;
             case PIPE:
-                logger.info("\tStdout is not redirected, as it participates in a pipeline");
+                logger.debug("{}{}Stdout is not redirected, as it participates in a pipeline", LogHelper.TAB, LogHelper.TAB);
                 break;
             case INHERIT:
             default:
-                logger.info("\tRedirecting stdout to IMF Utility stdout");
+                logger.debug("{}{}Redirecting stdout to IMF Utility stdout", LogHelper.TAB, LogHelper.TAB);
                 pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
                 break;
         }

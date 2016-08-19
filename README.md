@@ -75,7 +75,19 @@ The distribution includes
     * Previous conversion jobs log files: _/logs/archive_.
     * External tools log files: _{output-dir}/logs_.
  
- 
+Note 1:
+
+ * DPP format requires special Program Layout as defined in Section 4.5 of [BBC](http://dpp-assets.s3.amazonaws.com/wp-content/uploads/specs/bbc/TechnicalDeliveryStandardsBBC.pdf).
+ * Currently the Utility doesn't insert additional elements from 09.59.30.00 till 10.00.00.00 (Bars, clocks, lineup tone) and doesn't freezes the last frame for 5 seconds.
+ * The Utility just sets the start time to 09.59.30.00.
+ * So, in order to have a correct program layout, the user must insert required elements on IMF level (that is add segments with required video and audio data):
+     * Start:
+         * 20 seconds of 100% Bars on the Video with EBU Lineup tones on the audio; 
+         * 7 seconds of black and silence;
+         * 5 frames of slate (white text on black background) with silence on audio;
+         * 2 seconds and 19 frames of black and silence;
+     * End of program:    
+         * 5 seconds of freeze frame from last program video frame with silence.
 
 #### Prepare external tools used for conversion
 
@@ -203,7 +215,24 @@ imf-conversion-utility dpp -m metadata -o metadata.xml
 
 * Audiomap.xml is used to map input IMF virtual audio tracks and channels to the output ones depending on the _AudioTrackLayout_ set in metadata.xml.
 * Please see Section 4.4.1 in [BBC](http://dpp-assets.s3.amazonaws.com/wp-content/uploads/specs/bbc/TechnicalDeliveryStandardsBBC.pdf) for the description of different layouts.
-* If no audiomap.xml is specified, then default mapping will be used (each input IMF virtual audio track/channel will be mapped  to the output ones subsequently; remaining output tracks will be filled with silence).
+* If no audiomap.xml is specified, then default mapping will be used:
+     * If there is an Essence Descriptor in CPL.xml associated with each audio resource, and the Essence Descriptor defines the same 
+     same audio channel layout for each resource within a virtual track, then the audio mapping will be done according to the provided channel layout.
+         * R48:2a: there must be at least one stereo virtual track (if there are more than one stereo virtual tracks - the first will be used);
+         * R123:4b/c: there must be one or two stereo virtual track (not more);
+         * R123:16c: there must be one or two stereo and one or two 5.1 virtual tracks (not more);
+         * R123:16d: there must be exactly two 5.1 virtual tracks with different languages;
+         * R123:16f: there must be exactly three stereo virtual tracks with different languages;
+     * If it's not possible to guess audio mapping as described above (from channel layout defined in Essence Descriptors),
+      then each input IMF virtual audio track/channel will be mapped to the output ones subsequently; remaining output tracks will be filled with silence.
+         * Example for R123:16c track allocation and 3 stereo audio virtual tracks:
+             * VirtualTrack 1 - Left ===> Audio track 1 (St. Final mix L)
+             * VirtualTrack 1 - Right ===> Audio track 2 (St. Final mix R)
+             * VirtualTrack 2 - Left ===> Audio track 3 (St. M&E L)
+             * VirtualTrack 2 - Right ===> Audio track 4 (St. M&E R)
+             * VirtualTrack 3 - Left ===> Audio track 5 (5.1 Final Mix L)
+             * VirtualTrack 3 - Right ===> Audio track 6 (5.1 Final Mix R)
+             * All other audio tracks (7 - 16) - silence 
 * The following command generates a sample audiomap.xml
 ```
    imf-conversion-utility dpp -m audiomap -o audiomap.xml
@@ -216,6 +245,11 @@ imf-conversion-utility dpp -m metadata -o metadata.xml
 * _CPLVirtualTrackChannel_ is a channel number (starting from 1) within a virtual track specified above.
 * If either _CPLVirtualTrackId_ or _CPLVirtualTrackChannel_ is absent, then the output track will be silence. 
 * An example of mapping of two Stereo input Audio Virtual tracks tracks to _'R123: 4b'_ layout (4 output tracks, Stereo with M&E):
+    * VirtualTrack 1 (urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711) - Right ===> Audio track 1 (St. Final mix L)
+    * VirtualTrack 1 (urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711) - Left ===> Audio track 2 (St. Final mix R)
+    * VirtualTrack 2 (urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712) - Left ===> Audio track 3 (St. M&E L)
+    * VirtualTrack 2 (urn:uuid:63b41d86-c5df-4169-b036-3a25024bd712) - Right ===> Audio track 4 (St. M&E R)
+    
 ```
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <AudioMap xmlns="http://audiomap.dpp.imfutility.netflix.com">
