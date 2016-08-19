@@ -203,6 +203,7 @@
                         6. Extract each subtitle TTML segment from MXF
                     -->
                     <execEachSequence type="subtitle" name="extractSubtitleSegments">
+                        <dynamicParameter name="concatTTML"></dynamicParameter>
                         <execEachSegment name="extract_ttml">
                             <execOnce name="extract_ttml">
                                 "%{tool.as-02-unwrap}" "%{resource.essence}"
@@ -214,7 +215,6 @@
                                 %{seq.num}-%{segm.num}-%{resource.num}.xml
                             </dynamicParameter>
 
-                            <dynamicParameter name="concatTTML"></dynamicParameter>
                             <dynamicParameter name="concatTTML" concat="true" concatWhitespace="true">
                                 --ttml
                                 %{seq.num}-%{segm.num}-%{resource.num}.xml %{resource.offsetMS} %{resource.startTimeMS}
