@@ -558,9 +558,9 @@
                                 </dynamicParameter>
 
                                 <dynamicParameter name="concatTtml" concat="true" concatWhitespace="true">
-                                    --ttml
+                                    -t
                                     %{seq.num}-%{segm.num}-%{resource.num}.xml
-                                    <!--%{resource.offsetMS} %{resource.startTimeMS} %{resource.endTimeMS}-->
+                                    %{resource.offsetMS} %{resource.startTimeMS} %{resource.endTimeMS}
                                 </dynamicParameter>
                             </execEachSegment>
 
@@ -569,7 +569,7 @@
                             </dynamicParameter>
 
                             <execOnce name="convert_ttml_to_itt">
-                                %{dynamic.ttml-to-itt} %{dynamic.concatTtml} --outputITT %{dynamic.itt-%{seq.num}}
+                                %{dynamic.ttml-to-itt} %{dynamic.concatTtml} -o %{dynamic.itt-%{seq.num}}
                             </execOnce>
 
                         </execEachSequence>
@@ -583,7 +583,7 @@
                             </dynamicParameter>
 
                             <dynamicParameter name="ttmlToIttParams">
-                                --ttml %{dynamic.ttml-%{i}} --outputITT %{dynamic.itt-%{i}}
+                                -t %{dynamic.ttml-%{i}} -o %{dynamic.itt-%{i}}
                             </dynamicParameter>
 
                             <execOnce name="convert_ttml_to_itt">

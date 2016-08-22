@@ -16,49 +16,46 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.ttmltostl.inputparameters;
+package com.netflix.subtitles.cli;
 
 /**
- * Describes input TTML file parameters: file - start timecode - end timecode - offset timecode.
- * Created by Alexandr on 5/27/2016.
+ * --ttml option descriptor.
  */
-public class TtmlInDescriptor {
+public class TtmlOption {
+    private String fileName;
+    private long startMS = 0;
+    private long endMS = Long.MAX_VALUE;
+    private long offsetMS = 0;
 
-    private String file = null;
-    private int startMS = 0;
-    private int endMS = 0;
-    private int offsetMS = 0;
-
-    public String getFile() {
-        return file;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setFile(String file) {
-        this.file = file;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
-    public int getStartMS() {
+    public long getStartMS() {
         return startMS;
     }
 
-    public void setStartMS(int startMS) {
+    public void setStartMS(long startMS) {
         this.startMS = startMS;
     }
 
-    public int getEndMS() {
+    public long getEndMS() {
         return endMS;
     }
 
-    public void setEndMS(int endMS) {
+    public void setEndMS(long endMS) {
         this.endMS = endMS;
     }
 
-    public int getOffsetMS() {
+    public long getOffsetMS() {
         return offsetMS;
     }
 
-    public void setOffsetMS(int offsetMS) {
+    public void setOffsetMS(long offsetMS) {
         this.offsetMS = offsetMS;
     }
-
 }
