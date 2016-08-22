@@ -81,7 +81,7 @@ public class SubtitlesAssetProcessor extends AssetProcessor<DataFileType> {
 
         if (duplicate) {
             throw new AssetValidationException(String.format(
-                    "Subtitles locale validation failed. Metadata already contains subtitles for %s locale", locale.getName()));
+                    "Subtitles locale validation failed. Metadata already contains subtitles for %s locale.", locale.getName()));
         }
     }
 }

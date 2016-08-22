@@ -37,6 +37,7 @@ call .\chimera50-no-audio   "%~1\%Chimera50Dir%" %2 %3
 call .\chimera25-cc         "%~1\%Chimera25Dir%" %2 %3
 call .\chimera29-sub        "%~1\%Chimera29Dir%" %2 %3
 call .\chimera29-sub-ext    "%~1\%Chimera29Dir%" %2 %3
+call .\chimera29-sub-segments "%~1\%Chimera29Dir%" %2 %3
 
 :: default as-is full CPLs for all test packages
 call .\chimera23-default    "%~1\%Chimera23Dir%" %2 %3

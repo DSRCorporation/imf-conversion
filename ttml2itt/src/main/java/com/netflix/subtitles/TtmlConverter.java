@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -35,6 +35,7 @@ import com.netflix.subtitles.cli.TtmlConverterCmdLineParser;
 import com.netflix.subtitles.cli.TtmlOption;
 import com.netflix.subtitles.exception.ConvertException;
 import com.netflix.subtitles.exception.ParseException;
+import com.netflix.subtitles.ttml.TtmlParagraphResolver;
 import com.netflix.subtitles.ttml.TtmlTimeConverter;
 import com.netflix.subtitles.ttml.TtmlTimeReducer;
 import java.io.File;
@@ -127,6 +128,13 @@ public final class TtmlConverter {
         }
 
         try {
+            converter.resolveParagraphTimeOverlaps();
+        } catch (Exception e) {
+            System.err.println(String.format("Input file/s cannot be converted to itt. %s", e.getLocalizedMessage()));
+            System.exit(-1);
+        }
+
+        try {
             converter.writeToFile();
         } catch (Exception e) {
             System.err.println(String.format("Output iTT file cannot be saved. %s", e.getLocalizedMessage()));
@@ -160,7 +168,7 @@ public final class TtmlConverter {
 
         startMsg = "Start converting " + mergeMsg + " of "
                 + parsedParams.getTtmlOptions().stream()
-                        .map(TtmlOption::getFileName).collect(Collectors.joining(", ", "[", "]")) + fileMsg;
+                .map(TtmlOption::getFileName).collect(Collectors.joining(", ", "[", "]")) + fileMsg;
         System.out.println(startMsg);
     }
 
@@ -306,6 +314,10 @@ public final class TtmlConverter {
                         firstDiv.getBlockClass().add(p);
                     });
         });
+    }
+
+    public void resolveParagraphTimeOverlaps() {
+        new TtmlParagraphResolver(mergedItt).resolveTimeOverlaps();
     }
 
     /**
