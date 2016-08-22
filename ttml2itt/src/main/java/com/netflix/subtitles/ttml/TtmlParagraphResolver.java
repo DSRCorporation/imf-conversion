@@ -19,9 +19,8 @@
 package com.netflix.subtitles.ttml;
 
 import com.netflix.imfutility.util.ConversionHelper;
-import com.netflix.imfutility.xml.XmlParser;
-import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.subtitles.exception.ConvertException;
+import com.netflix.subtitles.exception.ParseException;
 import com.netflix.subtitles.util.SplitUtils;
 import com.netflix.subtitles.util.SplitUtils.Slice;
 import com.netflix.subtitles.util.SplitUtils.SliceBuilder;
@@ -33,18 +32,18 @@ import org.w3.ns.ttml.TtEltype;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.util.JAXBSource;
 import javax.xml.namespace.QName;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.netflix.subtitles.TtmlConverterConstants.TTML_PACKAGES;
-import static com.netflix.subtitles.TtmlConverterConstants.TTML_SCHEMA;
 
 /**
  * Class to resolve TTML paragraphs &lt;p&gt; in accordance with iTT format.
@@ -53,10 +52,6 @@ public class TtmlParagraphResolver {
 
     private final TtEltype tt;
     private final BigFraction frameRate;
-
-    public TtmlParagraphResolver(File ttmlFile) throws FileNotFoundException, XmlParsingException {
-        this(XmlParser.parse(ttmlFile, new String[]{TTML_SCHEMA}, TTML_PACKAGES, TtEltype.class));
-    }
 
     public TtmlParagraphResolver(TtEltype tt) {
         this.tt = tt;
@@ -70,7 +65,7 @@ public class TtmlParagraphResolver {
     public void resolveTimeOverlaps() {
         DivEltype div = tt.getBody().getDiv().stream()
                 .findFirst()
-                .orElseThrow(() -> new ConvertException("At least one <div> must be defined"));
+                .orElseThrow(() -> new ConvertException("At least one <div> must be defined."));
 
         List<PEltype> sliced = split(pStream(div.getBlockClass()))
                 .map(this::merge)
@@ -90,10 +85,9 @@ public class TtmlParagraphResolver {
     }
 
     private PEltype merge(Slice<PEltype> slice) {
-        PEltype p = deepCopy(slice.getContents().stream()
-                        .findFirst()
-                        .orElseThrow(() -> new ConvertException("At least one <p> must be defined")),
-                PEltype.class);
+        PEltype p = copy(slice.getContents().stream()
+                .findFirst()
+                .orElseThrow(() -> new ConvertException("At least one <p> must exist for content.")));
         p.setBegin(ConversionHelper.msToSmpteTimecode(slice.getBegin(), frameRate));
         p.setEnd(ConversionHelper.msToSmpteTimecode(slice.getEnd(), frameRate));
         p.getContent().clear();
@@ -113,14 +107,40 @@ public class TtmlParagraphResolver {
                 .map(PEltype.class::cast);
     }
 
-    private static <T> T deepCopy(T object, Class<T> clazz) {
+    private PEltype copy(PEltype p) {
+        List<Object> styles = new ArrayList<>(p.getStyle());
+        Object region = p.getRegion();
+
+        p.getStyle().clear();
+        p.setRegion(null);
+
+        PEltype targetP = deepCopy(p, PEltype.class, TTML_PACKAGES);
+
+        p.getStyle().addAll(styles);
+        p.setRegion(region);
+
+        targetP.getStyle().addAll(styles);
+        targetP.setRegion(region);
+
+        return targetP;
+    }
+
+    private static <T> T deepCopy(T object, Class<T> clazz, String packages) {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(TTML_PACKAGES);
-            JAXBElement<T> contentObject = new JAXBElement<T>(new QName(clazz.getSimpleName()), clazz, object);
-            JAXBSource source = new JAXBSource(jaxbContext, contentObject);
-            return jaxbContext.createUnmarshaller().unmarshal(source, clazz).getValue();
+            JAXBContext jaxbContext = JAXBContext.newInstance(packages);
+
+            //  create marshaller which disable validation step
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setEventHandler(event -> true);
+
+            //  create unmarshaller which disable validation step
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            unmarshaller.setEventHandler(event -> true);
+
+            JAXBElement<T> contentObject = new JAXBElement<>(new QName(clazz.getName()), clazz, object);
+            return unmarshaller.unmarshal(new JAXBSource(marshaller, contentObject), clazz).getValue();
         } catch (JAXBException e) {
-            throw new RuntimeException(e);
+            throw new ParseException("Time overlaps in <p> cannot be resolved.", e);
         }
     }
 }

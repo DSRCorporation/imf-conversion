@@ -20,23 +20,22 @@ package com.netflix.subtitles.util;
 
 import org.w3.ns.ttml.BodyEltype;
 import org.w3.ns.ttml.DivEltype;
-import org.w3.ns.ttml.HeadEltype;
 import org.w3.ns.ttml.PEltype;
-import org.w3.ns.ttml.StyleEltype;
-import org.w3.ns.ttml.StylingEltype;
 import org.w3.ns.ttml.TtEltype;
 
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.stream.Stream;
 
 /**
  * Test utils for ttml needs.
  */
-public class TtmlUtils {
+public final class TtmlUtils {
 
-    public static PEltype createP(String begin, String end, String content) {
+    private TtmlUtils() {
+    }
+
+    public static PEltype createP(String begin, String end, Serializable content) {
         PEltype p = new PEltype();
         p.setBegin(begin);
         p.setEnd(end);
@@ -44,7 +43,7 @@ public class TtmlUtils {
         return p;
     }
 
-    public static PEltype createPWithRegionAndStyle(String begin, String end, String content, String region, String style) {
+    public static PEltype createPWithRegionAndStyle(String begin, String end, Serializable content, Object region, Object style) {
         PEltype p = createP(begin, end, content);
         p.setRegion(region);
         p.getStyle().add(style);
@@ -63,20 +62,6 @@ public class TtmlUtils {
         tt.setFrameRate(new BigInteger("30"));
         tt.setFrameRateMultiplier("1000 1001");
         return tt;
-    }
-
-    public static void ensureFakeStylesCreated(TtEltype tt, String... styles) {
-        StylingEltype styling = new StylingEltype();
-        Stream.of(styles).map(style -> {
-            StyleEltype styleEl = new StyleEltype();
-            styleEl.setId(style);
-            return styleEl;
-        }).forEach(styling.getStyle()::add);
-
-        HeadEltype head = new HeadEltype();
-        head.setStyling(styling);
-
-        tt.setHead(head);
     }
 
     public static String getPBegin(Object obj) {

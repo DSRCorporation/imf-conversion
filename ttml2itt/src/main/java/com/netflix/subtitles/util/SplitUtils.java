@@ -114,7 +114,7 @@ public final class SplitUtils {
     }
 
     /**
-     * Slice interval that contains merged contents, for all overlapped intervals.
+     * Sliced interval that contains merged contents, for all overlapped intervals.
      *
      * @param <T> content type.
      */

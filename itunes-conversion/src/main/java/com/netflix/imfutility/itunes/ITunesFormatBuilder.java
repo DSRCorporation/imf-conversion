@@ -503,7 +503,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         try {
             processSubtitles(subtitles);
         } catch (AssetValidationException e) {
-            logger.warn("Subtitles procession failed.", e);
+            logger.warn("Subtitles processing failed: {}", e.getMessage());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

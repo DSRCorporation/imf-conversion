@@ -560,7 +560,7 @@
                                 <dynamicParameter name="concatTtml" concat="true" concatWhitespace="true">
                                     -t
                                     %{seq.num}-%{segm.num}-%{resource.num}.xml
-                                    <!--%{resource.offsetMS} %{resource.startTimeMS} %{resource.endTimeMS}-->
+                                    %{resource.offsetMS} %{resource.startTimeMS} %{resource.endTimeMS}
                                 </dynamicParameter>
                             </execEachSegment>
 

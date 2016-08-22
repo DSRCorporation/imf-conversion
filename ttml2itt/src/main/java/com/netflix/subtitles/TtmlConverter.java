@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -22,25 +22,19 @@ import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import static com.netflix.subtitles.TtmlConverterConstants.TTML_PACKAGES;
-import static com.netflix.subtitles.TtmlConverterConstants.TTML_SCHEMA;
-import static com.netflix.subtitles.TtmlConverterConstants.TTML_TO_ITT_TRANSFORMATION;
-import static com.netflix.subtitles.TtmlConverterConstants.XSLT2_TRANSFORMER_IMPLEMENTATION;
 import com.netflix.subtitles.cli.TtmlConverterCmdLineParams;
 import com.netflix.subtitles.cli.TtmlConverterCmdLineParser;
 import com.netflix.subtitles.cli.TtmlOption;
 import com.netflix.subtitles.exception.ConvertException;
 import com.netflix.subtitles.exception.ParseException;
+import com.netflix.subtitles.ttml.TtmlParagraphResolver;
 import com.netflix.subtitles.ttml.TtmlTimeConverter;
 import com.netflix.subtitles.ttml.TtmlTimeReducer;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.w3.ns.ttml.DivEltype;
+import org.w3.ns.ttml.ObjectFactory;
+import org.w3.ns.ttml.PEltype;
+import org.w3.ns.ttml.TtEltype;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -52,10 +46,19 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
-import org.w3.ns.ttml.DivEltype;
-import org.w3.ns.ttml.ObjectFactory;
-import org.w3.ns.ttml.PEltype;
-import org.w3.ns.ttml.TtEltype;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.netflix.subtitles.TtmlConverterConstants.TTML_PACKAGES;
+import static com.netflix.subtitles.TtmlConverterConstants.TTML_SCHEMA;
+import static com.netflix.subtitles.TtmlConverterConstants.TTML_TO_ITT_TRANSFORMATION;
+import static com.netflix.subtitles.TtmlConverterConstants.XSLT2_TRANSFORMER_IMPLEMENTATION;
 
 /**
  * Validates TTML against iTT specification and converts to iTT format in simple cases.
@@ -111,6 +114,13 @@ public final class TtmlConverter {
         }
 
         try {
+            converter.resolveParagraphTimeOverlaps();
+        } catch (Exception e) {
+            System.err.println(String.format("Input file/s cannot be converted to itt. %s", e.getLocalizedMessage()));
+            System.exit(-1);
+        }
+
+        try {
             converter.writeToFile();
         } catch (Exception e) {
             System.err.println(String.format("Output iTT file cannot be saved. %s", e.getLocalizedMessage()));
@@ -144,7 +154,7 @@ public final class TtmlConverter {
 
         startMsg = "Start converting " + mergeMsg + " of "
                 + parsedParams.getTtmlOptions().stream()
-                        .map(TtmlOption::getFileName).collect(Collectors.joining(", ", "[", "]")) + fileMsg;
+                .map(TtmlOption::getFileName).collect(Collectors.joining(", ", "[", "]")) + fileMsg;
         System.out.println(startMsg);
     }
 
@@ -252,6 +262,10 @@ public final class TtmlConverter {
                         firstDiv.getBlockClass().add(p);
                     });
         });
+    }
+
+    public void resolveParagraphTimeOverlaps() {
+        new TtmlParagraphResolver(mergedItt).resolveTimeOverlaps();
     }
 
     /**

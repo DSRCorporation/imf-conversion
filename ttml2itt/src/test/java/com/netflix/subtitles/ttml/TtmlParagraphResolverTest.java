@@ -19,7 +19,6 @@
 package com.netflix.subtitles.ttml;
 
 import com.netflix.subtitles.util.TtmlUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3.ns.ttml.PEltype;
 import org.w3.ns.ttml.TtEltype;
@@ -175,14 +174,12 @@ public class TtmlParagraphResolverTest {
         assertArrayEquals(new Serializable[]{"p1"}, TtmlUtils.getPContent(iterator.next()));
     }
 
-    @Ignore
     @Test
     public void testStyleAndRegionsMerge() {
         PEltype p1 = TtmlUtils.createPWithRegionAndStyle("00:00:01:00", "00:00:08:00", "p1", "region1", "style1");
         PEltype p2 = TtmlUtils.createPWithRegionAndStyle("00:00:03:00", "00:00:10:00", "p2", "region2", "style2");
-        PEltype p3 = TtmlUtils.createP("00:00:08:00", "00:00:12:00", "p2");
-        TtEltype tt = TtmlUtils.wrapPs(p1, p2);
-        TtmlUtils.ensureFakeStylesCreated(tt, "style1", "style2");
+        PEltype p3 = TtmlUtils.createP("00:00:08:00", "00:00:12:00", "p3");
+        TtEltype tt = TtmlUtils.wrapPs(p1, p2, p3);
 
         new TtmlParagraphResolver(tt).resolveTimeOverlaps();
 
@@ -204,7 +201,8 @@ public class TtmlParagraphResolverTest {
         iterator = tt.getBody().getDiv().get(0).getBlockClass().iterator();
         assertArrayEquals(new Serializable[]{"p1"}, TtmlUtils.getPContent(iterator.next()));
         assertArrayEquals(new Serializable[]{"p1", "p2"}, TtmlUtils.getPContent(iterator.next()));
-        assertArrayEquals(new Serializable[]{"p2"}, TtmlUtils.getPContent(iterator.next()));
+        assertArrayEquals(new Serializable[]{"p2", "p3"}, TtmlUtils.getPContent(iterator.next()));
+        assertArrayEquals(new Serializable[]{"p3"}, TtmlUtils.getPContent(iterator.next()));
 
         iterator = tt.getBody().getDiv().get(0).getBlockClass().iterator();
         assertEquals("region1", TtmlUtils.getPRegion(iterator.next()));
@@ -215,7 +213,7 @@ public class TtmlParagraphResolverTest {
         iterator = tt.getBody().getDiv().get(0).getBlockClass().iterator();
         assertArrayEquals(new Object[]{"style1"}, TtmlUtils.getPStyle(iterator.next()));
         assertArrayEquals(new Object[]{"style1"}, TtmlUtils.getPStyle(iterator.next()));
-        assertArrayEquals(new Object[]{"style1"}, TtmlUtils.getPStyle(iterator.next()));
+        assertArrayEquals(new Object[]{"style2"}, TtmlUtils.getPStyle(iterator.next()));
         assertArrayEquals(new Object[]{}, TtmlUtils.getPStyle(iterator.next()));
     }
 
