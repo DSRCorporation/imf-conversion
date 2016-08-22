@@ -30,7 +30,11 @@ public final class TtmlConverterConstants {
 
     public static final String XSLT2_TRANSFORMER_IMPLEMENTATION = "net.sf.saxon.TransformerFactoryImpl";
     public static final String TTML_TO_ITT_TRANSFORMATION = "xslt/ttml2itt.xsl";
+    public static final String REPLACE_STYLE_ID_TRANSFORMATION = "xslt/replace-style-ref.xsl";
+    public static final String OLD_STYLE_ID_PARAMETER = "oldStyleId";
+    public static final String NEW_STYLE_ID_PARAMETER = "newStyleId";
 
+    public static final String STYLE_FIELD = "style";
 
     private TtmlConverterConstants() {
     }
