@@ -212,6 +212,10 @@ task copyInstall(type: Copy) {
     into 'install'
 }
 
+clean {
+    delete 'install'
+}
+
 copyDistr.dependsOn(subprojects.build)
 copyInstall.dependsOn(':imf-conversion-utility:installDist')
 build.finalizedBy(copyDistr, copyInstall)
