@@ -18,7 +18,11 @@
  */
 package com.netflix.imfutility.itunes.util;
 
+import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
+import com.netflix.imfutility.xml.XmlParsingException;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 
 /**
@@ -51,5 +55,9 @@ public class MetadataUtils {
 
     public static File getBrokenMetadataXml() throws URISyntaxException {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/broken/broken-test-metadata.xml").toURI());
+    }
+
+    public static MetadataXmlProvider createMetadataXmlProvider(File file) throws XmlParsingException, FileNotFoundException {
+        return new MetadataXmlProvider("vendor_id", file);
     }
 }

@@ -26,7 +26,6 @@ import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.DestTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
@@ -46,6 +45,7 @@ import com.netflix.imfutility.itunes.destcontext.InputDestContextResolveStrategy
 import com.netflix.imfutility.itunes.destcontext.NameDestContextResolveStrategy;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
+import com.netflix.imfutility.itunes.locale.LocaleValidator;
 import com.netflix.imfutility.itunes.mediainfo.SimpleMediaInfoBuilder;
 import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider;
 import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider.AudioOption;
@@ -67,6 +67,7 @@ import org.w3.ns.ttml.TtEltype;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.ASPECT_RATIO;
@@ -74,6 +75,8 @@ import static com.netflix.imfutility.conversion.templateParameter.context.parame
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.FRAME_RATE;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.INTERLACED;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.SAMPLE_RATE;
+import static com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters.LANGUAGE;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEFAULT_LOCALE;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_AUDIO_SAMPLES_PER_FRAME;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_END_BLACK_FRAME_COUNT;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_IFRAME_RATE;
@@ -152,32 +155,34 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
     @Override
     protected void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException {
-        // parse audiomap and add audio parameters if audio exist
-        if (contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO) > 0) {
-            parseAudioMapAndAddParameters(iTunesInputParameters.getAudiomapFile(), contextProvider);
-            logger.info("AudioMap XML has been parsed sucessfully.");
+        // load, parse and validate metadata.xml (or generate default)
+        initMetadata();
 
+        // load, parse and validate audiomap.xml (or generate default) and add audio parameters if audio exist
+        if (contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO) > 0) {
+            initAudioMap();
+
+            buildAudiomapParameters();
             buildSilenceExprParameters();
         }
 
         buildSubtitleInputParameters();
+
+        resolveLocales();
     }
 
     @Override
     protected void preConvert() throws IOException, XmlParsingException {
-        // 1. creating [vendor-id].itmsp output directory
+        // creating [vendor-id].itmsp output directory
         createItmspDir();
 
-        // 2. load, parse and validate metadata.xml
-        loadMetadata();
-
-        // 3. process additional assets (poster, chapters, trailer)
+        // process additional assets (poster, chapters, trailer)
         processAdditionalAssets();
     }
 
     @Override
     protected void postConvert() throws IOException, XmlParsingException {
-        //  process main source
+        // process main source
         processMainSource();
 
         // process additional audios (if exists)
@@ -186,7 +191,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         // process subtitles (if exists)
         processSubtitles();
 
-        metadataXmlProvider.saveMetadata(itmspDir.getName());
+        metadataXmlProvider.saveMetadata(itmspDir);
     }
 
     @Override
@@ -270,24 +275,86 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         dynamicContext.addParameter(DYNAMIC_PARAM_IS_OSX, Boolean.toString(SystemUtils.IS_OS_MAC_OSX));
     }
 
-    private void loadMetadata() throws IOException, XmlParsingException {
+    // Locales resolving
+
+    private void resolveLocales() {
+        boolean hasAudio = contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO) > 0;
+
+        //  get locale from audiomap or metadata
+        //  print warning (if both exist and differ)
+        if (hasAudio) {
+
+            if (metadataXmlProvider.isCustomized() && audioMapXmlProvider.isCustomized()) {
+                if (!Objects.equals(metadataXmlProvider.getLocale(), audioMapXmlProvider.getLocale())) {
+                    logger.warn("Locales set in metadata.xml and audiomap.xml don't match.");
+                }
+                return;
+            }
+
+            if (metadataXmlProvider.isCustomized()) {
+                audioMapXmlProvider.setLocale(metadataXmlProvider.getLocale());
+                return;
+            }
+
+            if (audioMapXmlProvider.isCustomized()) {
+                metadataXmlProvider.setLocale(audioMapXmlProvider.getLocale());
+                return;
+            }
+        }
+
+        if (!hasAudio && metadataXmlProvider.isCustomized()) {
+            return;
+        }
+
+        //  get locale from context or use fallback-locale, if can't get from context
+        String locale = resolveContextLocale();
+        if (locale == null) {
+            locale = resolveFallbackLocale();
+        }
+
+        LocaleValidator.validateLocale(locale);
+
+        metadataXmlProvider.setLocale(locale);
+        if (hasAudio) {
+            audioMapXmlProvider.setLocale(locale);
+        }
+    }
+
+    private String resolveContextLocale() {
+        SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
+        return sequenceContext.getUuids(SequenceType.AUDIO).stream()
+                .map(uuid -> new ContextInfoBuilder()
+                        .setSequenceType(SequenceType.AUDIO)
+                        .setSequenceUuid(uuid)
+                        .build())
+                .findFirst()
+                .filter(contextInfo -> sequenceContext.hasSequenceParameter(LANGUAGE, contextInfo))
+                .map(contextInfo -> sequenceContext.getParameterValue(LANGUAGE, contextInfo))
+                .orElse(null);
+    }
+
+    private String resolveFallbackLocale() {
+        String fallbackLocale = iTunesInputParameters.getCmdLineArgs().getFallbackLocale();
+        return StringUtils.isBlank(fallbackLocale) ? DEFAULT_LOCALE : fallbackLocale;
+    }
+
+    private void initMetadata() throws IOException, XmlParsingException {
         File metadataFile = iTunesInputParameters.getMetadataFile();
         String vendorId = iTunesInputParameters.getCmdLineArgs().getVendorId();
-        String locale = iTunesInputParameters.getCmdLineArgs().getFallbackLocale();
 
-        metadataXmlProvider = metadataFile == null
-                ? new MetadataXmlProvider(inputParameters.getWorkingDirFile(), MetadataXmlProvider.generateSampleMetadata())
-                : new MetadataXmlProvider(inputParameters.getWorkingDirFile(), metadataFile);
-        metadataXmlProvider.updateMetadata(vendorId, locale);
+        metadataXmlProvider = new MetadataXmlProvider(vendorId, metadataFile);
+    }
+
+    private void initAudioMap() throws IOException, XmlParsingException {
+        File audiomapFile = iTunesInputParameters.getAudiomapFile();
+
+        audioMapXmlProvider = new AudioMapXmlProvider(audiomapFile, contextProvider);
     }
 
     //  Audio processing
 
-    private void parseAudioMapAndAddParameters(File audiomapFile, TemplateParameterContextProvider contextProvider)
-            throws XmlParsingException, FileNotFoundException {
-
+    private void buildAudiomapParameters() throws XmlParsingException, FileNotFoundException {
         int[] i = {0};
-        audioMapXmlProvider = new AudioMapXmlProvider(audiomapFile, contextProvider);
 
         // add dynamic parameters
         // mainAudio
@@ -452,7 +519,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         File destSource = new File(contextProvider.getWorkingDir(), dynamicContext.getParameterValueAsString(DYNAMIC_PARAM_DEST_SOURCE));
 
         new SourceAssetProcessor(metadataXmlProvider, itmspDir)
-                .setLocale(metadataXmlProvider.getDefaultLocale())
+                .setLocale(MetadataXmlProvider.getLocale(audioMapXmlProvider.getLocale()))
                 .process(destSource);
     }
 
@@ -478,7 +545,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         File audio = new File(inputParameters.getWorkingDirFile(), audioOption.getFileName());
 
         new AudioAssetProcessor(metadataXmlProvider, itmspDir)
-                .setLocale(metadataXmlProvider.getLocale(audioOption.getLocale()))
+                .setLocale(MetadataXmlProvider.getLocale(audioOption.getLocale()))
                 .process(audio);
     }
 

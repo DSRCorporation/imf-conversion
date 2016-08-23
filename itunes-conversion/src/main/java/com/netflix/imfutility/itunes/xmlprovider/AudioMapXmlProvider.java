@@ -36,8 +36,26 @@ import com.netflix.imfutility.generated.itunes.audiomap.Option3Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option4Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option5Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option6Type;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEFAULT_AUDIO_MAP_FILE;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_AUDIOMAP_FILE;
+import com.netflix.imfutility.util.StreamUtil;
+import com.netflix.imfutility.xml.XmlParser;
+import com.netflix.imfutility.xml.XmlParsingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEFAULT_LOCALE;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.GEN_ADDITIONAL_SEQ_UUID;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.GEN_MAIN_SEQ_UUID;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.MONO_CHANNELS;
@@ -52,28 +70,11 @@ import static com.netflix.imfutility.util.FFmpegAudioChannels.FR;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.LFE;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.SL;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.SR;
-import com.netflix.imfutility.util.StreamUtil;
-import com.netflix.imfutility.xml.XmlParser;
-import com.netflix.imfutility.xml.XmlParsingException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Basic functionality for audiomap.xml handling.
  */
-public final class AudioMapXmlProvider {
+public class AudioMapXmlProvider implements LocalizedXmlProvider {
 
     /**
      * Internal. Describes AudioOption of iTunes audio asset configuration.
@@ -98,6 +99,7 @@ public final class AudioMapXmlProvider {
             this.locale = locale;
         }
     }
+
     /**
      * Audio channel map: channelName -> CPL Virtual Track mapping.
      */
@@ -113,6 +115,8 @@ public final class AudioMapXmlProvider {
      * Logger.
      */
     private final Logger logger = LoggerFactory.getLogger(AudioMapXmlProvider.class);
+
+    private final boolean customized;
     /**
      * Context provider.
      */
@@ -235,47 +239,58 @@ public final class AudioMapXmlProvider {
     }
 
     /**
-     * Constructor with default generated audiomap.xml.
+     * Constructor with default generated AudioMap.
      *
      * @param contextProvider context provider
      * @throws FileNotFoundException if audioMapFile not found
-     * @throws XmlParsingException if audiomap.xml is not validated by schema
+     * @throws XmlParsingException   if audiomap.xml is not validated by schema
      */
     public AudioMapXmlProvider(TemplateParameterContextProvider contextProvider)
-        throws FileNotFoundException, XmlParsingException {
+            throws FileNotFoundException, XmlParsingException {
         this(null, contextProvider);
     }
 
     /**
      * Constructor.
      *
-     * @param audioMapFile audio map file
      * @param contextProvider context provider
+     * @param audiomapFile    audio map file
      * @throws FileNotFoundException if audioMapFile not found
-     * @throws XmlParsingException if audiomap.xml is not validated by schema
+     * @throws XmlParsingException   if audiomap.xml is not validated by schema
      */
-    public AudioMapXmlProvider(File audioMapFile, TemplateParameterContextProvider contextProvider)
+    public AudioMapXmlProvider(File audiomapFile, TemplateParameterContextProvider contextProvider)
             throws FileNotFoundException, XmlParsingException {
 
+        this.customized = audiomapFile != null;
         this.contextProvider = contextProvider;
 
         this.virtualTracksChannels = getVirtualTrackChannels();
         this.sequencedTrackChannelNumbers = getSequencedTrackChannelNumbers(this.virtualTracksChannels);
 
-        if (audioMapFile == null) {
-            logger.warn(
-                    "No audiomap.xml specified as a command line argument. A default audiomap.xml will be generated.");
+        this.audioMap = customized ? loadAudioMapXml(audiomapFile) : generateDerfaultAudioMapXml();
 
-            audioMapFile = generateDerfaultAudioMapXml();
-
-            // add as dynamic parameter to delete at the end.
-            contextProvider.getDynamicContext().addParameter(DYNAMIC_AUDIOMAP_FILE,
-                    audioMapFile.getAbsolutePath(), true);
+        if (customized) {
+            logger.info("AudioMap XML has been parsed successfully.");
+        } else {
+            logger.warn("No audiomap.xml specified as a command line argument. A default AudioMap was generated.");
         }
 
-        this.audioMap = loadAudioMapXml(audioMapFile);
         this.mainAudio = getMainAudio(this.audioMap);
         this.alternativesAudio = getAlternativeAudios(this.audioMap);
+    }
+
+    @Override
+    public void setLocale(String locale) {
+        mainAudio.setLocale(locale);
+    }
+
+    @Override
+    public String getLocale() {
+        return mainAudio.getLocale();
+    }
+
+    public boolean isCustomized() {
+        return customized;
     }
 
     /**
@@ -450,7 +465,7 @@ public final class AudioMapXmlProvider {
     /**
      * Gets intermediate key from track id and channel number -> trackId:channelNumber.
      *
-     * @param trackId track id
+     * @param trackId       track id
      * @param channelNumber channel number
      * @return intermediate key from track id and channel number -> trackId:channelNumber
      */
@@ -483,29 +498,18 @@ public final class AudioMapXmlProvider {
     }
 
     /**
-     * Generates a default audiomap.xml file basis on information of CPL virtual tracks.
+     * Generates a default audiomap basis on information of CPL virtual tracks.
      *
-     * @return audiomap.xml File
+     * @return audiomap.
      */
-    private File generateDerfaultAudioMapXml() {
-        return generateDerfaultAudioMapXml(DEFAULT_AUDIO_MAP_FILE);
-    }
-
-    /**
-     * Generates a default audiomap.xml file basis on information of CPL virtual tracks.
-     *
-     * @param filePath file to generate
-     * @return audiomap.xml File
-     */
-    private File generateDerfaultAudioMapXml(String filePath) {
-        File audiomapFile = new File(contextProvider.getWorkingDir(), filePath);
-        AudioMapType newAudioMap = new AudioMapType();
+    private AudioMapType generateDerfaultAudioMapXml() {
+        AudioMapType audioMap = new AudioMapType();
         Object generatedOption = (sequencedTrackChannelNumbers.size() < 6) ? new Option6Type() : new Option3Type();
         ArrayList<ChannelType> channels = createGeneratedChannels(generatedOption);
 
-        newAudioMap.setMainAudio(new MainAudioType());
-        newAudioMap.getMainAudio().setLocale("en-US");
-        newAudioMap.getMainAudio().setName("main-audio.mov");
+        audioMap.setMainAudio(new MainAudioType());
+        audioMap.getMainAudio().setLocale(DEFAULT_LOCALE);
+        audioMap.getMainAudio().setName("main-audio.mov");
         if (generatedOption instanceof Option6Type) {
             Option6Type opt6 = (Option6Type) generatedOption;
             opt6.setTrack1(new Option6Type.Track1());
@@ -513,7 +517,7 @@ public final class AudioMapXmlProvider {
             opt6.getTrack1().setL(channels.get(0));
             opt6.getTrack1().setR(channels.get(1));
 
-            newAudioMap.getMainAudio().setOption6(opt6);
+            audioMap.getMainAudio().setOption6(opt6);
         } else { // size is 8
             Option3Type opt3 = (Option3Type) generatedOption;
             opt3.setTrack1(new Option3Type.Track1());
@@ -529,22 +533,10 @@ public final class AudioMapXmlProvider {
             opt3.getTrack2().setLt(channels.get(6));
             opt3.getTrack2().setRt(channels.get(7));
 
-            newAudioMap.getMainAudio().setOption3(opt3);
+            audioMap.getMainAudio().setOption3(opt3);
         }
 
-        JAXBContext jaxbContext;
-        try {
-            jaxbContext = JAXBContext.newInstance(AudioMapType.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            JAXBElement<AudioMapType> audioMapJaxb = new ObjectFactory().createAudiomap(newAudioMap);
-            jaxbMarshaller.marshal(audioMapJaxb, audiomapFile);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
-
-        return audiomapFile;
+        return audioMap;
     }
 
     /**
@@ -579,7 +571,7 @@ public final class AudioMapXmlProvider {
             return options;
         }
 
-        audioMap.getAlternativeAudio().stream().forEach((altAudio) -> {
+        audioMap.getAlternativeAudio().forEach((altAudio) -> {
             AudioOption option;
             Object xmlOpt = getXmlAlternativeAudioOption(altAudio);
 
@@ -655,6 +647,7 @@ public final class AudioMapXmlProvider {
 
     /**
      * Verify OptionXXX and throw ConversionException on error.
+     *
      * @param opt parsed Option
      */
     private void verifyOption(Object opt) {

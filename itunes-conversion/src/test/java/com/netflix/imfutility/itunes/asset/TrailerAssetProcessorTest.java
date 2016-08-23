@@ -73,7 +73,8 @@ public class TrailerAssetProcessorTest {
         assertTrue(asset.exists());
         assertTrue(asset.isFile());
 
-        AssetType trailerAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
+        // first asset always must be full
+        AssetType trailerAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(1);
         assertEquals(AssetTypeType.PREVIEW, trailerAsset.getType());
 
         DataFileType trailerDataFile = trailerAsset.getDataFile().get(0);

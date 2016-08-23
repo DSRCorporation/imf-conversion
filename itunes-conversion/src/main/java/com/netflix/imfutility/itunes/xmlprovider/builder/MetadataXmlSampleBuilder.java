@@ -34,7 +34,6 @@ import com.netflix.imfutility.generated.itunes.metadata.ProductsType;
 import com.netflix.imfutility.generated.itunes.metadata.RatingSystemType;
 import com.netflix.imfutility.generated.itunes.metadata.RatingType;
 import com.netflix.imfutility.generated.itunes.metadata.RatingsType;
-import com.netflix.imfutility.generated.itunes.metadata.TitleType;
 import com.netflix.imfutility.generated.itunes.metadata.VideoType;
 import com.netflix.imfutility.generated.itunes.metadata.VideoTypeSubType;
 import com.netflix.imfutility.generated.itunes.metadata.VideoTypeType;
@@ -70,7 +69,7 @@ public final class MetadataXmlSampleBuilder {
 
     //  Video
 
-    public static VideoType buildVideo() throws DatatypeConfigurationException {
+    private static VideoType buildVideo() throws DatatypeConfigurationException {
         VideoType video = new VideoType();
         video.setType(VideoTypeType.FILM);
         video.setSubtype(VideoTypeSubType.FEATURE);
@@ -92,7 +91,7 @@ public final class MetadataXmlSampleBuilder {
 
     //  Genres
 
-    public static GenresType buildGenres() {
+    private static GenresType buildGenres() {
         GenresType genres = new GenresType();
         genres.getGenre().add(GenreType.CLASSICS);
         return genres;
@@ -100,13 +99,13 @@ public final class MetadataXmlSampleBuilder {
 
     // Ratings
 
-    public static RatingsType buildRatings() {
+    private static RatingsType buildRatings() {
         RatingsType ratings = new RatingsType();
         ratings.getRating().add(buildRating());
         return ratings;
     }
 
-    public static RatingType buildRating() {
+    private static RatingType buildRating() {
         RatingType rating = new RatingType();
         rating.setSystem(RatingSystemType.MPAA);
         rating.setValue("G");
@@ -115,13 +114,13 @@ public final class MetadataXmlSampleBuilder {
 
     //  Cast
 
-    public static CastType buildCast() {
+    private static CastType buildCast() {
         CastType cast = new CastType();
         cast.getCastMember().add(buildCastMember());
         return cast;
     }
 
-    public static CastMemberType buildCastMember() {
+    private static CastMemberType buildCastMember() {
         CastMemberType castMember = new CastMemberType();
         castMember.setBilling(BillingType.TOP);
         castMember.setDisplayName("Required cast member display name");
@@ -131,13 +130,13 @@ public final class MetadataXmlSampleBuilder {
 
     //  Crew
 
-    public static CrewType buildCrew() {
+    private static CrewType buildCrew() {
         CrewType crew = new CrewType();
         crew.getCrewMember().add(buildCrewMember());
         return crew;
     }
 
-    public static CrewMemberType buildCrewMember() {
+    private static CrewMemberType buildCrewMember() {
         CrewMemberType crewMember = new CrewMemberType();
         crewMember.setBilling(BillingType.TOP);
         crewMember.setDisplayName("Required crew member name");
@@ -145,7 +144,7 @@ public final class MetadataXmlSampleBuilder {
         return crewMember;
     }
 
-    public static CrewRolesType buildCrewRoles() {
+    private static CrewRolesType buildCrewRoles() {
         CrewRolesType crewRoles = new CrewRolesType();
         crewRoles.getRole().add(CrewRoleType.DIRECTOR);
         return crewRoles;
@@ -153,26 +152,17 @@ public final class MetadataXmlSampleBuilder {
 
     // Products
 
-    public static ProductsType buildProducts() {
+    private static ProductsType buildProducts() {
         ProductsType products = new ProductsType();
         products.getProduct().add(buildProduct());
         return products;
     }
 
-    public static ProductType buildProduct() {
+    private static ProductType buildProduct() {
         ProductType product = new ProductType();
         product.setTerritory(WWType.WW.value());
         product.setClearedForSale(true);
         return product;
-    }
-
-    // Title
-
-    public static TitleType buildTitle() {
-        TitleType title = new TitleType();
-        title.setLocale("en-US");
-        title.setValue("Required title");
-        return title;
     }
 
     private static XMLGregorianCalendar getTodayDateWithClearedTimezone() throws DatatypeConfigurationException {

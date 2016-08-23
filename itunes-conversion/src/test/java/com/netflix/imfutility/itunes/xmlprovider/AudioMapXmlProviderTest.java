@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -29,25 +29,27 @@ import com.netflix.imfutility.generated.itunes.audiomap.AudioMapType;
 import com.netflix.imfutility.generated.itunes.audiomap.ChannelType;
 import com.netflix.imfutility.generated.itunes.audiomap.Option3Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option6Type;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.GEN_ADDITIONAL_SEQ_UUID;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.GEN_MAIN_SEQ_UUID;
 import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider.AudioOption;
-import static com.netflix.imfutility.util.FFmpegAudioChannels.FC;
-import static com.netflix.imfutility.util.FFmpegAudioChannels.FL;
-import static com.netflix.imfutility.util.FFmpegAudioChannels.FR;
-import static com.netflix.imfutility.util.FFmpegAudioChannels.LFE;
-import static com.netflix.imfutility.util.FFmpegAudioChannels.SL;
-import static com.netflix.imfutility.util.FFmpegAudioChannels.SR;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xml.XmlParsingException;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.stream.Stream;
+
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.GEN_ADDITIONAL_SEQ_UUID;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.GEN_MAIN_SEQ_UUID;
+import static com.netflix.imfutility.util.FFmpegAudioChannels.FC;
+import static com.netflix.imfutility.util.FFmpegAudioChannels.FL;
+import static com.netflix.imfutility.util.FFmpegAudioChannels.FR;
+import static com.netflix.imfutility.util.FFmpegAudioChannels.LFE;
+import static com.netflix.imfutility.util.FFmpegAudioChannels.SL;
+import static com.netflix.imfutility.util.FFmpegAudioChannels.SR;
 import static junit.framework.TestCase.assertEquals;
-import org.junit.Test;
 
 /**
  * <ul>
@@ -1172,6 +1174,22 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         assertEquals(0, audioMap.getAlternativeAudio().size());
     }
 
+    @Test
+    public void testUpdateLocale() throws Exception {
+        /* PREPARATION */
+        String seq1 = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711";
+        TemplateParameterContextProvider contextProvider =
+                TemplateParameterContextCreator.createDefaultContextProvider();
+        prepareCplVirtualTracksWithChannels(contextProvider, trackChannels(seq1, 1));
+
+        /* EXECUTION */
+        AudioMapXmlProvider provider = new AudioMapXmlProvider(contextProvider);
+        provider.setLocale("fr-CA");
+
+        /* VALIDATION */
+        assertEquals("fr-CA", provider.getMainAudio().getLocale());
+    }
+
     private static File getAudiomapXml(String path) throws URISyntaxException {
         return new File(ClassLoader.getSystemClassLoader().getResource(path).toURI());
     }
@@ -1185,8 +1203,9 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         assertEquals(chNumber, actualCh.getCPLVirtualTrackChannel());
     }
 
-    private void prepareCplVirtualTracksWithChannels(TemplateParameterContextProvider contextProvider,
-                                                     SimpleEntry<String, Integer>... entries) {
+    @SafeVarargs
+    private final void prepareCplVirtualTracksWithChannels(TemplateParameterContextProvider contextProvider,
+                                                           SimpleEntry<String, Integer>... entries) {
         SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
         Stream.of(entries).forEach((e) -> {
                     sequenceContext.initSequence(SequenceType.AUDIO, SequenceUUID.create(e.getKey())); // as in test-audiomap.xml

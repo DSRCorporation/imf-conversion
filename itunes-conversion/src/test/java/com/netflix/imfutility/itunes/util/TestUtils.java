@@ -19,6 +19,7 @@
 package com.netflix.imfutility.itunes.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
@@ -31,5 +32,23 @@ public class TestUtils {
 
     public static File getTestFile() throws URISyntaxException {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/test-file").toURI());
+    }
+
+    public static File createFile(File dir, String name) throws IOException {
+        File file = new File(dir, name);
+        if (!file.createNewFile()) {
+            throw new IOException(String.format("Cannot create test file %s", file.getAbsolutePath()));
+        }
+        file.deleteOnExit();
+        return file;
+    }
+
+    public static File createDirectory(File dir, String name) throws IOException {
+        File destDir = new File(dir, name);
+        if (!destDir.mkdir()) {
+            throw new IOException(String.format("Cannot create test directory %s", destDir.getAbsolutePath()));
+        }
+        destDir.deleteOnExit();
+        return destDir;
     }
 }

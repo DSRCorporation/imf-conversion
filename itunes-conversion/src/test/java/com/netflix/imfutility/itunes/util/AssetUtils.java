@@ -21,9 +21,10 @@ package com.netflix.imfutility.itunes.util;
 import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
 import com.netflix.imfutility.generated.mediainfo.FormatType;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
-import com.netflix.imfutility.util.TemplateParameterContextCreator;
+import com.netflix.imfutility.xml.XmlParsingException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -63,33 +64,14 @@ public final class AssetUtils {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/scc/cc_no_signature.scc").toURI());
     }
 
-    public static MetadataXmlProvider createMetadataXmlProvider() {
-        return new MetadataXmlProvider(TemplateParameterContextCreator.getWorkingDir(),
-                MetadataXmlProvider.generateSampleMetadata());
+    public static MetadataXmlProvider createMetadataXmlProvider() throws FileNotFoundException, XmlParsingException {
+        return new MetadataXmlProvider("vendor_id", null);
     }
 
     public static LocaleType createLocale(String language) {
         LocaleType locale = new LocaleType();
         locale.setName(language);
         return locale;
-    }
-
-    public static File createFile(File dir, String name) throws IOException {
-        File file = new File(dir, name);
-        if (!file.createNewFile()) {
-            throw new IOException(String.format("Cannot create test file %s", file.getAbsolutePath()));
-        }
-        file.deleteOnExit();
-        return file;
-    }
-
-    public static File createDirectory(File dir, String name) throws IOException {
-        File destDir = new File(dir, name);
-        if (!destDir.mkdir()) {
-            throw new IOException(String.format("Cannot create test directory %s", destDir.getAbsolutePath()));
-        }
-        destDir.deleteOnExit();
-        return destDir;
     }
 
     public static FormatType createCorrectVideoFormat() {

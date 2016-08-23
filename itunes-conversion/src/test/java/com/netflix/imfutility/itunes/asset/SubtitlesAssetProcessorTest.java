@@ -24,6 +24,7 @@ import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
 import com.netflix.imfutility.itunes.util.AssetUtils;
+import com.netflix.imfutility.itunes.util.TestUtils;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.apache.commons.io.FileUtils;
@@ -66,9 +67,9 @@ public class SubtitlesAssetProcessorTest {
     }
 
     @Before
-    public void setup() throws IOException {
-        destDir = AssetUtils.createDirectory(TemplateParameterContextCreator.getWorkingDir(), "destDir");
-        inputAsset = AssetUtils.createFile(TemplateParameterContextCreator.getWorkingDir(), "subtitles");
+    public void setup() throws Exception {
+        destDir = TestUtils.createDirectory(TemplateParameterContextCreator.getWorkingDir(), "destDir");
+        inputAsset = TestUtils.createFile(TemplateParameterContextCreator.getWorkingDir(), "subtitles");
 
         metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
     }
@@ -122,7 +123,7 @@ public class SubtitlesAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testDuplicateLocales() throws Exception {
-        File anotherInputAsset = AssetUtils.createFile(TemplateParameterContextCreator.getWorkingDir(), "anotherSubtitles");
+        File anotherInputAsset = TestUtils.createFile(TemplateParameterContextCreator.getWorkingDir(), "anotherSubtitles");
 
         SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(metadataXmlProvider, destDir);
 

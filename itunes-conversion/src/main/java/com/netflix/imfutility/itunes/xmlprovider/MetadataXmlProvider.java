@@ -35,7 +35,6 @@ import com.netflix.imfutility.generated.itunes.metadata.TerritoriesType;
 import com.netflix.imfutility.itunes.xmlprovider.builder.MetadataXmlSampleBuilder;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBContext;
@@ -49,6 +48,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEFAULT_METADATA_FILENAME;
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.METADATA_PACKAGE;
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.METADATA_XML_SCHEME;
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.METADATA_XML_STRICT_SCHEME;
@@ -56,19 +56,18 @@ import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.METADAT
 /**
  * Provides functionality to generate empty metadata.xml for iTunes format.
  */
-public class MetadataXmlProvider {
+public class MetadataXmlProvider implements LocalizedXmlProvider {
 
+    private final boolean customized;
     private final PackageType packageType;
-    private final File workingDir;
 
-    public MetadataXmlProvider(File workingDir, File metadataFile) throws FileNotFoundException, XmlParsingException {
-        this.workingDir = workingDir;
-        this.packageType = loadMetadata(metadataFile);
-    }
+    public MetadataXmlProvider(String vendorId, File metadataFile) throws FileNotFoundException, XmlParsingException {
+        this.customized = metadataFile != null;
+        this.packageType = customized ? loadMetadata(metadataFile) : generateSampleMetadata();
 
-    public MetadataXmlProvider(File workingDir, PackageType packageType) {
-        this.workingDir = workingDir;
-        this.packageType = packageType;
+        this.packageType.getVideo().setVendorId(vendorId);
+        ensureChaptersCreated();
+        ensureFullAssetCreated();
     }
 
     private PackageType loadMetadata(File metadataFile) throws FileNotFoundException, XmlParsingException {
@@ -77,6 +76,21 @@ public class MetadataXmlProvider {
                     "Invalid metadata.xml file: '%s' not found", metadataFile.getAbsolutePath()));
         }
         return XmlParser.parse(metadataFile, new String[]{METADATA_XML_SCHEME}, METADATA_PACKAGE, PackageType.class);
+    }
+
+    @Override
+    public void setLocale(String locale) {
+        packageType.setLanguage(locale);
+        packageType.getVideo().setOriginalSpokenLocale(locale);
+    }
+
+    @Override
+    public String getLocale() {
+        return packageType.getLanguage();
+    }
+
+    public boolean isCustomized() {
+        return customized;
     }
 
     /**
@@ -89,51 +103,12 @@ public class MetadataXmlProvider {
     }
 
     /**
-     * Get basic language specified in metadata.
-     *
-     * @return basic language
-     */
-    public String getLanguage() {
-        return packageType.getLanguage();
-    }
-
-
-    /**
      * Get default locale based on language set in language tag.
      *
      * @return default locale
      */
     public LocaleType getDefaultLocale() {
         return getLocale(packageType.getLanguage());
-    }
-
-    /**
-     * Get default locale based on provided language.
-     *
-     * @return locale
-     */
-    public LocaleType getLocale(String language) {
-        LocaleType locale = new LocaleType();
-        locale.setName(language);
-        return locale;
-    }
-
-    /**
-     * Update metadata info. Set specified vendorId and locale (if not empty).
-     * Ensures creating empty chapters section and asset with for full-type asset.
-     *
-     * @param vendorId vendor identifier
-     * @param locale   locale
-     */
-    public void updateMetadata(String vendorId, String locale) {
-        packageType.getVideo().setVendorId(vendorId);
-
-        if (!StringUtils.isBlank(locale)) {
-            packageType.setLanguage(locale);
-        }
-
-        ensureChaptersCreated();
-        ensureFullAssetCreated();
     }
 
     //  Chapters processing
@@ -212,19 +187,24 @@ public class MetadataXmlProvider {
      * Within marshalling metadata will be validated by strict schema.
      * Assets and chapters full info is required.
      *
-     * @param path a path to destination dir relative to working dir
+     * @param dir a directory to save metadata
      * @return metadata.xml file
      */
-    public File saveMetadata(String path) {
-        File relativeDir = new File(workingDir, path);
-        if (!relativeDir.exists()) {
-            if (!relativeDir.mkdir()) {
-                throw new ConversionException(String.format("Couldn't create %s directory for metadata!", relativeDir));
-            }
-        }
-        File file = new File(relativeDir, "metadata.xml");
+    public File saveMetadata(File dir) {
+        File file = new File(dir, DEFAULT_METADATA_FILENAME);
         marshallMetadata(packageType, METADATA_XML_STRICT_SCHEME, file);
         return file;
+    }
+
+    /**
+     * Get locale based on provided language.
+     *
+     * @return locale
+     */
+    public static LocaleType getLocale(String language) {
+        LocaleType locale = new LocaleType();
+        locale.setName(language);
+        return locale;
     }
 
     /**
@@ -252,7 +232,7 @@ public class MetadataXmlProvider {
         try {
             return MetadataXmlSampleBuilder.buildPackage();
         } catch (DatatypeConfigurationException e) {
-            throw new RuntimeException(e);
+            throw new ConversionException("Sample metadata.xml cannot be generated.", e);
         }
     }
 

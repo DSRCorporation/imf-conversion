@@ -20,8 +20,8 @@ package com.netflix.imfutility.itunes.metadata;
 
 import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.itunes.util.MetadataUtils;
+import com.netflix.imfutility.itunes.util.TestUtils;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
-import com.netflix.imfutility.itunes.xmlprovider.builder.MetadataXmlSampleBuilder;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.apache.commons.io.FileUtils;
@@ -33,9 +33,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import static com.netflix.imfutility.itunes.util.MetadataUtils.createMetadataXmlProvider;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertNull;
+
 
 /**
  * Tests parsing and processing metadata.xml.
@@ -58,8 +60,16 @@ public class MetadataXmlProviderTest {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
     }
 
-    private MetadataXmlProvider createMetadataXmlProvider(File file) throws XmlParsingException, FileNotFoundException {
-        return new MetadataXmlProvider(TemplateParameterContextCreator.getWorkingDir(), file);
+    @Test
+    public void testGenerateDefaultMetadata() throws Exception {
+        MetadataXmlProvider provider = createMetadataXmlProvider(null);
+
+        assertNotNull(provider.getPackageType());
+        assertNotNull(provider.getPackageType().getProvider());
+        assertNotNull(provider.getPackageType().getLanguage());
+        assertNotNull(provider.getPackageType().getVideo());
+
+        assertEquals("vendor_id", provider.getPackageType().getVideo().getVendorId());
     }
 
     @Test
@@ -73,9 +83,8 @@ public class MetadataXmlProviderTest {
 
         assertNull(provider.getPackageType().getVideo().getLocales());
 
-        assertEquals("09736156444", provider.getPackageType().getVideo().getVendorId());
+        assertEquals("vendor_id", provider.getPackageType().getVideo().getVendorId());
     }
-
 
     @Test
     public void testParseCorrectMultipleLocaleMetadata() throws Exception {
@@ -142,34 +151,29 @@ public class MetadataXmlProviderTest {
     public void testSaveCorrectMetadata() throws Exception {
         MetadataXmlProvider provider = createMetadataXmlProvider(MetadataUtils.getCorrectMetadataXml());
 
-        new File(TemplateParameterContextCreator.getWorkingDir(), "vendor_id").mkdir();
+        File itmspDir = TestUtils.createDirectory(TemplateParameterContextCreator.getWorkingDir(), "correct.itmsp");
 
-        assertEquals(new File(TemplateParameterContextCreator.getWorkingDir(), "vendor_id/metadata.xml"), provider.saveMetadata("vendor_id"));
+        assertEquals(new File(itmspDir, "metadata.xml"), provider.saveMetadata(itmspDir));
+        assertEquals(AssetTypeType.FULL, provider.getPackageType().getVideo().getAssets().getAsset().get(0).getType());
     }
 
     @Test(expected = RuntimeException.class)
     public void testSaveIncorrectMetadata() throws Exception {
-        MetadataXmlProvider provider = new MetadataXmlProvider(TemplateParameterContextCreator.getWorkingDir(),
-                MetadataXmlSampleBuilder.buildPackage());
+        MetadataXmlProvider provider = createMetadataXmlProvider(null);
 
-        new File(TemplateParameterContextCreator.getWorkingDir(), "vendor_id").mkdir();
+        File itmspDir = TestUtils.createDirectory(TemplateParameterContextCreator.getWorkingDir(), "incorrect.itmsp");
 
         // sample package will fail strict validation
-        provider.saveMetadata("vendor_id");
+        provider.saveMetadata(itmspDir);
     }
 
     @Test
-    public void testUpdateMetadata() throws Exception {
-        MetadataXmlProvider provider = new MetadataXmlProvider(TemplateParameterContextCreator.getWorkingDir(),
-                MetadataXmlSampleBuilder.buildPackage());
+    public void testUpdateLocale() throws Exception {
+        MetadataXmlProvider provider = new MetadataXmlProvider("vendor_id", null);
 
-        provider.updateMetadata("vendor_id", "fr-CA");
+        provider.setLocale("fr-CA");
 
         assertEquals("fr-CA", provider.getPackageType().getLanguage());
-        assertEquals("vendor_id", provider.getPackageType().getVideo().getVendorId());
-
-        assertNotNull(provider.getPackageType().getVideo().getChapters());
-        assertNotNull(provider.getPackageType().getVideo().getAssets().getAsset());
-        assertEquals(AssetTypeType.FULL, provider.getPackageType().getVideo().getAssets().getAsset().get(0).getType());
+        assertEquals("fr-CA", provider.getPackageType().getVideo().getOriginalSpokenLocale());
     }
 }
