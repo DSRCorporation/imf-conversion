@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <package xmlns="http://apple.com/itunes/importer" version="film5.0">
     <provider>Required company</provider>
-    <language>en-US</language>
+    <language>fr-CA</language>
     <video>
         <type>film</type>
         <subtype>feature</subtype>
         <vendor_id>000000000000</vendor_id>
-        <country>US</country>
-        <original_spoken_locale>en-US</original_spoken_locale>
+        <country>CA</country>
+        <original_spoken_locale>fr-CA</original_spoken_locale>
         <title>Required title</title>
         <synopsis>Required synopsis</synopsis>
         <production_company>Required company</production_company>

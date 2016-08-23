@@ -23,7 +23,7 @@
         for iTunes audio first source always should be as main audio source
         one track containing all Surround channels; Matrix Stereo with Lt and Rt channels in one track (Option 3)
     -->
-    <mainAudio locale="en-US" name="main-audio.mov">
+    <mainAudio locale="de-DE" name="main-audio.mov">
         <Option6/>
     </mainAudio>
 
