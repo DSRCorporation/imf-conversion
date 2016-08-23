@@ -18,16 +18,37 @@
  */
 package com.netflix.subtitles.ttml;
 
+import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.util.ConversionHelper;
+import static com.netflix.subtitles.TtmlConverterConstants.STYLE_FIELD;
+import static com.netflix.subtitles.TtmlConverterConstants.TTML_PACKAGES;
+import static com.netflix.subtitles.TtmlConverterConstants.XSLT2_TRANSFORMER_IMPLEMENTATION;
+import com.netflix.subtitles.exception.ConvertException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.util.JAXBResult;
+import javax.xml.bind.util.JAXBSource;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamSource;
+import org.w3.ns.ttml.BodyEltype;
 import org.w3.ns.ttml.DivEltype;
+import org.w3.ns.ttml.ObjectFactory;
 import org.w3.ns.ttml.PEltype;
 import org.w3.ns.ttml.TtEltype;
 
 /**
  * Incapsulate time reduce functionality for timed texts objects.
  */
-public final class TtmlTimeReducer {
+public final class TtmlUtils {
 
     /**
      * Reduce timed objects according to start and end and normalize timeExpressions according to virtual track times.
@@ -99,6 +120,103 @@ public final class TtmlTimeReducer {
     }
 
     /**
+     * Moves all style refs from boby and div to corresponding p element for easiest merging.
+     *
+     * @param tt root timed object
+     */
+    public static void moveStyleRefToP(TtEltype tt) {
+        Set<Object> styles = new HashSet<>(tt.getBody().getStyle());
+
+        // set style to null, workaround for JAXB objects else style list will be just empty (invalid ttml)
+        BodyEltype body = tt.getBody();
+        body.getStyle().clear();
+        setStyleListToNull(body);
+
+        tt.getBody().getDiv().stream()
+                .peek((div) -> {
+                    styles.addAll(div.getStyle());
+                    div.getStyle().clear();
+                    setStyleListToNull(div);
+                })
+                .flatMap((div) -> div.getBlockClass().stream())
+                .filter((o) -> o instanceof PEltype)
+                .map((o) -> (PEltype) o)
+                .forEachOrdered((p) -> {
+                    styles.addAll(p.getStyle());
+                    p.getStyle().clear();
+                    p.getStyle().addAll(styles);
+                });
+    }
+
+    /**
+     * Creates specific for TTML document JAXB context object.
+     *
+     * @return specific for TTML document JAXB context object
+     * @throws JAXBException
+     */
+    public static JAXBContext createTtmlJaxbContext() throws JAXBException {
+        return JAXBContext.newInstance(TTML_PACKAGES);
+    }
+
+    /**
+     * Creates specific for TTML document transformer.
+     *
+     * @param xslt xsl transformation file/resource
+     * @return specific for TTML document transformer
+     */
+    public static Transformer createTtmlTransformer(String xslt) {
+        TransformerFactory tf = TransformerFactory.newInstance(XSLT2_TRANSFORMER_IMPLEMENTATION, null);
+        InputStream transformationStream = ResourceHelper.getResourceInputStream(xslt);
+        if (transformationStream == null) {
+            throw new ConvertException(String.format("The transformation file is absent: %s", xslt));
+        }
+
+        try {
+            return tf.newTransformer(new StreamSource(transformationStream));
+        } catch (TransformerConfigurationException e) {
+            throw new ConvertException(e);
+        }
+    }
+
+    /**
+     * Does TTML document transformation to another TTML document.
+     *
+     * @param tt source TTML document root element
+     * @param transformer transformer
+     * @return TTML document after transformation
+     */
+    public static TtEltype transformTtmlDocument(TtEltype tt, Transformer transformer) {
+        JAXBElement<TtEltype> ttJaxb = new ObjectFactory().createTt(tt);
+        try {
+            JAXBContext jaxbc = createTtmlJaxbContext();
+            JAXBSource source = new JAXBSource(jaxbc, ttJaxb);
+            JAXBResult result = new JAXBResult(jaxbc);
+
+            // transform
+            transformer.transform(source, result);
+
+            return (TtEltype) ((JAXBElement<TtEltype>) result.getResult()).getValue();
+        } catch (JAXBException | TransformerException e) {
+            throw new ConvertException(e);
+        }
+    }
+
+    /**
+     * Sets NULL value of style references list for div and body element.
+     *
+     * @param obj div or body element
+     */
+    private static void setStyleListToNull(Object obj) {
+        try {
+            Field field = obj.getClass().getDeclaredField(STYLE_FIELD);
+            field.setAccessible(true);
+            field.set(obj, null);
+        } catch (Exception e) {
+            // ignore exceptions
+        }
+    }
+
+    /**
      * Gets correct value of ending point of a temporal interval.
      * <p><p/>
      * Note: if both end and dur attributes are specified in the element then ending point is equal to the lesser of the
@@ -118,6 +236,9 @@ public final class TtmlTimeReducer {
         return Math.min(b + d, e);
     }
 
-    private TtmlTimeReducer() {
+    /**
+     * Constructor.
+     */
+    private TtmlUtils() {
     }
 }
