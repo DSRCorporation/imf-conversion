@@ -24,6 +24,7 @@ import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
 import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
 import com.netflix.imfutility.itunes.util.AssetUtils;
+import com.netflix.imfutility.itunes.util.TestUtils;
 import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.apache.commons.io.FileUtils;
@@ -66,9 +67,9 @@ public class AudioAssetProcessorTest {
     }
 
     @Before
-    public void setup() throws IOException {
-        destDir = AssetUtils.createDirectory(TemplateParameterContextCreator.getWorkingDir(), "destDir");
-        inputAsset = AssetUtils.createFile(TemplateParameterContextCreator.getWorkingDir(), "audio");
+    public void setup() throws Exception {
+        destDir = TestUtils.createDirectory(TemplateParameterContextCreator.getWorkingDir(), "destDir");
+        inputAsset = TestUtils.createFile(TemplateParameterContextCreator.getWorkingDir(), "audio");
 
         metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
     }

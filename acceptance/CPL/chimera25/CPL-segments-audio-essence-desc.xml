@@ -86,6 +86,7 @@
                         <r1:MCALinkID>urn:uuid:ba6730d5-f1bd-4dfe-bf17-f8af0fa84d70</r1:MCALinkID>
                         <r1:MCATagSymbol>sgST</r1:MCATagSymbol>
                         <r1:MCATagName>Standard Stereo</r1:MCATagName>
+                        <r1:RFC5646SpokenLanguage>en-GB</r1:RFC5646SpokenLanguage>
                     </r0:SoundfieldGroupLabelSubDescriptor>
                     <r0:AudioChannelLabelSubDescriptor>
                         <r1:InstanceID>urn:uuid:d7688e0a-24b0-4ac0-c074-8e9a6d7b7fdf</r1:InstanceID>

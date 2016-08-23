@@ -29,6 +29,10 @@ public final class ITunesConversionConstants {
     // conversion.xml location
     public static final String CONVERSION_XML = "xml/itunes-conversion.xml";
 
+    // common constants
+    public static final String DEFAULT_LOCALE = "en-US";
+    public static final String DEFAULT_METADATA_FILENAME = "metadata.xml";
+
     // common dynamic parameters:
     public static final String DYNAMIC_PARAM_TTML_TO_ITT = "ttml-to-itt";
     public static final String DYNAMIC_PARAM_OUTPUT_ITMSP = "outputItmsp";
@@ -56,10 +60,7 @@ public final class ITunesConversionConstants {
     public static final int SURROUND51_CHANNELS = 6;
     public static final int SURROUND51_DOWNMIX_CHANNELS = 8;
 
-    public static final String DEFAULT_AUDIO_MAP_FILE = "audiomap.xml";
-
     // audio dynamic parameters
-    public static final String DYNAMIC_AUDIOMAP_FILE = "itunesAudioMap";
     public static final String DYNAMIC_PAN_PARAMETER_PREFIX = "panParameter";
     public static final String DYNAMIC_ADDITIONAL_AUDIO_TRACKS_PREFIX = "additionalAudioTracks";
     public static final String DYNAMIC_ADDITIONAL_AUDIO_PREFIX = "additionalAudio";

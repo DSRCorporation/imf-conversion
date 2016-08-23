@@ -20,6 +20,7 @@ package com.netflix.imfutility.itunes.xmlprovider.builder;
 
 import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
 import com.netflix.imfutility.generated.itunes.metadata.ChaptersInputType;
+import com.netflix.imfutility.generated.itunes.metadata.TitleType;
 
 /**
  * Builder for creating sample chapters specified for iTunes.
@@ -41,8 +42,15 @@ public final class ChaptersXmlSampleBuilder {
     public static ChapterInputType buildInputChapter() {
         ChapterInputType chapter = new ChapterInputType();
         chapter.setStartTime("00:00:00");
-        chapter.setTitle(MetadataXmlSampleBuilder.buildTitle());
+        chapter.setTitle(buildTitle());
         chapter.setFileName("chapter01.jpg");
         return chapter;
+    }
+
+    private static TitleType buildTitle() {
+        TitleType title = new TitleType();
+        title.setLocale("en-US");
+        title.setValue("Required title");
+        return title;
     }
 }

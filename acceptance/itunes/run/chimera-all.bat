@@ -11,21 +11,26 @@ SET Chimera50Dir=Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV
 @echo on
 
 :: short versions
-call .\chimera25-short              "%~1\%Chimera25Dir%" %2 %3
-call .\chimera25-short-metadata     "%~1\%Chimera25Dir%" %2 %3
-call .\chimera25-short-add-assets   "%~1\%Chimera25Dir%" %2 %3
+call .\chimera25-short      "%~1\%Chimera25Dir%" %2 %3
+call .\chimera50-short      "%~1\%Chimera50Dir%" %2 %3
+
+:: formats
 call .\chimera25-short-formats      "%~1\%Chimera25Dir%" %2 %3
-call .\chimera50-short              "%~1\%Chimera50Dir%" %2 %3
 
 :: 2016 namespace
 :: use only with switched off imf validation
 ::call .\chimera25-2016-namespace     "%~1\%Chimera25Dir%" %2 %3
 
 :: CPLs with tricky segments
-call .\chimera25-segments   "%~1\%Chimera25Dir%" %2 %3
+call .\chimera25-segments                       "%~1\%Chimera25Dir%" %2 %3
+call .\chimera25-segments-audio-essence-desc    "%~1\%Chimera25Dir%" %2 %3
 
-:: audiomap
-call .\chimera25-audiomap   "%~1\%Chimera25Dir%" %2 %3
+:: custom audiomap, metadata, additional assets, fallback-locale
+call .\chimera25-audiomap           "%~1\%Chimera25Dir%" %2 %3
+call .\chimera25-metadata           "%~1\%Chimera25Dir%" %2 %3
+call .\chimera25-audiomap-metadata  "%~1\%Chimera25Dir%" %2 %3
+call .\chimera25-add-assets         "%~1\%Chimera25Dir%" %2 %3
+call .\chimera25-locale             "%~1\%Chimera25Dir%" %2 %3
 
 :: no audio/video/CC
 call .\chimera50-no-audio   "%~1\%Chimera50Dir%" %2 %3
