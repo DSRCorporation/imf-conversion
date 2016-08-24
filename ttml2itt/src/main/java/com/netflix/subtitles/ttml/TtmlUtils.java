@@ -142,9 +142,10 @@ public final class TtmlUtils {
                 .filter((o) -> o instanceof PEltype)
                 .map((o) -> (PEltype) o)
                 .forEachOrdered((p) -> {
-                    styles.addAll(p.getStyle());
+                    Set<Object> pStyles = new HashSet<>(styles);
+                    pStyles.addAll(p.getStyle());
                     p.getStyle().clear();
-                    p.getStyle().addAll(styles);
+                    p.getStyle().addAll(pStyles);
                 });
     }
 
