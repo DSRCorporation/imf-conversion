@@ -20,8 +20,6 @@ package com.netflix.subtitles.ttml;
 
 import static com.netflix.subtitles.TtmlConverterConstants.STYLE_FIELD;
 import com.netflix.subtitles.util.PBuilder;
-import static com.netflix.subtitles.util.TtmlTestUtils.createP;
-import static com.netflix.subtitles.util.TtmlTestUtils.createPWithRegionAndStyle;
 import static com.netflix.subtitles.util.TtmlTestUtils.createStyle;
 import static com.netflix.subtitles.util.TtmlTestUtils.getPBegin;
 import static com.netflix.subtitles.util.TtmlTestUtils.getPEnd;

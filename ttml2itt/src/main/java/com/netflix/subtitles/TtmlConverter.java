@@ -297,6 +297,14 @@ public final class TtmlConverter {
         XmlParser.parse(outputFile, new String[]{TTML_SCHEMA}, TTML_PACKAGES, TtEltype.class);
     }
 
+    /**
+     * Gets converted itt documents. For test purposes.
+     * @return converted itt documents
+     */
+    List<TtEltype> getConvertedItts() {
+        return convertedItts;
+    }
+
     private boolean isStyleInList(StyleEltype st, List<StyleEltype> stylesList) {
         return stylesList.stream().anyMatch((l) -> {
             return l.getId().equals(st.getId())
