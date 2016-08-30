@@ -18,29 +18,29 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
-import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
-import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
+import com.netflix.imfutility.itunes.asset.bean.Asset;
+import com.netflix.imfutility.itunes.asset.bean.AssetRole;
+import com.netflix.imfutility.itunes.asset.bean.AssetType;
+import com.netflix.imfutility.itunes.asset.builder.DefaultAssetBuilder;
 import com.netflix.imfutility.itunes.asset.distribute.MoveAssetStrategy;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
-import com.netflix.imfutility.itunes.xmlprovider.builder.file.DataFileTagBuilder;
+import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 
 import java.io.File;
-import java.util.function.Predicate;
+import java.util.Locale;
 
 /**
  * Asset processor specified for subtitles managing.
  */
-public class SubtitlesAssetProcessor extends AssetProcessor<DataFileType> {
-    private LocaleType locale;
+public class SubtitlesAssetProcessor extends AssetProcessor<Asset> {
 
-    public SubtitlesAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
+    private Locale locale;
+
+    public SubtitlesAssetProcessor(MetadataXmlProvider<?> metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
         setDistributeAssetStrategy(new MoveAssetStrategy());
     }
 
-    public SubtitlesAssetProcessor setLocale(LocaleType locale) {
+    public SubtitlesAssetProcessor setLocale(Locale locale) {
         this.locale = locale;
         return this;
     }
@@ -56,32 +56,25 @@ public class SubtitlesAssetProcessor extends AssetProcessor<DataFileType> {
     }
 
     @Override
-    protected DataFileType buildMetadata(File assetFile) {
-        return new DataFileTagBuilder(assetFile, getDestFileName(assetFile))
+    protected Asset buildAsset(File assetFile) {
+        return new DefaultAssetBuilder(assetFile, getDestFileName(assetFile))
+                .setType(AssetType.FULL)
+                .setRole(AssetRole.SUBTITLES)
                 .setLocale(locale)
-                .setRole(DataFileRoleType.SUBTITLES)
                 .build();
     }
 
     @Override
-    protected void appendMetadata(DataFileType tag) {
-        metadataXmlProvider.appendAssetDataFile(tag, AssetTypeType.FULL);
-    }
-
-    @Override
     protected String getDestFileName(File assetFile) {
-        return "subtitles_" + locale.getName().replace("-", "_").toUpperCase() + ".itt";
+        return "subtitles_" + locale.toString().replace("-", "_").toUpperCase() + ".itt";
     }
 
     private void validateDuplicateLocales() {
-        boolean duplicate = metadataXmlProvider.getFullAssetDataFilesByRole(DataFileRoleType.SUBTITLES).stream()
-                .map(DataFileType::getLocale)
-                .map(LocaleType::getName)
-                .anyMatch(Predicate.isEqual(locale.getName()));
+        boolean duplicate = metadataXmlProvider.getLocalesByRole(AssetRole.SUBTITLES).contains(locale);
 
         if (duplicate) {
             throw new AssetValidationException(String.format(
-                    "Subtitles locale validation failed. Metadata already contains subtitles for %s locale.", locale.getName()));
+                    "Subtitles locale validation failed. Metadata already contains subtitles for %s locale.", locale.getDisplayName()));
         }
     }
 }

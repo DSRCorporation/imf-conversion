@@ -150,7 +150,7 @@ configure(project.xsdJavaSubprojectList) {
         xjc {
             taskClassname = "org.jvnet.jaxb2_commons.xjc.XJC2Task"
             // generatePackages must be specified in xjb bindings
-            args = ["-Xinheritance", "-Xannotate"]
+            args = ["-Xinheritance", "-Xannotate", "-Xsimplify"]
             destinationDir = "src/generated/java"
         }
     }

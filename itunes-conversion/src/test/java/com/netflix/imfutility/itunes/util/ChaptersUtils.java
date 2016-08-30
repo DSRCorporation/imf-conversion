@@ -44,7 +44,9 @@ public final class ChaptersUtils {
 
     public static void createChapterFile(String chapterName) throws IOException {
         File file = new File(chapterName);
-        file.createNewFile();
+        if (!file.createNewFile()) {
+            throw new IOException(String.format("Cannot create test chapter file %s", file.getAbsolutePath()));
+        }
         file.deleteOnExit();
     }
 }

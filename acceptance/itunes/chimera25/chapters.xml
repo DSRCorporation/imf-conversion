@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapters basedir="../chimera25" xmlns="http://netflix.com/imf/itunes/chapters">
+<input_chapters basedir="../chimera25" xmlns="http://netflix.com/imf/itunes/chapters">
     <timecode_format>24/999 1000/nonDrop</timecode_format>
-    <chapter>
+    <input_chapter>
         <start_time>00:00:00:00</start_time>
         <title locale="en-US">Chapter 1</title>
         <file_name>chapter01.jpg</file_name>
-    </chapter>
-    <chapter>
+    </input_chapter>
+    <input_chapter>
         <start_time>00:00:00:10</start_time>
         <title locale="en-US">Chapter 2</title>
         <file_name>chapter02.jpg</file_name>
-    </chapter>
-</chapters>
+    </input_chapter>
+</input_chapters>

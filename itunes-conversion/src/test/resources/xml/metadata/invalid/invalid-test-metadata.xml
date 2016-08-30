@@ -33,8 +33,8 @@
         <title>Forrest Gump</title>
 
 
-        <!-- Invalid! -->
-        <!-- Synopsis required -->
+        <!-- Invalid tag! -->
+        <wrong_tag>Wrong value</wrong_tag>
 
 
         <production_company>Paramount Pictures</production_company>

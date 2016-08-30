@@ -1,33 +1,41 @@
 <bindings xmlns="http://java.sun.com/xml/ns/jaxb"
+      xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+      xmlns:simplify="http://jaxb2-commons.dev.java.net/basic/simplify"
       xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance"
       xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      extensionBindingPrefixes="xjc simplify"
       version="2.1">
 
-    <bindings schemaLocation="../xsd/metadata/iso-3166-1.xsd">
-        <globalBindings typesafeEnumMaxMembers="1024" />
+    <bindings schemaLocation="../xsd/metadata/itunes-metadata.xsd">
+        <bindings schemaLocation="../xsd/metadata/itunes-metadata.xsd">
+            <schemaBindings>
+                <package name="com.netflix.imfutility.generated.itunes.metadata" />
+            </schemaBindings>
+        </bindings>
+
+        <bindings node="xs:complexType[@name='PackageType']/xs:choice/xs:element[@name='metadata_token']">
+            <simplify:as-element-property/>
+        </bindings>
+
+        <bindings node="xs:complexType[@name='Video']/xs:choice/xs:element[@name='title']">
+            <simplify:as-element-property/>
+        </bindings>
+
+        <bindings node="xs:complexType[@name='AssetFile']/xs:choice/xs:element[@name='locale']">
+            <simplify:as-element-property/>
+        </bindings>
+
     </bindings>
 
-    <bindings schemaLocation="../xsd/metadata/iso-3166-1.xsd">
+    <bindings schemaLocation="../xsd/chapters/itunes-chapters.xsd">
         <schemaBindings>
-            <package name="com.netflix.imfutility.generated.itunes.metadata" />
-        </schemaBindings>
-    </bindings>
-
-    <bindings schemaLocation="../xsd/metadata/itunes-strict-metadata.xsd">
-        <schemaBindings>
-            <package name="com.netflix.imfutility.generated.itunes.metadata" />
+            <package name="com.netflix.imfutility.generated.itunes.chapters" />
         </schemaBindings>
     </bindings>
 
     <bindings schemaLocation="../xsd/audiomap/itunes-audiomap.xsd">
         <schemaBindings>
             <package name="com.netflix.imfutility.generated.itunes.audiomap" />
-        </schemaBindings>
-    </bindings>
-
-    <bindings schemaLocation="../xsd/chapters/itunes-chapters.xsd">
-        <schemaBindings>
-            <package name="com.netflix.imfutility.generated.itunes.metadata" />
         </schemaBindings>
     </bindings>
 

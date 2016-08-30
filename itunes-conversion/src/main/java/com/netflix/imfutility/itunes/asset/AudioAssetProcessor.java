@@ -18,29 +18,29 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
-import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
-import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
+import com.netflix.imfutility.itunes.asset.bean.Asset;
+import com.netflix.imfutility.itunes.asset.bean.AssetRole;
+import com.netflix.imfutility.itunes.asset.bean.AssetType;
+import com.netflix.imfutility.itunes.asset.builder.DefaultAssetBuilder;
 import com.netflix.imfutility.itunes.asset.distribute.MoveAssetStrategy;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
-import com.netflix.imfutility.itunes.xmlprovider.builder.file.DataFileTagBuilder;
+import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * Asset processor specified for additional audio managing.
  */
-public class AudioAssetProcessor extends AssetProcessor<DataFileType> {
+public class AudioAssetProcessor extends AssetProcessor<Asset> {
 
-    private LocaleType locale;
+    private Locale locale;
 
-    public AudioAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
+    public AudioAssetProcessor(MetadataXmlProvider<?> metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
         setDistributeAssetStrategy(new MoveAssetStrategy());
     }
 
-    public AudioAssetProcessor setLocale(LocaleType locale) {
+    public AudioAssetProcessor setLocale(Locale locale) {
         this.locale = locale;
         return this;
     }
@@ -56,16 +56,12 @@ public class AudioAssetProcessor extends AssetProcessor<DataFileType> {
     }
 
     @Override
-    protected DataFileType buildMetadata(File assetFile) {
-        return new DataFileTagBuilder(assetFile, getDestFileName(assetFile))
+    protected Asset buildAsset(File assetFile) {
+        return new DefaultAssetBuilder(assetFile, getDestFileName(assetFile))
+                .setType(AssetType.FULL)
+                .setRole(AssetRole.AUDIO)
                 .setLocale(locale)
-                .setRole(DataFileRoleType.AUDIO)
                 .build();
-    }
-
-    @Override
-    protected void appendMetadata(DataFileType tag) {
-        metadataXmlProvider.appendAssetDataFile(tag, AssetTypeType.FULL);
     }
 
     @Override

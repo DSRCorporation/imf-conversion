@@ -19,29 +19,32 @@
 package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.generated.itunes.metadata.AssetType;
-import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
-import com.netflix.imfutility.itunes.util.AssetUtils;
+import com.netflix.imfutility.itunes.asset.bean.AssetRole;
+import com.netflix.imfutility.itunes.asset.bean.AssetType;
+import com.netflix.imfutility.itunes.asset.bean.VideoAsset;
+import com.netflix.imfutility.itunes.util.FakeMetadataXmlProvider;
 import com.netflix.imfutility.itunes.util.TestUtils;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests main source asset processing.
  * (see {@link SourceAssetProcessor}).
  */
 public class SourceAssetProcessorTest {
+
+    private FakeMetadataXmlProvider metadataXmlProvider;
 
     @BeforeClass
     public static void setupAll() throws IOException {
@@ -58,35 +61,38 @@ public class SourceAssetProcessorTest {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
     }
 
+    @Before
+    public void setup() throws Exception {
+        metadataXmlProvider = new FakeMetadataXmlProvider();
+    }
+
     @Test
     public void testCorrectSource() throws Exception {
-        MetadataXmlProvider metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
         SourceAssetProcessor processor = new SourceAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setLocale(AssetUtils.createLocale("en-US"))
+        processor.setLocale(Locale.US)
                 .process(TestUtils.getTestFile());
 
-        AssetType sourceAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
-        assertEquals(AssetTypeType.FULL, sourceAsset.getType());
-
-        DataFileType sourceDataFile = sourceAsset.getDataFile().get(0);
-        assertEquals("test-file", sourceDataFile.getFileName());
-        assertEquals(DataFileRoleType.SOURCE, sourceDataFile.getRole());
-        assertEquals("en-US", sourceDataFile.getLocale().getName());
+        VideoAsset sourceAsset = (VideoAsset) metadataXmlProvider.getRootElement().getAssets().get(0);
+        assertEquals(AssetType.FULL, sourceAsset.getType());
+        assertEquals(AssetRole.SOURCE, sourceAsset.getRole());
+        assertEquals(Locale.US, sourceAsset.getLocale());
+        assertEquals("test-file", sourceAsset.getFileName());
+        assertTrue(sourceAsset.isCropToZero());
     }
 
     @Test(expected = ConversionException.class)
     public void testInvalidPath() throws Exception {
-        SourceAssetProcessor processor = new SourceAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        SourceAssetProcessor processor = new SourceAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setLocale(AssetUtils.createLocale("en-US"))
+        processor.setLocale(Locale.US)
                 .process(new File("invalid_path"));
     }
 
     @Test(expected = AssetValidationException.class)
     public void testParametersNotSet() throws Exception {
-        SourceAssetProcessor processor = new SourceAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        SourceAssetProcessor processor = new SourceAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
         //  locale is required

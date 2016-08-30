@@ -18,16 +18,17 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
-import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
+import com.netflix.imfutility.itunes.asset.bean.Asset;
+import com.netflix.imfutility.itunes.asset.bean.AssetType;
+import com.netflix.imfutility.itunes.asset.builder.DefaultAssetBuilder;
 import com.netflix.imfutility.itunes.asset.distribute.CopyAssetStrategy;
 import com.netflix.imfutility.itunes.image.ImageValidationException;
 import com.netflix.imfutility.itunes.image.ImageValidator;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
-import com.netflix.imfutility.itunes.xmlprovider.builder.file.DataFileTagBuilder;
+import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.io.File;
+import java.util.Locale;
 
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.POSTER_AR_DENOMINATOR;
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.POSTER_AR_NUMERATOR;
@@ -38,11 +39,12 @@ import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.POSTER
 /**
  * Asset processor specified for poster managing.
  */
-public class PosterAssetProcessor extends AssetProcessor<DataFileType> {
+public class PosterAssetProcessor extends AssetProcessor<Asset> {
 
     private String vendorId;
+    private Locale locale;
 
-    public PosterAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
+    public PosterAssetProcessor(MetadataXmlProvider<?> metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
         setDistributeAssetStrategy(new CopyAssetStrategy());
     }
@@ -52,9 +54,14 @@ public class PosterAssetProcessor extends AssetProcessor<DataFileType> {
         return this;
     }
 
+    public PosterAssetProcessor setLocale(Locale locale) {
+        this.locale = locale;
+        return this;
+    }
+
     @Override
     protected boolean checkMandatoryParams() {
-        return vendorId != null;
+        return vendorId != null && locale != null;
     }
 
     @Override
@@ -67,15 +74,12 @@ public class PosterAssetProcessor extends AssetProcessor<DataFileType> {
     }
 
     @Override
-    protected DataFileType buildMetadata(File assetFile) {
-        //  poster do not need locale and role info
-        return new DataFileTagBuilder(assetFile, getDestFileName(assetFile))
+    protected Asset buildAsset(File assetFile) {
+        //  poster do not need role info
+        return new DefaultAssetBuilder(assetFile, getDestFileName(assetFile))
+                .setType(AssetType.ARTWORK)
+                .setLocale(locale)
                 .build();
-    }
-
-    @Override
-    protected void appendMetadata(DataFileType tag) {
-        metadataXmlProvider.appendAssetDataFile(tag, AssetTypeType.ARTWORK);
     }
 
     @Override

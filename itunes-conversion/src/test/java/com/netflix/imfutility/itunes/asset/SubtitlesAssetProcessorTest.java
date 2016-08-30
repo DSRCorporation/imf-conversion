@@ -19,13 +19,11 @@
 package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.generated.itunes.metadata.AssetType;
-import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
-import com.netflix.imfutility.itunes.util.AssetUtils;
+import com.netflix.imfutility.itunes.asset.bean.Asset;
+import com.netflix.imfutility.itunes.asset.bean.AssetRole;
+import com.netflix.imfutility.itunes.asset.bean.AssetType;
+import com.netflix.imfutility.itunes.util.FakeMetadataXmlProvider;
 import com.netflix.imfutility.itunes.util.TestUtils;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -36,10 +34,11 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests subtitles asset processing.
@@ -47,7 +46,7 @@ import static org.junit.Assert.assertFalse;
  */
 public class SubtitlesAssetProcessorTest {
 
-    private MetadataXmlProvider metadataXmlProvider;
+    private FakeMetadataXmlProvider metadataXmlProvider;
     private File destDir;
     private File inputAsset;
 
@@ -71,7 +70,7 @@ public class SubtitlesAssetProcessorTest {
         destDir = TestUtils.createDirectory(TemplateParameterContextCreator.getWorkingDir(), "destDir");
         inputAsset = TestUtils.createFile(TemplateParameterContextCreator.getWorkingDir(), "subtitles");
 
-        metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
+        metadataXmlProvider = new FakeMetadataXmlProvider();
     }
 
     @After
@@ -86,7 +85,7 @@ public class SubtitlesAssetProcessorTest {
     public void testCorrectSubtitles() throws Exception {
         SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(metadataXmlProvider, destDir);
 
-        processor.setLocale(AssetUtils.createLocale("fr-CA"))
+        processor.setLocale(Locale.CANADA_FRENCH)
                 .process(inputAsset);
 
         // input asset must be moved to dest dir
@@ -96,20 +95,18 @@ public class SubtitlesAssetProcessorTest {
         assertTrue(outputAsset.exists());
         assertTrue(outputAsset.isFile());
 
-        AssetType subtitlesAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
-        assertEquals(AssetTypeType.FULL, subtitlesAsset.getType());
-
-        DataFileType subtitlesDataFile = subtitlesAsset.getDataFile().get(0);
-        assertEquals("subtitles_FR_CA.itt", subtitlesDataFile.getFileName());
-        assertEquals(DataFileRoleType.SUBTITLES, subtitlesDataFile.getRole());
-        assertEquals("fr-CA", subtitlesDataFile.getLocale().getName());
+        Asset subtitlesAsset = metadataXmlProvider.getRootElement().getAssets().get(0);
+        assertEquals(AssetType.FULL, subtitlesAsset.getType());
+        assertEquals(AssetRole.SUBTITLES, subtitlesAsset.getRole());
+        assertEquals(Locale.CANADA_FRENCH, subtitlesAsset.getLocale());
+        assertEquals("subtitles_FR_CA.itt", subtitlesAsset.getFileName());
     }
 
     @Test(expected = ConversionException.class)
     public void testInvalidPath() throws Exception {
         SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(metadataXmlProvider, destDir);
 
-        processor.setLocale(AssetUtils.createLocale("en-US"))
+        processor.setLocale(Locale.US)
                 .process(new File("invalid_path"));
     }
 
@@ -128,9 +125,9 @@ public class SubtitlesAssetProcessorTest {
         SubtitlesAssetProcessor processor = new SubtitlesAssetProcessor(metadataXmlProvider, destDir);
 
         //  locale is duplicated
-        processor.setLocale(AssetUtils.createLocale("en-US"))
+        processor.setLocale(Locale.US)
                 .process(inputAsset);
-        processor.setLocale(AssetUtils.createLocale("en-US"))
+        processor.setLocale(Locale.US)
                 .process(anotherInputAsset);
     }
 }

@@ -1,24 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright (C) 2016 Netflix, Inc.
-  ~
-  ~     This file is part of IMF Conversion Utility.
-  ~
-  ~     IMF Conversion Utility is free software: you can redistribute it and/or modify
-  ~     it under the terms of the GNU General Public License as published by
-  ~     the Free Software Foundation, either version 3 of the License, or
-  ~     (at your option) any later version.
-  ~
-  ~     IMF Conversion Utility is distributed in the hope that it will be useful,
-  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~     GNU General Public License for more details.
-  ~
-  ~     You should have received a copy of the GNU General Public License
-  ~     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-
-<package xmlns="http://apple.com/itunes/importer" version="film5.0">
+<package xmlns="http://apple.com/itunes/importer" version="film5.2">
     <provider>Paramount</provider>
     <language>en-US</language>
     <video>
@@ -27,54 +8,62 @@
         <vendor_offer_code>408CH98720X103</vendor_offer_code>
         <vendor_id>09736156444</vendor_id>
         <isan>0000-0000-03B6-0000-O-0000-0000-2</isan>
+        <eidr>10.5240/CFC2-B507-CE22-B3D4-F32F-2</eidr>
         <upc>09736156444</upc>
         <country>US</country>
         <original_spoken_locale>en-US</original_spoken_locale>
         <title>Forrest Gump</title>
-        <synopsis>"Stupid is as stupid does," says Forrest Gump (played by Tom
-            Hanks in an Oscar-winning performance) as he discusses his relative level of
-            intelligence with a stranger while waiting for a bus. Despite his sub-normal IQ,
-            Gump leads a truly charmed life, with a ringside seat for many of the most memorable
-            events of the second half of the 20th century. Featured alongside Tom Hanks are
-            Sally Field as Forrest's mother; Gary Sinise as his commanding officer in Vietnam;
-            Mykelti Williamson as his ill-fated Army buddy who is familiar with every recipe
-            that involves shrimp; and the special effects artists whose digital magic place
-            Forrest amidst a remarkable array of historical events and people.
-        </synopsis>
+        <studio_release_title>Forrest Gump</studio_release_title>
+        <synopsis>"Stupid is as stupid does," says Forrest Gump (played by Tom Hanks in an Oscar-winning performance) as he discusses his relative level of intelligence with a stranger while waiting for a bus. Despite his sub-normal IQ, Gump leads a truly charmed life, with a ringside seat for many of the most memorable events of the second half of the 20th century. Featured alongside Tom Hanks are Sally Field as Forrest's mother; Gary Sinise as his commanding officer in Vietnam; Mykelti Williamson as his ill-fated Army buddy who is familiar with every recipe that involves shrimp; and the special effects artists whose digital magic place Forrest amidst a remarkable array of historical events and people.</synopsis>
         <production_company>Paramount Pictures</production_company>
         <copyright_cline>1994 Paramount Pictures</copyright_cline>
         <theatrical_release_date>2007-05-04</theatrical_release_date>
         <genres>
-            <genre>Comedy</genre>
-            <genre>Drama</genre>
+            <genre code="COMEDY-00"/>
+            <genre code="DRAMA-00"/>
         </genres>
         <ratings>
-            <rating system="mpaa" reason="Rated PG-13 for drug content, some sensuality and war violence.">PG-13
-            </rating>
+            <rating system="mpaa" reason="For drug content, some sensuality and war violence." code="PG-13"/>
         </ratings>
         <cast>
             <cast_member billing="top">
                 <display_name>Tom Hanks</display_name>
-                <character_name>Forrest Gump</character_name>
+                <apple_id>2672649</apple_id>
+                <description format="plain">Forrest Gump leads a truly charmed life as he journeys through key events of the second half of the 20th century. Entirely without trying. For his portrayal of Forrest Gump, Tom Hanks earned the Academy Award for Best Actor, Golden Globe for Best Actor in a Motion Picture Drama, the BAFTA award for Best Actor and many more awards around the world. The titular film and character are based on the Winston Groom novel - "Forrest Gump".</description>
+                <characters>
+                    <character>
+                        <reference_id>FORREST</reference_id>
+                        <character_name>Forrest Gump</character_name>
+                        <character_note>Protagonist</character_note>
+                        <character_image>
+                            <data_file>
+                                <file_name>hanks_as_forrest_gump.png</file_name>
+                                <size>2813243</size>
+                                <checksum type="md5">4ec1addb1f4d3617718b3ebd1ae9ec96</checksum>
+                            </data_file>
+                        </character_image>
+                    </character>
+                    <!-- Additional character blocks here if needed for this cast member to handle cases where a cast member plays multiple characters in the film. -->
+                </characters>
             </cast_member>
-            <cast_member billing="top">
-                <display_name>Robin Wright Penn</display_name>
-                <character_name>Jenny Curran</character_name>
-            </cast_member>
+            <!-- Additional cast members here -->
         </cast>
         <crew>
             <crew_member billing="top">
                 <display_name>Robert Zemeckis</display_name>
+                <apple_id>274059420</apple_id>
                 <roles>
                     <role>Director</role>
                 </roles>
             </crew_member>
             <crew_member billing="top">
                 <display_name>Steve Starkey</display_name>
+                <apple_id>274059432</apple_id>
                 <roles>
                     <role>Producer</role>
                 </roles>
             </crew_member>
+            <!-- Additional crew members here -->
         </crew>
         <chapters>
             <timecode_format>24/999 1000/nonDrop</timecode_format>
@@ -83,44 +72,60 @@
                 <title locale="en-US">Forrest's Story Begins</title>
                 <artwork_file>
                     <file_name>chapter01.jpg</file_name>
+                    <checksum type="md5">ed93d0f3224a353a4cc8d4175d645130</checksum>
                     <size>6591649</size>
-                    <checksum type="md5">ed93d0f3224a353a4cc8d4175d645130
-                    </checksum>
                 </artwork_file>
             </chapter>
             <chapter>
                 <start_time>00:07:45:23</start_time>
                 <title locale="en-US">Football at Alabama</title>
-                <artwork_file>
-                    <file_name>chapter02.jpg</file_name>
-                    <size>6591649</size>
-                    <checksum type="md5">86bed7ef05c34c1e85345f40d11137a9
-                    </checksum>
-                </artwork_file>
+                <!-- Chapter image can be provided in an artwork file or specified by a timecode. This chapter image is specified by a timecode. -->
+                <artwork_time>00:07:45:38</artwork_time>
             </chapter>
+            <!-- Additional chapters here. -->
         </chapters>
+        <accessibility_info>
+            <accessibility role="captions" available="true"/>
+        </accessibility_info>
         <assets>
             <asset type="full">
                 <data_file role="source">
                     <locale name="en-US"/>
                     <file_name>09736156444-source.mov</file_name>
                     <size>2595225600</size>
-                    <checksum type="md5">2a793a8b46037fe8aa29dd739b49911a
-                    </checksum>
+                    <checksum type="md5">2a793a8b46037fe8aa29dd739b49911a</checksum>
                     <attribute name="crop.top">80</attribute>
                     <attribute name="crop.bottom">80</attribute>
                     <attribute name="crop.left">50</attribute>
                     <attribute name="crop.right">50</attribute>
                     <attribute name="image.textless_master">true</attribute>
                 </data_file>
+                <!-- 7.1 Surround Audio -->
+                <data_file role="audio.7_1">
+                    <locale name="en-US"/>
+                    <file_name>audio_71.mov</file_name>
+                    <checksum type="md5">a765a9fc88ac893ead51366fbeb04d82</checksum>
+                    <size>8730177839</size>
+                    <attribute name="audio.surround.force_5_1_downmix">true</attribute>
+                </data_file>
                 <data_file role="captions">
                     <file_name>09736156444-english.scc</file_name>
                     <size>9511</size>
-                    <checksum type="md5">5a793a8b46037fe8aa2bdd739b49911a
-                    </checksum>
+                    <checksum type="md5">5a793a8b46037fe8aa2bdd739b49911a</checksum>
+                    <locale name="en-US"/>
+                    <attribute name="program.start.timecode">-01:00:00:00
+                    </attribute>
+                </data_file>
+                <data_file role="audio.visually_impaired">
+                    <file_name>09736156444-ad.mov</file_name>
+                    <size>34866696</size>
+                    <checksum type="md5">a2db7f2f30c9744e98fa393e51cf6a93</checksum>
+                    <locale name="en-US"/>
                 </data_file>
             </asset>
+            <!-- Required. World Trailer. Will be used where territory-specific trailer has not been provided -->
             <asset type="preview">
+                <preview_image_time format="24/999 1000/nonDrop">00:00:57:02</preview_image_time>
                 <territories>
                     <territory>WW</territory>
                 </territories>
@@ -128,23 +133,23 @@
                     <locale name="en-US"/>
                     <file_name>09736156444-US-preview.mov</file_name>
                     <size>9987212</size>
-                    <checksum type="md5">739b43b793a8b46037fe8aa29dd9911e
-                    </checksum>
+                    <checksum type="md5">739b43b793a8b46037fe8aa29dd9911e</checksum>
                     <attribute name="crop.top">80</attribute>
                     <attribute name="crop.bottom">80</attribute>
                     <attribute name="crop.left">50</attribute>
                     <attribute name="crop.right">50</attribute>
                 </data_file>
             </asset>
+            <!-- Required. World Poster Art. Will be used where territory-specific poster art has not been provided  -->
             <asset type="artwork">
                 <territories>
                     <territory>WW</territory>
                 </territories>
                 <data_file>
+                    <locale name="en-US"/>
                     <file_name>09736156444.jpg</file_name>
                     <size>6591649</size>
-                    <checksum type="md5">43e7dddfe4b8ab433ede429df86cabb2
-                    </checksum>
+                    <checksum type="md5">43e7dddfe4b8ab433ede429df86cabb2</checksum>
                 </data_file>
             </asset>
         </assets>

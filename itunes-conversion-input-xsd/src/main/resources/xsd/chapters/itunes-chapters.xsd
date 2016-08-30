@@ -22,30 +22,26 @@
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
            targetNamespace="http://netflix.com/imf/itunes/chapters"
            xmlns="http://netflix.com/imf/itunes/chapters"
-           xmlns:i="http://apple.com/itunes/importer"
+           xmlns:importer="http://apple.com/itunes/importer"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-    <xs:import schemaLocation="../metadata/iso-3166-1.xsd" namespace="http://iso3166.metadata.itunes.imfutility.netflix.com"/>
     <xs:import schemaLocation="../metadata/itunes-metadata.xsd" namespace="http://apple.com/itunes/importer"/>
 
     <!-- root element -->
-    <xs:element name="chapters" type="ChaptersInputType"/>
+    <xs:element name="input_chapters" type="InputChapterList"/>
 
-    <xs:complexType name="ChaptersInputType">
+    <xs:complexType name="InputChapterList">
         <xs:sequence>
-            <xs:element name="timecode_format" type="i:TimecodeFormatType" minOccurs="0"/>
-            <xs:element name="chapter" type="ChapterInputType" minOccurs="1" maxOccurs="99"/>
+            <xs:element name="timecode_format" type="xs:string"/>
+            <xs:element name="input_chapter" type="InputChapterItem" minOccurs="1" maxOccurs="99"/>
         </xs:sequence>
         <xs:attribute name="basedir" type="xs:string" use="required"/>
     </xs:complexType>
 
-    <xs:complexType name="ChapterInputType">
+    <xs:complexType name="InputChapterItem">
         <xs:sequence>
-            <xs:element name="start_time" type="i:TimecodeFormat"/>
-            <xs:choice>
-                <xs:element name="title" type="i:TitleType"/>
-                <xs:element name="titles" type="i:TitlesType"/>
-            </xs:choice>
+            <xs:element name="start_time" type="importer:FormattedTime"/>
+            <xs:element name="title" type="importer:NonEmptyLocalizableTextElement"/>
             <xs:element name="file_name" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>

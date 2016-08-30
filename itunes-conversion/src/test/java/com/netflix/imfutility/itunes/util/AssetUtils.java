@@ -18,14 +18,9 @@
  */
 package com.netflix.imfutility.itunes.util;
 
-import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
 import com.netflix.imfutility.generated.mediainfo.FormatType;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
-import com.netflix.imfutility.xml.XmlParsingException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
@@ -62,16 +57,6 @@ public final class AssetUtils {
 
     public static File getTestInvalidSignatureCcFile() throws URISyntaxException {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/scc/cc_no_signature.scc").toURI());
-    }
-
-    public static MetadataXmlProvider createMetadataXmlProvider() throws FileNotFoundException, XmlParsingException {
-        return new MetadataXmlProvider("vendor_id", null);
-    }
-
-    public static LocaleType createLocale(String language) {
-        LocaleType locale = new LocaleType();
-        locale.setName(language);
-        return locale;
     }
 
     public static FormatType createCorrectVideoFormat() {

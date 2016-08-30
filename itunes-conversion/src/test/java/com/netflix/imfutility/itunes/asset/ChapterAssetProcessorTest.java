@@ -19,30 +19,34 @@
 package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.generated.itunes.metadata.ChapterType;
+import com.netflix.imfutility.itunes.asset.bean.ChapterAsset;
+import com.netflix.imfutility.itunes.chapters.builder.ChaptersXmlSampleBuilder;
 import com.netflix.imfutility.itunes.image.ImageValidationException;
 import com.netflix.imfutility.itunes.util.AssetUtils;
+import com.netflix.imfutility.itunes.util.FakeMetadataXmlProvider;
 import com.netflix.imfutility.itunes.util.TestUtils;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
-import com.netflix.imfutility.itunes.xmlprovider.builder.ChaptersXmlSampleBuilder;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.assertNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests chapter asset processing.
  * (see {@link ChapterAssetProcessor}).
  */
 public class ChapterAssetProcessorTest {
+
+    private FakeMetadataXmlProvider metadataXmlProvider;
 
     @BeforeClass
     public static void setupAll() throws IOException {
@@ -59,12 +63,16 @@ public class ChapterAssetProcessorTest {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
     }
 
+    @Before
+    public void setup() throws Exception {
+        metadataXmlProvider = new FakeMetadataXmlProvider();
+    }
+
     @Test
     public void testCorrectChapter() throws Exception {
-        MetadataXmlProvider metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
         ChapterAssetProcessor processor = new ChapterAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setInputChapter(ChaptersXmlSampleBuilder.buildInputChapter())
+        processor.setInputChapterItem(ChaptersXmlSampleBuilder.buildInputChapter())
                 .setAspectRatio(new BigFraction(16).divide(9))
                 .setChapterIndex(1)
                 .process(AssetUtils.getTestCorrectChapterFile());
@@ -73,18 +81,18 @@ public class ChapterAssetProcessorTest {
         assertTrue(asset.exists());
         assertTrue(asset.isFile());
 
-        ChapterType chapter = metadataXmlProvider.getPackageType().getVideo().getChapters().getChapter().get(0);
-        assertEquals("Required title", chapter.getTitle().getValue());
-        assertEquals("00:00:00", chapter.getStartTime());
-        assertEquals("chapter01.jpg", chapter.getArtworkFile().getFileName());
+        ChapterAsset chapterAsset = metadataXmlProvider.getRootElement().getChapterAssets().get(0);
+        assertNull(chapterAsset.getType());
+        assertNull(chapterAsset.getRole());
+        assertEquals("chapter01.jpg", chapterAsset.getFileName());
     }
 
     @Test(expected = ImageValidationException.class)
     public void testInvalidChapter() throws Exception {
-        ChapterAssetProcessor processor = new ChapterAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        ChapterAssetProcessor processor = new ChapterAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setInputChapter(ChaptersXmlSampleBuilder.buildInputChapter())
+        processor.setInputChapterItem(ChaptersXmlSampleBuilder.buildInputChapter())
                 //  aspect ratio of image 16:9
                 .setAspectRatio(new BigFraction(4).divide(3))
                 .setChapterIndex(1)
@@ -93,10 +101,10 @@ public class ChapterAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testInvalidFile() throws Exception {
-        ChapterAssetProcessor processor = new ChapterAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        ChapterAssetProcessor processor = new ChapterAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setInputChapter(ChaptersXmlSampleBuilder.buildInputChapter())
+        processor.setInputChapterItem(ChaptersXmlSampleBuilder.buildInputChapter())
                 .setAspectRatio(new BigFraction(16).divide(9))
                 .setChapterIndex(1)
                 .process(TestUtils.getTestFile());
@@ -104,10 +112,10 @@ public class ChapterAssetProcessorTest {
 
     @Test(expected = ConversionException.class)
     public void testInvalidPath() throws Exception {
-        ChapterAssetProcessor processor = new ChapterAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        ChapterAssetProcessor processor = new ChapterAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setInputChapter(ChaptersXmlSampleBuilder.buildInputChapter())
+        processor.setInputChapterItem(ChaptersXmlSampleBuilder.buildInputChapter())
                 .setAspectRatio(new BigFraction(16).divide(9))
                 .setChapterIndex(1)
                 .process(new File("invalid_path"));
@@ -115,7 +123,7 @@ public class ChapterAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testParametersNotSet() throws Exception {
-        ChapterAssetProcessor processor = new ChapterAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        ChapterAssetProcessor processor = new ChapterAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.process(AssetUtils.getTestCorrectChapterFile());
@@ -123,10 +131,10 @@ public class ChapterAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testChapterIndexOutOfBound() throws Exception {
-        ChapterAssetProcessor processor = new ChapterAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        ChapterAssetProcessor processor = new ChapterAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
-        processor.setInputChapter(ChaptersXmlSampleBuilder.buildInputChapter())
+        processor.setInputChapterItem(ChaptersXmlSampleBuilder.buildInputChapter())
                 .setAspectRatio(new BigFraction(16).divide(9))
                 //  chapter index must be from 1 to 99
                 .setChapterIndex(100)

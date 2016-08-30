@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<package xmlns="http://apple.com/itunes/importer" version="film5.0">
-    <provider>Required company</provider>
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://apple.com/itunes/importer" version="film5.2">
+    <provider>Required provider</provider>
     <language>fr-CA</language>
     <video>
         <type>film</type>
@@ -11,10 +11,10 @@
         <title>Required title</title>
         <synopsis>Required synopsis</synopsis>
         <production_company>Required company</production_company>
-        <copyright_cline>2016 Required Company</copyright_cline>
+        <copyright_cline>2016 Required company</copyright_cline>
         <theatrical_release_date>2016-08-02</theatrical_release_date>
         <genres>
-            <genre>Classics</genre>
+            <genre code="CLASSICS-00"/>
         </genres>
         <ratings>
             <rating system="mpaa">G</rating>
@@ -36,7 +36,7 @@
         <products>
             <product>
                 <territory>WW</territory>
-                <cleared_for_sale>true</cleared_for_sale>
+                <cleared_for_sale>false</cleared_for_sale>
             </product>
         </products>
     </video>

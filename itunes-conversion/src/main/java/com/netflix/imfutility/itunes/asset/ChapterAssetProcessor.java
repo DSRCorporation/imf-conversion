@@ -18,12 +18,12 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
-import com.netflix.imfutility.generated.itunes.metadata.ArtWorkFileType;
-import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
+import com.netflix.imfutility.generated.itunes.chapters.InputChapterItem;
+import com.netflix.imfutility.itunes.asset.bean.ChapterAsset;
+import com.netflix.imfutility.itunes.asset.builder.ChapterAssetBuilder;
 import com.netflix.imfutility.itunes.asset.distribute.CopyAssetStrategy;
 import com.netflix.imfutility.itunes.image.ImageValidator;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
-import com.netflix.imfutility.itunes.xmlprovider.builder.file.ArtWorkFileTagBuilder;
+import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.io.File;
@@ -36,13 +36,13 @@ import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.CHAPTE
 /**
  * Asset processor specified for chapter image managing.
  */
-public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
+public class ChapterAssetProcessor extends AssetProcessor<ChapterAsset> {
 
     private Integer chapterIndex;
-    private ChapterInputType inputChapter;
+    private InputChapterItem inputChapterItem;
     private BigFraction aspectRatio;
 
-    public ChapterAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
+    public ChapterAssetProcessor(MetadataXmlProvider<?> metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
         setDistributeAssetStrategy(new CopyAssetStrategy());
     }
@@ -52,8 +52,8 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
         return this;
     }
 
-    public ChapterAssetProcessor setInputChapter(ChapterInputType inputChapter) {
-        this.inputChapter = inputChapter;
+    public ChapterAssetProcessor setInputChapterItem(InputChapterItem inputChapterItem) {
+        this.inputChapterItem = inputChapterItem;
         return this;
     }
 
@@ -67,7 +67,7 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
         return chapterIndex != null
                 && !(chapterIndex < CHAPTER_MIN_INDEX || chapterIndex > CHAPTER_MAX_INDEX)
                 && aspectRatio != null
-                && inputChapter != null;
+                && inputChapterItem != null;
     }
 
     @Override
@@ -81,13 +81,15 @@ public class ChapterAssetProcessor extends AssetProcessor<ArtWorkFileType> {
     }
 
     @Override
-    protected ArtWorkFileType buildMetadata(File assetFile) {
-        return new ArtWorkFileTagBuilder(assetFile, getDestFileName(assetFile)).build();
+    protected ChapterAsset buildAsset(File assetFile) {
+        return new ChapterAssetBuilder(assetFile, getDestFileName(assetFile))
+                .setInputChapterItem(inputChapterItem)
+                .build();
     }
 
     @Override
-    protected void appendMetadata(ArtWorkFileType tag) {
-        metadataXmlProvider.appendChapter(tag, inputChapter);
+    protected void appendAsset(ChapterAsset asset) {
+        (metadataXmlProvider).appendChapterAsset(asset);
     }
 
     @Override

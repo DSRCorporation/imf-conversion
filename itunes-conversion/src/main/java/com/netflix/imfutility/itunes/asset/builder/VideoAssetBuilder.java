@@ -16,27 +16,40 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.xmlprovider.builder.file;
+package com.netflix.imfutility.itunes.asset.builder;
 
-import com.netflix.imfutility.itunes.xmlprovider.builder.MetadataXmlTagBuilder;
+import com.netflix.imfutility.itunes.asset.bean.VideoAsset;
 
 import java.io.File;
 
 /**
- * Common class for creating metadata info based on asset file.
- *
- * @param <T> tag class
+ * Builder for creating iTunes metadata video asset info.
  */
-public abstract class FileTagBuilder<T> implements MetadataXmlTagBuilder<T> {
-    protected final File assetFile;
-    protected final String fileName;
+public class VideoAssetBuilder extends AssetBuilder<VideoAsset> {
 
-    public FileTagBuilder(File assetFile) {
-        this(assetFile, assetFile.getName());
+    private boolean cropToZero = false;
+
+    public VideoAssetBuilder(File file) {
+        super(file);
     }
 
-    public FileTagBuilder(File assetFile, String fileName) {
-        this.assetFile = assetFile;
-        this.fileName = fileName;
+    public VideoAssetBuilder(File file, String fileName) {
+        super(file, fileName);
+    }
+
+    public VideoAssetBuilder setCropToZero(boolean cropToZero) {
+        this.cropToZero = cropToZero;
+        return this;
+    }
+
+    @Override
+    protected void buildImpl(VideoAsset asset) {
+        super.buildImpl(asset);
+        asset.setCropToZero(cropToZero);
+    }
+
+    @Override
+    protected VideoAsset create() {
+        return new VideoAsset();
     }
 }

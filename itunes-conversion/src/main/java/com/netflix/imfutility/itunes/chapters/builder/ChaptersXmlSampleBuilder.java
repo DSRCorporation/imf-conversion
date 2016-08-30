@@ -16,41 +16,42 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.xmlprovider.builder;
+package com.netflix.imfutility.itunes.chapters.builder;
 
-import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
-import com.netflix.imfutility.generated.itunes.metadata.ChaptersInputType;
-import com.netflix.imfutility.generated.itunes.metadata.TitleType;
+import com.netflix.imfutility.generated.itunes.chapters.InputChapterItem;
+import com.netflix.imfutility.generated.itunes.chapters.InputChapterList;
+import com.netflix.imfutility.generated.itunes.metadata.NonEmptyLocalizableTextElement;
 
 /**
  * Builder for creating sample chapters specified for iTunes.
- * (see {@link com.netflix.imfutility.itunes.xmlprovider.ChaptersXmlProvider}.
+ * (see {@link com.netflix.imfutility.itunes.chapters.ChaptersXmlProvider}.
  */
 public final class ChaptersXmlSampleBuilder {
 
     private ChaptersXmlSampleBuilder() {
     }
 
-    public static ChaptersInputType buildInputChapters() {
-        ChaptersInputType chapters = new ChaptersInputType();
+    public static InputChapterList buildInputChapters() {
+        InputChapterList chapters = new InputChapterList();
         chapters.setBasedir(".");
         chapters.setTimecodeFormat("qt_text");
-        chapters.getChapter().add(buildInputChapter());
+        chapters.getInputChapter().add(buildInputChapter());
         return chapters;
     }
 
-    public static ChapterInputType buildInputChapter() {
-        ChapterInputType chapter = new ChapterInputType();
+    public static InputChapterItem buildInputChapter() {
+        InputChapterItem chapter = new InputChapterItem();
         chapter.setStartTime("00:00:00");
         chapter.setTitle(buildTitle());
         chapter.setFileName("chapter01.jpg");
         return chapter;
     }
 
-    private static TitleType buildTitle() {
-        TitleType title = new TitleType();
+    private static NonEmptyLocalizableTextElement buildTitle() {
+        NonEmptyLocalizableTextElement title = new NonEmptyLocalizableTextElement();
         title.setLocale("en-US");
-        title.setValue("Required title");
+        title.setValue("Required chapter title");
         return title;
     }
+
 }
