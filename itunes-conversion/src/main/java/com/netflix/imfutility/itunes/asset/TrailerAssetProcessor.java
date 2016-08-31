@@ -18,29 +18,29 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
-import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
-import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
 import com.netflix.imfutility.generated.mediainfo.FormatType;
+import com.netflix.imfutility.itunes.asset.builder.VideoAssetBuilder;
 import com.netflix.imfutility.itunes.asset.distribute.CopyAssetStrategy;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
-import com.netflix.imfutility.itunes.xmlprovider.builder.file.DataFileTagBuilder;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
+import com.netflix.imfutility.itunes.asset.type.VideoAsset;
+import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 
 import java.io.File;
+import java.util.Locale;
 
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.MOV_FORMAT;
 
 /**
  * Asset processor specified for trailer managing.
  */
-public class TrailerAssetProcessor extends AssetProcessor<DataFileType> {
+public class TrailerAssetProcessor extends AssetProcessor<VideoAsset> {
 
     private String vendorId;
     private FormatType format;
-    private LocaleType locale;
+    private Locale locale;
 
-    public TrailerAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
+    public TrailerAssetProcessor(MetadataXmlProvider<?> metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
         setDistributeAssetStrategy(new CopyAssetStrategy());
     }
@@ -55,7 +55,7 @@ public class TrailerAssetProcessor extends AssetProcessor<DataFileType> {
         return this;
     }
 
-    public TrailerAssetProcessor setLocale(LocaleType locale) {
+    public TrailerAssetProcessor setLocale(Locale locale) {
         this.locale = locale;
         return this;
     }
@@ -75,17 +75,12 @@ public class TrailerAssetProcessor extends AssetProcessor<DataFileType> {
     }
 
     @Override
-    protected DataFileType buildMetadata(File assetFile) {
-        return new DataFileTagBuilder(assetFile, getDestFileName(assetFile))
+    protected VideoAsset buildAsset(File assetFile) {
+        return new VideoAssetBuilder(assetFile, getDestFileName(assetFile))
+                .setType(AssetType.PREVIEW)
+                .setRole(AssetRole.SOURCE)
                 .setLocale(locale)
-                .setRole(DataFileRoleType.SOURCE)
-                .setCropToZero(true)
                 .build();
-    }
-
-    @Override
-    protected void appendMetadata(DataFileType tag) {
-        metadataXmlProvider.appendAssetDataFile(tag, AssetTypeType.PREVIEW);
     }
 
     @Override

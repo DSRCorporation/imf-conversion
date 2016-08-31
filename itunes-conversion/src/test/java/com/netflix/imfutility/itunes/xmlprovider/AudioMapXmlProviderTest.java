@@ -39,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.GEN_ADDITIONAL_SEQ_UUID;
@@ -1184,7 +1185,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
 
         /* EXECUTION */
         AudioMapXmlProvider provider = new AudioMapXmlProvider(contextProvider);
-        provider.setLocale("fr-CA");
+        provider.setLocale(Locale.CANADA_FRENCH);
 
         /* VALIDATION */
         assertEquals("fr-CA", provider.getMainAudio().getLocale());

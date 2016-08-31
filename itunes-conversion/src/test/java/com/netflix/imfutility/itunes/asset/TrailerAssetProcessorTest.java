@@ -19,30 +19,33 @@
 package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.generated.itunes.metadata.AssetType;
-import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
+import com.netflix.imfutility.itunes.asset.type.VideoAsset;
 import com.netflix.imfutility.itunes.util.AssetUtils;
+import com.netflix.imfutility.itunes.util.FakeMetadataXmlProvider;
 import com.netflix.imfutility.itunes.util.TestUtils;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests trailer asset processing.
  * (see {@link TrailerAssetProcessor}).
  */
 public class TrailerAssetProcessorTest {
+
+    private FakeMetadataXmlProvider metadataXmlProvider;
 
     @BeforeClass
     public static void setupAll() throws IOException {
@@ -59,13 +62,17 @@ public class TrailerAssetProcessorTest {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
     }
 
+    @Before
+    public void setup() throws Exception {
+        metadataXmlProvider = new FakeMetadataXmlProvider();
+    }
+
     @Test
     public void testCorrectTrailer() throws Exception {
-        MetadataXmlProvider metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
         TrailerAssetProcessor processor = new TrailerAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
-                .setLocale(AssetUtils.createLocale("en-US"))
+                .setLocale(Locale.US)
                 .setFormat(AssetUtils.createCorrectVideoFormat())
                 .process(TestUtils.getTestFile());
 
@@ -73,41 +80,38 @@ public class TrailerAssetProcessorTest {
         assertTrue(asset.exists());
         assertTrue(asset.isFile());
 
-        // first asset always must be full
-        AssetType trailerAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(1);
-        assertEquals(AssetTypeType.PREVIEW, trailerAsset.getType());
-
-        DataFileType trailerDataFile = trailerAsset.getDataFile().get(0);
-        assertEquals("vendor_id-preview.mov", trailerDataFile.getFileName());
-        assertEquals(DataFileRoleType.SOURCE, trailerDataFile.getRole());
-        assertEquals("en-US", trailerDataFile.getLocale().getName());
+        VideoAsset trailerAsset = (VideoAsset) metadataXmlProvider.getRootElement().getAssets().get(0);
+        assertEquals(AssetType.PREVIEW, trailerAsset.getType());
+        assertEquals(AssetRole.SOURCE, trailerAsset.getRole());
+        assertEquals(Locale.US, trailerAsset.getLocale());
+        assertEquals("vendor_id-preview.mov", trailerAsset.getFileName());
     }
 
     @Test(expected = AssetValidationException.class)
     public void testInvalidFormat() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        TrailerAssetProcessor processor = new TrailerAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
-                .setLocale(AssetUtils.createLocale("en-US"))
+                .setLocale(Locale.US)
                 .setFormat(AssetUtils.createIncorrectVideoFormat())
                 .process(TestUtils.getTestFile());
     }
 
     @Test(expected = ConversionException.class)
     public void testInvalidPath() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        TrailerAssetProcessor processor = new TrailerAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
-                .setLocale(AssetUtils.createLocale("en-US"))
+                .setLocale(Locale.US)
                 .setFormat(AssetUtils.createCorrectVideoFormat())
                 .process(new File("invalid_path"));
     }
 
     @Test(expected = AssetValidationException.class)
     public void testParametersNotSet() throws Exception {
-        TrailerAssetProcessor processor = new TrailerAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        TrailerAssetProcessor processor = new TrailerAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
         //  vendor_id, locale and format are required

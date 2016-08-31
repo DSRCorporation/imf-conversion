@@ -16,13 +16,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.xmlprovider.builder;
+package com.netflix.imfutility.itunes.metadata;
 
 /**
- * Common interface for all builders to construct metadata tags.
+ * Metadata descriptor for correct schema validation, marshalling and unmarshalling.
  *
- * @param <T> tag class
+ * @param <T> root element class.
  */
-public interface MetadataXmlTagBuilder<T> {
-    T build();
+public interface MetadataDescriptor<T> {
+
+    Class<T> getMetadataClass();
+
+    String getMetadataSchema();
+
+    String getMetadataPackage();
+
+    String getMetadataNamespace();
+
+    String getMetadataRoot();
 }

@@ -1,24 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright (C) 2016 Netflix, Inc.
-  ~
-  ~     This file is part of IMF Conversion Utility.
-  ~
-  ~     IMF Conversion Utility is free software: you can redistribute it and/or modify
-  ~     it under the terms of the GNU General Public License as published by
-  ~     the Free Software Foundation, either version 3 of the License, or
-  ~     (at your option) any later version.
-  ~
-  ~     IMF Conversion Utility is distributed in the hope that it will be useful,
-  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~     GNU General Public License for more details.
-  ~
-  ~     You should have received a copy of the GNU General Public License
-  ~     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-
-<package xmlns="http://apple.com/itunes/importer" version="film5.0">
+<package xmlns="http://apple.com/itunes/importer" version="film5.2">
     <provider>WarnerMusicGroup</provider>
     <language>en-US</language>
     <video>
@@ -29,25 +10,42 @@
         <upc>075993999976</upc>
         <country>US</country>
         <title>The Confessions Tour</title>
-        <synopsis>The Confessions Tour features songs from throughout the dance
-            diva's career but largely focuses on Confessions On A Dance Floor.
-        </synopsis>
+        <synopsis>The Confessions Tour features songs from throughout the dance diva's career but largely focuses on Confessions On A Dance Floor.</synopsis>
+        <locales>
+            <locale name="cmn-Hant">
+                <title>「自白巡演」</title>
+                <synopsis>「自白巡演」收錄了這位舞蹈天后整個演藝事業的歌曲，但是主要集中在「舞池上的自白」這張專輯。</synopsis>
+            </locale>
+            <locale name="cmn-Hans">
+                <title>“自白巡演” </title>
+                <synopsis>“自白巡演”包括的歌曲贯穿这位舞蹈天后的整个演艺事业，但是主要集中在《舞池上的自白》这张专辑。</synopsis>
+            </locale>
+        </locales>
         <production_company>Warner Bros.</production_company>
         <copyright_cline>2006 Warner Bros. Records Inc.</copyright_cline>
         <theatrical_release_date>2007-01-23</theatrical_release_date>
         <genres>
-            <genre>Concert Films</genre>
+            <genre code="CONCERT-FILMS-00"/>
         </genres>
         <ratings>
-            <rating system="mpaa" reason="Content contains adult material.">UR</rating>
+            <rating system="mpaa" reason="Content contains adult material." code="UR"/>
         </ratings>
         <artists>
             <artist>
                 <artist_name>Madonna</artist_name>
+                <apple_id>20044</apple_id>
                 <roles>
                     <role>Performer</role>
                 </roles>
                 <primary>true</primary>
+                <locales>
+                    <locale name="cmn-Hant">
+                        <artist_name>麥當娜</artist_name>
+                    </locale>
+                    <locale name="cmn-Hans">
+                        <artist_name>麦当娜</artist_name>
+                    </locale>
+                </locales>
             </artist>
         </artists>
         <chapters>
@@ -72,14 +70,16 @@
             </chapter>
             <!-- Additional chapters here. -->
         </chapters>
+        <accessibility_info>
+            <accessibility role="captions" available="true"/>
+        </accessibility_info>
         <assets>
             <asset type="full">
                 <data_file role="source">
                     <locale name="en-US"/>
                     <file_name>USWBV0700016_15384-source.mov</file_name>
                     <size>2595225600</size>
-                    <checksum type="md5">2a793a8b46037fe8aa29dd739b49911a
-                    </checksum>
+                    <checksum type="md5">2a793a8b46037fe8aa29dd739b49911a</checksum>
                     <attribute name="crop.top">80</attribute>
                     <attribute name="crop.bottom">80</attribute>
                     <attribute name="crop.left">50</attribute>
@@ -89,8 +89,8 @@
                 <data_file role="captions">
                     <file_name>USWBV0700016_15384-english.scc</file_name>
                     <size>9511</size>
-                    <checksum type="md5">5a793a8b46037fe8aa2bdd739b49911a
-                    </checksum>
+                    <checksum type="md5">5a793a8b46037fe8aa2bdd739b49911a</checksum>
+                    <locale name="en-US"/>
                 </data_file>
             </asset>
             <asset type="preview">
@@ -101,8 +101,7 @@
                     <locale name="en-US"/>
                     <file_name>USWBV0700016_15384-preview.mov</file_name>
                     <size>9987212</size>
-                    <checksum type="md5">3b793a8b46037fe8aa29dd739b49911e
-                    </checksum>
+                    <checksum type="md5">3b793a8b46037fe8aa29dd739b49911e</checksum>
                     <attribute name="crop.top">80</attribute>
                     <attribute name="crop.bottom">80</attribute>
                     <attribute name="crop.left">50</attribute>
@@ -114,10 +113,10 @@
                     <territory>WW</territory>
                 </territories>
                 <data_file>
+                    <locale name="en-US"/>
                     <file_name>USWBV0700016.sca3.jpg</file_name>
                     <size>6591649</size>
-                    <checksum type="md5">ddfe4b8ab433e43e7dde429df86cabb2
-                    </checksum>
+                    <checksum type="md5">ddfe4b8ab433e43e7dde429df86cabb2</checksum>
                 </data_file>
             </asset>
         </assets>
@@ -146,6 +145,7 @@
                 <artists>
                     <artist>
                         <artist_name>Madonna</artist_name>
+                        <apple_id>20044</apple_id>
                         <roles>
                             <role>Performer</role>
                             <role>Creator</role>
@@ -174,6 +174,7 @@
                 <artists>
                     <artist>
                         <artist_name>Madonna</artist_name>
+                        <apple_id>20044</apple_id>
                         <roles>
                             <role>Performer</role>
                         </roles>
@@ -207,6 +208,7 @@
                 <artists>
                     <artist>
                         <artist_name>Madonna</artist_name>
+                        <apple_id>20044</apple_id>
                         <roles>
                             <role>Performer</role>
                             <role>Creator</role>

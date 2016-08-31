@@ -16,27 +16,10 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.xmlprovider.builder.file;
-
-import com.netflix.imfutility.itunes.xmlprovider.builder.MetadataXmlTagBuilder;
-
-import java.io.File;
+package com.netflix.imfutility.itunes.asset.type;
 
 /**
- * Common class for creating metadata info based on asset file.
- *
- * @param <T> tag class
+ * Asset info bean specified for iTunes film metadata info related to video essence.
  */
-public abstract class FileTagBuilder<T> implements MetadataXmlTagBuilder<T> {
-    protected final File assetFile;
-    protected final String fileName;
-
-    public FileTagBuilder(File assetFile) {
-        this(assetFile, assetFile.getName());
-    }
-
-    public FileTagBuilder(File assetFile, String fileName) {
-        this.assetFile = assetFile;
-        this.fileName = fileName;
-    }
+public class VideoAsset extends Asset {
 }

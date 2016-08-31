@@ -36,6 +36,7 @@ import com.netflix.imfutility.generated.itunes.audiomap.Option3Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option4Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option5Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option6Type;
+import com.netflix.imfutility.itunes.locale.LocaleHelper;
 import com.netflix.imfutility.util.StreamUtil;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -51,6 +52,7 @@ import java.io.FileNotFoundException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -280,13 +282,13 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
     }
 
     @Override
-    public void setLocale(String locale) {
-        mainAudio.setLocale(locale);
+    public void setLocale(Locale locale) {
+        mainAudio.setLocale(LocaleHelper.toITunesLocale(locale));
     }
 
     @Override
-    public String getLocale() {
-        return mainAudio.getLocale();
+    public Locale getLocale() {
+        return LocaleHelper.fromITunesLocale(mainAudio.getLocale());
     }
 
     public boolean isCustomized() {

@@ -19,31 +19,33 @@
 package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.generated.itunes.metadata.AssetType;
-import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
+import com.netflix.imfutility.itunes.asset.type.Asset;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
 import com.netflix.imfutility.itunes.util.AssetUtils;
+import com.netflix.imfutility.itunes.util.FakeMetadataXmlProvider;
 import com.netflix.imfutility.itunes.util.TestUtils;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNull;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests closed captions asset processing.
  * (see {@link CaptionsAssetProcessor}).
  */
 public class CaptionsAssetProcessorTest {
+
+    private FakeMetadataXmlProvider metadataXmlProvider;
 
     @BeforeClass
     public static void setupAll() throws IOException {
@@ -60,9 +62,13 @@ public class CaptionsAssetProcessorTest {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
     }
 
+    @Before
+    public void setup() throws Exception {
+        metadataXmlProvider = new FakeMetadataXmlProvider();
+    }
+
     @Test
     public void testCorrectCaptions() throws Exception {
-        MetadataXmlProvider metadataXmlProvider = AssetUtils.createMetadataXmlProvider();
         CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
@@ -72,18 +78,16 @@ public class CaptionsAssetProcessorTest {
         assertTrue(asset.exists());
         assertTrue(asset.isFile());
 
-        AssetType captionsAsset = metadataXmlProvider.getPackageType().getVideo().getAssets().getAsset().get(0);
-        assertEquals(AssetTypeType.FULL, captionsAsset.getType());
-
-        DataFileType captionsDataFile = captionsAsset.getDataFile().get(0);
-        assertEquals("vendor_id-english.scc", captionsDataFile.getFileName());
-        assertEquals(DataFileRoleType.CAPTIONS, captionsDataFile.getRole());
-        assertNull(captionsDataFile.getLocale());
+        Asset captionsAsset = metadataXmlProvider.getRootElement().getAssets().get(0);
+        assertEquals(AssetType.FULL, captionsAsset.getType());
+        assertEquals(AssetRole.CAPTIONS, captionsAsset.getRole());
+        assertEquals(Locale.US, captionsAsset.getLocale());
+        assertEquals("vendor_id-english.scc", captionsAsset.getFileName());
     }
 
     @Test(expected = AssetValidationException.class)
     public void testInvalidLocaleFile() throws Exception {
-        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
@@ -92,7 +96,7 @@ public class CaptionsAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testInvalidSignatureFile() throws Exception {
-        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
@@ -101,7 +105,7 @@ public class CaptionsAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testEmptyFile() throws Exception {
-        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
@@ -110,7 +114,7 @@ public class CaptionsAssetProcessorTest {
 
     @Test(expected = ConversionException.class)
     public void testInvalidPath() throws Exception {
-        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
@@ -119,7 +123,7 @@ public class CaptionsAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testParametersNotSet() throws Exception {
-        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.process(AssetUtils.getTestCorrectCcUSFile());
@@ -127,13 +131,12 @@ public class CaptionsAssetProcessorTest {
 
     @Test(expected = AssetValidationException.class)
     public void testDuplicateLanguages() throws Exception {
-        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(AssetUtils.createMetadataXmlProvider(),
+        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id");
 
         processor.process(AssetUtils.getTestCorrectCcUSFile());
         processor.process(AssetUtils.getTestCorrectCcGBFile());
-
     }
 }

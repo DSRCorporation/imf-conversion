@@ -18,14 +18,14 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
-import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
+import com.netflix.imfutility.itunes.asset.type.Asset;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
+import com.netflix.imfutility.itunes.asset.builder.DefaultAssetBuilder;
 import com.netflix.imfutility.itunes.asset.distribute.CopyAssetStrategy;
 import com.netflix.imfutility.itunes.locale.LocaleValidationException;
 import com.netflix.imfutility.itunes.locale.LocaleValidator;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
-import com.netflix.imfutility.itunes.xmlprovider.builder.file.DataFileTagBuilder;
+import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 import org.apache.commons.lang3.LocaleUtils;
 
 import java.io.BufferedReader;
@@ -35,7 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.DEFAULT_CC_LOCALE;
 import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.SCC_SIGNATURE;
@@ -43,10 +43,11 @@ import static com.netflix.imfutility.itunes.asset.AssetProcessorConstants.SCC_SI
 /**
  * Asset processor specified for captions managing.
  */
-public class CaptionsAssetProcessor extends AssetProcessor<DataFileType> {
+public class CaptionsAssetProcessor extends AssetProcessor<Asset> {
+
     private String vendorId;
 
-    public CaptionsAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
+    public CaptionsAssetProcessor(MetadataXmlProvider<?> metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
         setDistributeAssetStrategy(new CopyAssetStrategy());
     }
@@ -65,19 +66,16 @@ public class CaptionsAssetProcessor extends AssetProcessor<DataFileType> {
     protected void validate(File assetFile) throws AssetValidationException {
         validateFormat(assetFile);
         validateLocale(assetFile);
-        validateDuplicateLanguages(assetFile);
+        validateDuplicateLocales(assetFile);
     }
 
     @Override
-    protected DataFileType buildMetadata(File assetFile) {
-        return new DataFileTagBuilder(assetFile, getDestFileName(assetFile))
-                .setRole(DataFileRoleType.CAPTIONS)
+    protected Asset buildAsset(File assetFile) {
+        return new DefaultAssetBuilder(assetFile, getDestFileName(assetFile))
+                .setType(AssetType.FULL)
+                .setRole(AssetRole.CAPTIONS)
+                .setLocale(getLocaleFromFileName(assetFile))
                 .build();
-    }
-
-    @Override
-    protected void appendMetadata(DataFileType tag) {
-        metadataXmlProvider.appendAssetDataFile(tag, AssetTypeType.FULL);
     }
 
     @Override
@@ -98,7 +96,7 @@ public class CaptionsAssetProcessor extends AssetProcessor<DataFileType> {
 
     private void validateLocale(File assetFile) throws AssetValidationException {
         try {
-            LocaleValidator.validateLocale(extractLocale(assetFile));
+            LocaleValidator.validateLocale(getPostfix(assetFile.getName()));
         } catch (LocaleValidationException e) {
             throw new AssetValidationException("Captions locale validation failed. "
                     + "Filename must fit pattern <filename>-xx_XX.scc, where xx_XX - existing locale", e);
@@ -106,27 +104,28 @@ public class CaptionsAssetProcessor extends AssetProcessor<DataFileType> {
 
     }
 
-    private void validateDuplicateLanguages(File assetFile) {
-        String language = getLanguageFromFileName(assetFile);
+    private void validateDuplicateLocales(File assetFile) {
+        Locale locale = getLocaleFromFileName(assetFile);
 
-        boolean duplicate = metadataXmlProvider.getFullAssetDataFilesByRole(DataFileRoleType.CAPTIONS).stream()
-                .map(DataFileType::getFileName)
-                .map(this::getPostfix)
-                .anyMatch(Predicate.isEqual(language));
+        // search for duplicates by main language
+        Stream<Locale> stream = metadataXmlProvider.getLocalesByRole(AssetRole.CAPTIONS).stream();
+
+        boolean duplicate = stream
+                .map(Locale::getLanguage)
+                .anyMatch(lang -> lang.equals(locale.getLanguage()));
 
         if (duplicate) {
             throw new AssetValidationException(String.format(
-                    "Captions locale validation failed. Metadata already contains captions for %s language", language));
+                    "Captions locale validation failed. Metadata already contains captions for %s locale.", locale.getDisplayName()));
         }
     }
 
     private String getLanguageFromFileName(File assetFile) {
-        Locale locale = LocaleUtils.toLocale(getPostfix(assetFile.getName()));
-        return locale.getDisplayLanguage(DEFAULT_CC_LOCALE).toLowerCase();
+        return getLocaleFromFileName(assetFile).getDisplayLanguage(DEFAULT_CC_LOCALE).toLowerCase();
     }
 
-    private String extractLocale(File assetFile) {
-        return getPostfix(assetFile.getName());
+    private Locale getLocaleFromFileName(File assetFile) {
+        return LocaleUtils.toLocale(getPostfix(assetFile.getName()));
     }
 
     private String getPostfix(String fileName) {

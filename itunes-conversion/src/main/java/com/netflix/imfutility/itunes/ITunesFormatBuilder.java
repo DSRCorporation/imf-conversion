@@ -29,8 +29,7 @@ import com.netflix.imfutility.conversion.templateParameter.context.SequenceTempl
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
-import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
-import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
+import com.netflix.imfutility.generated.itunes.chapters.InputChapterItem;
 import com.netflix.imfutility.generated.mediainfo.FfprobeType;
 import com.netflix.imfutility.itunes.asset.AssetValidationException;
 import com.netflix.imfutility.itunes.asset.AudioAssetProcessor;
@@ -40,23 +39,26 @@ import com.netflix.imfutility.itunes.asset.PosterAssetProcessor;
 import com.netflix.imfutility.itunes.asset.SourceAssetProcessor;
 import com.netflix.imfutility.itunes.asset.SubtitlesAssetProcessor;
 import com.netflix.imfutility.itunes.asset.TrailerAssetProcessor;
+import com.netflix.imfutility.itunes.chapters.ChaptersXmlProvider;
 import com.netflix.imfutility.itunes.destcontext.DestContextResolveStrategy;
 import com.netflix.imfutility.itunes.destcontext.InputDestContextResolveStrategy;
 import com.netflix.imfutility.itunes.destcontext.NameDestContextResolveStrategy;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
+import com.netflix.imfutility.itunes.locale.LocaleHelper;
 import com.netflix.imfutility.itunes.locale.LocaleValidator;
 import com.netflix.imfutility.itunes.mediainfo.SimpleMediaInfoBuilder;
+import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
+import com.netflix.imfutility.itunes.metadata.film.FilmMetadataXmlProvider;
 import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider;
 import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider.AudioOption;
-import com.netflix.imfutility.itunes.xmlprovider.ChaptersXmlProvider;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
 import com.netflix.imfutility.mediainfo.MediaInfoException;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
+import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -67,6 +69,7 @@ import org.w3.ns.ttml.TtEltype;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
@@ -191,6 +194,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         // process subtitles (if exists)
         processSubtitles();
 
+
         metadataXmlProvider.saveMetadata(itmspDir);
     }
 
@@ -286,7 +290,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
             if (metadataXmlProvider.isCustomized() && audioMapXmlProvider.isCustomized()) {
                 if (!Objects.equals(metadataXmlProvider.getLocale(), audioMapXmlProvider.getLocale())) {
-                    logger.warn("Locales set in metadata.xml and audiomap.xml don't match.");
+                    logger.warn("Locale set in metadata.xml doesn't match locale in audiomap.xml.");
                 }
                 return;
             }
@@ -314,9 +318,9 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
         LocaleValidator.validateLocale(locale);
 
-        metadataXmlProvider.setLocale(locale);
+        metadataXmlProvider.setLocale(LocaleHelper.fromITunesLocale(locale));
         if (hasAudio) {
-            audioMapXmlProvider.setLocale(locale);
+            audioMapXmlProvider.setLocale(LocaleHelper.fromITunesLocale(locale));
         }
     }
 
@@ -342,7 +346,8 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         File metadataFile = iTunesInputParameters.getMetadataFile();
         String vendorId = iTunesInputParameters.getCmdLineArgs().getVendorId();
 
-        metadataXmlProvider = new MetadataXmlProvider(vendorId, metadataFile);
+        metadataXmlProvider = new FilmMetadataXmlProvider(metadataFile);
+        metadataXmlProvider.updateVendorId(vendorId);
     }
 
     private void initAudioMap() throws IOException, XmlParsingException {
@@ -451,6 +456,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
         new PosterAssetProcessor(metadataXmlProvider, itmspDir)
                 .setVendorId(iTunesInputParameters.getCmdLineArgs().getVendorId())
+                .setLocale(metadataXmlProvider.getLocale())
                 .process(poster);
     }
 
@@ -462,14 +468,14 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
         ChaptersXmlProvider chaptersXmlProvider = new ChaptersXmlProvider(chaptersFile);
 
-        metadataXmlProvider.appendChaptersTimeCode(chaptersXmlProvider.getChapters().getTimecodeFormat());
+        metadataXmlProvider.appendChaptersTimeCode(chaptersXmlProvider.getTimecodeFormat());
 
         ChapterAssetProcessor processor = new ChapterAssetProcessor(metadataXmlProvider, itmspDir)
                 .setAspectRatio(getDestAspectRatio());
 
         int i = 1;
-        for (ChapterInputType chapter : chaptersXmlProvider.getChapters().getChapter()) {
-            processor.setInputChapter(chapter)
+        for (InputChapterItem chapter : chaptersXmlProvider.getChapters()) {
+            processor.setInputChapterItem(chapter)
                     .setChapterIndex(i)
                     .process(chaptersXmlProvider.getChapterFile(chapter));
             i++;
@@ -485,7 +491,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         new TrailerAssetProcessor(metadataXmlProvider, itmspDir)
                 .setVendorId(iTunesInputParameters.getCmdLineArgs().getVendorId())
                 .setFormat(getTrailerMediaInfo(trailer).getFormat())
-                .setLocale(metadataXmlProvider.getDefaultLocale())
+                .setLocale(metadataXmlProvider.getLocale())
                 .process(trailer);
     }
 
@@ -519,7 +525,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         File destSource = new File(contextProvider.getWorkingDir(), dynamicContext.getParameterValueAsString(DYNAMIC_PARAM_DEST_SOURCE));
 
         new SourceAssetProcessor(metadataXmlProvider, itmspDir)
-                .setLocale(MetadataXmlProvider.getLocale(audioMapXmlProvider.getLocale()))
+                .setLocale(audioMapXmlProvider.getLocale())
                 .process(destSource);
     }
 
@@ -545,7 +551,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         File audio = new File(inputParameters.getWorkingDirFile(), audioOption.getFileName());
 
         new AudioAssetProcessor(metadataXmlProvider, itmspDir)
-                .setLocale(MetadataXmlProvider.getLocale(audioOption.getLocale()))
+                .setLocale(LocaleUtils.toLocale(audioOption.getLocale()))
                 .process(audio);
     }
 
@@ -589,10 +595,10 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
      * @return iTunes locale associated with input subtitles.
      * @throws IOException
      */
-    private LocaleType getLocaleFromTtml(File subtitles) throws IOException {
+    private Locale getLocaleFromTtml(File subtitles) throws IOException {
         try {
             TtEltype ttEl = XmlParser.parse(subtitles, new String[]{TTML_SCHEMA}, TTML_PACKAGES, TtEltype.class);
-            return metadataXmlProvider.getLocale(ttEl.getLang());
+            return LocaleHelper.fromITunesLocale(ttEl.getLang());
         } catch (XmlParsingException e) {
             throw new ConversionException("Can't parse subtitles");
         }

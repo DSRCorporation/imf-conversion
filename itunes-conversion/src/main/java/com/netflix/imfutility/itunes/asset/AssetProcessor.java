@@ -19,8 +19,9 @@
 package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.itunes.asset.type.Asset;
 import com.netflix.imfutility.itunes.asset.distribute.DistributeAssetStrategy;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
+import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,17 +38,17 @@ import java.io.IOException;
  * <li>Asset distribution to destination package</li>
  * </ul>
  *
- * @param <T> metadata tag class
+ * @param <T> type of processed asset.
  */
-public abstract class AssetProcessor<T> {
+public abstract class AssetProcessor<T extends Asset> {
     private final Logger logger = LoggerFactory.getLogger(AssetProcessor.class);
 
-    protected final MetadataXmlProvider metadataXmlProvider;
+    protected final MetadataXmlProvider<?> metadataXmlProvider;
     protected final File destDir;
 
-    protected DistributeAssetStrategy distributeAssetStrategy;
+    private DistributeAssetStrategy distributeAssetStrategy;
 
-    public AssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
+    public AssetProcessor(MetadataXmlProvider<?> metadataXmlProvider, File destDir) {
         this.metadataXmlProvider = metadataXmlProvider;
         this.destDir = destDir;
     }
@@ -69,13 +70,15 @@ public abstract class AssetProcessor<T> {
         }
 
         validate(assetFile);
-        appendMetadata(buildMetadata(assetFile));
+        appendAsset(buildAsset(assetFile));
         distribute(assetFile);
 
         logger.info("Processed asset: OK\n");
     }
 
-    protected abstract boolean checkMandatoryParams();
+    protected void appendAsset(T asset) {
+        metadataXmlProvider.appendAsset(asset);
+    }
 
     protected void distribute(File assetFile) throws IOException {
         if (distributeAssetStrategy != null) {
@@ -83,11 +86,11 @@ public abstract class AssetProcessor<T> {
         }
     }
 
+    protected abstract boolean checkMandatoryParams();
+
     protected abstract void validate(File assetFile) throws AssetValidationException;
 
-    protected abstract T buildMetadata(File assetFile);
-
-    protected abstract void appendMetadata(T tag);
+    protected abstract T buildAsset(File assetFile);
 
     protected abstract String getDestFileName(File assetFile);
 }

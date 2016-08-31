@@ -16,13 +16,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.xmlprovider;
+package com.netflix.imfutility.itunes.chapters;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.generated.itunes.metadata.ChapterInputType;
-import com.netflix.imfutility.generated.itunes.metadata.ChaptersInputType;
-import com.netflix.imfutility.generated.itunes.metadata.ObjectFactory;
-import com.netflix.imfutility.itunes.xmlprovider.builder.ChaptersXmlSampleBuilder;
+import com.netflix.imfutility.generated.itunes.chapters.InputChapterItem;
+import com.netflix.imfutility.generated.itunes.chapters.InputChapterList;
+import com.netflix.imfutility.generated.itunes.chapters.ObjectFactory;
+import com.netflix.imfutility.itunes.chapters.builder.ChaptersXmlSampleBuilder;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.xml.sax.SAXException;
@@ -34,6 +34,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.validation.Schema;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -42,40 +43,45 @@ import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.CHAPTER
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.CHAPTERS_XML_SCHEME;
 
 /**
- * Provides functionality to generate empty chapters.xml for iTunes format.
+ * Provides functionality to generate empty chapters.xml for iTunes format and to manage chapter assets.
  */
 public final class ChaptersXmlProvider {
 
-    private final ChaptersInputType chaptersType;
+    private final InputChapterList chapters;
     private final File baseDir;
-    private Map<ChapterInputType, File> chaptersAssetMap;
+    private Map<InputChapterItem, File> chaptersAssetMap;
+
 
     public ChaptersXmlProvider(File chaptersFile) throws FileNotFoundException, XmlParsingException {
-        this.chaptersType = loadChapters(chaptersFile);
-        this.baseDir = new File(chaptersType.getBasedir());
+        this.chapters = loadChapters(chaptersFile);
+        this.baseDir = new File(chapters.getBasedir());
 
         mapChaptersAssets();
         checkChaptersAssets();
     }
 
-    private ChaptersInputType loadChapters(File chaptersFile) throws FileNotFoundException, XmlParsingException {
+    private InputChapterList loadChapters(File chaptersFile) throws FileNotFoundException, XmlParsingException {
         if (!chaptersFile.isFile()) {
             throw new FileNotFoundException(String.format(
                     "Invalid chapters.xml file: '%s' not found", chaptersFile.getAbsolutePath()));
         }
-        return XmlParser.parse(chaptersFile, new String[]{CHAPTERS_XML_SCHEME}, CHAPTERS_PACKAGE, ChaptersInputType.class);
+        return XmlParser.parse(chaptersFile, new String[]{CHAPTERS_XML_SCHEME}, CHAPTERS_PACKAGE, InputChapterList.class);
     }
 
-    public ChaptersInputType getChapters() {
-        return chaptersType;
+    public List<InputChapterItem> getChapters() {
+        return chapters.getInputChapter();
     }
 
-    public File getChapterFile(ChapterInputType chapter) {
+    public String getTimecodeFormat() {
+        return chapters.getTimecodeFormat();
+    }
+
+    public File getChapterFile(InputChapterItem chapter) {
         return chaptersAssetMap.get(chapter);
     }
 
     private void mapChaptersAssets() {
-        chaptersAssetMap = chaptersType.getChapter().stream()
+        chaptersAssetMap = chapters.getInputChapter().stream()
                 .limit(99)
                 .collect(Collectors.toMap(Function.identity(), this::createChapterFile));
     }
@@ -86,7 +92,7 @@ public final class ChaptersXmlProvider {
         }
     }
 
-    private File createChapterFile(ChapterInputType chapter) {
+    private File createChapterFile(InputChapterItem chapter) {
         return new File(baseDir, chapter.getFileName());
     }
 
@@ -130,16 +136,16 @@ public final class ChaptersXmlProvider {
     /**
      * Marshall chapters.
      *
-     * @param chaptersType package to marshall
-     * @param schemaPath   path to schema
+     * @param chapters   package to marshall
+     * @param schemaPath path to schema
      */
-    private static void marshallChapters(ChaptersInputType chaptersType, String schemaPath, File file) {
+    private static void marshallChapters(InputChapterList chapters, String schemaPath, File file) {
         JAXBContext jaxbContext;
         try {
-            jaxbContext = JAXBContext.newInstance(ChaptersInputType.class);
+            jaxbContext = JAXBContext.newInstance(InputChapterList.class);
             Marshaller jaxbMarshaller = createMarshaller(jaxbContext, schemaPath);
 
-            JAXBElement<ChaptersInputType> chaptersJaxb = new ObjectFactory().createChapters(chaptersType);
+            JAXBElement<InputChapterList> chaptersJaxb = new ObjectFactory().createInputChapters(chapters);
             jaxbMarshaller.marshal(chaptersJaxb, file);
         } catch (SAXException | JAXBException e) {
             throw new RuntimeException(e);

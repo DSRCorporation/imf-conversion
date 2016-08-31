@@ -18,12 +18,14 @@
  */
 package com.netflix.imfutility.itunes.xmlprovider;
 
+import java.util.Locale;
+
 /**
  * Common interface for provider which must implements locale customization logic.
  */
 public interface LocalizedXmlProvider {
 
-    void setLocale(String locale);
+    void setLocale(Locale locale);
 
-    String getLocale();
+    Locale getLocale();
 }

@@ -18,27 +18,27 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
-import com.netflix.imfutility.generated.itunes.metadata.AssetTypeType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileRoleType;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileType;
-import com.netflix.imfutility.generated.itunes.metadata.LocaleType;
-import com.netflix.imfutility.itunes.xmlprovider.MetadataXmlProvider;
-import com.netflix.imfutility.itunes.xmlprovider.builder.file.DataFileTagBuilder;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
+import com.netflix.imfutility.itunes.asset.type.VideoAsset;
+import com.netflix.imfutility.itunes.asset.builder.VideoAssetBuilder;
+import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * Asset processor specified for main source managing.
  */
-public class SourceAssetProcessor extends AssetProcessor<DataFileType> {
+public class SourceAssetProcessor extends AssetProcessor<VideoAsset> {
 
-    private LocaleType locale;
+    private Locale locale;
 
-    public SourceAssetProcessor(MetadataXmlProvider metadataXmlProvider, File destDir) {
+    public SourceAssetProcessor(MetadataXmlProvider<?> metadataXmlProvider, File destDir) {
         super(metadataXmlProvider, destDir);
     }
 
-    public SourceAssetProcessor setLocale(LocaleType locale) {
+    public SourceAssetProcessor setLocale(Locale locale) {
         this.locale = locale;
         return this;
     }
@@ -54,17 +54,12 @@ public class SourceAssetProcessor extends AssetProcessor<DataFileType> {
     }
 
     @Override
-    protected DataFileType buildMetadata(File assetFile) {
-        return new DataFileTagBuilder(assetFile, getDestFileName(assetFile))
+    protected VideoAsset buildAsset(File assetFile) {
+        return new VideoAssetBuilder(assetFile, getDestFileName(assetFile))
+                .setType(AssetType.FULL)
+                .setRole(AssetRole.SOURCE)
                 .setLocale(locale)
-                .setRole(DataFileRoleType.SOURCE)
-                .setCropToZero(true)
                 .build();
-    }
-
-    @Override
-    protected void appendMetadata(DataFileType tag) {
-        metadataXmlProvider.appendAssetDataFile(tag, AssetTypeType.FULL);
     }
 
     @Override

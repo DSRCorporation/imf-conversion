@@ -20,7 +20,6 @@ package com.netflix.imfutility.itunes.chapters;
 
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.itunes.util.ChaptersUtils;
-import com.netflix.imfutility.itunes.xmlprovider.ChaptersXmlProvider;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.apache.commons.io.FileUtils;
@@ -33,7 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertFalse;
 
 /**
  * Tests parsing chapters.xml.
@@ -70,13 +69,11 @@ public class ChaptersXmlProviderTest {
     public void testParseCorrectChapters() throws Exception {
         ChaptersXmlProvider provider = new ChaptersXmlProvider(ChaptersUtils.getCorrectChaptersXml());
 
-        assertNotNull(provider.getChapters());
-        assertNotNull(provider.getChapters().getTimecodeFormat());
+        assertFalse(provider.getChapters().isEmpty());
+        assertEquals("24/999 1000/nonDrop", provider.getTimecodeFormat());
 
-        assertEquals(".", provider.getChapters().getBasedir());
-
-        assertEquals("chapter01.jpg", provider.getChapters().getChapter().get(0).getFileName());
-        assertEquals("chapter02.jpg", provider.getChapters().getChapter().get(1).getFileName());
+        assertEquals("chapter01.jpg", provider.getChapters().get(0).getFileName());
+        assertEquals("chapter02.jpg", provider.getChapters().get(1).getFileName());
     }
 
     @Test(expected = XmlParsingException.class)
@@ -102,11 +99,13 @@ public class ChaptersXmlProviderTest {
     }
 
     @Test
-    public void testGenerateSampleChapters() {
+    public void testGenerateSampleChapters() throws Exception {
         File chaptersFile = new File(TemplateParameterContextCreator.getWorkingDir(), "sample_chapters.xml");
         ChaptersXmlProvider.generateSampleXml(chaptersFile);
 
         assertEquals(new File(TemplateParameterContextCreator.getWorkingDir(), "sample_chapters.xml"), chaptersFile);
+
+        new ChaptersXmlProvider(chaptersFile);
     }
 
 }
