@@ -18,9 +18,9 @@
  */
 package com.netflix.imfutility.itunes.metadata;
 
-import com.netflix.imfutility.itunes.asset.bean.Asset;
-import com.netflix.imfutility.itunes.asset.bean.AssetRole;
-import com.netflix.imfutility.itunes.asset.bean.ChapterAsset;
+import com.netflix.imfutility.itunes.asset.type.Asset;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.ChapterAsset;
 import com.netflix.imfutility.itunes.xmlprovider.LocalizedXmlProvider;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -48,21 +48,22 @@ public abstract class MetadataXmlProvider<T> implements LocalizedXmlProvider {
 
     private final boolean customized;
 
-    protected final MetadataInfo<T> metadataInfo;
+    protected final MetadataDescriptor<T> metadataDescriptor;
     protected final T rootElement;
     protected final JAXBContext context;
 
-    public MetadataXmlProvider(MetadataInfo<T> metadataInfo) throws FileNotFoundException, XmlParsingException {
-        this(metadataInfo, null);
+    public MetadataXmlProvider(MetadataDescriptor<T> metadataDescriptor) throws FileNotFoundException, XmlParsingException {
+        this(metadataDescriptor, null);
     }
 
-    public MetadataXmlProvider(MetadataInfo<T> metadataInfo, File metadataFile) throws FileNotFoundException, XmlParsingException {
+    public MetadataXmlProvider(MetadataDescriptor<T> metadataDescriptor, File metadataFile)
+            throws FileNotFoundException, XmlParsingException {
         this.customized = metadataFile != null;
 
-        this.metadataInfo = metadataInfo;
+        this.metadataDescriptor = metadataDescriptor;
         this.rootElement = customized ? loadMetadata(metadataFile) : generateDefaultMetadata();
         try {
-            this.context = JAXBContext.newInstance(metadataInfo.getMetadataClass());
+            this.context = JAXBContext.newInstance(metadataDescriptor.getMetadataClass());
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
@@ -74,9 +75,9 @@ public abstract class MetadataXmlProvider<T> implements LocalizedXmlProvider {
                     "Invalid metadata.xml file: '%s' not found", metadataFile.getAbsolutePath()));
         }
         return XmlParser.parse(metadataFile,
-                new String[]{metadataInfo.getMetadataSchema()},
-                metadataInfo.getMetadataPackage(),
-                metadataInfo.getMetadataClass());
+                new String[]{metadataDescriptor.getMetadataSchema()},
+                metadataDescriptor.getMetadataPackage(),
+                metadataDescriptor.getMetadataClass());
     }
 
     public boolean isCustomized() {
@@ -149,10 +150,10 @@ public abstract class MetadataXmlProvider<T> implements LocalizedXmlProvider {
      */
     private void marshallMetadata(T root, File file) {
         try {
-            Marshaller jaxbMarshaller = createMarshaller(context, metadataInfo.getMetadataSchema());
+            Marshaller jaxbMarshaller = createMarshaller(context, metadataDescriptor.getMetadataSchema());
 
-            QName qName = new QName(metadataInfo.getMetadataNamespace(), metadataInfo.getMetadataRoot());
-            JAXBElement<T> metadataJaxb = new JAXBElement<>(qName, metadataInfo.getMetadataClass(), null, root);
+            QName qName = new QName(metadataDescriptor.getMetadataNamespace(), metadataDescriptor.getMetadataRoot());
+            JAXBElement<T> metadataJaxb = new JAXBElement<>(qName, metadataDescriptor.getMetadataClass(), null, root);
             jaxbMarshaller.marshal(metadataJaxb, file);
         } catch (SAXException | JAXBException e) {
             throw new RuntimeException(e);

@@ -19,9 +19,9 @@
 package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.itunes.asset.bean.AssetRole;
-import com.netflix.imfutility.itunes.asset.bean.AssetType;
-import com.netflix.imfutility.itunes.asset.bean.VideoAsset;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
+import com.netflix.imfutility.itunes.asset.type.VideoAsset;
 import com.netflix.imfutility.itunes.util.FakeMetadataXmlProvider;
 import com.netflix.imfutility.itunes.util.TestUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
@@ -78,7 +78,6 @@ public class SourceAssetProcessorTest {
         assertEquals(AssetRole.SOURCE, sourceAsset.getRole());
         assertEquals(Locale.US, sourceAsset.getLocale());
         assertEquals("test-file", sourceAsset.getFileName());
-        assertTrue(sourceAsset.isCropToZero());
     }
 
     @Test(expected = ConversionException.class)

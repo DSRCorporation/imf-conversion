@@ -19,7 +19,7 @@
 package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.itunes.asset.bean.Asset;
+import com.netflix.imfutility.itunes.asset.type.Asset;
 import com.netflix.imfutility.itunes.asset.distribute.DistributeAssetStrategy;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 import org.slf4j.Logger;

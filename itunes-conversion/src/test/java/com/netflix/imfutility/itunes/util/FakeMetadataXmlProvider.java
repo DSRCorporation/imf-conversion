@@ -18,10 +18,10 @@
  */
 package com.netflix.imfutility.itunes.util;
 
-import com.netflix.imfutility.itunes.asset.bean.Asset;
-import com.netflix.imfutility.itunes.asset.bean.AssetRole;
-import com.netflix.imfutility.itunes.asset.bean.ChapterAsset;
-import com.netflix.imfutility.itunes.metadata.MetadataInfo;
+import com.netflix.imfutility.itunes.asset.type.Asset;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.ChapterAsset;
+import com.netflix.imfutility.itunes.metadata.MetadataDescriptor;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 import com.netflix.imfutility.itunes.util.FakeMetadataXmlProvider.FakeRoot;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public class FakeMetadataXmlProvider extends MetadataXmlProvider<FakeRoot> {
 
     public FakeMetadataXmlProvider() throws FileNotFoundException, XmlParsingException {
-        super(new FakeMetadataInfo());
+        super(new FakeMetadataDescriptor());
     }
 
     @Override
@@ -93,7 +93,7 @@ public class FakeMetadataXmlProvider extends MetadataXmlProvider<FakeRoot> {
         }
     }
 
-    public static class FakeMetadataInfo implements MetadataInfo<FakeRoot> {
+    public static class FakeMetadataDescriptor implements MetadataDescriptor<FakeRoot> {
 
         @Override
         public Class<FakeRoot> getMetadataClass() {

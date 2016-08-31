@@ -27,10 +27,11 @@ public final class ITunesConversionXsdConstants {
     }
 
     // metadata.xml
-    public static final String METADATA_XML_SCHEME = "xsd/metadata/itunes-metadata.xsd";
-    public static final String METADATA_PACKAGE = "com.netflix.imfutility.generated.itunes.metadata";
-    public static final String METADATA_NAMESPACE = "http://apple.com/itunes/importer";
-    public static final String METADATA_ROOT_ELEMENT = "package";
+    // film spec
+    public static final String FILM_METADATA_XML_SCHEME = "xsd/metadata/film/itunes-film-metadata.xsd";
+    public static final String FILM_METADATA_PACKAGE = "com.netflix.imfutility.generated.itunes.metadata.film";
+    public static final String FILM_METADATA_NAMESPACE = "http://apple.com/itunes/importer";
+    public static final String FILM_METADATA_ROOT_ELEMENT = "package";
 
     // audiomap.xml
     public static final String AUDIOMAP_XML_SCHEME = "xsd/audiomap/itunes-audiomap.xsd";

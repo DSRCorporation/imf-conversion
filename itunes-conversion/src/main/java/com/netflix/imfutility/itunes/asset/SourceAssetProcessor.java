@@ -18,9 +18,9 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
-import com.netflix.imfutility.itunes.asset.bean.AssetRole;
-import com.netflix.imfutility.itunes.asset.bean.AssetType;
-import com.netflix.imfutility.itunes.asset.bean.VideoAsset;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
+import com.netflix.imfutility.itunes.asset.type.VideoAsset;
 import com.netflix.imfutility.itunes.asset.builder.VideoAssetBuilder;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 
@@ -56,7 +56,6 @@ public class SourceAssetProcessor extends AssetProcessor<VideoAsset> {
     @Override
     protected VideoAsset buildAsset(File assetFile) {
         return new VideoAssetBuilder(assetFile, getDestFileName(assetFile))
-                .setCropToZero(true)
                 .setType(AssetType.FULL)
                 .setRole(AssetRole.SOURCE)
                 .setLocale(locale)

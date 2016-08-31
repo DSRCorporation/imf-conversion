@@ -19,8 +19,8 @@
 package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.itunes.asset.bean.Asset;
-import com.netflix.imfutility.itunes.asset.bean.AssetType;
+import com.netflix.imfutility.itunes.asset.type.Asset;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
 import com.netflix.imfutility.itunes.image.ImageValidationException;
 import com.netflix.imfutility.itunes.util.AssetUtils;
 import com.netflix.imfutility.itunes.util.FakeMetadataXmlProvider;

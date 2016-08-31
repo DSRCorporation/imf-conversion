@@ -16,22 +16,10 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.metadata;
+package com.netflix.imfutility.itunes.asset.type;
 
 /**
- * Metadata info for correct schema validation, marshalling and unmarshalling.
- *
- * @param <T> root element class.
+ * Asset info bean specified for iTunes film metadata info related to video essence.
  */
-public interface MetadataInfo<T> {
-
-    Class<T> getMetadataClass();
-
-    String getMetadataSchema();
-
-    String getMetadataPackage();
-
-    String getMetadataNamespace();
-
-    String getMetadataRoot();
+public class VideoAsset extends Asset {
 }

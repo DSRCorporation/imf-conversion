@@ -37,7 +37,7 @@ public final class LocaleValidator {
         }
 
         try {
-            Locale locale = LocaleUtils.toLocale(str.replace("-", "_"));
+            Locale locale = LocaleHelper.fromITunesLocale(str);
 
             if (!LocaleUtils.availableLocaleList().contains(locale)) {
                 throw new LocaleValidationException(String.format(

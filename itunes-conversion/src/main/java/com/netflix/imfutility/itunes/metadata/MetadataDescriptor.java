@@ -16,22 +16,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.asset.bean;
-
-
-import com.netflix.imfutility.generated.itunes.chapters.InputChapterItem;
+package com.netflix.imfutility.itunes.metadata;
 
 /**
- * Asset info bean specified for iTunes film metadata chapter info.
+ * Metadata descriptor for correct schema validation, marshalling and unmarshalling.
+ *
+ * @param <T> root element class.
  */
-public class ChapterAsset extends Asset {
-    private InputChapterItem inputChapterItem;
+public interface MetadataDescriptor<T> {
 
-    public InputChapterItem getInputChapterItem() {
-        return inputChapterItem;
-    }
+    Class<T> getMetadataClass();
 
-    public void setInputChapterItem(InputChapterItem inputChapterItem) {
-        this.inputChapterItem = inputChapterItem;
-    }
+    String getMetadataSchema();
+
+    String getMetadataPackage();
+
+    String getMetadataNamespace();
+
+    String getMetadataRoot();
 }

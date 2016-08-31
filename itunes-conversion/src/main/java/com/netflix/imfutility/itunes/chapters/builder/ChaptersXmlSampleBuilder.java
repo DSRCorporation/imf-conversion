@@ -20,7 +20,7 @@ package com.netflix.imfutility.itunes.chapters.builder;
 
 import com.netflix.imfutility.generated.itunes.chapters.InputChapterItem;
 import com.netflix.imfutility.generated.itunes.chapters.InputChapterList;
-import com.netflix.imfutility.generated.itunes.metadata.NonEmptyLocalizableTextElement;
+import com.netflix.imfutility.generated.itunes.chapters.NonEmptyLocalizableTextElement;
 
 /**
  * Builder for creating sample chapters specified for iTunes.
@@ -28,29 +28,36 @@ import com.netflix.imfutility.generated.itunes.metadata.NonEmptyLocalizableTextE
  */
 public final class ChaptersXmlSampleBuilder {
 
+    private static final String BASEDIR = ".";
+    private static final String TIMECODE_FORMAT = "qt_text";
+    private static final String START_TIME = "00:00:00";
+    private static final String FILE_NAME = "chapter01.jpg";
+    private static final String LOCALE = "en-US";
+    private static final String TITLE = "Required chapter title";
+
     private ChaptersXmlSampleBuilder() {
     }
 
     public static InputChapterList buildInputChapters() {
         InputChapterList chapters = new InputChapterList();
-        chapters.setBasedir(".");
-        chapters.setTimecodeFormat("qt_text");
+        chapters.setBasedir(BASEDIR);
+        chapters.setTimecodeFormat(TIMECODE_FORMAT);
         chapters.getInputChapter().add(buildInputChapter());
         return chapters;
     }
 
     public static InputChapterItem buildInputChapter() {
         InputChapterItem chapter = new InputChapterItem();
-        chapter.setStartTime("00:00:00");
+        chapter.setStartTime(START_TIME);
         chapter.setTitle(buildTitle());
-        chapter.setFileName("chapter01.jpg");
+        chapter.setFileName(FILE_NAME);
         return chapter;
     }
 
     private static NonEmptyLocalizableTextElement buildTitle() {
         NonEmptyLocalizableTextElement title = new NonEmptyLocalizableTextElement();
-        title.setLocale("en-US");
-        title.setValue("Required chapter title");
+        title.setLocale(LOCALE);
+        title.setValue(TITLE);
         return title;
     }
 

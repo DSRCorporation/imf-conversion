@@ -19,7 +19,7 @@
 package com.netflix.imfutility.itunes.asset.builder;
 
 import com.netflix.imfutility.generated.itunes.chapters.InputChapterItem;
-import com.netflix.imfutility.itunes.asset.bean.ChapterAsset;
+import com.netflix.imfutility.itunes.asset.type.ChapterAsset;
 
 import java.io.File;
 

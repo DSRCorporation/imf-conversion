@@ -18,16 +18,16 @@
  */
 package com.netflix.imfutility.itunes.metadata.film;
 
-import com.netflix.imfutility.generated.itunes.metadata.AssetFile;
-import com.netflix.imfutility.generated.itunes.metadata.AssetItem;
-import com.netflix.imfutility.generated.itunes.metadata.ChapterItem;
-import com.netflix.imfutility.generated.itunes.metadata.Checksum;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileRole;
-import com.netflix.imfutility.generated.itunes.metadata.PackageType;
-import com.netflix.imfutility.itunes.asset.bean.Asset;
-import com.netflix.imfutility.itunes.asset.bean.AssetRole;
-import com.netflix.imfutility.itunes.asset.bean.AssetType;
-import com.netflix.imfutility.itunes.asset.bean.ChapterAsset;
+import com.netflix.imfutility.generated.itunes.metadata.film.AssetFile;
+import com.netflix.imfutility.generated.itunes.metadata.film.AssetItem;
+import com.netflix.imfutility.generated.itunes.metadata.film.ChapterItem;
+import com.netflix.imfutility.generated.itunes.metadata.film.Checksum;
+import com.netflix.imfutility.generated.itunes.metadata.film.DataFileRole;
+import com.netflix.imfutility.generated.itunes.metadata.film.PackageType;
+import com.netflix.imfutility.itunes.asset.type.Asset;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
+import com.netflix.imfutility.itunes.asset.type.ChapterAsset;
 import com.netflix.imfutility.itunes.chapters.builder.ChaptersXmlSampleBuilder;
 import com.netflix.imfutility.itunes.metadata.film.wrap.ChapterItemWrapper;
 import com.netflix.imfutility.itunes.metadata.film.wrap.FileWrapper;

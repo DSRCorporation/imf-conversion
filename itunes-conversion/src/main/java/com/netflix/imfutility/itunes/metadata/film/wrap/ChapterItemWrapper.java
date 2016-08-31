@@ -18,9 +18,9 @@
  */
 package com.netflix.imfutility.itunes.metadata.film.wrap;
 
-import com.netflix.imfutility.generated.itunes.metadata.ChapterItem;
-import com.netflix.imfutility.generated.itunes.metadata.File;
-import com.netflix.imfutility.generated.itunes.metadata.NonEmptyLocalizableTextElement;
+import com.netflix.imfutility.generated.itunes.metadata.film.ChapterItem;
+import com.netflix.imfutility.generated.itunes.metadata.film.File;
+import com.netflix.imfutility.generated.itunes.metadata.film.NonEmptyLocalizableTextElement;
 import com.netflix.imfutility.itunes.metadata.ElemWrapper;
 
 import javax.xml.bind.JAXBContext;
@@ -30,6 +30,10 @@ import java.util.List;
  * Wrapper for {@link ChapterItem}.
  */
 public class ChapterItemWrapper extends ElemWrapper<ChapterItem> {
+
+    private static final String START_TIME = "start_time";
+    private static final String TITLE = "title";
+    private static final String ARTWORK_FILE = "artwork_file";
 
     private List<Object> mixed;
 
@@ -43,7 +47,7 @@ public class ChapterItemWrapper extends ElemWrapper<ChapterItem> {
     }
 
     public String getStartTime() {
-        return getElemValueByName(mixed, "start_time", String.class);
+        return getElemValueByName(mixed, START_TIME, String.class);
     }
 
     public void setTitle(NonEmptyLocalizableTextElement title) {
@@ -51,7 +55,7 @@ public class ChapterItemWrapper extends ElemWrapper<ChapterItem> {
     }
 
     public NonEmptyLocalizableTextElement getTitle() {
-        return getElemValueByName(mixed, "title", NonEmptyLocalizableTextElement.class);
+        return getElemValueByName(mixed, TITLE, NonEmptyLocalizableTextElement.class);
     }
 
     public void setArtworkFile(File file) {
@@ -59,6 +63,6 @@ public class ChapterItemWrapper extends ElemWrapper<ChapterItem> {
     }
 
     public File getArtworkFile() {
-        return getElemValueByName(mixed, "artwork_file", File.class);
+        return getElemValueByName(mixed, ARTWORK_FILE, File.class);
     }
 }

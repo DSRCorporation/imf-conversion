@@ -18,7 +18,7 @@
  */
 package com.netflix.imfutility.itunes.asset.builder;
 
-import com.netflix.imfutility.itunes.asset.bean.VideoAsset;
+import com.netflix.imfutility.itunes.asset.type.VideoAsset;
 
 import java.io.File;
 
@@ -27,25 +27,12 @@ import java.io.File;
  */
 public class VideoAssetBuilder extends AssetBuilder<VideoAsset> {
 
-    private boolean cropToZero = false;
-
     public VideoAssetBuilder(File file) {
         super(file);
     }
 
     public VideoAssetBuilder(File file, String fileName) {
         super(file, fileName);
-    }
-
-    public VideoAssetBuilder setCropToZero(boolean cropToZero) {
-        this.cropToZero = cropToZero;
-        return this;
-    }
-
-    @Override
-    protected void buildImpl(VideoAsset asset) {
-        super.buildImpl(asset);
-        asset.setCropToZero(cropToZero);
     }
 
     @Override

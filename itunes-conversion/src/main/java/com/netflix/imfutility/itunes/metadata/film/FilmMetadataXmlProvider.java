@@ -18,28 +18,30 @@
  */
 package com.netflix.imfutility.itunes.metadata.film;
 
-import com.netflix.imfutility.generated.itunes.metadata.AssetFile;
-import com.netflix.imfutility.generated.itunes.metadata.AssetItem;
-import com.netflix.imfutility.generated.itunes.metadata.AssetList;
-import com.netflix.imfutility.generated.itunes.metadata.Attribute;
-import com.netflix.imfutility.generated.itunes.metadata.ChapterItem;
-import com.netflix.imfutility.generated.itunes.metadata.ChapterList;
-import com.netflix.imfutility.generated.itunes.metadata.Checksum;
-import com.netflix.imfutility.generated.itunes.metadata.DataFileRole;
-import com.netflix.imfutility.generated.itunes.metadata.PackageType;
-import com.netflix.imfutility.generated.itunes.metadata.Territories;
-import com.netflix.imfutility.generated.itunes.metadata.Video;
-import com.netflix.imfutility.generated.itunes.metadata.VideoLocale;
-import com.netflix.imfutility.itunes.asset.bean.Asset;
-import com.netflix.imfutility.itunes.asset.bean.AssetRole;
-import com.netflix.imfutility.itunes.asset.bean.AssetType;
-import com.netflix.imfutility.itunes.asset.bean.ChapterAsset;
-import com.netflix.imfutility.itunes.asset.bean.VideoAsset;
+import com.netflix.imfutility.generated.itunes.chapters.InputChapterItem;
+import com.netflix.imfutility.generated.itunes.metadata.film.AssetFile;
+import com.netflix.imfutility.generated.itunes.metadata.film.AssetItem;
+import com.netflix.imfutility.generated.itunes.metadata.film.AssetList;
+import com.netflix.imfutility.generated.itunes.metadata.film.Attribute;
+import com.netflix.imfutility.generated.itunes.metadata.film.ChapterItem;
+import com.netflix.imfutility.generated.itunes.metadata.film.ChapterList;
+import com.netflix.imfutility.generated.itunes.metadata.film.Checksum;
+import com.netflix.imfutility.generated.itunes.metadata.film.DataFileRole;
+import com.netflix.imfutility.generated.itunes.metadata.film.NonEmptyLocalizableTextElement;
+import com.netflix.imfutility.generated.itunes.metadata.film.PackageType;
+import com.netflix.imfutility.generated.itunes.metadata.film.Territories;
+import com.netflix.imfutility.generated.itunes.metadata.film.Video;
+import com.netflix.imfutility.generated.itunes.metadata.film.VideoLocale;
+import com.netflix.imfutility.itunes.asset.type.Asset;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
+import com.netflix.imfutility.itunes.asset.type.ChapterAsset;
+import com.netflix.imfutility.itunes.asset.type.VideoAsset;
+import com.netflix.imfutility.itunes.locale.LocaleHelper;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 import com.netflix.imfutility.itunes.metadata.film.wrap.ChapterItemWrapper;
 import com.netflix.imfutility.itunes.metadata.film.wrap.FileWrapper;
 import com.netflix.imfutility.xml.XmlParsingException;
-import org.apache.commons.lang3.LocaleUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,6 +55,9 @@ import java.util.stream.Stream;
  */
 public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
 
+    private static final String DEFAULT_TERRITORY = "WW";
+    private static final String[] CROP_ATTRUBUTE_NAMES = new String[]{"crop.top", "crop.bottom", "crop.left", "crop.right"};
+
     private final Video video;
 
     public FilmMetadataXmlProvider() throws FileNotFoundException, XmlParsingException {
@@ -60,7 +65,7 @@ public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
     }
 
     public FilmMetadataXmlProvider(File metadataFile) throws FileNotFoundException, XmlParsingException {
-        super(FilmMetadataInfo.INSTANCE, metadataFile);
+        super(FilmMetadataDescriptor.INSTANCE, metadataFile);
         this.video = getSingleValue(rootElement.getVideo());
     }
 
@@ -77,14 +82,14 @@ public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
 
     @Override
     public void setLocale(Locale locale) {
-        String str = locale.toString().replace("_", "-");
+        String str = LocaleHelper.toITunesLocale(locale);
         setSingleValue(rootElement.getLanguage(), str);
         setSingleValue(video.getOriginalSpokenLocale(), str);
     }
 
     @Override
     public Locale getLocale() {
-        return LocaleUtils.toLocale(getSingleValue(rootElement.getLanguage()).replace("-", "_"));
+        return LocaleHelper.fromITunesLocale(getSingleValue(rootElement.getLanguage()));
     }
 
     // Asset processing
@@ -104,7 +109,7 @@ public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
                 .map(AssetFile.class::cast)
                 .filter(assetFile -> assetFile.getRole().value().equals(role.getName()))
                 .filter(assetFile -> getSingleValue(assetFile.getLocale()) != null)
-                .map(assetFile -> LocaleUtils.toLocale(getSingleValue(assetFile.getLocale()).getName()))
+                .map(assetFile -> LocaleHelper.fromITunesLocale(getSingleValue(assetFile.getLocale()).getName()))
                 .collect(Collectors.toList());
     }
 
@@ -154,7 +159,7 @@ public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
         ChapterItemWrapper wrapper = new ChapterItemWrapper(context, new ChapterItem());
 
         wrapper.setStartTime(asset.getInputChapterItem().getStartTime());
-        wrapper.setTitle(asset.getInputChapterItem().getTitle());
+        wrapper.setTitle(createTitle(asset.getInputChapterItem()));
         wrapper.setArtworkFile(fileWrapper.getInner());
 
         ensureChaptersCreated().getTimecodeFormatOrChapter().add(wrapper.getInner());
@@ -182,16 +187,14 @@ public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
         }
 
         if (asset instanceof VideoAsset) {
-            if (((VideoAsset) asset).isCropToZero()) {
-                assetFile.getAttribute().addAll(createZeroCropAttributeList());
-            }
+            assetFile.getAttribute().addAll(createZeroCropAttributeList());
         }
 
         return assetFile;
     }
 
     private List<Attribute> createZeroCropAttributeList() {
-        return Stream.of("crop.top", "crop.bottom", "crop.left", "crop.right")
+        return Stream.of(CROP_ATTRUBUTE_NAMES)
                 .map(this::createZeroCropAttribute)
                 .collect(Collectors.toList());
     }
@@ -205,7 +208,7 @@ public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
 
     private VideoLocale createVideoLocale(Locale locale) {
         VideoLocale videoLocale = new VideoLocale();
-        videoLocale.setName(locale.toString().replace("_", "-"));
+        videoLocale.setName(LocaleHelper.toITunesLocale(locale));
         return videoLocale;
     }
 
@@ -219,7 +222,14 @@ public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
     private Territories createTerritories() {
         //  create WW territory by default
         Territories territories = new Territories();
-        territories.getTerritory().add("WW");
+        territories.getTerritory().add(DEFAULT_TERRITORY);
         return territories;
+    }
+
+    private NonEmptyLocalizableTextElement createTitle(InputChapterItem inputChapterItem) {
+        NonEmptyLocalizableTextElement title = new NonEmptyLocalizableTextElement();
+        title.setLocale(inputChapterItem.getTitle().getLocale());
+        title.setValue(inputChapterItem.getTitle().getValue());
+        return title;
     }
 }

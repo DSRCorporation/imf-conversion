@@ -16,27 +16,22 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.asset.builder;
+package com.netflix.imfutility.itunes.asset.type;
 
-import com.netflix.imfutility.itunes.asset.type.Asset;
 
-import java.io.File;
+import com.netflix.imfutility.generated.itunes.chapters.InputChapterItem;
 
 /**
- * Builder for creating default iTunes metadata asset info.
+ * Asset info bean specified for iTunes film metadata chapter info.
  */
-public class DefaultAssetBuilder extends AssetBuilder<Asset> {
+public class ChapterAsset extends Asset {
+    private InputChapterItem inputChapterItem;
 
-    public DefaultAssetBuilder(File file) {
-        super(file);
+    public InputChapterItem getInputChapterItem() {
+        return inputChapterItem;
     }
 
-    public DefaultAssetBuilder(File file, String fileName) {
-        super(file, fileName);
-    }
-
-    @Override
-    protected Asset create() {
-        return new Asset();
+    public void setInputChapterItem(InputChapterItem inputChapterItem) {
+        this.inputChapterItem = inputChapterItem;
     }
 }

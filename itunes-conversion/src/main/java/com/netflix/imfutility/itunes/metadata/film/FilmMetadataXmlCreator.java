@@ -18,8 +18,9 @@
  */
 package com.netflix.imfutility.itunes.metadata.film;
 
-import com.netflix.imfutility.generated.itunes.metadata.ObjectFactory;
-import com.netflix.imfutility.generated.itunes.metadata.PackageType;
+
+import com.netflix.imfutility.generated.itunes.metadata.film.ObjectFactory;
+import com.netflix.imfutility.generated.itunes.metadata.film.PackageType;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -44,7 +45,7 @@ public final class FilmMetadataXmlCreator {
         File file = new File(path);
         JAXBContext jaxbContext;
         try {
-            jaxbContext = JAXBContext.newInstance(FilmMetadataInfo.INSTANCE.getMetadataClass());
+            jaxbContext = JAXBContext.newInstance(FilmMetadataDescriptor.INSTANCE.getMetadataClass());
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 

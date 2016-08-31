@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.asset.bean;
+package com.netflix.imfutility.itunes.asset.type;
 
 import java.util.Locale;
 

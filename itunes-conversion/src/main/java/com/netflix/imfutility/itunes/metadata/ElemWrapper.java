@@ -18,7 +18,8 @@
  */
 package com.netflix.imfutility.itunes.metadata;
 
-import com.netflix.imfutility.generated.itunes.metadata.ObjectFactory;
+
+import com.netflix.imfutility.generated.itunes.metadata.film.ObjectFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBIntrospector;

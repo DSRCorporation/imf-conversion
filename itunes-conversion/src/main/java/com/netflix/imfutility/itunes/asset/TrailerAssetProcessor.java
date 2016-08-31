@@ -19,11 +19,11 @@
 package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.generated.mediainfo.FormatType;
-import com.netflix.imfutility.itunes.asset.bean.AssetRole;
-import com.netflix.imfutility.itunes.asset.bean.AssetType;
-import com.netflix.imfutility.itunes.asset.bean.VideoAsset;
 import com.netflix.imfutility.itunes.asset.builder.VideoAssetBuilder;
 import com.netflix.imfutility.itunes.asset.distribute.CopyAssetStrategy;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
+import com.netflix.imfutility.itunes.asset.type.VideoAsset;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 
 import java.io.File;
@@ -77,7 +77,6 @@ public class TrailerAssetProcessor extends AssetProcessor<VideoAsset> {
     @Override
     protected VideoAsset buildAsset(File assetFile) {
         return new VideoAssetBuilder(assetFile, getDestFileName(assetFile))
-                .setCropToZero(true)
                 .setType(AssetType.PREVIEW)
                 .setRole(AssetRole.SOURCE)
                 .setLocale(locale)

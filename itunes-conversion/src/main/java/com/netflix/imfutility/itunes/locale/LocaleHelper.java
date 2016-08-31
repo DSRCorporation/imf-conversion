@@ -16,19 +16,24 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.asset.bean;
+package com.netflix.imfutility.itunes.locale;
+
+import org.apache.commons.lang3.LocaleUtils;
+
+import java.util.Locale;
 
 /**
- * Created by Konstantin Goncharov on 8/30/2016.
+ * Utility class to help convert locale between xx_XX and xx-XX formats.
  */
-public class VideoAsset extends Asset {
-    private boolean cropToZero;
-
-    public boolean isCropToZero() {
-        return cropToZero;
+public final class LocaleHelper {
+    private LocaleHelper() {
     }
 
-    public void setCropToZero(boolean cropToZero) {
-        this.cropToZero = cropToZero;
+    public static String toITunesLocale(Locale locale) {
+        return locale.toString().replace("_", "-");
+    }
+
+    public static Locale fromITunesLocale(String locale) {
+        return LocaleUtils.toLocale(locale.replace("-", "_"));
     }
 }

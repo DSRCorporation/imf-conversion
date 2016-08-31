@@ -19,7 +19,7 @@
 package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.itunes.asset.bean.ChapterAsset;
+import com.netflix.imfutility.itunes.asset.type.ChapterAsset;
 import com.netflix.imfutility.itunes.chapters.builder.ChaptersXmlSampleBuilder;
 import com.netflix.imfutility.itunes.image.ImageValidationException;
 import com.netflix.imfutility.itunes.util.AssetUtils;

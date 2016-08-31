@@ -18,11 +18,11 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
-import com.netflix.imfutility.itunes.asset.bean.Asset;
-import com.netflix.imfutility.itunes.asset.bean.AssetRole;
-import com.netflix.imfutility.itunes.asset.bean.AssetType;
 import com.netflix.imfutility.itunes.asset.builder.DefaultAssetBuilder;
 import com.netflix.imfutility.itunes.asset.distribute.MoveAssetStrategy;
+import com.netflix.imfutility.itunes.asset.type.Asset;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 
 import java.io.File;
@@ -66,7 +66,7 @@ public class SubtitlesAssetProcessor extends AssetProcessor<Asset> {
 
     @Override
     protected String getDestFileName(File assetFile) {
-        return "subtitles_" + locale.toString().replace("-", "_").toUpperCase() + ".itt";
+        return "subtitles_" + locale.toString().toUpperCase() + ".itt";
     }
 
     private void validateDuplicateLocales() {
@@ -74,7 +74,7 @@ public class SubtitlesAssetProcessor extends AssetProcessor<Asset> {
 
         if (duplicate) {
             throw new AssetValidationException(String.format(
-                    "Subtitles locale validation failed. Metadata already contains subtitles for %s locale.", locale.getDisplayName()));
+                    "Subtitles locale validation failed. Metadata already contains subtitles for %s locale.", locale.toString()));
         }
     }
 }

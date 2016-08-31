@@ -18,22 +18,22 @@
  */
 package com.netflix.imfutility.itunes.metadata.film;
 
-import com.netflix.imfutility.generated.itunes.metadata.PackageType;
-import com.netflix.imfutility.itunes.metadata.MetadataInfo;
+import com.netflix.imfutility.generated.itunes.metadata.film.PackageType;
+import com.netflix.imfutility.itunes.metadata.MetadataDescriptor;
 
-import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.METADATA_NAMESPACE;
-import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.METADATA_PACKAGE;
-import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.METADATA_ROOT_ELEMENT;
-import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.METADATA_XML_SCHEME;
+import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.FILM_METADATA_NAMESPACE;
+import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.FILM_METADATA_PACKAGE;
+import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.FILM_METADATA_ROOT_ELEMENT;
+import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.FILM_METADATA_XML_SCHEME;
 
 /**
- * Metadata info for iTunes film specification.
+ * Metadata descriptor for iTunes film specification.
  */
-public final class FilmMetadataInfo implements MetadataInfo<PackageType> {
+public final class FilmMetadataDescriptor implements MetadataDescriptor<PackageType> {
 
-    public static final FilmMetadataInfo INSTANCE = new FilmMetadataInfo();
+    public static final FilmMetadataDescriptor INSTANCE = new FilmMetadataDescriptor();
 
-    private FilmMetadataInfo() {
+    private FilmMetadataDescriptor() {
     }
 
     @Override
@@ -43,21 +43,21 @@ public final class FilmMetadataInfo implements MetadataInfo<PackageType> {
 
     @Override
     public String getMetadataSchema() {
-        return METADATA_XML_SCHEME;
+        return FILM_METADATA_XML_SCHEME;
     }
 
     @Override
     public String getMetadataPackage() {
-        return METADATA_PACKAGE;
+        return FILM_METADATA_PACKAGE;
     }
 
     @Override
     public String getMetadataNamespace() {
-        return METADATA_NAMESPACE;
+        return FILM_METADATA_NAMESPACE;
     }
 
     @Override
     public String getMetadataRoot() {
-        return METADATA_ROOT_ELEMENT;
+        return FILM_METADATA_ROOT_ELEMENT;
     }
 }

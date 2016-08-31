@@ -36,10 +36,10 @@ import com.netflix.imfutility.generated.itunes.audiomap.Option3Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option4Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option5Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option6Type;
+import com.netflix.imfutility.itunes.locale.LocaleHelper;
 import com.netflix.imfutility.util.StreamUtil;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import org.apache.commons.lang3.LocaleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -283,12 +283,12 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
 
     @Override
     public void setLocale(Locale locale) {
-        mainAudio.setLocale(locale.toString().replace("_", "-"));
+        mainAudio.setLocale(LocaleHelper.toITunesLocale(locale));
     }
 
     @Override
     public Locale getLocale() {
-        return LocaleUtils.toLocale(mainAudio.getLocale().replace("-", "_"));
+        return LocaleHelper.fromITunesLocale(mainAudio.getLocale());
     }
 
     public boolean isCustomized() {

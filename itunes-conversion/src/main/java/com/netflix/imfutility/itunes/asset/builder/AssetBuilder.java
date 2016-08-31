@@ -18,9 +18,9 @@
  */
 package com.netflix.imfutility.itunes.asset.builder;
 
-import com.netflix.imfutility.itunes.asset.bean.Asset;
-import com.netflix.imfutility.itunes.asset.bean.AssetRole;
-import com.netflix.imfutility.itunes.asset.bean.AssetType;
+import com.netflix.imfutility.itunes.asset.type.Asset;
+import com.netflix.imfutility.itunes.asset.type.AssetRole;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;

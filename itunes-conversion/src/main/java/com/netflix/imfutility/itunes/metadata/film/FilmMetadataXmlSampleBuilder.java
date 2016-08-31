@@ -18,20 +18,21 @@
  */
 package com.netflix.imfutility.itunes.metadata.film;
 
-import com.netflix.imfutility.generated.itunes.metadata.Cast;
-import com.netflix.imfutility.generated.itunes.metadata.Crew;
-import com.netflix.imfutility.generated.itunes.metadata.FilmRating;
-import com.netflix.imfutility.generated.itunes.metadata.Genre;
-import com.netflix.imfutility.generated.itunes.metadata.GenreList;
-import com.netflix.imfutility.generated.itunes.metadata.LocalizableMovieParticipant;
-import com.netflix.imfutility.generated.itunes.metadata.LocalizableMovieParticipant.Roles;
-import com.netflix.imfutility.generated.itunes.metadata.MovieRole;
-import com.netflix.imfutility.generated.itunes.metadata.ObjectFactory;
-import com.netflix.imfutility.generated.itunes.metadata.PackageType;
-import com.netflix.imfutility.generated.itunes.metadata.ProductItem;
-import com.netflix.imfutility.generated.itunes.metadata.ProductList;
-import com.netflix.imfutility.generated.itunes.metadata.Ratings;
-import com.netflix.imfutility.generated.itunes.metadata.Video;
+
+import com.netflix.imfutility.generated.itunes.metadata.film.Cast;
+import com.netflix.imfutility.generated.itunes.metadata.film.Crew;
+import com.netflix.imfutility.generated.itunes.metadata.film.FilmRating;
+import com.netflix.imfutility.generated.itunes.metadata.film.Genre;
+import com.netflix.imfutility.generated.itunes.metadata.film.GenreList;
+import com.netflix.imfutility.generated.itunes.metadata.film.LocalizableMovieParticipant;
+import com.netflix.imfutility.generated.itunes.metadata.film.LocalizableMovieParticipant.Roles;
+import com.netflix.imfutility.generated.itunes.metadata.film.MovieRole;
+import com.netflix.imfutility.generated.itunes.metadata.film.ObjectFactory;
+import com.netflix.imfutility.generated.itunes.metadata.film.PackageType;
+import com.netflix.imfutility.generated.itunes.metadata.film.ProductItem;
+import com.netflix.imfutility.generated.itunes.metadata.film.ProductList;
+import com.netflix.imfutility.generated.itunes.metadata.film.Ratings;
+import com.netflix.imfutility.generated.itunes.metadata.film.Video;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,6 +46,27 @@ public final class FilmMetadataXmlSampleBuilder {
 
     private static final ObjectFactory OBJECT_FACTORY = new ObjectFactory();
 
+    private static final String PACKAGE_VERSION = "film5.2";
+    private static final String LOCALE = "en-US";
+    private static final String COUNTRY = "US";
+    private static final String TERRITORY = "WW";
+    private static final String PROVIDER = "Required Provider";
+    private static final String VIDEO_TYPE = "film";
+    private static final String VIDEO_SUB_TYPE = "feature";
+    private static final String VENDOR_ID = "vendor_id";
+    private static final String TITLE = "Required Title";
+    private static final String SYNOPSIS = "Required Synopsis";
+    private static final String COMPANY = "Required Company";
+    private static final String COPYRIGHT = "%4s " + COMPANY;
+    private static final String GENRE_CODE = "CLASSICS-00";
+    private static final String RATING_SYSTEM = "mpaa";
+    private static final String RATING = "G";
+    private static final String BILLING = "top";
+    private static final String CREW_ROLE = "director";
+    private static final String CAST_MEMBER_DISPLAY_NAME = "Required cast member display name";
+    private static final String CAST_MEMBER_CHARACTER_NAME = "Required cast member character name";
+    private static final String CREW_MEMBER_DISPLAY_NAME = "Required crew member display name";
+
     private FilmMetadataXmlSampleBuilder() {
     }
 
@@ -52,9 +74,9 @@ public final class FilmMetadataXmlSampleBuilder {
 
     public static PackageType buildPackage() {
         PackageType packageType = new PackageType();
-        packageType.setVersion("film5.2");
-        packageType.getLanguage().add("en-US");
-        packageType.getProvider().add("Reuqired Provider");
+        packageType.setVersion(PACKAGE_VERSION);
+        packageType.getLanguage().add(LOCALE);
+        packageType.getProvider().add(PROVIDER);
         packageType.getVideo().add(buildVideo());
         return packageType;
     }
@@ -63,15 +85,15 @@ public final class FilmMetadataXmlSampleBuilder {
 
     private static Video buildVideo() {
         Video video = new Video();
-        video.getType().add("film");
-        video.getSubtype().add("feature");
-        video.getVendorId().add("vendor_id");
-        video.getCountry().add("US");
-        video.getOriginalSpokenLocale().add("en-US");
-        video.getTitle().add("Required title");
-        video.getSynopsis().add("Required synopsis");
-        video.getProductionCompany().add("Required company");
-        video.getCopyrightCline().add(String.format("%4s Required Company", Calendar.getInstance().get(Calendar.YEAR)));
+        video.getType().add(VIDEO_TYPE);
+        video.getSubtype().add(VIDEO_SUB_TYPE);
+        video.getVendorId().add(VENDOR_ID);
+        video.getCountry().add(COUNTRY);
+        video.getOriginalSpokenLocale().add(LOCALE);
+        video.getTitle().add(TITLE);
+        video.getSynopsis().add(SYNOPSIS);
+        video.getProductionCompany().add(COMPANY);
+        video.getCopyrightCline().add(String.format(COPYRIGHT, Calendar.getInstance().get(Calendar.YEAR)));
         video.getTheatricalReleaseDate().add(getTodayFormattedDate());
         video.getGenres().add(buildGenres());
         video.getRatings().add(buildRatings());
@@ -91,7 +113,7 @@ public final class FilmMetadataXmlSampleBuilder {
 
     private static Genre buildGenre() {
         Genre genre = new Genre();
-        genre.setCode("CLASSICS-00");
+        genre.setCode(GENRE_CODE);
         return genre;
     }
 
@@ -105,8 +127,8 @@ public final class FilmMetadataXmlSampleBuilder {
 
     private static FilmRating buildRating() {
         FilmRating rating = new FilmRating();
-        rating.setSystem("mpaa");
-        rating.setValue("G");
+        rating.setSystem(RATING_SYSTEM);
+        rating.setValue(RATING);
         return rating;
     }
 
@@ -120,11 +142,11 @@ public final class FilmMetadataXmlSampleBuilder {
 
     private static LocalizableMovieParticipant buildCastMember() {
         LocalizableMovieParticipant castMember = new LocalizableMovieParticipant();
-        castMember.setBilling("top");
+        castMember.setBilling(BILLING);
         castMember.getAppleIdOrReadOnlyInfoOrDisplayName().add(
-                OBJECT_FACTORY.createLocalizableMovieParticipantDisplayName("Required cast member display name"));
+                OBJECT_FACTORY.createLocalizableMovieParticipantDisplayName(CAST_MEMBER_DISPLAY_NAME));
         castMember.getAppleIdOrReadOnlyInfoOrDisplayName().add(
-                OBJECT_FACTORY.createCharacterName("Required cast member character name"));
+                OBJECT_FACTORY.createCharacterName(CAST_MEMBER_CHARACTER_NAME));
         return castMember;
     }
 
@@ -138,9 +160,9 @@ public final class FilmMetadataXmlSampleBuilder {
 
     private static LocalizableMovieParticipant buildCrewMember() {
         LocalizableMovieParticipant crewMember = new LocalizableMovieParticipant();
-        crewMember.setBilling("top");
+        crewMember.setBilling(BILLING);
         crewMember.getAppleIdOrReadOnlyInfoOrDisplayName().add(
-                OBJECT_FACTORY.createLocalizableMovieParticipantDisplayName("Required crew member display name"));
+                OBJECT_FACTORY.createLocalizableMovieParticipantDisplayName(CREW_MEMBER_DISPLAY_NAME));
         crewMember.getAppleIdOrReadOnlyInfoOrDisplayName().add(
                 OBJECT_FACTORY.createLocalizableMovieParticipantRoles(buildCrewRoles()));
         return crewMember;
@@ -154,7 +176,7 @@ public final class FilmMetadataXmlSampleBuilder {
 
     private static MovieRole buildCrewRole() {
         MovieRole role = new MovieRole();
-        role.setValue("director");
+        role.setValue(CREW_ROLE);
         return role;
     }
 
@@ -169,7 +191,7 @@ public final class FilmMetadataXmlSampleBuilder {
     private static ProductItem buildProduct() {
         ProductItem product = new ProductItem();
         product.getTerritoryOrClearedForSaleOrClearedForTicketmaster().add(
-                OBJECT_FACTORY.createTerritory("WW"));
+                OBJECT_FACTORY.createTerritory(TERRITORY));
         product.getTerritoryOrClearedForSaleOrClearedForTicketmaster().add(
                 OBJECT_FACTORY.createClearedForSale(Boolean.FALSE.toString()));
         return product;

@@ -18,8 +18,8 @@
  */
 package com.netflix.imfutility.itunes.metadata.film.wrap;
 
-import com.netflix.imfutility.generated.itunes.metadata.Checksum;
-import com.netflix.imfutility.generated.itunes.metadata.File;
+import com.netflix.imfutility.generated.itunes.metadata.film.Checksum;
+import com.netflix.imfutility.generated.itunes.metadata.film.File;
 import com.netflix.imfutility.itunes.metadata.ElemWrapper;
 
 import javax.xml.bind.JAXBContext;
@@ -30,6 +30,10 @@ import java.util.List;
  * Wrapper for {@link File}.
  */
 public class FileWrapper extends ElemWrapper<File> {
+
+    private static final String FILE_NAME = "file_name";
+    private static final String SIZE = "size";
+    private static final String CHECKSUM = "checksum";
 
     private List<JAXBElement<?>> mixed;
 
@@ -47,7 +51,7 @@ public class FileWrapper extends ElemWrapper<File> {
     }
 
     public String getFileName() {
-        return getElemValueByName(mixed, "file_name", String.class);
+        return getElemValueByName(mixed, FILE_NAME, String.class);
     }
 
     public void setSize(String size) {
@@ -55,7 +59,7 @@ public class FileWrapper extends ElemWrapper<File> {
     }
 
     public String getSize() {
-        return getElemValueByName(mixed, "size", String.class);
+        return getElemValueByName(mixed, SIZE, String.class);
     }
 
     public void setChecksum(Checksum checksum) {
@@ -63,6 +67,6 @@ public class FileWrapper extends ElemWrapper<File> {
     }
 
     public Checksum getChecksum() {
-        return getElemValueByName(mixed, "checksum", Checksum.class);
+        return getElemValueByName(mixed, CHECKSUM, Checksum.class);
     }
 }

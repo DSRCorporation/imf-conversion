@@ -18,8 +18,8 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
-import com.netflix.imfutility.itunes.asset.bean.Asset;
-import com.netflix.imfutility.itunes.asset.bean.AssetType;
+import com.netflix.imfutility.itunes.asset.type.Asset;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
 import com.netflix.imfutility.itunes.asset.builder.DefaultAssetBuilder;
 import com.netflix.imfutility.itunes.asset.distribute.CopyAssetStrategy;
 import com.netflix.imfutility.itunes.image.ImageValidationException;

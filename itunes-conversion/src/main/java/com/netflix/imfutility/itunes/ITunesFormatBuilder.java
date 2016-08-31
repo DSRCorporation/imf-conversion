@@ -45,6 +45,7 @@ import com.netflix.imfutility.itunes.destcontext.InputDestContextResolveStrategy
 import com.netflix.imfutility.itunes.destcontext.NameDestContextResolveStrategy;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
+import com.netflix.imfutility.itunes.locale.LocaleHelper;
 import com.netflix.imfutility.itunes.locale.LocaleValidator;
 import com.netflix.imfutility.itunes.mediainfo.SimpleMediaInfoBuilder;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
@@ -316,11 +317,10 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         }
 
         LocaleValidator.validateLocale(locale);
-        locale = locale.replace("-", "_");
 
-        metadataXmlProvider.setLocale(LocaleUtils.toLocale(locale));
+        metadataXmlProvider.setLocale(LocaleHelper.fromITunesLocale(locale));
         if (hasAudio) {
-            audioMapXmlProvider.setLocale(LocaleUtils.toLocale(locale));
+            audioMapXmlProvider.setLocale(LocaleHelper.fromITunesLocale(locale));
         }
     }
 
@@ -598,7 +598,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     private Locale getLocaleFromTtml(File subtitles) throws IOException {
         try {
             TtEltype ttEl = XmlParser.parse(subtitles, new String[]{TTML_SCHEMA}, TTML_PACKAGES, TtEltype.class);
-            return LocaleUtils.toLocale(ttEl.getLang());
+            return LocaleHelper.fromITunesLocale(ttEl.getLang());
         } catch (XmlParsingException e) {
             throw new ConversionException("Can't parse subtitles");
         }

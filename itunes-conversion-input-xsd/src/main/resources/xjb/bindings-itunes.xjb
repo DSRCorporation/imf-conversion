@@ -6,10 +6,10 @@
       extensionBindingPrefixes="xjc simplify"
       version="2.1">
 
-    <bindings schemaLocation="../xsd/metadata/itunes-metadata.xsd">
-        <bindings schemaLocation="../xsd/metadata/itunes-metadata.xsd">
+    <bindings schemaLocation="../xsd/metadata/film/itunes-film-metadata.xsd">
+        <bindings schemaLocation="../xsd/metadata/film/itunes-film-metadata.xsd">
             <schemaBindings>
-                <package name="com.netflix.imfutility.generated.itunes.metadata" />
+                <package name="com.netflix.imfutility.generated.itunes.metadata.film" />
             </schemaBindings>
         </bindings>
 
