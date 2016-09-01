@@ -1,0 +1,91 @@
+description = "iTunes TV Metadata generated Java Classes (JAXB)"
+version="5.2"
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+buildscript {
+
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath 'com.github.jacobono:gradle-jaxb-plugin:1.3.6'
+    }
+
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task generateClasses {
+
+    apply plugin: 'com.github.jacobono.jaxb'
+
+    System.setProperty('javax.xml.accessExternalSchema', 'file')
+
+    dependencies {
+        jaxb 'com.sun.xml.bind:jaxb-xjc:2.2.7-b41'
+        jaxb 'com.sun.xml.bind:jaxb-impl:2.2.7-b41'
+        jaxb 'javax.xml.bind:jaxb-api:2.2.7'
+        jaxb "org.jvnet.jaxb2_commons:jaxb2-basics-ant:0.6.5"
+        jaxb "org.jvnet.jaxb2_commons:jaxb2-basics:0.6.4"
+        jaxb "org.jvnet.jaxb2_commons:jaxb2-basics-annotate:0.6.4"
+        jaxb "org.jvnet.jaxb2_commons:jaxb2-value-constructor:3.0"
+    }
+
+    jaxb {
+        xsdDir = "src/main/resources/xsd"
+        bindingsDir = "src/main/resources/xjb"
+        bindings = ["**/*.xjb"]
+        xjc {
+            taskClassname = "org.jvnet.jaxb2_commons.xjc.XJC2Task"
+            args = ["-Xinheritance", "-Xannotate", "-Xsimplify"]
+            destinationDir = "src/main/java"
+        }
+    }
+
+    compileJava.dependsOn(xjc)
+}
+
+compileJava.dependsOn(generateClasses)
+
+artifacts {
+    archives sourcesJar
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': description, 'Implementation-Version': version
+    }
+}
+
+clean {
+    delete 'dist'
+}
+
+uploadArchives {
+    repositories {
+        flatDir {
+            dirs 'dist'
+        }
+    }
+}
