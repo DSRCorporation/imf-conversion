@@ -10,4 +10,5 @@ dependencies {
     compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
     compile name: 'ttml-java-1.0'
     compile name: 'itunes-metadata-film-5.2'
+    compile name: 'itunes-metadata-tv-5.2'
 }

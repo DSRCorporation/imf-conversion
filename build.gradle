@@ -58,7 +58,7 @@ configure(project.javaSubprojectList) {
         mavenCentral()
         jcenter()
         flatDir {
-            dirs '../ttml-java/dist', '../itunes-metadata-film/dist'
+            dirs '../ttml-java/dist', '../itunes-metadata-film/dist', '../itunes-metadata-tv/dist'
         }
     }
 

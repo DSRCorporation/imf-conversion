@@ -51,7 +51,7 @@ import com.netflix.imfutility.itunes.locale.LocaleHelper;
 import com.netflix.imfutility.itunes.locale.LocaleValidator;
 import com.netflix.imfutility.itunes.mediainfo.SimpleMediaInfoBuilder;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
-import com.netflix.imfutility.itunes.metadata.film.FilmMetadataXmlProvider;
+import com.netflix.imfutility.itunes.metadata.tv.TvMetadataXmlProvider;
 import com.netflix.imfutility.mediainfo.MediaInfoException;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
@@ -346,7 +346,8 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         File metadataFile = iTunesInputParameters.getMetadataFile();
         String vendorId = iTunesInputParameters.getCmdLineArgs().getVendorId();
 
-        metadataXmlProvider = new FilmMetadataXmlProvider(metadataFile);
+        // TODO: make strategy to define provider depends on package type (film or tv)
+        metadataXmlProvider = new TvMetadataXmlProvider(metadataFile);
         metadataXmlProvider.updateVendorId(vendorId);
     }
 

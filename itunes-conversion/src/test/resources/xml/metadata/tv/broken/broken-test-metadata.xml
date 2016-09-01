@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://apple.com/itunes/importer" version="tv5.2">
+    <provider>abc</provider>
+    <language>en-US</language>
+    <video>
+        <type>tv</type>
+        <subtype>episode</subtype>
+        <container_id>ABC_GREYSANATOMY_SEASON_004</container_id
+</package>

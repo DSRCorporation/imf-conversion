@@ -16,51 +16,40 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.metadata.film;
+package com.netflix.imfutility.itunes.metadata.tv;
 
-import com.apple.itunes.importer.film.AssetFile;
-import com.apple.itunes.importer.film.AssetItem;
-import com.apple.itunes.importer.film.ChapterItem;
-import com.apple.itunes.importer.film.Checksum;
-import com.apple.itunes.importer.film.DataFileRole;
-import com.apple.itunes.importer.film.PackageType;
+import com.apple.itunes.importer.tv.AssetFile;
+import com.apple.itunes.importer.tv.AssetItem;
+import com.apple.itunes.importer.tv.Checksum;
+import com.apple.itunes.importer.tv.DataFileRole;
 import com.netflix.imfutility.itunes.asset.type.Asset;
 import com.netflix.imfutility.itunes.asset.type.AssetRole;
 import com.netflix.imfutility.itunes.asset.type.AssetType;
 import com.netflix.imfutility.itunes.asset.type.ChapterAsset;
 import com.netflix.imfutility.itunes.chapters.builder.ChaptersXmlSampleBuilder;
-import com.netflix.imfutility.itunes.metadata.film.wrap.ChapterItemWrapper;
-import com.netflix.imfutility.itunes.metadata.film.wrap.FileWrapper;
 import com.netflix.imfutility.itunes.util.MetadataUtils;
 import com.netflix.imfutility.itunes.util.TestUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Locale;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
 
 
 /**
  * Tests parsing and processing metadata.xml.
- * (see {@link FilmMetadataXmlProvider ).
+ * (see {@link TvMetadataXmlProvider ).
  */
-public class FilmMetadataXmlProviderTest {
-
-    private static JAXBContext context;
+public class TvMetadataXmlProviderTest {
 
     @BeforeClass
     public static void setupAll() throws IOException {
@@ -69,12 +58,6 @@ public class FilmMetadataXmlProviderTest {
         File workingDir = TemplateParameterContextCreator.getWorkingDir();
         if (!workingDir.mkdir()) {
             throw new RuntimeException("Could not create a working dir within tmp folder");
-        }
-
-        try {
-            context = JAXBContext.newInstance(PackageType.class);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -85,7 +68,7 @@ public class FilmMetadataXmlProviderTest {
 
     @Test
     public void testAppendSourceAsset() throws Exception {
-        FilmMetadataXmlProvider metadataXmlProvider = new FilmMetadataXmlProvider();
+        TvMetadataXmlProvider metadataXmlProvider = new TvMetadataXmlProvider();
 
         Asset asset = new Asset();
         asset.setFileName("file_name");
@@ -117,9 +100,9 @@ public class FilmMetadataXmlProviderTest {
         metadataXmlProvider.saveMetadata(TemplateParameterContextCreator.getWorkingDir());
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testAppendChapterAsset() throws Exception {
-        FilmMetadataXmlProvider metadataXmlProvider = new FilmMetadataXmlProvider();
+        TvMetadataXmlProvider metadataXmlProvider = new TvMetadataXmlProvider();
 
         ChapterAsset asset = new ChapterAsset();
         asset.setFileName("chapter01");
@@ -129,102 +112,50 @@ public class FilmMetadataXmlProviderTest {
         asset.setInputChapterItem(ChaptersXmlSampleBuilder.buildInputChapter());
 
         metadataXmlProvider.appendChapterAsset(asset);
-
-        ChapterItem chapter = (ChapterItem) metadataXmlProvider.getRootElement().getVideo().get(0)
-                .getChapters().get(0)
-                .getTimecodeFormatOrChapter().get(0);
-        ChapterItemWrapper wrapper = new ChapterItemWrapper(context, chapter);
-        FileWrapper fileWrapper = new FileWrapper(context, wrapper.getArtworkFile());
-
-        Assert.assertEquals("Required chapter title", wrapper.getTitle().getValue());
-        Assert.assertEquals("en-US", wrapper.getTitle().getLocale());
-        Assert.assertEquals("00:00:00", wrapper.getStartTime());
-        Assert.assertEquals("chapter01", fileWrapper.getFileName());
-
-        metadataXmlProvider.saveMetadata(TemplateParameterContextCreator.getWorkingDir());
     }
 
     @Test
     public void testGenerateDefaultMetadata() throws Exception {
-        FilmMetadataXmlProvider provider = new FilmMetadataXmlProvider();
+        TvMetadataXmlProvider provider = new TvMetadataXmlProvider();
 
         assertNotNull(provider.getRootElement());
         assertNotNull(provider.getRootElement().getProvider().get(0));
         assertNotNull(provider.getRootElement().getLanguage().get(0));
         assertNotNull(provider.getRootElement().getVideo().get(0));
 
-        assertEquals("film5.2", provider.getRootElement().getVersion());
-        assertEquals("film", provider.getRootElement().getVideo().get(0).getType().get(0));
-        assertEquals("feature", provider.getRootElement().getVideo().get(0).getSubtype().get(0));
+        assertEquals("tv5.2", provider.getRootElement().getVersion());
+        assertEquals("tv", provider.getRootElement().getVideo().get(0).getType().get(0));
         assertEquals("vendor_id", provider.getRootElement().getVideo().get(0).getVendorId().get(0));
     }
 
     @Test
     public void testParseCorrectMetadata() throws Exception {
-        FilmMetadataXmlProvider provider = new FilmMetadataXmlProvider(MetadataUtils.getCorrectFilmMetadataXml());
+        TvMetadataXmlProvider provider = new TvMetadataXmlProvider(MetadataUtils.getCorrectTvMetadataXml());
 
         assertNotNull(provider.getRootElement());
         assertNotNull(provider.getRootElement().getProvider().get(0));
         assertNotNull(provider.getRootElement().getLanguage().get(0));
         assertNotNull(provider.getRootElement().getVideo().get(0));
-
-        assertTrue(provider.getRootElement().getVideo().get(0).getLocales().isEmpty());
-    }
-
-    @Test
-    public void testParseCorrectMultipleLocaleMetadata() throws Exception {
-        FilmMetadataXmlProvider provider = new FilmMetadataXmlProvider(MetadataUtils.getCorrectMultipleLocaleMetadataXml());
-
-        assertNotNull(provider.getRootElement());
-        assertNotNull(provider.getRootElement().getProvider().get(0));
-        assertNotNull(provider.getRootElement().getLanguage().get(0));
-        assertNotNull(provider.getRootElement().getVideo().get(0));
-
-        assertFalse(provider.getRootElement().getVideo().get(0).getLocales().isEmpty());
-    }
-
-
-    @Test
-    public void testParseCorrectConcertMetadata() throws Exception {
-        FilmMetadataXmlProvider provider = new FilmMetadataXmlProvider(MetadataUtils.getCorrectConcertMetadataXml());
-
-        assertNotNull(provider.getRootElement());
-        assertNotNull(provider.getRootElement().getProvider().get(0));
-        assertNotNull(provider.getRootElement().getLanguage().get(0));
-        assertNotNull(provider.getRootElement().getVideo().get(0));
-
-        assertFalse(provider.getRootElement().getVideo().get(0).getArtists().isEmpty());
-        assertTrue(provider.getRootElement().getVideo().get(0).getCast().isEmpty());
-    }
-
-    @Test
-    public void testParseCorrectIntervalsMetadata() throws Exception {
-        FilmMetadataXmlProvider provider = new FilmMetadataXmlProvider(MetadataUtils.getCorrectIntervalsMetadataXml());
-
-        assertNotNull(provider.getRootElement());
-        assertNotNull(provider.getRootElement().getProvider());
-        assertNotNull(provider.getRootElement().getLanguage());
-        assertNotNull(provider.getRootElement().getVideo());
     }
 
     @Test(expected = XmlParsingException.class)
     public void testParseBrokenMetadata() throws Exception {
-        new FilmMetadataXmlProvider(MetadataUtils.getBrokenFilmMetadataXml());
+        new TvMetadataXmlProvider(MetadataUtils.getBrokenTvMetadataXml());
     }
 
     @Test(expected = XmlParsingException.class)
     public void testParseInvalidMetadata() throws Exception {
-        new FilmMetadataXmlProvider(MetadataUtils.getInvalidFilmMetadataXml());
+        new TvMetadataXmlProvider(MetadataUtils.getInvalidTvMetadataXml());
     }
 
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
-        new FilmMetadataXmlProvider(new File("invalid-path"));
+        new TvMetadataXmlProvider(new File("invalid-path"));
     }
 
     @Test
     public void testSaveCorrectMetadata() throws Exception {
-        FilmMetadataXmlProvider provider = new FilmMetadataXmlProvider(MetadataUtils.getCorrectFilmMetadataXml());
+        TvMetadataXmlProvider provider = new TvMetadataXmlProvider(MetadataUtils.getCorrectTvMetadataXml());
 
         File itmspDir = TestUtils.createDirectory(TemplateParameterContextCreator.getWorkingDir(), "correct.itmsp");
         File savedMetadata = provider.saveMetadata(itmspDir);
@@ -234,7 +165,7 @@ public class FilmMetadataXmlProviderTest {
 
     @Test
     public void testUpdateLocale() throws Exception {
-        FilmMetadataXmlProvider provider = new FilmMetadataXmlProvider();
+        TvMetadataXmlProvider provider = new TvMetadataXmlProvider();
 
         provider.setLocale(Locale.CANADA_FRENCH);
 

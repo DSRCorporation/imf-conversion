@@ -20,7 +20,6 @@ package com.netflix.imfutility.itunes.metadata.film.wrap;
 
 import com.apple.itunes.importer.film.Checksum;
 import com.apple.itunes.importer.film.File;
-import com.netflix.imfutility.itunes.metadata.ElemWrapper;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://apple.com/itunes/importer" version="tv5.2">
+    <provider>abc</provider>
+    <language>en-US</language>
+    <video>
+        <type>tv</type>
+        <subtype>episode</subtype>
+        <container_id>ABC_GREYSANATOMY_SEASON_004</container_id>
+        <container_position>9</container_position>
+        <vendor_offer_code>408CH98720X103</vendor_offer_code>
+        <vendor_id>ABC_GREYSANATOMY_409</vendor_id>
+        <isan>0000-0001-DE1D-0000-M-0000-0000-8</isan>
+        <eidr>10.5240/23B3-9CA1-888D-9266-54C9-5</eidr>
+        <episode_production_number>409</episode_production_number>
+        <original_spoken_locale>en-US</original_spoken_locale>
+        <title>Crash Into Me, Pt. 1</title>
+        <studio_release_title>Crash Into Me, Pt. 1</studio_release_title>
+        <description>An ambulance crash endangers the lives of the paramedics involved, as Meredith and the Chief work on-site to save them, Bailey treats a patient who refuses her help.</description>
+        <release_date>2007-11-22</release_date>
+        <regions>
+            <region>
+                <territory>GB</territory>
+                <release_date>2007-11-23</release_date>
+            </region>
+            <region>
+                <territory>CA</territory>
+                <release_date>2007-11-24</release_date>
+            </region>
+        </regions>
+        <copyright_cline>2007 ABC Studios. All Rights Reserved.</copyright_cline>
+        <ratings>
+            <rating system="us-tv">TV-14</rating>
+            <advisory system="us-cable">AL</advisory>
+            <rating system="ca-tv">14+</rating>
+        </ratings>
+        <accessibility_info>
+            <accessibility role="captions" available="true"/>
+        </accessibility_info>
+        <assets>
+            <asset type="full">
+                <data_file role="source">
+                    <locale name="en-US"/>
+                    <file_name>ABC_GREYSANATOMY_409_PRORES.mov</file_name>
+                    <size>6763970564</size>
+                    <checksum type="md5">c2108d9ea7d4ba2a0df2d4f10b1704bf</checksum>
+                    <!-- Note: Crop dimensions are supported for QuickTime source only. -->
+                    <attribute name="crop.top">4</attribute>
+                    <attribute name="crop.bottom">4</attribute>
+                    <attribute name="crop.left">2</attribute>
+                    <attribute name="crop.right">2</attribute>
+                </data_file>
+                <data_file role="captions">
+                    <file_name>captions.scc</file_name>
+                    <size>9511</size>
+                    <checksum type="md5">5a793a8b46037fe8aa2bdd739b49911a</checksum>
+                    <locale name="en-US"/>
+                    <attribute name="program.start.timecode">-01:00:00:00</attribute>
+                </data_file>
+            </asset>
+        </assets>
+        <!-- Defined preview -->
+        <previews>
+            <preview timecode_format="qt_text" start_time="00:05:13.002" end_time="00:06:27.000" image_time="00:05:45.128"/>
+        </previews>
+        <products>
+            <product>
+                <territory>US</territory>
+                <sales_start_date>2007-11-23</sales_start_date>
+                <cleared_for_sale>true</cleared_for_sale>
+                <bundle_only>true</bundle_only>
+            </product>
+            <product>
+                <territory>GB</territory>
+                <sales_start_date>2007-11-24</sales_start_date>
+                <cleared_for_sale>true</cleared_for_sale>
+                <bundle_only>true</bundle_only>
+            </product>
+            <product>
+                <territory>CA</territory>
+                <sales_start_date>2007-11-25</sales_start_date>
+                <cleared_for_sale>true</cleared_for_sale>
+                <bundle_only>true</bundle_only>
+            </product>
+        </products>
+    </video>
+</package>
