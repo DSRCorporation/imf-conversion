@@ -18,10 +18,10 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
-import com.netflix.imfutility.itunes.asset.type.Asset;
-import com.netflix.imfutility.itunes.asset.type.AssetType;
 import com.netflix.imfutility.itunes.asset.builder.DefaultAssetBuilder;
 import com.netflix.imfutility.itunes.asset.distribute.CopyAssetStrategy;
+import com.netflix.imfutility.itunes.asset.type.Asset;
+import com.netflix.imfutility.itunes.asset.type.AssetType;
 import com.netflix.imfutility.itunes.image.ImageValidationException;
 import com.netflix.imfutility.itunes.image.ImageValidator;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
@@ -69,7 +69,7 @@ public class PosterAssetProcessor extends AssetProcessor<Asset> {
         ImageValidator validator = new ImageValidator(assetFile, POSTER_TYPE);
         validator.validateSize(POSTER_MIN_WIDTH, POSTER_MIN_HEIGHT);
         validator.validateAspectRatio(new BigFraction(POSTER_AR_NUMERATOR).divide(POSTER_AR_DENOMINATOR));
-        validator.validateJpeg();
+        validator.validateJpegOrPng();
         validator.validateRGBColorSpace();
     }
 

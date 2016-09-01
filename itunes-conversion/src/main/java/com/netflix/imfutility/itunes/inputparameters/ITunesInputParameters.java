@@ -113,22 +113,21 @@ public class ITunesInputParameters extends ImfUtilityInputParameters {
     }
 
     /**
-     * Gets a closed caption files as specified via command line arguments or null if it's not specified.
+     * Gets a closed caption file as specified via command line arguments or null if it's not specified.
      *
-     * @return a trailer file as specified via command line arguments or null if it's not specified.
+     * @return a closed caption file as specified via command line arguments or null if it's not specified.
      */
-    public List<File> getCcFiles() {
-        if (cmdLineArgs.getCc() == null || cmdLineArgs.getCc().isEmpty()) {
+    public File getCcFile() {
+        if (cmdLineArgs.getCc() == null) {
             return null;
         }
-        return cmdLineArgs.getCc().stream()
-                .map(File::new).collect(Collectors.toList());
+        return new File(cmdLineArgs.getCc());
     }
 
     /**
      * Gets a subtitle files as specified via command line arguments or null if it's not specified.
      *
-     * @return a trailer file as specified via command line arguments or null if it's not specified.
+     * @return a subtitle files as specified via command line arguments or null if it's not specified.
      */
     public List<File> getSubFiles() {
         if (cmdLineArgs.getSub() == null || cmdLineArgs.getSub().isEmpty()) {

@@ -73,7 +73,7 @@ public final class ITunesInputParametersValidator {
         // chapters may be null. in this case a default chapters.xml is created.
         validateFile(inputParameters.getChaptersFile(), "Chapters");
         // cc may be null.
-        validateFiles(inputParameters.getCcFiles(), "Closed captions");
+        validateFile(inputParameters.getCcFile(), "Closed captions");
         // subtitles may be null.
         validateFiles(inputParameters.getSubFiles(), "Subtitles");
     }

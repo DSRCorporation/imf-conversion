@@ -43,16 +43,8 @@ public final class AssetUtils {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/image/test-image-1920-1080.jpg").toURI());
     }
 
-    public static File getTestCorrectCcUSFile() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/scc/cc-en_US.scc").toURI());
-    }
-
-    public static File getTestCorrectCcGBFile() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/scc/cc-en_US.scc").toURI());
-    }
-
-    public static File getTestInvalidLocaleCcFile() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/scc/cc_no_locale.scc").toURI());
+    public static File getTestCorrectCcFile() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/scc/cc.scc").toURI());
     }
 
     public static File getTestInvalidSignatureCcFile() throws URISyntaxException {

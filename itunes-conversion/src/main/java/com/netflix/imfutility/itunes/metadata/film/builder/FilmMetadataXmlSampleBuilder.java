@@ -16,10 +16,12 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.metadata.film;
+package com.netflix.imfutility.itunes.metadata.film.builder;
 
 
 import com.netflix.imfutility.generated.itunes.metadata.film.Cast;
+import com.netflix.imfutility.generated.itunes.metadata.film.Character;
+import com.netflix.imfutility.generated.itunes.metadata.film.Characters;
 import com.netflix.imfutility.generated.itunes.metadata.film.Crew;
 import com.netflix.imfutility.generated.itunes.metadata.film.FilmRating;
 import com.netflix.imfutility.generated.itunes.metadata.film.Genre;
@@ -64,7 +66,8 @@ public final class FilmMetadataXmlSampleBuilder {
     private static final String BILLING = "top";
     private static final String CREW_ROLE = "director";
     private static final String CAST_MEMBER_DISPLAY_NAME = "Required cast member display name";
-    private static final String CAST_MEMBER_CHARACTER_NAME = "Required cast member character name";
+    private static final String CHARACTER_NAME = "Required cast member character name";
+    private static final String REFERENCE_ID = "REFERENCE_ID";
     private static final String CREW_MEMBER_DISPLAY_NAME = "Required crew member display name";
 
     private FilmMetadataXmlSampleBuilder() {
@@ -91,6 +94,7 @@ public final class FilmMetadataXmlSampleBuilder {
         video.getCountry().add(COUNTRY);
         video.getOriginalSpokenLocale().add(LOCALE);
         video.getTitle().add(TITLE);
+        video.getStudioReleaseTitle().add(TITLE);
         video.getSynopsis().add(SYNOPSIS);
         video.getProductionCompany().add(COMPANY);
         video.getCopyrightCline().add(String.format(COPYRIGHT, Calendar.getInstance().get(Calendar.YEAR)));
@@ -128,7 +132,7 @@ public final class FilmMetadataXmlSampleBuilder {
     private static FilmRating buildRating() {
         FilmRating rating = new FilmRating();
         rating.setSystem(RATING_SYSTEM);
-        rating.setValue(RATING);
+        rating.setCode(RATING);
         return rating;
     }
 
@@ -146,9 +150,25 @@ public final class FilmMetadataXmlSampleBuilder {
         castMember.getAppleIdOrReadOnlyInfoOrDisplayName().add(
                 OBJECT_FACTORY.createLocalizableMovieParticipantDisplayName(CAST_MEMBER_DISPLAY_NAME));
         castMember.getAppleIdOrReadOnlyInfoOrDisplayName().add(
-                OBJECT_FACTORY.createCharacterName(CAST_MEMBER_CHARACTER_NAME));
+                OBJECT_FACTORY.createCharacters(buildCharacters()));
         return castMember;
     }
+
+    private static Characters buildCharacters() {
+        Characters characters = new Characters();
+        characters.getCharacter().add(buildCharacter());
+        return characters;
+    }
+
+    private static Character buildCharacter() {
+        Character character = new Character();
+        character.getCharacterNameOrReferenceIdOrCharacterNote().add(
+                OBJECT_FACTORY.createReferenceId(REFERENCE_ID));
+        character.getCharacterNameOrReferenceIdOrCharacterNote().add(
+                OBJECT_FACTORY.createCharacterName(CHARACTER_NAME));
+        return character;
+    }
+
 
     //  Crew
 

@@ -108,14 +108,14 @@ public interface ITunesCmdLineArgs extends ImfUtilityCmdLineArgs {
     String getChapters();
 
     @Option(
-            description = "a paths to external closed captions. "
+            description = "a path to external closed captions. "
                     + " ('convert' mode only)."
-                    + " Filenames must fit pattern <filename>-xx_XX.scc, where xx_XX - existing locale.",
+                    + " Input file must have scc extension.",
             longName = {"cc"},
             defaultToNull = true,
-            pattern = ".*\\-[a-z]{2}(_[A-Z]{2})?.scc"
+            pattern = ".*\\.scc"
     )
-    List<String> getCc();
+    String getCc();
 
     @Option(
             description = "a paths to external subtitles. "

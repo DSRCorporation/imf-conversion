@@ -18,10 +18,10 @@
  */
 package com.netflix.imfutility.itunes.asset;
 
+import com.netflix.imfutility.itunes.asset.builder.DefaultAssetBuilder;
+import com.netflix.imfutility.itunes.asset.type.Asset;
 import com.netflix.imfutility.itunes.asset.type.AssetRole;
 import com.netflix.imfutility.itunes.asset.type.AssetType;
-import com.netflix.imfutility.itunes.asset.type.VideoAsset;
-import com.netflix.imfutility.itunes.asset.builder.VideoAssetBuilder;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 
 import java.io.File;
@@ -30,7 +30,7 @@ import java.util.Locale;
 /**
  * Asset processor specified for main source managing.
  */
-public class SourceAssetProcessor extends AssetProcessor<VideoAsset> {
+public class SourceAssetProcessor extends AssetProcessor<Asset> {
 
     private Locale locale;
 
@@ -54,8 +54,8 @@ public class SourceAssetProcessor extends AssetProcessor<VideoAsset> {
     }
 
     @Override
-    protected VideoAsset buildAsset(File assetFile) {
-        return new VideoAssetBuilder(assetFile, getDestFileName(assetFile))
+    protected Asset buildAsset(File assetFile) {
+        return new DefaultAssetBuilder(assetFile, getDestFileName(assetFile))
                 .setType(AssetType.FULL)
                 .setRole(AssetRole.SOURCE)
                 .setLocale(locale)

@@ -25,7 +25,7 @@ import com.netflix.imfutility.itunes.inputparameters.ITunesDefaultTools;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
 import com.netflix.imfutility.itunes.metadata.film.FilmMetadataXmlCreator;
-import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider;
+import com.netflix.imfutility.itunes.audiomap.AudioMapXmlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

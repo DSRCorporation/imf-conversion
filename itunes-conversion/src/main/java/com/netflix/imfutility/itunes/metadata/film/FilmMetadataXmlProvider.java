@@ -19,6 +19,9 @@
 package com.netflix.imfutility.itunes.metadata.film;
 
 import com.netflix.imfutility.generated.itunes.chapters.InputChapterItem;
+import com.netflix.imfutility.generated.itunes.metadata.film.Accessibility;
+import com.netflix.imfutility.generated.itunes.metadata.film.AccessibilityInfo;
+import com.netflix.imfutility.generated.itunes.metadata.film.AccessibilityRole;
 import com.netflix.imfutility.generated.itunes.metadata.film.AssetFile;
 import com.netflix.imfutility.generated.itunes.metadata.film.AssetItem;
 import com.netflix.imfutility.generated.itunes.metadata.film.AssetList;
@@ -36,9 +39,9 @@ import com.netflix.imfutility.itunes.asset.type.Asset;
 import com.netflix.imfutility.itunes.asset.type.AssetRole;
 import com.netflix.imfutility.itunes.asset.type.AssetType;
 import com.netflix.imfutility.itunes.asset.type.ChapterAsset;
-import com.netflix.imfutility.itunes.asset.type.VideoAsset;
 import com.netflix.imfutility.itunes.locale.LocaleHelper;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
+import com.netflix.imfutility.itunes.metadata.film.builder.FilmMetadataXmlSampleBuilder;
 import com.netflix.imfutility.itunes.metadata.film.wrap.ChapterItemWrapper;
 import com.netflix.imfutility.itunes.metadata.film.wrap.FileWrapper;
 import com.netflix.imfutility.xml.XmlParsingException;
@@ -47,6 +50,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,6 +61,7 @@ public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
 
     private static final String DEFAULT_TERRITORY = "WW";
     private static final String[] CROP_ATTRUBUTE_NAMES = new String[]{"crop.top", "crop.bottom", "crop.left", "crop.right"};
+    private static final String TEXTLESS_MASTER_ATTRIBUTE_NAME = "image.textless_master";
 
     private final Video video;
 
@@ -100,6 +105,10 @@ public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
                 ? ensureFullAssetItemCreated()
                 : createAssetItem(asset.getType(), createTerritories());
         assetItem.getReadOnlyInfoOrTerritoriesOrDataFile().add(createAssetFile(asset));
+
+        if (asset.getRole() == AssetRole.CAPTIONS) {
+            ensureCaptionsAccessibility();
+        }
     }
 
     @Override
@@ -107,9 +116,11 @@ public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
         return ensureFullAssetItemCreated().getReadOnlyInfoOrTerritoriesOrDataFile().stream()
                 .filter(AssetFile.class::isInstance)
                 .map(AssetFile.class::cast)
-                .filter(assetFile -> assetFile.getRole().value().equals(role.getName()))
-                .filter(assetFile -> getSingleValue(assetFile.getLocale()) != null)
-                .map(assetFile -> LocaleHelper.fromITunesLocale(getSingleValue(assetFile.getLocale()).getName()))
+                .filter(assetFile -> Objects.equals(assetFile.getRole().value(), role.getName()))
+                .map(assetFile -> getSingleValue(assetFile.getLocale()))
+                .filter(Objects::nonNull)
+                .map(VideoLocale::getName)
+                .map(LocaleHelper::fromITunesLocale)
                 .collect(Collectors.toList());
     }
 
@@ -186,8 +197,12 @@ public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
             assetFile.setRole(DataFileRole.fromValue(asset.getRole().getName()));
         }
 
-        if (asset instanceof VideoAsset) {
+        if (asset.getRole() == AssetRole.SOURCE) {
             assetFile.getAttribute().addAll(createZeroCropAttributeList());
+        }
+
+        if (asset.getType() == AssetType.FULL && asset.getRole() == AssetRole.SOURCE) {
+            assetFile.getAttribute().add(createAttribute(TEXTLESS_MASTER_ATTRIBUTE_NAME, Boolean.TRUE.toString()));
         }
 
         return assetFile;
@@ -195,14 +210,14 @@ public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
 
     private List<Attribute> createZeroCropAttributeList() {
         return Stream.of(CROP_ATTRUBUTE_NAMES)
-                .map(this::createZeroCropAttribute)
+                .map(name -> createAttribute(name, "0"))
                 .collect(Collectors.toList());
     }
 
-    private Attribute createZeroCropAttribute(String name) {
+    private Attribute createAttribute(String name, String content) {
         Attribute attribute = new Attribute();
         attribute.setName(name);
-        attribute.setContent("0");
+        attribute.setContent(content);
         return attribute;
     }
 
@@ -224,6 +239,21 @@ public class FilmMetadataXmlProvider extends MetadataXmlProvider<PackageType> {
         Territories territories = new Territories();
         territories.getTerritory().add(DEFAULT_TERRITORY);
         return territories;
+    }
+
+    private AccessibilityInfo ensureCaptionsAccessibility() {
+        Accessibility accessibility = new Accessibility();
+        accessibility.setRole(AccessibilityRole.CAPTIONS);
+        accessibility.setAvailable(true);
+
+        AccessibilityInfo info = getSingleValue(video.getAccessibilityInfo());
+        if (info == null) {
+            info = new AccessibilityInfo();
+            setSingleValue(video.getAccessibilityInfo(), info);
+        }
+
+        info.getReadOnlyInfoOrAccessibility().add(accessibility);
+        return info;
     }
 
     private NonEmptyLocalizableTextElement createTitle(InputChapterItem inputChapterItem) {

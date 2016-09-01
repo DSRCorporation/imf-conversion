@@ -70,7 +70,7 @@ public class ITunesInputParametersTest {
 
     @Test
     public void testMetadataFile() throws URISyntaxException {
-        testCmdLineFile("--metadata", TestUtils.getTestFile().getAbsolutePath(), parameters -> parameters.getMetadataFile());
+        testCmdLineFile("--metadata", TestUtils.getTestFile().getAbsolutePath(), ITunesInputParameters::getMetadataFile);
     }
 
     private void validate(String[] args) {

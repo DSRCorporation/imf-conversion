@@ -18,7 +18,9 @@
  */
 package com.netflix.imfutility.itunes.util;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -34,6 +36,14 @@ public final class ChaptersUtils {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/chapters/test-chapters.xml").toURI());
     }
 
+    public static File getDiffLocalesChaptersXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/chapters/test-chapters-diff-locales.xml").toURI());
+    }
+
+    public static File getIdentFilesChaptersXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/chapters/test-chapters-ident-files.xml").toURI());
+    }
+
     public static File getInvalidChaptersXml() throws URISyntaxException {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/chapters/invalid/invalid-test-chapters.xml").toURI());
     }
@@ -42,10 +52,14 @@ public final class ChaptersUtils {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/chapters/broken/broken-test-chapters.xml").toURI());
     }
 
-    public static void createChapterFile(String chapterName) throws IOException {
-        File file = new File(chapterName);
+    public static void createChapterFile(int chapterIndex) throws IOException {
+        File file = new File(String.format("chapter%02d.jpg", chapterIndex));
         if (!file.createNewFile()) {
             throw new IOException(String.format("Cannot create test chapter file %s", file.getAbsolutePath()));
+        }
+
+        try (BufferedOutputStream outStream = new BufferedOutputStream(new FileOutputStream(file))) {
+            outStream.write(chapterIndex);
         }
         file.deleteOnExit();
     }

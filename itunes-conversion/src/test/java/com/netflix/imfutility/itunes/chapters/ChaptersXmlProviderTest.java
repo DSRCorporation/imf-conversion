@@ -54,8 +54,8 @@ public class ChaptersXmlProviderTest {
         userDir = System.getProperty("user.dir");
         System.setProperty("user.dir", workingDir.getAbsolutePath());
 
-        ChaptersUtils.createChapterFile("chapter01.jpg");
-        ChaptersUtils.createChapterFile("chapter02.jpg");
+        ChaptersUtils.createChapterFile(1);
+        ChaptersUtils.createChapterFile(2);
     }
 
     @AfterClass
@@ -89,6 +89,16 @@ public class ChaptersXmlProviderTest {
     @Test(expected = FileNotFoundException.class)
     public void testParseInvalidFilePath() throws Exception {
         new ChaptersXmlProvider(new File("invalid-path"));
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testChaptersIdentFiles() throws Exception {
+        new ChaptersXmlProvider(ChaptersUtils.getIdentFilesChaptersXml());
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testChaptersDiffLocales() throws Exception {
+        new ChaptersXmlProvider(ChaptersUtils.getDiffLocalesChaptersXml());
     }
 
     @Test(expected = ConversionException.class)

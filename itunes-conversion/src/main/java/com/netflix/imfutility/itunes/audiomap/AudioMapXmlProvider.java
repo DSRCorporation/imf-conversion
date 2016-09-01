@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.xmlprovider;
+package com.netflix.imfutility.itunes.audiomap;
 
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
@@ -37,6 +37,7 @@ import com.netflix.imfutility.generated.itunes.audiomap.Option4Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option5Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option6Type;
 import com.netflix.imfutility.itunes.locale.LocaleHelper;
+import com.netflix.imfutility.itunes.xmlprovider.LocalizedXmlProvider;
 import com.netflix.imfutility.util.StreamUtil;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;

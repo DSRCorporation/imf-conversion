@@ -18,22 +18,27 @@
  */
 package com.netflix.imfutility.itunes.image;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
  * Validator to check image size, aspect ratio, color model and format.
  */
 public class ImageValidator {
-    private static final int JPEG_START_BYTES = 0xffd8ffe0;
+    private static final String JPEG_START_SIGNATURE = "FFD8";
+    private static final String JPEG_END_SIGNATURE = "FFD9";
+    private static final String PNG_SIGNATURE = "89504E470D0A1A0A";
+
     private final File file;
     private BufferedImage image;
 
@@ -91,16 +96,66 @@ public class ImageValidator {
         }
     }
 
+    public void validateJpegOrPng() throws ImageValidationException {
+        if (!isJpeg() && !isPng()) {
+            throw new ImageValidationException(String.format(
+                    "%s image must be JPG or PNG", imageType));
+        }
+    }
+
     private BigFraction getImageAspectRatio() {
         return new BigFraction(image.getWidth()).divide(image.getHeight());
     }
 
     private boolean isJpeg() {
-        try (DataInputStream ins = new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) {
-            return ins.readInt() == JPEG_START_BYTES;
+        return validateSignature(JPEG_START_SIGNATURE, JPEG_END_SIGNATURE);
+    }
+
+    private boolean isPng() {
+        return validateSignature(PNG_SIGNATURE, "");
+    }
+
+    private boolean validateSignature(String startSignature, String endSignature) {
+        try {
+            return checkBytes(file, getBytes(startSignature), getBytes(endSignature));
         } catch (IOException e) {
             throw new ImageValidationException(String.format(
                     "Can't read file %s", file.getName()), e);
         }
+    }
+
+    private static byte[] getBytes(String hexString) {
+        if (StringUtils.isBlank(hexString)) {
+            return new byte[]{};
+        }
+
+        try {
+            return Hex.decodeHex(hexString.toCharArray());
+        } catch (DecoderException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static boolean checkBytes(File file, byte[] start, byte[] end) throws IOException {
+        RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
+
+        byte[] destStart = new byte[start.length];
+        if (start.length != 0) {
+            int res = randomAccessFile.read(destStart, 0, start.length);
+            if (res == -1) {
+                return false;
+            }
+        }
+
+        byte[] destEnd = new byte[end.length];
+        if (end.length != 0) {
+            randomAccessFile.seek(file.length() - end.length);
+            int res = randomAccessFile.read(destEnd, 0, end.length);
+            if (res == -1) {
+                return false;
+            }
+        }
+
+        return Arrays.equals(start, destStart) && Arrays.equals(end, destEnd);
     }
 }
