@@ -18,8 +18,8 @@
  */
 package com.netflix.imfutility.itunes.metadata.film.wrap;
 
-import com.netflix.imfutility.generated.itunes.metadata.film.Checksum;
-import com.netflix.imfutility.generated.itunes.metadata.film.File;
+import com.apple.itunes.importer.film.Checksum;
+import com.apple.itunes.importer.film.File;
 import com.netflix.imfutility.itunes.metadata.ElemWrapper;
 
 import javax.xml.bind.JAXBContext;

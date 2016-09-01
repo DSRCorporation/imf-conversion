@@ -18,12 +18,12 @@
  */
 package com.netflix.imfutility.itunes.metadata.film;
 
-import com.netflix.imfutility.generated.itunes.metadata.film.AssetFile;
-import com.netflix.imfutility.generated.itunes.metadata.film.AssetItem;
-import com.netflix.imfutility.generated.itunes.metadata.film.ChapterItem;
-import com.netflix.imfutility.generated.itunes.metadata.film.Checksum;
-import com.netflix.imfutility.generated.itunes.metadata.film.DataFileRole;
-import com.netflix.imfutility.generated.itunes.metadata.film.PackageType;
+import com.apple.itunes.importer.film.AssetFile;
+import com.apple.itunes.importer.film.AssetItem;
+import com.apple.itunes.importer.film.ChapterItem;
+import com.apple.itunes.importer.film.Checksum;
+import com.apple.itunes.importer.film.DataFileRole;
+import com.apple.itunes.importer.film.PackageType;
 import com.netflix.imfutility.itunes.asset.type.Asset;
 import com.netflix.imfutility.itunes.asset.type.AssetRole;
 import com.netflix.imfutility.itunes.asset.type.AssetType;

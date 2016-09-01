@@ -18,9 +18,9 @@
  */
 package com.netflix.imfutility.itunes.metadata.film.wrap;
 
-import com.netflix.imfutility.generated.itunes.metadata.film.ChapterItem;
-import com.netflix.imfutility.generated.itunes.metadata.film.File;
-import com.netflix.imfutility.generated.itunes.metadata.film.NonEmptyLocalizableTextElement;
+import com.apple.itunes.importer.film.ChapterItem;
+import com.apple.itunes.importer.film.File;
+import com.apple.itunes.importer.film.NonEmptyLocalizableTextElement;
 import com.netflix.imfutility.itunes.metadata.ElemWrapper;
 
 import javax.xml.bind.JAXBContext;
