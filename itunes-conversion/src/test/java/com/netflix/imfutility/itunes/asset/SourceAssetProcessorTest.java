@@ -19,9 +19,9 @@
 package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.itunes.asset.type.Asset;
 import com.netflix.imfutility.itunes.asset.type.AssetRole;
 import com.netflix.imfutility.itunes.asset.type.AssetType;
-import com.netflix.imfutility.itunes.asset.type.VideoAsset;
 import com.netflix.imfutility.itunes.util.FakeMetadataXmlProvider;
 import com.netflix.imfutility.itunes.util.TestUtils;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.util.Locale;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests main source asset processing.
@@ -73,7 +72,7 @@ public class SourceAssetProcessorTest {
         processor.setLocale(Locale.US)
                 .process(TestUtils.getTestFile());
 
-        VideoAsset sourceAsset = (VideoAsset) metadataXmlProvider.getRootElement().getAssets().get(0);
+        Asset sourceAsset = metadataXmlProvider.getRootElement().getAssets().get(0);
         assertEquals(AssetType.FULL, sourceAsset.getType());
         assertEquals(AssetRole.SOURCE, sourceAsset.getRole());
         assertEquals(Locale.US, sourceAsset.getLocale());

@@ -21,11 +21,9 @@ package com.netflix.imfutility.itunes.asset.builder;
 import com.netflix.imfutility.itunes.asset.type.Asset;
 import com.netflix.imfutility.itunes.asset.type.AssetRole;
 import com.netflix.imfutility.itunes.asset.type.AssetType;
-import org.apache.commons.codec.digest.DigestUtils;
+import com.netflix.imfutility.itunes.digest.DigestHelper;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -82,16 +80,8 @@ public abstract class AssetBuilder<T extends Asset> {
         asset.setFileName(fileName);
         asset.setSize(String.valueOf(file.length()));
         asset.setChecksumType(MD5_CHECKSUM_TYPE);
-        asset.setChecksum(md5(file));
+        asset.setChecksum(DigestHelper.md5(file));
     }
 
     protected abstract T create();
-
-    private static String md5(File file) {
-        try (FileInputStream stream = new FileInputStream(file)) {
-            return DigestUtils.md5Hex(stream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

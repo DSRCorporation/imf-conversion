@@ -40,4 +40,8 @@ public final class ImageUtils {
     public static File getTestImageJpgCmykFile() throws URISyntaxException {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/image/test-image-1280-720-cmyk.jpg").toURI());
     }
+
+    public static File getTestImageGifFile() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/image/test-image-600-400.gif").toURI());
+    }
 }

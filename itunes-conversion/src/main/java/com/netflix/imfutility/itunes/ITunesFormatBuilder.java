@@ -39,6 +39,8 @@ import com.netflix.imfutility.itunes.asset.PosterAssetProcessor;
 import com.netflix.imfutility.itunes.asset.SourceAssetProcessor;
 import com.netflix.imfutility.itunes.asset.SubtitlesAssetProcessor;
 import com.netflix.imfutility.itunes.asset.TrailerAssetProcessor;
+import com.netflix.imfutility.itunes.audiomap.AudioMapXmlProvider;
+import com.netflix.imfutility.itunes.audiomap.AudioMapXmlProvider.AudioOption;
 import com.netflix.imfutility.itunes.chapters.ChaptersXmlProvider;
 import com.netflix.imfutility.itunes.destcontext.DestContextResolveStrategy;
 import com.netflix.imfutility.itunes.destcontext.InputDestContextResolveStrategy;
@@ -50,8 +52,6 @@ import com.netflix.imfutility.itunes.locale.LocaleValidator;
 import com.netflix.imfutility.itunes.mediainfo.SimpleMediaInfoBuilder;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
 import com.netflix.imfutility.itunes.metadata.film.FilmMetadataXmlProvider;
-import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider;
-import com.netflix.imfutility.itunes.xmlprovider.AudioMapXmlProvider.AudioOption;
 import com.netflix.imfutility.mediainfo.MediaInfoException;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
@@ -495,25 +495,19 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
                 .process(trailer);
     }
 
-    private void processCaptions() {
-        if (iTunesInputParameters.getCcFiles() == null) {
+    private void processCaptions() throws IOException {
+        File captions = iTunesInputParameters.getCcFile();
+        if (captions == null) {
+            if (Objects.equals(metadataXmlProvider.getLocale(), Locale.US)) {
+                logger.warn("Closed captions are required for US deliveries.");
+            }
             return;
         }
 
-        iTunesInputParameters.getCcFiles().forEach(this::safeProcessCaptions);
-    }
-
-    private void safeProcessCaptions(File captions) {
-        try {
-            processCaptions(captions);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void processCaptions(File captions) throws IOException {
         new CaptionsAssetProcessor(metadataXmlProvider, itmspDir)
                 .setVendorId(iTunesInputParameters.getCmdLineArgs().getVendorId())
+                // only US english captions currently allowed
+                .setLocale(Locale.US)
                 .process(captions);
     }
 

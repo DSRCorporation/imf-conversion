@@ -55,7 +55,7 @@ public class ITunesCmdLineArgumentsTest {
                 "--trailer", "trailer.mov",
                 "--poster", "poster.jpg",
                 "--chapters", "chapters.xml",
-                "--cc", "c0-en.scc", "c1-fr_FR.scc", "c2-de_DE.scc", "c3-ja.scc",
+                "--cc", "c0.scc",
                 "--sub", "t0.ttml", "t1.itt", "t2.xml",
                 "--fallback-locale", "en-US",
                 "--output", "output"
@@ -71,13 +71,7 @@ public class ITunesCmdLineArgumentsTest {
         assertEquals("chapters.xml", cmdLineArgs.getChapters());
         assertEquals("en-US", cmdLineArgs.getFallbackLocale());
         assertEquals("output", cmdLineArgs.getOutput());
-
-        assertNotNull(cmdLineArgs.getCc());
-        assertEquals(4, cmdLineArgs.getCc().size());
-        assertEquals("c0-en.scc", cmdLineArgs.getCc().get(0));
-        assertEquals("c1-fr_FR.scc", cmdLineArgs.getCc().get(1));
-        assertEquals("c2-de_DE.scc", cmdLineArgs.getCc().get(2));
-        assertEquals("c3-ja.scc", cmdLineArgs.getCc().get(3));
+        assertEquals("c0.scc", cmdLineArgs.getCc());
 
         assertNotNull(cmdLineArgs.getSub());
         assertEquals(3, cmdLineArgs.getSub().size());
@@ -114,7 +108,7 @@ public class ITunesCmdLineArgumentsTest {
 
     @Test(expected = ArgumentValidationException.class)
     public void testInvalidCc() {
-        String[] args = new String[]{"--cc", "c1.scc"};
+        String[] args = new String[]{"--cc", "c1.itt"};
         CliFactory.parseArguments(ITunesCmdLineArgs.class, args);
     }
 

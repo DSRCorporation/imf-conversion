@@ -19,9 +19,9 @@
 package com.netflix.imfutility.itunes.asset;
 
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.itunes.asset.type.Asset;
 import com.netflix.imfutility.itunes.asset.type.AssetRole;
 import com.netflix.imfutility.itunes.asset.type.AssetType;
-import com.netflix.imfutility.itunes.asset.type.VideoAsset;
 import com.netflix.imfutility.itunes.util.AssetUtils;
 import com.netflix.imfutility.itunes.util.FakeMetadataXmlProvider;
 import com.netflix.imfutility.itunes.util.TestUtils;
@@ -80,7 +80,7 @@ public class TrailerAssetProcessorTest {
         assertTrue(asset.exists());
         assertTrue(asset.isFile());
 
-        VideoAsset trailerAsset = (VideoAsset) metadataXmlProvider.getRootElement().getAssets().get(0);
+        Asset trailerAsset = metadataXmlProvider.getRootElement().getAssets().get(0);
         assertEquals(AssetType.PREVIEW, trailerAsset.getType());
         assertEquals(AssetRole.SOURCE, trailerAsset.getRole());
         assertEquals(Locale.US, trailerAsset.getLocale());

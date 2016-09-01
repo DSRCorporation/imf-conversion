@@ -21,8 +21,10 @@ package com.netflix.imfutility.itunes.chapters;
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.generated.itunes.chapters.InputChapterItem;
 import com.netflix.imfutility.generated.itunes.chapters.InputChapterList;
+import com.netflix.imfutility.generated.itunes.chapters.NonEmptyLocalizableTextElement;
 import com.netflix.imfutility.generated.itunes.chapters.ObjectFactory;
 import com.netflix.imfutility.itunes.chapters.builder.ChaptersXmlSampleBuilder;
+import com.netflix.imfutility.itunes.digest.DigestHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.xml.sax.SAXException;
@@ -34,6 +36,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.validation.Schema;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -57,6 +60,7 @@ public final class ChaptersXmlProvider {
         this.baseDir = new File(chapters.getBasedir());
 
         mapChaptersAssets();
+        checkChapters();
         checkChaptersAssets();
     }
 
@@ -86,9 +90,26 @@ public final class ChaptersXmlProvider {
                 .collect(Collectors.toMap(Function.identity(), this::createChapterFile));
     }
 
+    private void checkChapters() {
+        if (chaptersAssetMap.keySet().stream()
+                .map(InputChapterItem::getTitle)
+                .map(NonEmptyLocalizableTextElement::getLocale)
+                .distinct()
+                .count() != 1) {
+            throw new ConversionException("Locales set in chapters must be the same.");
+        }
+    }
+
     private void checkChaptersAssets() {
-        if (!chaptersAssetMap.values().stream().allMatch(File::isFile)) {
-            throw new ConversionException("Chapters.xml contains not existing files");
+        if (!chaptersAssetMap.values().stream()
+                .allMatch(File::isFile)) {
+            throw new ConversionException("Chapters.xml contains not existing files.");
+        }
+
+        if (!chaptersAssetMap.values().stream()
+                .map(DigestHelper::md5)
+                .allMatch(new HashSet<>()::add)) {
+            throw new ConversionException("Chapters.xml contains equal files. Chapter files must be unique.");
         }
     }
 

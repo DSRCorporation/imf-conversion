@@ -9,6 +9,7 @@
         <country>CA</country>
         <original_spoken_locale>fr-CA</original_spoken_locale>
         <title>Required title</title>
+        <studio_release_title>Required title</studio_release_title>
         <synopsis>Required synopsis</synopsis>
         <production_company>Required company</production_company>
         <copyright_cline>2016 Required company</copyright_cline>
@@ -17,12 +18,17 @@
             <genre code="CLASSICS-00"/>
         </genres>
         <ratings>
-            <rating system="mpaa">G</rating>
+            <rating system="mpaa" code="G"/>
         </ratings>
         <cast>
             <cast_member billing="top">
                 <display_name>Required cast member display name</display_name>
-                <character_name>Required cast member character name</character_name>
+                <characters>
+                    <character>
+                        <reference_id>REFERENCE_ID</reference_id>
+                        <character_name>Required cast member character name</character_name>
+                    </character>
+                </characters>
             </cast_member>
         </cast>
         <crew>

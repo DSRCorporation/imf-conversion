@@ -72,7 +72,8 @@ public class CaptionsAssetProcessorTest {
         CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider, TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
-                .process(AssetUtils.getTestCorrectCcUSFile());
+                .setLocale(Locale.US)
+                .process(AssetUtils.getTestCorrectCcFile());
 
         File asset = new File(TemplateParameterContextCreator.getWorkingDir(), "vendor_id-english.scc");
         assertTrue(asset.exists());
@@ -86,20 +87,12 @@ public class CaptionsAssetProcessorTest {
     }
 
     @Test(expected = AssetValidationException.class)
-    public void testInvalidLocaleFile() throws Exception {
-        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider,
-                TemplateParameterContextCreator.getWorkingDir());
-
-        processor.setVendorId("vendor_id")
-                .process(AssetUtils.getTestInvalidLocaleCcFile());
-    }
-
-    @Test(expected = AssetValidationException.class)
     public void testInvalidSignatureFile() throws Exception {
         CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
+                .setLocale(Locale.US)
                 .process(AssetUtils.getTestInvalidSignatureCcFile());
     }
 
@@ -109,6 +102,7 @@ public class CaptionsAssetProcessorTest {
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
+                .setLocale(Locale.US)
                 .process(TestUtils.getTestFile());
     }
 
@@ -118,6 +112,7 @@ public class CaptionsAssetProcessorTest {
                 TemplateParameterContextCreator.getWorkingDir());
 
         processor.setVendorId("vendor_id")
+                .setLocale(Locale.US)
                 .process(new File("invalid_path"));
     }
 
@@ -126,17 +121,7 @@ public class CaptionsAssetProcessorTest {
         CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider,
                 TemplateParameterContextCreator.getWorkingDir());
 
-        processor.process(AssetUtils.getTestCorrectCcUSFile());
-    }
-
-    @Test(expected = AssetValidationException.class)
-    public void testDuplicateLanguages() throws Exception {
-        CaptionsAssetProcessor processor = new CaptionsAssetProcessor(metadataXmlProvider,
-                TemplateParameterContextCreator.getWorkingDir());
-
-        processor.setVendorId("vendor_id");
-
-        processor.process(AssetUtils.getTestCorrectCcUSFile());
-        processor.process(AssetUtils.getTestCorrectCcGBFile());
+        processor.setVendorId("vendorId")
+                .process(AssetUtils.getTestCorrectCcFile());
     }
 }
