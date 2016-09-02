@@ -29,27 +29,39 @@ public class MetadataUtils {
     private MetadataUtils() {
     }
 
-    public static File getCorrectMetadataXml() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/test-metadata.xml").toURI());
+    public static File getCorrectFilmMetadataXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/film/test-metadata.xml").toURI());
     }
 
     public static File getCorrectMultipleLocaleMetadataXml() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/test-metadata-multiple-locale.xml").toURI());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/film/test-metadata-multiple-locale.xml").toURI());
     }
 
     public static File getCorrectConcertMetadataXml() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/test-metadata-concert.xml").toURI());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/film/test-metadata-concert.xml").toURI());
     }
 
     public static File getCorrectIntervalsMetadataXml() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/test-metadata-intervals.xml").toURI());
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/film/test-metadata-intervals.xml").toURI());
     }
 
-    public static File getInvalidMetadataXml() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/invalid/invalid-test-metadata.xml").toURI());
+    public static File getInvalidFilmMetadataXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/film/invalid/invalid-test-metadata.xml").toURI());
     }
 
-    public static File getBrokenMetadataXml() throws URISyntaxException {
-        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/broken/broken-test-metadata.xml").toURI());
+    public static File getBrokenFilmMetadataXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/film/broken/broken-test-metadata.xml").toURI());
+    }
+
+    public static File getCorrectTvMetadataXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/tv/test-metadata.xml").toURI());
+    }
+
+    public static File getInvalidTvMetadataXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/tv/invalid/invalid-test-metadata.xml").toURI());
+    }
+
+    public static File getBrokenTvMetadataXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/tv/broken/broken-test-metadata.xml").toURI());
     }
 }

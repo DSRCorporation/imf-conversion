@@ -19,13 +19,13 @@
 package com.netflix.imfutility.itunes;
 
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.itunes.audiomap.AudioMapXmlProvider;
 import com.netflix.imfutility.itunes.chapters.ChaptersXmlProvider;
 import com.netflix.imfutility.itunes.inputparameters.ITunesCmdLineArgs;
 import com.netflix.imfutility.itunes.inputparameters.ITunesDefaultTools;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
 import com.netflix.imfutility.itunes.metadata.film.FilmMetadataXmlCreator;
-import com.netflix.imfutility.itunes.audiomap.AudioMapXmlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +73,7 @@ public class ITunesFormatProcessor {
     private int processMetadataMode(ITunesInputParameters inputParameters) {
         logger.info("Metadata mode\n");
         logger.info("Generating a sample Metadata.xml file {}", inputParameters.getCmdLineArgs().getOutput());
+        // TODO: make using creator depends on package type (film or tv)
         FilmMetadataXmlCreator.generateSampleXml(inputParameters.getCmdLineArgs().getOutput());
         logger.info("Generated a sample Metadata.xml file: OK");
         return 0;

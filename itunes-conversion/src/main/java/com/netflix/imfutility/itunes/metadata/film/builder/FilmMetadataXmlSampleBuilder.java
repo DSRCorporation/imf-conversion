@@ -19,22 +19,22 @@
 package com.netflix.imfutility.itunes.metadata.film.builder;
 
 
-import com.netflix.imfutility.generated.itunes.metadata.film.Cast;
-import com.netflix.imfutility.generated.itunes.metadata.film.Character;
-import com.netflix.imfutility.generated.itunes.metadata.film.Characters;
-import com.netflix.imfutility.generated.itunes.metadata.film.Crew;
-import com.netflix.imfutility.generated.itunes.metadata.film.FilmRating;
-import com.netflix.imfutility.generated.itunes.metadata.film.Genre;
-import com.netflix.imfutility.generated.itunes.metadata.film.GenreList;
-import com.netflix.imfutility.generated.itunes.metadata.film.LocalizableMovieParticipant;
-import com.netflix.imfutility.generated.itunes.metadata.film.LocalizableMovieParticipant.Roles;
-import com.netflix.imfutility.generated.itunes.metadata.film.MovieRole;
-import com.netflix.imfutility.generated.itunes.metadata.film.ObjectFactory;
-import com.netflix.imfutility.generated.itunes.metadata.film.PackageType;
-import com.netflix.imfutility.generated.itunes.metadata.film.ProductItem;
-import com.netflix.imfutility.generated.itunes.metadata.film.ProductList;
-import com.netflix.imfutility.generated.itunes.metadata.film.Ratings;
-import com.netflix.imfutility.generated.itunes.metadata.film.Video;
+import com.apple.itunes.importer.film.Cast;
+import com.apple.itunes.importer.film.Character;
+import com.apple.itunes.importer.film.Characters;
+import com.apple.itunes.importer.film.Crew;
+import com.apple.itunes.importer.film.FilmRating;
+import com.apple.itunes.importer.film.Genre;
+import com.apple.itunes.importer.film.GenreList;
+import com.apple.itunes.importer.film.LocalizableMovieParticipant;
+import com.apple.itunes.importer.film.LocalizableMovieParticipant.Roles;
+import com.apple.itunes.importer.film.MovieRole;
+import com.apple.itunes.importer.film.ObjectFactory;
+import com.apple.itunes.importer.film.PackageType;
+import com.apple.itunes.importer.film.ProductItem;
+import com.apple.itunes.importer.film.ProductList;
+import com.apple.itunes.importer.film.Ratings;
+import com.apple.itunes.importer.film.Video;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

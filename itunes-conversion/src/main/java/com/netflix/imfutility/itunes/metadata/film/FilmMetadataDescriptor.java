@@ -18,7 +18,7 @@
  */
 package com.netflix.imfutility.itunes.metadata.film;
 
-import com.netflix.imfutility.generated.itunes.metadata.film.PackageType;
+import com.apple.itunes.importer.film.PackageType;
 import com.netflix.imfutility.itunes.metadata.MetadataDescriptor;
 
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.FILM_METADATA_NAMESPACE;

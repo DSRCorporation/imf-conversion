@@ -28,10 +28,15 @@ public final class ITunesConversionXsdConstants {
 
     // metadata.xml
     // film spec
-    public static final String FILM_METADATA_XML_SCHEME = "xsd/metadata/film/itunes-film-metadata.xsd";
-    public static final String FILM_METADATA_PACKAGE = "com.netflix.imfutility.generated.itunes.metadata.film";
+    public static final String FILM_METADATA_XML_SCHEME = "xsd/metadata/film5.2-strict.xsd";
+    public static final String FILM_METADATA_PACKAGE = "com.apple.itunes.importer.film";
     public static final String FILM_METADATA_NAMESPACE = "http://apple.com/itunes/importer";
     public static final String FILM_METADATA_ROOT_ELEMENT = "package";
+    // tv spec
+    public static final String TV_METADATA_XML_SCHEME = "xsd/metadata/tv5.2-strict.xsd";
+    public static final String TV_METADATA_PACKAGE = "com.apple.itunes.importer.tv";
+    public static final String TV_METADATA_NAMESPACE = "http://apple.com/itunes/importer";
+    public static final String TV_METADATA_ROOT_ELEMENT = "package";
 
     // audiomap.xml
     public static final String AUDIOMAP_XML_SCHEME = "xsd/audiomap/itunes-audiomap.xsd";

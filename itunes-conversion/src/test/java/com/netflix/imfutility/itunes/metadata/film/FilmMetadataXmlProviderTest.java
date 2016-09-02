@@ -18,12 +18,12 @@
  */
 package com.netflix.imfutility.itunes.metadata.film;
 
-import com.netflix.imfutility.generated.itunes.metadata.film.AssetFile;
-import com.netflix.imfutility.generated.itunes.metadata.film.AssetItem;
-import com.netflix.imfutility.generated.itunes.metadata.film.ChapterItem;
-import com.netflix.imfutility.generated.itunes.metadata.film.Checksum;
-import com.netflix.imfutility.generated.itunes.metadata.film.DataFileRole;
-import com.netflix.imfutility.generated.itunes.metadata.film.PackageType;
+import com.apple.itunes.importer.film.AssetFile;
+import com.apple.itunes.importer.film.AssetItem;
+import com.apple.itunes.importer.film.ChapterItem;
+import com.apple.itunes.importer.film.Checksum;
+import com.apple.itunes.importer.film.DataFileRole;
+import com.apple.itunes.importer.film.PackageType;
 import com.netflix.imfutility.itunes.asset.type.Asset;
 import com.netflix.imfutility.itunes.asset.type.AssetRole;
 import com.netflix.imfutility.itunes.asset.type.AssetType;
@@ -153,12 +153,15 @@ public class FilmMetadataXmlProviderTest {
         assertNotNull(provider.getRootElement().getLanguage().get(0));
         assertNotNull(provider.getRootElement().getVideo().get(0));
 
+        assertEquals("film5.2", provider.getRootElement().getVersion());
+        assertEquals("film", provider.getRootElement().getVideo().get(0).getType().get(0));
+        assertEquals("feature", provider.getRootElement().getVideo().get(0).getSubtype().get(0));
         assertEquals("vendor_id", provider.getRootElement().getVideo().get(0).getVendorId().get(0));
     }
 
     @Test
     public void testParseCorrectMetadata() throws Exception {
-        FilmMetadataXmlProvider provider = new FilmMetadataXmlProvider(MetadataUtils.getCorrectMetadataXml());
+        FilmMetadataXmlProvider provider = new FilmMetadataXmlProvider(MetadataUtils.getCorrectFilmMetadataXml());
 
         assertNotNull(provider.getRootElement());
         assertNotNull(provider.getRootElement().getProvider().get(0));
@@ -206,12 +209,12 @@ public class FilmMetadataXmlProviderTest {
 
     @Test(expected = XmlParsingException.class)
     public void testParseBrokenMetadata() throws Exception {
-        new FilmMetadataXmlProvider(MetadataUtils.getBrokenMetadataXml());
+        new FilmMetadataXmlProvider(MetadataUtils.getBrokenFilmMetadataXml());
     }
 
     @Test(expected = XmlParsingException.class)
     public void testParseInvalidMetadata() throws Exception {
-        new FilmMetadataXmlProvider(MetadataUtils.getInvalidMetadataXml());
+        new FilmMetadataXmlProvider(MetadataUtils.getInvalidFilmMetadataXml());
     }
 
     @Test(expected = FileNotFoundException.class)
@@ -221,7 +224,7 @@ public class FilmMetadataXmlProviderTest {
 
     @Test
     public void testSaveCorrectMetadata() throws Exception {
-        FilmMetadataXmlProvider provider = new FilmMetadataXmlProvider(MetadataUtils.getCorrectMetadataXml());
+        FilmMetadataXmlProvider provider = new FilmMetadataXmlProvider(MetadataUtils.getCorrectFilmMetadataXml());
 
         File itmspDir = TestUtils.createDirectory(TemplateParameterContextCreator.getWorkingDir(), "correct.itmsp");
         File savedMetadata = provider.saveMetadata(itmspDir);

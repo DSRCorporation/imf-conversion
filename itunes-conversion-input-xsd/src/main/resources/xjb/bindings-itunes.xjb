@@ -6,27 +6,6 @@
       extensionBindingPrefixes="xjc simplify"
       version="2.1">
 
-    <bindings schemaLocation="../xsd/metadata/film/itunes-film-metadata.xsd">
-        <bindings schemaLocation="../xsd/metadata/film/itunes-film-metadata.xsd">
-            <schemaBindings>
-                <package name="com.netflix.imfutility.generated.itunes.metadata.film" />
-            </schemaBindings>
-        </bindings>
-
-        <bindings node="xs:complexType[@name='PackageType']/xs:choice/xs:element[@name='metadata_token']">
-            <simplify:as-element-property/>
-        </bindings>
-
-        <bindings node="xs:complexType[@name='Video']/xs:choice/xs:element[@name='title']">
-            <simplify:as-element-property/>
-        </bindings>
-
-        <bindings node="xs:complexType[@name='AssetFile']/xs:choice/xs:element[@name='locale']">
-            <simplify:as-element-property/>
-        </bindings>
-
-    </bindings>
-
     <bindings schemaLocation="../xsd/chapters/itunes-chapters.xsd">
         <schemaBindings>
             <package name="com.netflix.imfutility.generated.itunes.chapters" />
