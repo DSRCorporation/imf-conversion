@@ -133,6 +133,9 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     protected void doBuildDynamicContextPreCpl() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
 
+        // load, parse and validate metadata.xml (or generate default)
+        initMetadata();
+
         //  fill ttml-to-itt tool parameter
         dynamicContext.addParameter(DYNAMIC_PARAM_TTML_TO_ITT, iTunesInputParameters.getTtmlToIttTool());
 
@@ -158,9 +161,6 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
     @Override
     protected void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException {
-        // load, parse and validate metadata.xml (or generate default)
-        initMetadata();
-
         // load, parse and validate audiomap.xml (or generate default) and add audio parameters if audio exist
         if (contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO) > 0) {
             initAudioMap();
@@ -169,7 +169,13 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
             buildSilenceExprParameters();
         }
 
-        buildSubtitleInputParameters();
+        if (metadataXmlProvider.getDescriptor().getPackageType() == ITunesPackageType.film) {
+            buildSubtitleInputParameters();
+        } else { // TV package
+            if (iTunesInputParameters.getSubFiles() != null && !iTunesInputParameters.getSubFiles().isEmpty()) {
+                logger.info("Subtitles will not be processed for TV package type.");
+            }
+        }
 
         resolveLocales();
     }
@@ -192,8 +198,9 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         processAdditionalAudios();
 
         // process subtitles (if exists)
-        processSubtitles();
-
+        if (metadataXmlProvider.getDescriptor().getPackageType() == ITunesPackageType.film) {
+            processSubtitles();
+        }
 
         metadataXmlProvider.saveMetadata(itmspDir);
     }
@@ -343,12 +350,16 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         return StringUtils.isBlank(fallbackLocale) ? DEFAULT_LOCALE : fallbackLocale;
     }
 
-    private void initMetadata() throws IOException, XmlParsingException {
+    private void initMetadata() {
         File metadataFile = iTunesInputParameters.getMetadataFile();
         String vendorId = iTunesInputParameters.getCmdLineArgs().getVendorId();
         ITunesPackageType packageType = iTunesInputParameters.getCmdLineArgs().getPackageType();
 
-        metadataXmlProvider = MetadataXmlProviderFactory.createProvider(metadataFile, packageType);
+        try {
+            metadataXmlProvider = MetadataXmlProviderFactory.createProvider(metadataFile, packageType);
+        } catch (XmlParsingException | IOException e) {
+            throw new RuntimeException(e);
+        }
         metadataXmlProvider.updateVendorId(vendorId);
     }
 
@@ -444,10 +455,19 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     //  Additional assets (poster, trailer, chapters)
 
     private void processAdditionalAssets() throws XmlParsingException, IOException {
-        processTrailer();
         processPoster();
-        processChapters();
         processCaptions();
+        if (metadataXmlProvider.getDescriptor().getPackageType() == ITunesPackageType.film) {
+            processTrailer();
+            processChapters();
+        } else {
+            if (iTunesInputParameters.getTrailerFile() != null) {
+                logger.info("A trailer is not required for TV package and can not be processed.");
+            }
+            if (iTunesInputParameters.getChaptersFile() != null) {
+                logger.info("Chapters is not required for TV package and can not be processed.");
+            }
+        }
     }
 
     private void processPoster() throws IOException {
