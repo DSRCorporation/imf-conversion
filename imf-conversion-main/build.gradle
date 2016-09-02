@@ -18,13 +18,15 @@ task copyDefaultTools(type: Copy) {
     from '../imf-validation/build/libs'
     from '../ttml-to-stl/build/libs'
     from '../ttml2itt/build/libs'
+    from '../ttml2scc/build/libs'
     into "${buildDir}/tools"
 }
 
 evaluationDependsOn(':imf-validation')
 evaluationDependsOn(':ttml-to-stl')
 evaluationDependsOn(':ttml2itt')
-copyDefaultTools.dependsOn(':imf-validation:assemble', ':ttml-to-stl:assemble', ':ttml2itt:assemble')
+evaluationDependsOn(':ttml2scc')
+copyDefaultTools.dependsOn(':imf-validation:assemble', ':ttml-to-stl:assemble', ':ttml2itt:assemble', ':ttml2scc:assemble')
 classes.dependsOn(copyDefaultTools)
 
 // 5. customize distribution:
