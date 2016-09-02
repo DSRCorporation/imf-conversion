@@ -21,6 +21,7 @@ package com.netflix.imfutility.itunes.inputparameters;
 import com.lexicalscope.jewel.cli.Option;
 import com.netflix.imfutility.inputparameters.ImfUtilityCmdLineArgs;
 import com.netflix.imfutility.itunes.ITunesMode;
+import com.netflix.imfutility.itunes.ITunesPackageType;
 
 import java.util.List;
 
@@ -71,6 +72,16 @@ public interface ITunesCmdLineArgs extends ImfUtilityCmdLineArgs {
             defaultToNull = true
     )
     String getAudioMap();
+
+    @Option(
+            description = "a destination iTunes package type."
+                    + " Supported values: film (default), tv."
+                    + " ('convert' and 'metadata' modes).",
+            shortName = {"p"},
+            longName = {"package-type"},
+            defaultValue = "film"
+    )
+    ITunesPackageType getPackageType();
 
     @Option(
             description = "a destination encoded video format"

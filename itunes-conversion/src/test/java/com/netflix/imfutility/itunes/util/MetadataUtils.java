@@ -64,4 +64,8 @@ public class MetadataUtils {
     public static File getBrokenTvMetadataXml() throws URISyntaxException {
         return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/tv/broken/broken-test-metadata.xml").toURI());
     }
+
+    public static File getUnknownVersionMetadataXml() throws URISyntaxException {
+        return new File(ClassLoader.getSystemClassLoader().getResource("xml/metadata/test-metadata-unknown-version.xml").toURI());
+    }
 }

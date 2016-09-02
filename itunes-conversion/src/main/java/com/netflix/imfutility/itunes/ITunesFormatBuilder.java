@@ -45,13 +45,14 @@ import com.netflix.imfutility.itunes.chapters.ChaptersXmlProvider;
 import com.netflix.imfutility.itunes.destcontext.DestContextResolveStrategy;
 import com.netflix.imfutility.itunes.destcontext.InputDestContextResolveStrategy;
 import com.netflix.imfutility.itunes.destcontext.NameDestContextResolveStrategy;
+import com.netflix.imfutility.itunes.destcontext.check.DurationChecker;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
 import com.netflix.imfutility.itunes.locale.LocaleHelper;
 import com.netflix.imfutility.itunes.locale.LocaleValidator;
 import com.netflix.imfutility.itunes.mediainfo.SimpleMediaInfoBuilder;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
-import com.netflix.imfutility.itunes.metadata.tv.TvMetadataXmlProvider;
+import com.netflix.imfutility.itunes.metadata.factory.MetadataXmlProviderFactory;
 import com.netflix.imfutility.mediainfo.MediaInfoException;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
@@ -133,6 +134,9 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     protected void doBuildDynamicContextPreCpl() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
 
+        // load, parse and validate metadata.xml (or generate default)
+        initMetadata();
+
         //  fill ttml-to-itt tool parameter
         dynamicContext.addParameter(DYNAMIC_PARAM_TTML_TO_ITT, iTunesInputParameters.getTtmlToIttTool());
 
@@ -158,9 +162,6 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
     @Override
     protected void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException {
-        // load, parse and validate metadata.xml (or generate default)
-        initMetadata();
-
         // load, parse and validate audiomap.xml (or generate default) and add audio parameters if audio exist
         if (contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO) > 0) {
             initAudioMap();
@@ -169,7 +170,13 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
             buildSilenceExprParameters();
         }
 
-        buildSubtitleInputParameters();
+        if (metadataXmlProvider.getDescriptor().getPackageType() == ITunesPackageType.film) {
+            buildSubtitleInputParameters();
+        } else { // TV package
+            if (iTunesInputParameters.getSubFiles() != null && !iTunesInputParameters.getSubFiles().isEmpty()) {
+                logger.info("Subtitles will not be processed for TV package type.");
+            }
+        }
 
         resolveLocales();
     }
@@ -192,8 +199,9 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         processAdditionalAudios();
 
         // process subtitles (if exists)
-        processSubtitles();
-
+        if (metadataXmlProvider.getDescriptor().getPackageType() == ITunesPackageType.film) {
+            processSubtitles();
+        }
 
         metadataXmlProvider.saveMetadata(itmspDir);
     }
@@ -208,9 +216,11 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         logger.info("Resolving destination format...");
 
         String format = iTunesInputParameters.getCmdLineArgs().getFormat();
+        ITunesPackageType packageType = metadataXmlProvider.getDescriptor().getPackageType();
+
         DestContextResolveStrategy resolveStrategy = format != null
-                ? new NameDestContextResolveStrategy(format)
-                : new InputDestContextResolveStrategy(contextProvider);
+                ? new NameDestContextResolveStrategy(format, packageType)
+                : new InputDestContextResolveStrategy(contextProvider, packageType);
         DestContextTypeMap destContextMap = resolveStrategy.resolveContext(destContexts);
 
         logger.info("Destination format defined by {}", format != null
@@ -218,6 +228,10 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
                 : "source video");
         logger.info("Destination format: {}", destContextMap.getName());
         logger.info("Resolved destination format: OK\n");
+
+        if (packageType == ITunesPackageType.tv) {
+            new DurationChecker(contextProvider).checkDuration(destContextMap);
+        }
 
         return destContextMap;
     }
@@ -342,12 +356,16 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         return StringUtils.isBlank(fallbackLocale) ? DEFAULT_LOCALE : fallbackLocale;
     }
 
-    private void initMetadata() throws IOException, XmlParsingException {
+    private void initMetadata() {
         File metadataFile = iTunesInputParameters.getMetadataFile();
         String vendorId = iTunesInputParameters.getCmdLineArgs().getVendorId();
+        ITunesPackageType packageType = iTunesInputParameters.getCmdLineArgs().getPackageType();
 
-        // TODO: make strategy to define provider depends on package type (film or tv)
-        metadataXmlProvider = new TvMetadataXmlProvider(metadataFile);
+        try {
+            metadataXmlProvider = MetadataXmlProviderFactory.createProvider(metadataFile, packageType);
+        } catch (XmlParsingException | IOException e) {
+            throw new RuntimeException(e);
+        }
         metadataXmlProvider.updateVendorId(vendorId);
     }
 
@@ -443,10 +461,19 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     //  Additional assets (poster, trailer, chapters)
 
     private void processAdditionalAssets() throws XmlParsingException, IOException {
-        processTrailer();
         processPoster();
-        processChapters();
         processCaptions();
+        if (metadataXmlProvider.getDescriptor().getPackageType() == ITunesPackageType.film) {
+            processTrailer();
+            processChapters();
+        } else {
+            if (iTunesInputParameters.getTrailerFile() != null) {
+                logger.info("A trailer is not required for TV package and can not be processed.");
+            }
+            if (iTunesInputParameters.getChaptersFile() != null) {
+                logger.info("Chapters is not required for TV package and can not be processed.");
+            }
+        }
     }
 
     private void processPoster() throws IOException {

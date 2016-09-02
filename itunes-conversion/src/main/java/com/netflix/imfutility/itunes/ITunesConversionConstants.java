@@ -49,6 +49,7 @@ public final class ITunesConversionConstants {
     public static final String DEST_PARAM_VIDEO_IFRAME_RATE = "iFrameRate";
     public static final String DEST_PARAM_VIDEO_IS_DAR_SPECIFIED = "isDarSpecified";
     public static final String DEST_PARAM_VIDEO_END_BLACK_FRAME_COUNT = "endBlackFrameCount";
+    public static final String DEST_PARAM_VIDEO_SPECIFIED_FOR = "specifiedFor";
     public static final String DEST_PARAM_AUDIO_SAMPLES_PER_FRAME = "samplesPerFrame";
 
     // AudioMap constants

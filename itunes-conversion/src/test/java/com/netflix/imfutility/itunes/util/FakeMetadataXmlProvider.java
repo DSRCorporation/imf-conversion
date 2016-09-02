@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.itunes.util;
 
+import com.netflix.imfutility.itunes.ITunesPackageType;
 import com.netflix.imfutility.itunes.asset.type.Asset;
 import com.netflix.imfutility.itunes.asset.type.AssetRole;
 import com.netflix.imfutility.itunes.asset.type.ChapterAsset;
@@ -118,6 +119,11 @@ public class FakeMetadataXmlProvider extends MetadataXmlProvider<FakeRoot> {
         @Override
         public String getMetadataRoot() {
             return "fakeroot";
+        }
+
+        @Override
+        public ITunesPackageType getPackageType() {
+            return ITunesPackageType.film;
         }
     }
 

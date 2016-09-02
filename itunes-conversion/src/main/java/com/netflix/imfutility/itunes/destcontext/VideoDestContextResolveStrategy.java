@@ -19,15 +19,15 @@
 package com.netflix.imfutility.itunes.destcontext;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.generated.conversion.DestContextParamType;
-import com.netflix.imfutility.util.ConversionHelper;
+import com.netflix.imfutility.itunes.ITunesPackageType;
+import com.netflix.imfutility.itunes.destcontext.filter.DestContextPackageTypeFilter;
+import com.netflix.imfutility.itunes.destcontext.wrap.DestContextMapWrapper;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.util.Comparator;
 
-import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.DURATION;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.FRAME_RATE;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.HEIGHT;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.INTERLACED;
@@ -42,7 +42,7 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
     protected Integer height;
     protected Boolean interlaced;
     protected BigFraction frameRate;
-    protected Long duration;
+    protected ITunesPackageType packageType;
 
     public VideoDestContextResolveStrategy() {
     }
@@ -67,8 +67,8 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
         return this;
     }
 
-    public VideoDestContextResolveStrategy setDuration(Long duration) {
-        this.duration = duration;
+    public VideoDestContextResolveStrategy setPackageType(ITunesPackageType packageType) {
+        this.packageType = packageType;
         return this;
     }
 
@@ -78,17 +78,18 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
                 || width == null
                 || height == null
                 || frameRate == null
-                || duration == null) {
+                || packageType == null) {
             throw new ConversionException(
                     "Format can't be defined. Source video characteristics must be set.");
         }
 
-        return destContexts.getMap().values().stream().map(Wrapper::new)
+        return destContexts.getMap().values().stream()
+                .filter(new DestContextPackageTypeFilter(packageType))
+                .map(DestContextMapWrapper::new)
                 .filter(this::matchScan)
                 .filter(this::checkWidth)
                 .filter(this::checkHeight)
                 .filter(this::checkFrameRate)
-                .filter(this::checkDuration)
                 .max(comparator())
                 .orElseThrow(() -> new ConversionException(String.format(
                         "Format can't be defined. Source video characteristics: [%4s X %-4s %s fps %s scan]",
@@ -96,99 +97,41 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
                 .getMap();
     }
 
-    private Comparator<Wrapper> comparator() {
+    private Comparator<DestContextMapWrapper> comparator() {
         return Comparator
                 .comparing(this::getFrameRate)
                 .thenComparingInt(this::getWidth)
                 .thenComparingInt(this::getHeight);
     }
 
-    private boolean checkWidth(Wrapper wrapper) {
+    private boolean checkWidth(DestContextMapWrapper wrapper) {
         return wrapper.compareToInteger(WIDTH.getName(), width, false) <= 0;
     }
 
-    private boolean checkHeight(Wrapper wrapper) {
+    private boolean checkHeight(DestContextMapWrapper wrapper) {
         return wrapper.compareToInteger(HEIGHT.getName(), height, false) <= 0;
     }
 
-    private boolean checkFrameRate(Wrapper wrapper) {
+    private boolean checkFrameRate(DestContextMapWrapper wrapper) {
         return wrapper.compareToFrameRate(FRAME_RATE.getName(), frameRate, false) <= 0;
     }
 
-    private boolean checkDuration(Wrapper wrapper) {
-        return wrapper.compareToLong(DURATION.getName(), duration, true) > 0;
-    }
-
-    private boolean matchScan(Wrapper wrapper) {
+    private boolean matchScan(DestContextMapWrapper wrapper) {
         Boolean value = wrapper.getValueAsBoolean(INTERLACED.getName());
         return interlaced ? value : !value;
     }
 
-    private Integer getWidth(Wrapper wrapper) {
+    private Integer getWidth(DestContextMapWrapper wrapper) {
         return wrapper.getValueAsInteger(WIDTH.getName());
     }
 
-    private Integer getHeight(Wrapper wrapper) {
+    private Integer getHeight(DestContextMapWrapper wrapper) {
         return wrapper.getValueAsInteger(HEIGHT.getName());
     }
 
-    private BigFraction getFrameRate(Wrapper wrapper) {
+    private BigFraction getFrameRate(DestContextMapWrapper wrapper) {
         return wrapper.getValueAsFrameRate(FRAME_RATE.getName());
     }
 
-    private static class Wrapper {
-        private final DestContextTypeMap map;
 
-        public Wrapper(DestContextTypeMap map) {
-            this.map = map;
-        }
-
-        public DestContextTypeMap getMap() {
-            return map;
-        }
-
-        public String getValue(String paramName) {
-            DestContextParamType param = map.getMap().get(paramName);
-            return param != null ? param.getValue() : null;
-        }
-
-        public Integer getValueAsInteger(String paramName) {
-            String value = getValue(paramName);
-            return value != null ? Integer.parseInt(value) : null;
-        }
-
-        public Long getValueAsLong(String paramName) {
-            String value = getValue(paramName);
-            return value != null ? Long.parseLong(value) : null;
-        }
-
-        public BigFraction getValueAsFrameRate(String paramName) {
-            String value = getValue(paramName);
-            return value != null ? ConversionHelper.parseEditRate(value) : null;
-        }
-
-        public Boolean getValueAsBoolean(String paramName) {
-            String value = getValue(paramName);
-            return value != null && Boolean.parseBoolean(value);
-        }
-
-        public <T extends Comparable<T>> int compare(T value, T comp, boolean nullsFirst) {
-            if (value == null) {
-                return nullsFirst ? 1 : -1;
-            }
-            return value.compareTo(comp);
-        }
-
-        public int compareToInteger(String paramName, Integer comp, boolean nullsFirst) {
-            return compare(getValueAsInteger(paramName), comp, nullsFirst);
-        }
-
-        public int compareToLong(String paramName, Long comp, boolean nullsFirst) {
-            return compare(getValueAsLong(paramName), comp, nullsFirst);
-        }
-
-        public int compareToFrameRate(String paramName, BigFraction comp, boolean nullsFirst) {
-            return compare(getValueAsFrameRate(paramName), comp, nullsFirst);
-        }
-    }
 }

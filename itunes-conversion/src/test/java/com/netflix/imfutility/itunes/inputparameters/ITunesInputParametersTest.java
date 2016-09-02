@@ -56,27 +56,9 @@ public class ITunesInputParametersTest {
         FileUtils.deleteDirectory(TemplateParameterContextCreator.getWorkingDir());
     }
 
-    private void testCmdLineFile(String option, String value, Function<ITunesInputParameters, File> paramFunction) {
-        ITunesInputParameters inputParametersExist = createInputParameters(new String[]{option, value});
-        ITunesInputParameters inputParametersNotExist = createInputParameters(new String[]{});
-
-        assertEquals(new File(value), paramFunction.apply(inputParametersExist));
-        assertNull(paramFunction.apply(inputParametersNotExist));
-    }
-
-    private ITunesInputParameters createInputParameters(String[] args) {
-        return new ITunesInputParameters(CliFactory.parseArguments(ITunesCmdLineArgs.class, args), new ITunesFakeDefaultTools());
-    }
-
     @Test
     public void testMetadataFile() throws URISyntaxException {
         testCmdLineFile("--metadata", TestUtils.getTestFile().getAbsolutePath(), ITunesInputParameters::getMetadataFile);
-    }
-
-    private void validate(String[] args) {
-        ITunesInputParameters inputParameters = createInputParameters(args);
-
-        ITunesInputParametersValidator.validateCmdLineArguments(inputParameters);
     }
 
     @Test
@@ -145,5 +127,23 @@ public class ITunesInputParametersTest {
     @Test(expected = ArgumentValidationException.class)
     public void testValidateFallbackLocaleNotExist() throws Exception {
         validate(new String[]{"-m", "convert", "--vendor-id", "abc12_", "--fallback-locale", "fr_XX"});
+    }
+
+    private static void testCmdLineFile(String option, String value, Function<ITunesInputParameters, File> paramFunction) {
+        ITunesInputParameters inputParametersExist = createInputParameters(new String[]{option, value});
+        ITunesInputParameters inputParametersNotExist = createInputParameters(new String[]{});
+
+        assertEquals(new File(value), paramFunction.apply(inputParametersExist));
+        assertNull(paramFunction.apply(inputParametersNotExist));
+    }
+
+    private static ITunesInputParameters createInputParameters(String[] args) {
+        return new ITunesInputParameters(CliFactory.parseArguments(ITunesCmdLineArgs.class, args), new ITunesFakeDefaultTools());
+    }
+
+    private static void validate(String[] args) {
+        ITunesInputParameters inputParameters = createInputParameters(args);
+
+        ITunesInputParametersValidator.validateCmdLineArguments(inputParameters);
     }
 }

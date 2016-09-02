@@ -93,6 +93,15 @@ public abstract class MetadataXmlProvider<T> implements LocalizedXmlProvider {
         return rootElement;
     }
 
+    /**
+     * Get metadata descriptor.
+     *
+     * @return descriptor associated with provider
+     */
+    public MetadataDescriptor<T> getDescriptor() {
+        return metadataDescriptor;
+    }
+
     // Common metadata methods
 
     public abstract void updateVendorId(String vendorId);

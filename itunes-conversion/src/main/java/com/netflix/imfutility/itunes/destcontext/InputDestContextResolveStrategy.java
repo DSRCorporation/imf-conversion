@@ -26,13 +26,12 @@ import com.netflix.imfutility.conversion.templateParameter.context.TemplateParam
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.itunes.ITunesPackageType;
 import com.netflix.imfutility.util.ConversionHelper;
-import com.netflix.imfutility.util.CplHelper;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 import org.apache.commons.math3.fraction.BigFraction;
 
-import java.time.Duration;
 import java.util.Comparator;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -48,15 +47,18 @@ import static com.netflix.imfutility.conversion.templateParameter.context.parame
  */
 public class InputDestContextResolveStrategy implements DestContextResolveStrategy {
     private final TemplateParameterContextProvider contextProvider;
+    private final ITunesPackageType packageType;
     private final VideoDestContextResolveStrategy resolveStrategy;
 
-    public InputDestContextResolveStrategy(TemplateParameterContextProvider contextProvider) {
-        this(contextProvider, new VideoDestContextResolveStrategy());
+    public InputDestContextResolveStrategy(TemplateParameterContextProvider contextProvider, ITunesPackageType packageType) {
+        this(contextProvider, packageType, new VideoDestContextResolveStrategy());
     }
 
     public InputDestContextResolveStrategy(TemplateParameterContextProvider contextProvider,
+                                           ITunesPackageType packageType,
                                            VideoDestContextResolveStrategy resolveStrategy) {
         this.contextProvider = contextProvider;
+        this.packageType = packageType;
         this.resolveStrategy = resolveStrategy;
     }
 
@@ -72,16 +74,13 @@ public class InputDestContextResolveStrategy implements DestContextResolveStrate
 
         BigFraction frameRate = getMinResourceParameterValue(seqContextInfo, FRAME_RATE, ConversionHelper::parseEditRate);
 
-        long durationMs = CplHelper.getVirtualTrackDurationMS(contextProvider, SequenceType.VIDEO, getSequenceUUID());
-        Long durationS = Duration.ofMillis(durationMs).getSeconds();
-
         return resolveStrategy
+                .setPackageType(packageType)
                 .setWidth(width)
                 .setHeight(height)
                 .setFrameRate(frameRate)
                 // assume video scan type is progressive (according to IMF application #2E)
                 .setInterlaced(false)
-                .setDuration(durationS)
                 .resolveContext(destContexts);
     }
 

@@ -18,6 +18,8 @@
  */
 package com.netflix.imfutility.itunes.metadata;
 
+import com.netflix.imfutility.itunes.ITunesPackageType;
+
 /**
  * Metadata descriptor for correct schema validation, marshalling and unmarshalling.
  *
@@ -34,4 +36,6 @@ public interface MetadataDescriptor<T> {
     String getMetadataNamespace();
 
     String getMetadataRoot();
+
+    ITunesPackageType getPackageType();
 }
