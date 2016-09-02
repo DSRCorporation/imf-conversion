@@ -27,6 +27,7 @@ import com.netflix.imfutility.cpl.uuid.ResourceUUID;
 import com.netflix.imfutility.cpl.uuid.SegmentUUID;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.itunes.ITunesPackageType;
 import com.netflix.imfutility.itunes.util.FakeVideoDestContextResolveStrategy;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
@@ -96,7 +97,7 @@ public class InputDestContextResolveStrategyTest {
     @Test
     public void testBuildCorrectVideoFormat() throws Exception {
 
-        InputDestContextResolveStrategy strategy = new InputDestContextResolveStrategy(contextProvider,
+        InputDestContextResolveStrategy strategy = new InputDestContextResolveStrategy(contextProvider, ITunesPackageType.film,
                 new FakeVideoDestContextResolveStrategy());
 
         DestContextTypeMap map = strategy.resolveContext(new DestContextsTypeMap());

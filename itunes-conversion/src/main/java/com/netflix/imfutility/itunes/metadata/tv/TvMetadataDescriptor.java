@@ -19,6 +19,7 @@
 package com.netflix.imfutility.itunes.metadata.tv;
 
 import com.apple.itunes.importer.tv.PackageType;
+import com.netflix.imfutility.itunes.ITunesPackageType;
 import com.netflix.imfutility.itunes.metadata.MetadataDescriptor;
 
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.TV_METADATA_NAMESPACE;
@@ -59,5 +60,10 @@ public final class TvMetadataDescriptor implements MetadataDescriptor<PackageTyp
     @Override
     public String getMetadataRoot() {
         return TV_METADATA_ROOT_ELEMENT;
+    }
+
+    @Override
+    public ITunesPackageType getPackageType() {
+        return ITunesPackageType.tv;
     }
 }

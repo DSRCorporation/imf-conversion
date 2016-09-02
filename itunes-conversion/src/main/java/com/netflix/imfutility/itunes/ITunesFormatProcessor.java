@@ -26,6 +26,7 @@ import com.netflix.imfutility.itunes.inputparameters.ITunesDefaultTools;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
 import com.netflix.imfutility.itunes.metadata.film.FilmMetadataXmlCreator;
+import com.netflix.imfutility.itunes.metadata.tv.TvMetadataXmlCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,8 +74,7 @@ public class ITunesFormatProcessor {
     private int processMetadataMode(ITunesInputParameters inputParameters) {
         logger.info("Metadata mode\n");
         logger.info("Generating a sample Metadata.xml file {}", inputParameters.getCmdLineArgs().getOutput());
-        // TODO: make using creator depends on package type (film or tv)
-        FilmMetadataXmlCreator.generateSampleXml(inputParameters.getCmdLineArgs().getOutput());
+        generateMetadata(inputParameters);
         logger.info("Generated a sample Metadata.xml file: OK");
         return 0;
     }
@@ -100,4 +100,20 @@ public class ITunesFormatProcessor {
         return new ITunesFormatBuilder(inputParameters).build();
     }
 
+
+    private void generateMetadata(ITunesInputParameters inputParameters) {
+        String output = inputParameters.getCmdLineArgs().getOutput();
+
+        ITunesPackageType packageType = inputParameters.getCmdLineArgs().getPackageType();
+        switch (packageType) {
+            case film:
+                FilmMetadataXmlCreator.generateSampleXml(output);
+                break;
+            case tv:
+                TvMetadataXmlCreator.generateSampleXml(output);
+                break;
+            default:
+                throw new ConversionException("Unsupported iTunes package type " + packageType.getName());
+        }
+    }
 }

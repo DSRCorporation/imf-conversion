@@ -21,6 +21,7 @@ package com.netflix.imfutility.itunes.inputparameters;
 import com.lexicalscope.jewel.cli.ArgumentValidationException;
 import com.lexicalscope.jewel.cli.CliFactory;
 import com.netflix.imfutility.itunes.ITunesMode;
+import com.netflix.imfutility.itunes.ITunesPackageType;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -35,12 +36,14 @@ public class ITunesCmdLineArgumentsTest {
     public void testParseCorrectCmdLineArgumentsShortName() {
         String[] args = new String[]{
                 "-m", "audiomap",
+                "-p", "tv",
                 "-f", "hd1080p30",
                 "-o", "output"
         };
         ITunesCmdLineArgs cmdLineArgs = CliFactory.parseArguments(ITunesCmdLineArgs.class, args);
 
         assertEquals(ITunesMode.audiomap, cmdLineArgs.getMode());
+        assertEquals(ITunesPackageType.tv, cmdLineArgs.getPackageType());
         assertEquals("hd1080p30", cmdLineArgs.getFormat());
         assertEquals("output", cmdLineArgs.getOutput());
     }
@@ -49,6 +52,7 @@ public class ITunesCmdLineArgumentsTest {
     public void testParseCorrectCmdLineArgumentsLongName() {
         String[] args = new String[]{
                 "--mode", "convert",
+                "--package-type", "film",
                 "--format", "hd1080p30",
                 "--metadata", "metadata.xml",
                 "--audiomap", "audiomap.xml",
@@ -63,6 +67,7 @@ public class ITunesCmdLineArgumentsTest {
         ITunesCmdLineArgs cmdLineArgs = CliFactory.parseArguments(ITunesCmdLineArgs.class, args);
 
         assertEquals(ITunesMode.convert, cmdLineArgs.getMode());
+        assertEquals(ITunesPackageType.film, cmdLineArgs.getPackageType());
         assertEquals("hd1080p30", cmdLineArgs.getFormat());
         assertEquals("metadata.xml", cmdLineArgs.getMetadata());
         assertEquals("audiomap.xml", cmdLineArgs.getAudioMap());
@@ -86,6 +91,7 @@ public class ITunesCmdLineArgumentsTest {
         ITunesCmdLineArgs cmdLineArgs = CliFactory.parseArguments(ITunesCmdLineArgs.class, args);
 
         assertEquals(ITunesMode.convert, cmdLineArgs.getMode());
+        assertEquals(ITunesPackageType.film, cmdLineArgs.getPackageType());
     }
 
     @Test(expected = ArgumentValidationException.class)

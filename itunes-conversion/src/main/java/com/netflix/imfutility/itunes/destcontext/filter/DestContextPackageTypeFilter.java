@@ -16,36 +16,31 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.destcontext;
+package com.netflix.imfutility.itunes.destcontext.filter;
 
-import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.itunes.ITunesPackageType;
-import com.netflix.imfutility.itunes.destcontext.filter.DestContextPackageTypeFilter;
+import com.netflix.imfutility.itunes.destcontext.wrap.DestContextMapWrapper;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
-import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 
-import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
- * Resolve dest context by name.
+ * Class to filter dest context depends on package type (film or tv).
  */
-public class NameDestContextResolveStrategy implements DestContextResolveStrategy {
-    private final String name;
+public class DestContextPackageTypeFilter implements Predicate<DestContextTypeMap> {
     private final ITunesPackageType packageType;
 
-    public NameDestContextResolveStrategy(String name, ITunesPackageType packageType) {
-        this.name = name;
+    public DestContextPackageTypeFilter(ITunesPackageType packageType) {
         this.packageType = packageType;
     }
 
     @Override
-    public DestContextTypeMap resolveContext(DestContextsTypeMap destContexts) throws ConversionException {
-        return destContexts.getMap().entrySet().stream()
-                .filter(entry -> Objects.equals(entry.getKey(), name))
-                .findFirst()
-                .map(Entry::getValue)
-                .filter(new DestContextPackageTypeFilter(packageType))
-                .orElseThrow(() -> new ConversionException(String.format("Format %s can't be defined.", name)));
+    public boolean test(DestContextTypeMap destContextTypeMap) {
+        DestContextMapWrapper wrapper = new DestContextMapWrapper(destContextTypeMap);
+
+        ITunesPackageType packageType = ITunesPackageType.fromName(wrapper.getValue("specifiedFor")); // TODO: reference to custom enum
+
+        return packageType == null || Objects.equals(packageType, this.packageType);
     }
 }

@@ -51,7 +51,7 @@ import com.netflix.imfutility.itunes.locale.LocaleHelper;
 import com.netflix.imfutility.itunes.locale.LocaleValidator;
 import com.netflix.imfutility.itunes.mediainfo.SimpleMediaInfoBuilder;
 import com.netflix.imfutility.itunes.metadata.MetadataXmlProvider;
-import com.netflix.imfutility.itunes.metadata.tv.TvMetadataXmlProvider;
+import com.netflix.imfutility.itunes.metadata.factory.MetadataXmlProviderFactory;
 import com.netflix.imfutility.mediainfo.MediaInfoException;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
@@ -208,9 +208,10 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         logger.info("Resolving destination format...");
 
         String format = iTunesInputParameters.getCmdLineArgs().getFormat();
+        ITunesPackageType packageType = metadataXmlProvider.getDescriptor().getPackageType();
         DestContextResolveStrategy resolveStrategy = format != null
-                ? new NameDestContextResolveStrategy(format)
-                : new InputDestContextResolveStrategy(contextProvider);
+                ? new NameDestContextResolveStrategy(format, packageType)
+                : new InputDestContextResolveStrategy(contextProvider, packageType);
         DestContextTypeMap destContextMap = resolveStrategy.resolveContext(destContexts);
 
         logger.info("Destination format defined by {}", format != null
@@ -345,9 +346,9 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     private void initMetadata() throws IOException, XmlParsingException {
         File metadataFile = iTunesInputParameters.getMetadataFile();
         String vendorId = iTunesInputParameters.getCmdLineArgs().getVendorId();
+        ITunesPackageType packageType = iTunesInputParameters.getCmdLineArgs().getPackageType();
 
-        // TODO: make strategy to define provider depends on package type (film or tv)
-        metadataXmlProvider = new TvMetadataXmlProvider(metadataFile);
+        metadataXmlProvider = MetadataXmlProviderFactory.createProvider(metadataFile, packageType);
         metadataXmlProvider.updateVendorId(vendorId);
     }
 

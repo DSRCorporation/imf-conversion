@@ -19,6 +19,7 @@
 package com.netflix.imfutility.itunes.metadata.film;
 
 import com.apple.itunes.importer.film.PackageType;
+import com.netflix.imfutility.itunes.ITunesPackageType;
 import com.netflix.imfutility.itunes.metadata.MetadataDescriptor;
 
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.FILM_METADATA_NAMESPACE;
@@ -59,5 +60,10 @@ public final class FilmMetadataDescriptor implements MetadataDescriptor<PackageT
     @Override
     public String getMetadataRoot() {
         return FILM_METADATA_ROOT_ELEMENT;
+    }
+
+    @Override
+    public ITunesPackageType getPackageType() {
+        return ITunesPackageType.film;
     }
 }

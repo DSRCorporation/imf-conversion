@@ -19,6 +19,7 @@
 package com.netflix.imfutility.itunes.destcontext;
 
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.itunes.ITunesPackageType;
 import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -54,16 +55,16 @@ public class NameDestContextResolveStrategyTest {
     public void testCorrectName() {
         NameDestContextResolveStrategy resolveStrategy;
 
-        resolveStrategy = new NameDestContextResolveStrategy("sdfilmntsc480i2997");
+        resolveStrategy = new NameDestContextResolveStrategy("sdfilmntsc480i2997", ITunesPackageType.film);
         assertEquals("sdfilmntsc480i2997", resolveStrategy.resolveContext(map).getName());
 
-        resolveStrategy = new NameDestContextResolveStrategy("hd720i23976");
+        resolveStrategy = new NameDestContextResolveStrategy("hd720i23976", ITunesPackageType.film);
         assertEquals("hd720i23976", resolveStrategy.resolveContext(map).getName());
     }
 
     @Test(expected = ConversionException.class)
     public void testIncorrectName() {
-        NameDestContextResolveStrategy resolveStrategy = new NameDestContextResolveStrategy("xxxx");
+        NameDestContextResolveStrategy resolveStrategy = new NameDestContextResolveStrategy("xxxx", ITunesPackageType.film);
 
         resolveStrategy.resolveContext(map);
     }
