@@ -25,6 +25,8 @@ import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_SPECIFIED_FOR;
+
 /**
  * Class to filter dest context depends on package type (film or tv).
  */
@@ -39,7 +41,7 @@ public class DestContextPackageTypeFilter implements Predicate<DestContextTypeMa
     public boolean test(DestContextTypeMap destContextTypeMap) {
         DestContextMapWrapper wrapper = new DestContextMapWrapper(destContextTypeMap);
 
-        ITunesPackageType packageType = ITunesPackageType.fromName(wrapper.getValue("specifiedFor")); // TODO: reference to custom enum
+        ITunesPackageType packageType = ITunesPackageType.fromName(wrapper.getValue(DEST_PARAM_VIDEO_SPECIFIED_FOR));
 
         return packageType == null || Objects.equals(packageType, this.packageType);
     }

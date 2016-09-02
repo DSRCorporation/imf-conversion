@@ -19,12 +19,13 @@
 package com.netflix.imfutility.itunes.destcontext;
 
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.itunes.ITunesPackageType;
 import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static com.netflix.imfutility.util.TemplateParameterContextCreator.createDestContextMap;
+import static com.netflix.imfutility.itunes.util.DestContextUtils.createDestContextMap;
 import static junit.framework.TestCase.assertEquals;
 
 /**
@@ -43,58 +44,65 @@ public class VideoDestContextResolveStrategyTest {
         map.getMap().put("hd1080i2997", createDestContextMap(
                 "hd1080i2997", "1920", "1080", "30000/1001", "true", null));
         map.getMap().put("hd720i23976", createDestContextMap(
-                "hd720i23976", "1280", "720", "24000/1001", "true", null));
+                "hd720i23976", "1280", "720", "24000/1001", "true", "tv"));
         map.getMap().put("sdfilmntsc480i2997", createDestContextMap(
-                "sdfilmntsc480i2997", "640", "480", "30000/1001", "true", null));
+                "sdfilmntsc480i2997", "640", "480", "30000/1001", "true", "film"));
         map.getMap().put("sdtvntsc480i2997", createDestContextMap(
-                "sdtvntsc480i2997", "640", "480", "30000/1001", "true", "3600"));
+                "sdtvntsc480i2997", "640", "480", "30000/1001", "true", "tv"));
         map.getMap().put("sdfilmpal576p24", createDestContextMap(
-                "sdfilmpal576p24", "720", "576", "24/1", "", null));
+                "sdfilmpal576p24", "720", "576", "24/1", "", "film"));
     }
 
     @Test
     public void testCorrectResolvingParameters() {
         VideoDestContextResolveStrategy resolveStrategy = new VideoDestContextResolveStrategy();
 
-        resolveStrategy.setWidth(4096)
+        resolveStrategy.setPackageType(ITunesPackageType.film)
+                .setWidth(4096)
                 .setHeight(2160)
                 .setFrameRate(new BigFraction(60))
-                .setInterlaced(true)
-                .setDuration(3600L);
+                .setInterlaced(false);
+        assertEquals("hd1080p30", resolveStrategy.resolveContext(map).getName());
+
+        resolveStrategy.setPackageType(ITunesPackageType.tv)
+                .setWidth(4096)
+                .setHeight(2160)
+                .setFrameRate(new BigFraction(60))
+                .setInterlaced(true);
         assertEquals("hd1080i2997", resolveStrategy.resolveContext(map).getName());
 
-        resolveStrategy.setWidth(800)
+        resolveStrategy.setPackageType(ITunesPackageType.film)
+                .setWidth(800)
                 .setHeight(600)
                 .setFrameRate(new BigFraction(30))
-                .setInterlaced(true)
-                .setDuration(3599L);
-        //  duration < 1 hour. Expected sd tv format
-        assertEquals("sdtvntsc480i2997", resolveStrategy.resolveContext(map).getName());
+                .setInterlaced(true);
+        //  hd 720 not allowed for film. Expected sd film format
+        assertEquals("sdfilmntsc480i2997", resolveStrategy.resolveContext(map).getName());
 
-        resolveStrategy.setWidth(1919)
+        resolveStrategy.setPackageType(ITunesPackageType.tv)
+                .setWidth(1919)
                 .setHeight(1281)
                 .setFrameRate(new BigFraction(24))
-                .setInterlaced(true)
-                .setDuration(3600L);
+                .setInterlaced(true);
         assertEquals("hd720i23976", resolveStrategy.resolveContext(map).getName());
 
-        resolveStrategy.setWidth(800)
+        resolveStrategy.setPackageType(ITunesPackageType.tv)
+                .setWidth(800)
                 .setHeight(600)
-                .setFrameRate(new BigFraction(24))
-                .setInterlaced(false)
-                .setDuration(3600L);
-        assertEquals("sdfilmpal576p24", resolveStrategy.resolveContext(map).getName());
+                .setFrameRate(new BigFraction(30))
+                .setInterlaced(true);
+        assertEquals("sdtvntsc480i2997", resolveStrategy.resolveContext(map).getName());
     }
 
     @Test(expected = ConversionException.class)
     public void testIncorrectWidth() {
         VideoDestContextResolveStrategy resolveStrategy = new VideoDestContextResolveStrategy();
 
-        resolveStrategy.setWidth(639)
+        resolveStrategy.setPackageType(ITunesPackageType.film)
+                .setWidth(639)
                 .setHeight(2160)
                 .setFrameRate(new BigFraction(60))
-                .setInterlaced(true)
-                .setDuration(3600L);
+                .setInterlaced(true);
         resolveStrategy.resolveContext(map);
     }
 
@@ -102,11 +110,11 @@ public class VideoDestContextResolveStrategyTest {
     public void testIncorrectHeight() {
         VideoDestContextResolveStrategy resolveStrategy = new VideoDestContextResolveStrategy();
 
-        resolveStrategy.setWidth(4096)
+        resolveStrategy.setPackageType(ITunesPackageType.film)
+                .setWidth(4096)
                 .setHeight(575)
                 .setFrameRate(new BigFraction(60))
-                .setInterlaced(false)
-                .setDuration(3600L);
+                .setInterlaced(false);
         resolveStrategy.resolveContext(map);
     }
 
@@ -114,11 +122,11 @@ public class VideoDestContextResolveStrategyTest {
     public void testIncorrectFrameRate() {
         VideoDestContextResolveStrategy resolveStrategy = new VideoDestContextResolveStrategy();
 
-        resolveStrategy.setWidth(4096)
+        resolveStrategy.setPackageType(ITunesPackageType.film)
+                .setWidth(4096)
                 .setHeight(2160)
                 .setFrameRate(new BigFraction(23))
-                .setInterlaced(true)
-                .setDuration(3600L);
+                .setInterlaced(true);
         resolveStrategy.resolveContext(map);
     }
 
@@ -126,11 +134,11 @@ public class VideoDestContextResolveStrategyTest {
     public void testIncorrectScanType() {
         VideoDestContextResolveStrategy resolveStrategy = new VideoDestContextResolveStrategy();
 
-        resolveStrategy.setWidth(800)
+        resolveStrategy.setPackageType(ITunesPackageType.tv)
+                .setWidth(800)
                 .setHeight(600)
                 .setFrameRate(new BigFraction(24000).divide(1001))
-                .setInterlaced(true)
-                .setDuration(3600L);
+                .setInterlaced(true);
         // no interlaced format with fps < 24 defined in map
         resolveStrategy.resolveContext(map);
     }

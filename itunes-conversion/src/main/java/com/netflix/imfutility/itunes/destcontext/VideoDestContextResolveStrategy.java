@@ -28,7 +28,6 @@ import org.apache.commons.math3.fraction.BigFraction;
 
 import java.util.Comparator;
 
-import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.DURATION;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.FRAME_RATE;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.HEIGHT;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.INTERLACED;
@@ -43,8 +42,7 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
     protected Integer height;
     protected Boolean interlaced;
     protected BigFraction frameRate;
-    protected Long duration;
-    private ITunesPackageType packageType;
+    protected ITunesPackageType packageType;
 
     public VideoDestContextResolveStrategy() {
     }
@@ -69,11 +67,6 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
         return this;
     }
 
-    public VideoDestContextResolveStrategy setDuration(Long duration) {
-        this.duration = duration;
-        return this;
-    }
-
     public VideoDestContextResolveStrategy setPackageType(ITunesPackageType packageType) {
         this.packageType = packageType;
         return this;
@@ -85,7 +78,6 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
                 || width == null
                 || height == null
                 || frameRate == null
-                || duration == null
                 || packageType == null) {
             throw new ConversionException(
                     "Format can't be defined. Source video characteristics must be set.");
@@ -98,7 +90,6 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
                 .filter(this::checkWidth)
                 .filter(this::checkHeight)
                 .filter(this::checkFrameRate)
-                .filter(this::checkDuration)
                 .max(comparator())
                 .orElseThrow(() -> new ConversionException(String.format(
                         "Format can't be defined. Source video characteristics: [%4s X %-4s %s fps %s scan]",
@@ -123,10 +114,6 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
 
     private boolean checkFrameRate(DestContextMapWrapper wrapper) {
         return wrapper.compareToFrameRate(FRAME_RATE.getName(), frameRate, false) <= 0;
-    }
-
-    private boolean checkDuration(DestContextMapWrapper wrapper) {
-        return wrapper.compareToLong(DURATION.getName(), duration, true) > 0;
     }
 
     private boolean matchScan(DestContextMapWrapper wrapper) {

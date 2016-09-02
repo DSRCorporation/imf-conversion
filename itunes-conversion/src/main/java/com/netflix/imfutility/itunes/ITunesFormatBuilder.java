@@ -45,6 +45,7 @@ import com.netflix.imfutility.itunes.chapters.ChaptersXmlProvider;
 import com.netflix.imfutility.itunes.destcontext.DestContextResolveStrategy;
 import com.netflix.imfutility.itunes.destcontext.InputDestContextResolveStrategy;
 import com.netflix.imfutility.itunes.destcontext.NameDestContextResolveStrategy;
+import com.netflix.imfutility.itunes.destcontext.check.DurationChecker;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParametersValidator;
 import com.netflix.imfutility.itunes.locale.LocaleHelper;
@@ -216,6 +217,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
         String format = iTunesInputParameters.getCmdLineArgs().getFormat();
         ITunesPackageType packageType = metadataXmlProvider.getDescriptor().getPackageType();
+
         DestContextResolveStrategy resolveStrategy = format != null
                 ? new NameDestContextResolveStrategy(format, packageType)
                 : new InputDestContextResolveStrategy(contextProvider, packageType);
@@ -226,6 +228,10 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
                 : "source video");
         logger.info("Destination format: {}", destContextMap.getName());
         logger.info("Resolved destination format: OK\n");
+
+        if (packageType == ITunesPackageType.tv) {
+            new DurationChecker(contextProvider).checkDuration(destContextMap);
+        }
 
         return destContextMap;
     }

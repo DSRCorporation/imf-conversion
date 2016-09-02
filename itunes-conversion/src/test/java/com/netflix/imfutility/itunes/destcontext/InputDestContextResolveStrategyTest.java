@@ -37,6 +37,7 @@ import org.junit.Test;
 
 import java.util.EnumSet;
 
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_SPECIFIED_FOR;
 import static junit.framework.TestCase.assertEquals;
 
 /**
@@ -80,8 +81,6 @@ public class InputDestContextResolveStrategyTest {
                 for (ResourceUUID resUuid : resourceContext.getUuids(resKey)) {
 
                     resourceContext.addResourceParameter(resKey, resUuid,
-                            ResourceContextParameters.DURATION_MS, String.valueOf(4000));
-                    resourceContext.addResourceParameter(resKey, resUuid,
                             ResourceContextParameters.WIDTH, String.valueOf(widths[i]));
                     resourceContext.addResourceParameter(resKey, resUuid,
                             ResourceContextParameters.HEIGHT, String.valueOf(heights[i]));
@@ -107,7 +106,6 @@ public class InputDestContextResolveStrategyTest {
         assertEquals("25 1", map.getMap().get(DestContextParameters.FRAME_RATE.getName()).getValue());
         // assume video scan type is progressive (according to IMF application #2E)
         assertEquals("false", map.getMap().get(DestContextParameters.INTERLACED.getName()).getValue());
-        // max duration must be equals 2(segm)*2(res)*2(repeat)*(4000(millisDuration)/1000(millisInSec))
-        assertEquals("32", map.getMap().get(DestContextParameters.DURATION.getName()).getValue());
+        assertEquals(ITunesPackageType.film.getName(), map.getMap().get(DEST_PARAM_VIDEO_SPECIFIED_FOR).getValue());
     }
 }

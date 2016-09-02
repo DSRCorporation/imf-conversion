@@ -21,7 +21,6 @@ package com.netflix.imfutility.itunes.util;
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.itunes.destcontext.VideoDestContextResolveStrategy;
 import com.netflix.imfutility.util.ConversionHelper;
-import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
 
@@ -32,12 +31,11 @@ public class FakeVideoDestContextResolveStrategy extends VideoDestContextResolve
 
     @Override
     public DestContextTypeMap resolveContext(DestContextsTypeMap destContexts) throws ConversionException {
-        DestContextTypeMap map = TemplateParameterContextCreator.createDestContextMap("",
+        return DestContextUtils.createDestContextMap("",
                 String.valueOf(width),
                 String.valueOf(height),
                 ConversionHelper.toEditRate(frameRate),
                 Boolean.toString(interlaced),
-                Long.toString(duration));
-        return map;
+                packageType.getName());
     }
 }
