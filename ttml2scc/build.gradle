@@ -1,0 +1,24 @@
+description = "TTML to SCC closed captions conversion (default CC conversion tool for iTunes format)"
+version=""
+
+dependencies {
+    compile project(':ttml-to-stl')
+}
+
+dependencies {
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.3'
+}
+
+
+jar {
+    baseName = project.name
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest {
+        attributes 'Implementation-Title': 'TTML to SCC converter', 'Implementation-Version': version
+        attributes 'Main-Class': 'com.netflix.imfutility.cc.Convert'
+    }
+}
+
+checkstyleMain {
+    ignoreFailures = true
+}
