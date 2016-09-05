@@ -15,7 +15,7 @@ call .\chimera25-short      "%~1\%Chimera25Dir%" %2 %3
 call .\chimera50-short      "%~1\%Chimera50Dir%" %2 %3
 
 :: formats
-call .\chimera25-short-formats      "%~1\%Chimera25Dir%" %2 %3
+call .\chimera25-formats      "%~1\%Chimera25Dir%" %2 %3
 
 :: 2016 namespace
 :: use only with switched off imf validation

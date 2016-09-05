@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<input_chapters basedir="../chimera25" xmlns="http://netflix.com/imf/itunes/chapters">
+<input_chapters basedir="../../chimera25" xmlns="http://netflix.com/imf/itunes/chapters">
     <timecode_format>24/999 1000/nonDrop</timecode_format>
     <input_chapter>
         <start_time>00:00:00:00</start_time>

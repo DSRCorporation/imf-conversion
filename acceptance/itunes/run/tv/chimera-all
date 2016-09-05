@@ -56,9 +56,6 @@ Chimera50Dir="Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV"
 
 # closed captions and subtitles
 ./chimera25-cc              "$1/$Chimera25Dir" "$2" "$3";
-./chimera29-sub             "$1/$Chimera29Dir" "$2" "$3";
-./chimera29-sub-ext         "$1/$Chimera29Dir" "$2" "$3";
-./chimera29-sub-segments    "$1/$Chimera29Dir" "$2" "$3";
 
 # default as-is full CPLs for all test packages
 ./chimera23-default     "$1/$Chimera23Dir" "$2" "$3";

@@ -547,7 +547,9 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         File destSource = new File(contextProvider.getWorkingDir(), dynamicContext.getParameterValueAsString(DYNAMIC_PARAM_DEST_SOURCE));
 
         new SourceAssetProcessor(metadataXmlProvider, itmspDir)
-                .setLocale(audioMapXmlProvider.getLocale())
+                .setLocale(audioMapXmlProvider == null
+                        ? metadataXmlProvider.getLocale()
+                        : audioMapXmlProvider.getLocale())
                 .process(destSource);
     }
 
