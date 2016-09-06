@@ -19,6 +19,7 @@
 package com.netflix.subtitles.cli;
 
 import com.netflix.subtitles.exception.ParseException;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.cli.CommandLine;
@@ -95,6 +96,8 @@ public final class TtmlConverterCmdLineParser {
         // outputFile
         if (line.hasOption(out.getOpt())) {
             params.setOutputFile(line.getOptionValue(out.getOpt()));
+        } else {
+            throw new ParseException("Output file option must be provided.");
         }
 
         // ttml
@@ -116,9 +119,9 @@ public final class TtmlConverterCmdLineParser {
             }
 
             return ttmlOption;
-        }).collect(Collectors.toList()));
+        }).collect(Collectors.toCollection(ArrayList::new)));
         if (params.getTtmlOptions().isEmpty()) {
-            throw new ParseException("At least one input TTML file must be provided");
+            throw new ParseException("At least one input TTML file must be provided.");
         }
 
         return params;

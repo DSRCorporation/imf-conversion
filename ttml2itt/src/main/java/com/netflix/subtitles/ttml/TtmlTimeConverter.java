@@ -18,7 +18,6 @@
  */
 package com.netflix.subtitles.ttml;
 
-import com.netflix.imfutility.util.ConversionHelper;
 import java.util.Objects;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.w3.ns.ttml.TtEltype;
@@ -168,20 +167,12 @@ public final class TtmlTimeConverter {
     }
 
     /**
-     * Gets units in second string in the following format: &lt;frameRate * numerator&gt; &lt;denominator&gt;.
-     * @return units in second string in the following format: &lt;frameRate * numerator&gt; &lt;denominator&gt;
-     */
-    public String getUnitsInSecStr() {
-        return String.valueOf(frameRate * frNumerator) + " " + String.valueOf(frDenominator);
-    }
-
-    /**
      * Returns a fraction corresponding to the frameRate.
      *
      * @return fraction corresponding to the frameRate
      */
     public BigFraction getUnitsInSec() {
-        return ConversionHelper.parseEditRate(getUnitsInSecStr());
+        return new BigFraction(frameRate * frNumerator, frDenominator);
     }
 
     @Override

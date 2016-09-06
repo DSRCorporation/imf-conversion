@@ -18,54 +18,38 @@
  */
 package com.netflix.subtitles;
 
-import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import static com.netflix.subtitles.TtmlConverterConstants.NEW_STYLE_ID_PARAMETER;
 import static com.netflix.subtitles.TtmlConverterConstants.OLD_STYLE_ID_PARAMETER;
 import static com.netflix.subtitles.TtmlConverterConstants.REPLACE_STYLE_ID_TRANSFORMATION;
-import static com.netflix.subtitles.TtmlConverterConstants.STYLE_FIELD;
 import static com.netflix.subtitles.TtmlConverterConstants.TTML_PACKAGES;
 import static com.netflix.subtitles.TtmlConverterConstants.TTML_SCHEMA;
 import static com.netflix.subtitles.TtmlConverterConstants.TTML_TO_ITT_TRANSFORMATION;
-import static com.netflix.subtitles.TtmlConverterConstants.XSLT2_TRANSFORMER_IMPLEMENTATION;
 import com.netflix.subtitles.cli.TtmlConverterCmdLineParams;
 import com.netflix.subtitles.cli.TtmlConverterCmdLineParser;
 import com.netflix.subtitles.cli.TtmlOption;
-import com.netflix.subtitles.exception.ConvertException;
 import com.netflix.subtitles.exception.ParseException;
 import com.netflix.subtitles.ttml.TtmlParagraphResolver;
 import com.netflix.subtitles.ttml.TtmlTimeConverter;
-import com.netflix.subtitles.ttml.TtmlTimeReducer;
+import com.netflix.subtitles.ttml.TtmlUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.util.JAXBResult;
-import javax.xml.bind.util.JAXBSource;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamSource;
-import org.w3.ns.ttml.BodyEltype;
 import org.w3.ns.ttml.DivEltype;
 import org.w3.ns.ttml.ObjectFactory;
 import org.w3.ns.ttml.PEltype;
@@ -152,10 +136,6 @@ public final class TtmlConverter {
         System.out.println("Conversion done.");
     }
 
-    private static JAXBContext createTtmlJaxbContext() throws JAXBException {
-        return JAXBContext.newInstance(TTML_PACKAGES);
-    }
-
     private static void printStartMessage(TtmlConverterCmdLineParams parsedParams) {
         String mergeMsg = "";
         String fileMsg = " file.";
@@ -170,36 +150,6 @@ public final class TtmlConverter {
                 + parsedParams.getTtmlOptions().stream()
                 .map(TtmlOption::getFileName).collect(Collectors.joining(", ", "[", "]")) + fileMsg;
         System.out.println(startMsg);
-    }
-
-    private static Transformer createTtmlTransformer(String xslt) {
-        TransformerFactory tf = TransformerFactory.newInstance(XSLT2_TRANSFORMER_IMPLEMENTATION, null);
-        InputStream transformationStream = ResourceHelper.getResourceInputStream(xslt);
-        if (transformationStream == null) {
-            throw new ConvertException(String.format("The transformation file is absent: %s", xslt));
-        }
-
-        try {
-            return tf.newTransformer(new StreamSource(transformationStream));
-        } catch (TransformerConfigurationException e) {
-            throw new ConvertException(e);
-        }
-    }
-
-    private static TtEltype transformTtmlDocument(TtEltype tt, Transformer transformer) {
-        JAXBElement<TtEltype> ttJaxb = new ObjectFactory().createTt(tt);
-        try {
-            JAXBContext jaxbc = createTtmlJaxbContext();
-            JAXBSource source = new JAXBSource(jaxbc, ttJaxb);
-            JAXBResult result = new JAXBResult(jaxbc);
-
-            // transform
-            transformer.transform(source, result);
-
-            return (TtEltype) ((JAXBElement<TtEltype>) result.getResult()).getValue();
-        } catch (JAXBException | TransformerException e) {
-            throw new ConvertException(e);
-        }
     }
 
     /**
@@ -224,8 +174,8 @@ public final class TtmlConverter {
                 throw new ParseException(e);
             }
 
-            TtmlTimeReducer.reduceAccordingSegment(tt, o.getOffsetMS(), o.getStartMS(), o.getEndMS());
-            moveStyleRefToP(tt);
+            TtmlUtils.reduceAccordingSegment(tt, o.getOffsetMS(), o.getStartMS(), o.getEndMS());
+            TtmlUtils.moveStyleRefToP(tt);
             return tt;
         }).collect(Collectors.toList());
     }
@@ -234,13 +184,12 @@ public final class TtmlConverter {
      * Converts all TTML input documents to corresponding iTT.
      *
      * @throws TransformerConfigurationException
-     * @throws ConvertException
      */
     public void convertInputsToItt() throws TransformerConfigurationException {
-        Transformer transformer = createTtmlTransformer(TTML_TO_ITT_TRANSFORMATION);
+        Transformer transformer = TtmlUtils.createTtmlTransformer(TTML_TO_ITT_TRANSFORMATION);
 
         convertedItts = ttmlTts.stream()
-                .map((tt) -> transformTtmlDocument(tt, transformer))
+                .map((tt) -> TtmlUtils.transformTtmlDocument(tt, transformer))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         mergedItt = convertedItts.get(0);
@@ -331,7 +280,7 @@ public final class TtmlConverter {
             return;
         }
 
-        Marshaller jaxbMarshaller = createTtmlJaxbContext().createMarshaller();
+        Marshaller jaxbMarshaller = TtmlUtils.createTtmlJaxbContext().createMarshaller();
         jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
         jaxbMarshaller.marshal(new ObjectFactory().createTt(mergedItt), outputFile);
@@ -346,6 +295,14 @@ public final class TtmlConverter {
      */
     public void validateOutput() throws XmlParsingException, FileNotFoundException {
         XmlParser.parse(outputFile, new String[]{TTML_SCHEMA}, TTML_PACKAGES, TtEltype.class);
+    }
+
+    /**
+     * Gets converted itt documents. For test purposes.
+     * @return converted itt documents
+     */
+    List<TtEltype> getConvertedItts() {
+        return convertedItts;
     }
 
     private boolean isStyleInList(StyleEltype st, List<StyleEltype> stylesList) {
@@ -369,44 +326,10 @@ public final class TtmlConverter {
     }
 
     private TtEltype fixStyleRefs(TtEltype itt, String oldId, String newId) {
-        Transformer transformer = createTtmlTransformer(REPLACE_STYLE_ID_TRANSFORMATION);
+        Transformer transformer = TtmlUtils.createTtmlTransformer(REPLACE_STYLE_ID_TRANSFORMATION);
         transformer.setParameter(OLD_STYLE_ID_PARAMETER, oldId);
         transformer.setParameter(NEW_STYLE_ID_PARAMETER, newId);
 
-        return transformTtmlDocument(itt, transformer);
-    }
-
-    private void moveStyleRefToP(TtEltype tt) {
-        Set<Object> styles = new HashSet<>(tt.getBody().getStyle());
-
-        // set style to null, workaround for JAXB objects
-        BodyEltype body = tt.getBody();
-        body.getStyle().clear();
-        setStyleListToNull(body);
-
-        tt.getBody().getDiv().stream()
-                .peek((div) -> {
-                    styles.addAll(div.getStyle());
-                    div.getStyle().clear();
-                    setStyleListToNull(div);
-                })
-                .flatMap((div) -> div.getBlockClass().stream())
-                .filter((o) -> o instanceof PEltype)
-                .map((o) -> (PEltype) o)
-                .forEachOrdered((p) -> {
-                    styles.addAll(p.getStyle());
-                    p.getStyle().clear();
-                    p.getStyle().addAll(styles);
-                });
-    }
-
-    private void setStyleListToNull(Object obj) {
-        try {
-            Field field = obj.getClass().getDeclaredField(STYLE_FIELD);
-            field.setAccessible(true);
-            field.set(obj, null);
-        } catch (Exception e) {
-            // ignore exceptions
-        }
+        return TtmlUtils.transformTtmlDocument(itt, transformer);
     }
 }

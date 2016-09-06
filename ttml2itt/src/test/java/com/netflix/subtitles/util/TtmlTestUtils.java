@@ -26,13 +26,18 @@ import org.w3.ns.ttml.TtEltype;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Arrays;
+import org.w3.ns.ttml.StyleEltype;
 
 /**
  * Test utils for ttml needs.
  */
-public final class TtmlUtils {
+public final class TtmlTestUtils {
 
-    private TtmlUtils() {
+    public static StyleEltype createStyle(String id) {
+        StyleEltype st = new StyleEltype();
+
+        st.setId(id);
+        return st;
     }
 
     public static PEltype createP(String begin, String end, Serializable content) {
@@ -64,6 +69,10 @@ public final class TtmlUtils {
         return tt;
     }
 
+    public static PEltype p(Object obj) {
+        return (PEltype) obj;
+    }
+
     public static String getPBegin(Object obj) {
         return ((PEltype) obj).getBegin();
     }
@@ -82,5 +91,8 @@ public final class TtmlUtils {
 
     public static Object getPRegion(Object obj) {
         return ((PEltype) obj).getRegion();
+    }
+
+    private TtmlTestUtils() {
     }
 }
