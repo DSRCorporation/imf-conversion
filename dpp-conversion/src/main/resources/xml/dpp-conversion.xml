@@ -109,14 +109,14 @@
                     <execEachSequence type="audio" name="extractAudioSegments">
                         <execEachSegment name="extract_audio">
                             <execOnce name="extract_audio">
-                                "%{tool.mxf2raw}" -p "%{seq.num}-%{segm.num}-%{resource.num}" --start
-                                %{resource.startTimeFrameEU}
-                                --dur %{resource.durationFrameEU} "%{resource.essence}"
+                                "%{tool.as-02-unwrap}"
+                                "%{resource.essence}"
+                                %{seq.num}-%{segm.num}-%{resource.num}.wav
                             </execOnce>
                             <!-- to delete intermediate files at the end -->
                             <dynamicParameter name="audio-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}"
                                               deleteOnExit="true">
-                                %{seq.num}-%{segm.num}-%{resource.num}_a0.raw
+                                %{seq.num}-%{segm.num}-%{resource.num}.wav
                             </dynamicParameter>
                         </execEachSegment>
                     </execEachSequence>
@@ -130,8 +130,10 @@
                             <cycle>
                                 <execEachSegment name="decode_audio">
                                     <execOnce name="decode_audio">
-                                        "%{tool.ffmpeg}" -f s%{resource.bits_per_sample}le -ar %{resource.sample_rate}
+                                        "%{tool.ffmpeg}" -y -f wav
                                         -ac %{resource.channels_num}
+                                        -ss %{resource.startTimeTC}
+                                        -t %{resource.durationTC}
                                         -i "%{dynamic.audio-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}}" -vn -af
                                         aresample=%{dest.sampleRate}
                                         -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
@@ -139,7 +141,7 @@
                                 </execEachSegment>
                             </cycle>
                             <execOnce name="encode_audio">
-                                "%{tool.ffmpeg}" -f s%{dest.bitsSample}le -ar %{dest.sampleRate} -ac %{seq.channels_num} -i - -vn -c:a
+                                "%{tool.ffmpeg}" -y -f s%{dest.bitsSample}le -ar %{dest.sampleRate} -ac %{seq.channels_num} -i - -vn -c:a
                                 copy -f wav %{seq.num}-audio-encoded.wav
                             </execOnce>
                         </pipe>
@@ -163,7 +165,7 @@
                         4. Remap audio in accordance with AudioMap.xml
                     -->
                     <execOnce name="audioMaping" if="%{dynamic.hasAudio}">
-                        "%{tool.ffmpeg}" %{dynamic.concatAudioInput} -filter_complex
+                        "%{tool.ffmpeg}" -y %{dynamic.concatAudioInput} -filter_complex
                         "%{dynamic.concatAudioMap}amerge,pan=%{dynamic.panParameter}[aout]"
                         -map "[aout]" -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f s%{dest.bitsSample}le "%{tmp.audioEncoded}"
                     </execOnce>
