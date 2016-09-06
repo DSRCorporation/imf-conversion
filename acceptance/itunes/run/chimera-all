@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+function usage {
+    echo "Convert all default test packages to DPP Format."
+    echo "1st argument - a path to the directory containing all default test packages."
+    echo "2d argument - a path to the directory containing the output for all test packages."
+    echo "3d argument - a path to imf-conversion-utility (if not set a default one will be used assuming that we're in the source root folder)."
+}
+
+if [ -z "$1" ]; then
+    echo "Missing argument: a path to the directory containing all default test packages."
+    usage
+    exit 1
+fi
+
+if [ -z "$2" ]; then
+    echo "Missing argument: a path to the directory containing the output for all test packages."
+    usage
+    exit 1
+fi
+
+cd "${BASH_SOURCE%/*}"
+
+./film/chimera-all  "$1" "$2/film" "$3";
+./tv/chimera-all    "$1" "$2/tv" "$3";
+

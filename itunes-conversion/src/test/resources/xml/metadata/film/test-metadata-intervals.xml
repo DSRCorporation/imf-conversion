@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://apple.com/itunes/importer" version="film5.2">
+    <provider>Paramount</provider>
+    <language>en-US</language>
+    <video>
+        <type>film</type>
+        <subtype>feature</subtype>
+        <vendor_id>09736156444</vendor_id>
+        <isan>0000-0000-03B6-0000-O-0000-0000-2</isan>
+        <upc>09736156444</upc>
+        <country>US</country>
+        <title>Forrest Gump</title>
+        <synopsis>"Stupid is as stupid does," says Forrest Gump (played by Tom Hanks in an Oscar-winning performance) as he discusses his relative level of intelligence with a stranger while waiting for a bus. Despite his sub-normal IQ, Gump leads a truly charmed life, with a ringside seat for many of the most memorable events of the second half of the 20th century. Featured alongside Tom Hanks are Sally Field as Forrest's mother; Gary Sinise as his commanding officer in Vietnam; Mykelti Williamson as his ill-fated Army buddy who is familiar with every recipe that involves shrimp; and the special effects artists whose digital magic place Forrest amidst a remarkable array of historical events and people.</synopsis>
+        <production_company>Paramount Pictures</production_company>
+        <copyright_cline>1994 Paramount Pictures</copyright_cline>
+        <theatrical_release_date>2007-05-04</theatrical_release_date>
+        <genres>
+            <genre code="COMEDY-00"/>
+            <genre code="DRAMA-00"/>
+        </genres>
+        <ratings>
+            <rating system="mpaa" reason="For drug content, some sensuality and war violence." code="PG-13"/>
+        </ratings>
+        <cast>
+            <cast_member billing="top">
+                <display_name>Tom Hanks</display_name>
+                <apple_id>2672649</apple_id>
+                <description format="plain">Forrest Gump leads a truly charmed life as he journeys through key events of the second half of the 20th century. Entirely without trying. For his portrayal of Forrest Gump, Tom Hanks earned the Academy Award for Best Actor, Golden Globe for Best Actor in a Motion Picture Drama, the BAFTA award for Best Actor and many more awards around the world. The titular film and character are based on the Winston Groom novel - "Forrest Gump".</description>
+                <characters>
+                    <character>
+                        <reference_id>FORREST</reference_id>
+                        <character_name>Forrest Gump</character_name>
+                        <character_note>Protagonist</character_note>
+                        <character_image>
+                            <data_file>
+                                <file_name>hanks_as_forrest_gump.png</file_name>
+                                <size>2813243</size>
+                                <checksum type="md5">4ec1addb1f4d3617718b3ebd1ae9ec96</checksum>
+                            </data_file>
+                        </character_image>
+                    </character>
+                    <!-- Additional character blocks here if needed for this cast member to handle cases where a cast member plays multiple characters in the film. -->
+                </characters>
+            </cast_member>
+            <!-- Additional cast members here -->
+        </cast>
+        <crew>
+            <crew_member billing="top">
+                <display_name>Robert Zemeckis</display_name>
+                <apple_id>274059420</apple_id>
+                <roles>
+                    <role>Director</role>
+                </roles>
+            </crew_member>
+            <crew_member billing="top">
+                <display_name>Steve Starkey</display_name>
+                <apple_id>274059432</apple_id>
+                <roles>
+                    <role>Producer</role>
+                </roles>
+            </crew_member>
+            <!-- Additional crew members here -->
+        </crew>
+        <chapters>
+            <timecode_format>24/999 1000/nonDrop</timecode_format>
+            <chapter>
+                <start_time>00:00:00:00</start_time>
+                <title locale="en-US">Forrest's Story Begins</title>
+                <artwork_file>
+                    <file_name>chapter01.jpg</file_name>
+                    <checksum type="md5">ed93d0f3224a353a4cc8d4175d645130</checksum>
+                    <size>6591649</size>
+                </artwork_file>
+            </chapter>
+            <chapter>
+                <start_time>00:07:45:23</start_time>
+                <title locale="en-US">Football at Alabama</title>
+                <artwork_file>
+                    <file_name>chapter02.jpg</file_name>
+                    <checksum type="md5">86bed7ef05c34c1e85345f40d11137a9</checksum>
+                    <size>6591649</size>
+                </artwork_file>
+            </chapter>
+            <!-- Additional chapters here. -->
+        </chapters>
+        <accessibility_info>
+            <accessibility role="captions" available="true"/>
+        </accessibility_info>
+        <assets>
+            <asset type="full">
+                <data_file role="source">
+                    <locale name="en-US"/>
+                    <file_name>09736156444-source.mov</file_name>
+                    <size>2595225600</size>
+                    <checksum type="md5">2a793a8b46037fe8aa29dd739b49911a</checksum>
+                    <attribute name="crop.top">80</attribute>
+                    <attribute name="crop.bottom">80</attribute>
+                    <attribute name="crop.left">50</attribute>
+                    <attribute name="crop.right">50</attribute>
+                    <attribute name="image.textless_master">true</attribute>
+                </data_file>
+                <data_file role="captions">
+                    <file_name>09736156444-english.scc</file_name>
+                    <size>9511</size>
+                    <checksum type="md5">5a793a8b46037fe8aa2bdd739b49911a</checksum>
+                    <locale name="en-US"/>
+                </data_file>
+            </asset>
+            <!-- World Trailer. Will be used where territory-specific trailer has not been provided -->
+            <asset type="preview">
+                <territories>
+                    <territory>WW</territory>
+                </territories>
+                <data_file role="source">
+                    <locale name="en-US"/>
+                    <file_name>09736156444-US-preview.mov</file_name>
+                    <size>9987212</size>
+                    <checksum type="md5">739b43b793a8b46037fe8aa29dd9911e</checksum>
+                    <attribute name="crop.top">80</attribute>
+                    <attribute name="crop.bottom">80</attribute>
+                    <attribute name="crop.left">50</attribute>
+                    <attribute name="crop.right">50</attribute>
+                </data_file>
+            </asset>
+            <!-- World Poster Art. Will be used where territory-specific poster art has not been provided -->
+            <asset type="artwork">
+                <territories>
+                    <territory>WW</territory>
+                </territories>
+                <data_file>
+                    <locale name="en-US"/>
+                    <file_name>09736156444.jpg</file_name>
+                    <size>6591649</size>
+                    <checksum type="md5">43e7dddfe4b8ab433ede429df86cabb2</checksum>
+                </data_file>
+            </asset>
+        </assets>
+        <products>
+            <product>
+                <territory>US</territory>
+                <intervals>
+                    <interval>
+                        <start_date>2011-07-01</start_date>
+                        <end_date>2011-09-01</end_date>
+                        <wholesale_price_tier>3</wholesale_price_tier>
+                        <hd_wholesale_price_tier>1</hd_wholesale_price_tier>
+                    </interval>
+                    <interval>
+                        <start_date>2011-09-01</start_date>
+                        <end_date>2011-10-01</end_date>
+                        <wholesale_price_tier>5</wholesale_price_tier>
+                        <hd_wholesale_price_tier>3</hd_wholesale_price_tier>
+                    </interval>
+                    <interval>
+                        <start_date>2011-10-01</start_date>
+                        <wholesale_price_tier>3</wholesale_price_tier>
+                        <hd_wholesale_price_tier>1</hd_wholesale_price_tier>
+                    </interval>
+                </intervals>
+                <cleared_for_sale>true</cleared_for_sale>
+                <cleared_for_hd_sale>true</cleared_for_hd_sale>
+                <preorder_sales_start_date>2011-02-10</preorder_sales_start_date>
+                <sales_start_date>2011-03-12</sales_start_date>
+                <sales_end_date>2011-12-12</sales_end_date>
+                <cleared_for_vod>true</cleared_for_vod>
+                <vod_type>New Release</vod_type>
+                <available_for_vod_date>2011-11-12</available_for_vod_date>
+                <unavailable_for_vod_date>2012-11-12</unavailable_for_vod_date>
+                <physical_release_date>2007-08-01</physical_release_date>
+                <cleared_for_hd_vod>false</cleared_for_hd_vod>
+            </product>
+            <product>
+                <territory>GB</territory>
+                <intervals>
+                    <interval>
+                        <start_date>2011-07-01</start_date>
+                        <end_date>2011-09-01</end_date>
+                        <wholesale_price_tier>3</wholesale_price_tier>
+                    </interval>
+                    <interval>
+                        <start_date>2011-09-01</start_date>
+                        <end_date>2011-10-01</end_date>
+                        <wholesale_price_tier>5</wholesale_price_tier>
+                    </interval>
+                    <interval>
+                        <start_date>2011-10-01</start_date>
+                        <wholesale_price_tier>3</wholesale_price_tier>
+                    </interval>
+                </intervals>
+                <cleared_for_sale>true</cleared_for_sale>
+                <cleared_for_hd_sale>true</cleared_for_hd_sale>
+                <preorder_sales_start_date>2011-02-10</preorder_sales_start_date>
+                <sales_start_date>2011-03-12</sales_start_date>
+                <sales_end_date>2011-12-12</sales_end_date>
+                <cleared_for_vod>true</cleared_for_vod>
+                <vod_type>New Release</vod_type>
+                <available_for_vod_date>2011-11-12</available_for_vod_date>
+                <unavailable_for_vod_date>2012-11-12</unavailable_for_vod_date>
+                <physical_release_date>2007-08-01</physical_release_date>
+                <cleared_for_hd_vod>false</cleared_for_hd_vod>
+            </product>
+        </products>
+    </video>
+</package>

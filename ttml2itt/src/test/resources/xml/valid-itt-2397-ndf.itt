@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tt
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.w3.org/ns/ttml"
+    xmlns:tt="http://www.w3.org/ns/ttml"
+    xmlns:tts="http://www.w3.org/ns/ttml#styling"
+    xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+    xml:lang="en-US"
+    ttp:timeBase="smpte"
+    ttp:frameRate="24"
+    ttp:frameRateMultiplier="999 1000"
+    ttp:dropMode="nonDrop">
+    <head>
+        <styling>
+            <style
+                xml:id="normal"
+                tts:fontFamily="sansSerif"
+                tts:fontWeight="normal"
+                tts:fontStyle="normal"
+                tts:color="white"
+                tts:fontSize="100%"/>
+            <style
+                xml:id="bold"
+                tts:fontFamily="sansSerif"
+                tts:fontWeight="bold"
+                tts:fontStyle="normal"
+                tts:color="white"
+                tts:fontSize="100%"/>
+            <style
+                xml:id="italic"
+                tts:fontFamily="sansSerif"
+                tts:fontWeight="normal"
+                tts:fontStyle="italic"
+                tts:color="white"
+                tts:fontSize="100%"/>
+            <style
+                xml:id="yellow"
+                tts:fontFamily="sansSerif"
+                tts:fontWeight="normal"
+                tts:fontStyle="normal"
+                tts:color="rgb(255,255,0)"
+                tts:fontSize="100%"/>
+        </styling>
+        <layout>
+            <region
+                xml:id="top"
+                tts:origin="0% 0%"
+                tts:extent="100% 15%"
+                tts:textAlign="center"
+                tts:displayAlign="before"/>
+            <region
+                xml:id="bottom"
+                tts:origin="0% 85%"
+                tts:extent="100% 15%"
+                tts:textAlign="center"
+                tts:displayAlign="after"/>
+        </layout>
+    </head>
+    <body style="normal" region="bottom">
+        <div begin="-01:00:00:00">
+            <p begin="01:00:06:09" end="01:00:11:13">
+                <span style="bold">iPhone 4</span> is so much more than just a new product.
+            </p>
+            <p begin="01:04:16:15" end="01:04:25:00">
+                The <span style="bold">iPhone</span>, for a user, it is simplicity, it is easy to use.
+                <br/>Behind it is <span style="italic"><span style="yellow">intense</span> technology.</span>
+            </p>
+        </div>
+    </body>
+</tt>
