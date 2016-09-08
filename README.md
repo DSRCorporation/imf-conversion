@@ -95,7 +95,7 @@ Note 1:
 
 2. Get x264 Encoder [x264](http://www.videolan.org/developers/x264.html). 10-bit version must be used!
 
-3. Get BMX: bmx2raw and raw2bmx applications from tools directory. tools/bms directory  contains proper [BMX tools](https://sourceforge.net/projects/bmxlib/)
+3. Get BMX: bmx2raw and raw2bmx applications from tools directory. tools/bmx directory  contains proper [BMX tools](https://sourceforge.net/projects/bmxlib/)
 snapshots because latest BMX tools include MCA implementation and if we have incorect MXF audio file (without MCA
 label id property) mxf2raw exits with exception and does not extract audio data.
 
