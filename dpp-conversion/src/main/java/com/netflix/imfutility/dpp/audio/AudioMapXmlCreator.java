@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -20,9 +20,6 @@ package com.netflix.imfutility.dpp.audio;
 
 import com.netflix.imfutility.generated.dpp.audiomap.AudioMapType;
 import com.netflix.imfutility.generated.dpp.audiomap.EBUTrackType;
-import com.netflix.imfutility.util.ImfLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -30,8 +27,6 @@ import java.io.File;
  * Provides functionality to generate a sample audiomap.xml for DPP format.
  */
 public final class AudioMapXmlCreator {
-
-    private final Logger logger = new ImfLogger(LoggerFactory.getLogger(AudioMapXmlCreator.class));
 
     /**
      * Generates a sample audiomap.xml file.

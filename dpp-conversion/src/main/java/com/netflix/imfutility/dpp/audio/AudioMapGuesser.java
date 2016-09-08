@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -18,41 +18,25 @@
  */
 package com.netflix.imfutility.dpp.audio;
 
-import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
-import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
-import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
-import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
+import com.netflix.imfutility.audio.InvalidAudioChannelAssignmentException;
+import com.netflix.imfutility.audio.SoundfieldGroupHelper;
+import com.netflix.imfutility.audio.SoundfieldGroupInfo;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
-import com.netflix.imfutility.cpl.uuid.ResourceUUID;
-import com.netflix.imfutility.cpl.uuid.SegmentUUID;
-import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.dpp.audiomap.AudioMapType;
 import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
-import com.netflix.imfutility.util.FFmpegAudioChannels;
 import com.netflix.imfutility.util.ImfLogger;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 
+import static com.netflix.imfutility.audio.AudioConstants.STEREO_LAYOUT;
+import static com.netflix.imfutility.audio.AudioConstants.SURROUND_5_1_LAYOUT;
 import static com.netflix.imfutility.dpp.audio.AudioMapHelper.add51;
 import static com.netflix.imfutility.dpp.audio.AudioMapHelper.add51Silence;
 import static com.netflix.imfutility.dpp.audio.AudioMapHelper.addStereo;
 import static com.netflix.imfutility.dpp.audio.AudioMapHelper.addStereoSilence;
-import static com.netflix.imfutility.dpp.audio.AudioMapHelper.get51Layout;
-import static com.netflix.imfutility.dpp.audio.AudioMapHelper.getStereoLayout;
 import static com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type.EBU_R_123_16_C;
 import static com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type.EBU_R_123_16_D;
 import static com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type.EBU_R_123_16_F;
@@ -63,19 +47,15 @@ import static com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs
 /**
  * Generates an audiomap.xml based on Essence Descriptor and selected audio track layout if possible.
  */
-public final class AudioMapGuesser {
+public final class AudioMapGuesser extends SoundfieldGroupHelper {
 
     private final Logger logger = new ImfLogger(LoggerFactory.getLogger(AudioMapGuesser.class));
 
-    private final TemplateParameterContextProvider contextProvider;
     private final AudioTrackLayoutDmAs11Type audioLayout;
 
-    private final Map<String, SoundfieldGroupInfo> inputSoundfieldGroups;
-
     public AudioMapGuesser(TemplateParameterContextProvider contextProvider, AudioTrackLayoutDmAs11Type audioLayout) {
-        this.contextProvider = contextProvider;
+        super(contextProvider);
         this.audioLayout = audioLayout;
-        this.inputSoundfieldGroups = new LinkedHashMap<>();
     }
 
     /**
@@ -83,18 +63,18 @@ public final class AudioMapGuesser {
      * (this information is obtained from Essence Descriptors).
      * An audio map can be generated only if
      * <ul>
-     *     <li>All resources within a sequence has channel layout</li>
-     *     <li>All resources within a sequence has equal channel layout</li>
-     *     <li>For R48_2A: there are at least one stereo sequence</li>
-     *     <li>For R123_4B/C: there are one or two stereo sequences</li>
-     *     <li>For R123_16C: there are one or two 5.1 sequences</li>
-     *     <li>For R123_16D: there are exactly two 5.1 sequences with different languages (languages must be set)</li>
-     *     <li>For R123_16F: there are exactly three stereo sequences with different languages (languages must be set)</li>
+     * <li>All resources within a sequence has channel layout</li>
+     * <li>All resources within a sequence has equal channel layout</li>
+     * <li>For R48_2A: there are at least one stereo sequence</li>
+     * <li>For R123_4B/C: there are one or two stereo sequences</li>
+     * <li>For R123_16C: there are one or two 5.1 sequences</li>
+     * <li>For R123_16D: there are exactly two 5.1 sequences with different languages (languages must be set)</li>
+     * <li>For R123_16F: there are exactly three stereo sequences with different languages (languages must be set)</li>
      * </ul>
      *
      * @return an audio map instance or null if there is not audio.
      * @throws InvalidAudioChannelAssignmentException an exception with description why audio map can not ne generated
-     * for the selected track allocation
+     *                                                for the selected track allocation
      */
     public AudioMapType guessAudioMap() throws InvalidAudioChannelAssignmentException {
         if (contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO) == 0) {
@@ -103,122 +83,12 @@ public final class AudioMapGuesser {
 
         logger.debug("Trying to generate an audiomap.xml based on the EssenceDescriptor...");
 
-        // 1. check that all resources within a sequence have the same channel layout
-        checkCorrectChannelLayout();
+        prepareContext();
 
-        // 2. get all soundfield groups from input audio
-        prepareSoundfieldGroups();
-
-        // 3. create the audio map
+        // create the audio map
         AudioMapType audioMap = createAudioMap();
         logger.info("Generated an audiomap.xml based on the EssenceDescriptor: OK");
         return audioMap;
-    }
-
-    void checkCorrectChannelLayout() throws InvalidAudioChannelAssignmentException {
-        for (SequenceUUID seqUuid : contextProvider.getSequenceContext().getUuids(SequenceType.AUDIO)) {
-            String channelLayout = null;
-            for (SegmentUUID segmUuid : contextProvider.getSegmentContext().getUuids()) {
-                for (ResourceUUID resUuid : contextProvider.getResourceContext()
-                        .getUuids(ResourceKey.create(segmUuid, seqUuid, SequenceType.AUDIO))) {
-                    ContextInfo contextInfo = new ContextInfoBuilder()
-                            .setResourceUuid(resUuid)
-                            .setSegmentUuid(segmUuid)
-                            .setSequenceUuid(seqUuid)
-                            .setSequenceType(SequenceType.AUDIO).build();
-
-                    if (!contextProvider.getResourceContext().hasResourceParameter(
-                            ResourceContextParameters.CHANNELS_LAYOUT, contextInfo)) {
-                        // all resources must have a channel layout!
-                        throw new InvalidAudioChannelAssignmentException(
-                                "All resources within a sequence must have a channel layout set in the Essence Descriptor.");
-                    }
-
-                    String nextChannelLayout = contextProvider.getResourceContext().getParameterValue(
-                            ResourceContextParameters.CHANNELS_LAYOUT, contextInfo);
-                    if (StringUtils.isEmpty(nextChannelLayout)) {
-                        // all resources must have a channel layout!
-                        throw new InvalidAudioChannelAssignmentException(
-                                "All resources within a sequence must have a channel layout set in the Essence Descriptor.");
-                    }
-
-                    if (channelLayout != null && !channelLayout.equals(nextChannelLayout)) {
-                        // all resources within a sequence must have equal channel layouts
-                        throw new InvalidAudioChannelAssignmentException(
-                                "All resources within a sequence must have the same channel layout.");
-                    }
-
-                    if (!contextProvider.getResourceContext().hasResourceParameter(
-                            ResourceContextParameters.CHANNELS_NUM, contextInfo)) {
-                        // all resources must have a channels num!
-                        throw new InvalidAudioChannelAssignmentException(
-                                "All resources within a sequence must have a channels number set.");
-                    }
-
-                    Integer channelsCount = Integer.parseInt(contextProvider.getResourceContext().getParameterValue(
-                            ResourceContextParameters.CHANNELS_NUM, contextInfo));
-                    if (FFmpegAudioChannels.toFFmpegAudioChannels(nextChannelLayout).length != channelsCount) {
-                        // the number of channels as defined in the channels layout must match the number of channels
-                        // as get from media info tools
-                        throw new InvalidAudioChannelAssignmentException(
-                                String.format(
-                                        "A number of channels in channel layout (%s) must match real number of channels (%d)",
-                                        nextChannelLayout, channelsCount));
-                    }
-
-                    channelLayout = nextChannelLayout;
-                }
-            }
-        }
-    }
-
-    private void prepareSoundfieldGroups() throws InvalidAudioChannelAssignmentException {
-        for (SequenceUUID seqUuid : contextProvider.getSequenceContext().getUuids(SequenceType.AUDIO)) {
-            // several sequences may belong to the same soundfield group
-            StringBuilder soundfieldGroupIdKey = new StringBuilder();
-            // find a channel layout for a sequence
-            String channelLayout = null;
-            for (SegmentUUID segmUuid : contextProvider.getSegmentContext().getUuids()) {
-                for (ResourceUUID resUuid : contextProvider.getResourceContext()
-                        .getUuids(ResourceKey.create(segmUuid, seqUuid, SequenceType.AUDIO))) {
-                    ContextInfo contextInfo = new ContextInfoBuilder()
-                            .setResourceUuid(resUuid)
-                            .setSegmentUuid(segmUuid)
-                            .setSequenceUuid(seqUuid)
-                            .setSequenceType(SequenceType.AUDIO).build();
-
-                    if (!contextProvider.getResourceContext().hasResourceParameter(
-                            ResourceContextParameters.SOUNDFIELD_GROUP_ID, contextInfo)) {
-                        soundfieldGroupIdKey.append("");
-                    } else {
-                        String soundFieldGroupId = contextProvider.getResourceContext().getParameterValue(
-                                ResourceContextParameters.SOUNDFIELD_GROUP_ID, contextInfo);
-                        soundfieldGroupIdKey.append(soundFieldGroupId);
-                    }
-
-                    if (channelLayout == null) {
-                        // we've already checked that all resources within a sequence have the same channel layout
-                        channelLayout = contextProvider.getResourceContext().getParameterValue(
-                                ResourceContextParameters.CHANNELS_LAYOUT, contextInfo);
-                    }
-                }
-            }
-
-            String soundfieldKey = soundfieldGroupIdKey.toString();
-            // if no soundfield groups specified
-            if (soundfieldKey.isEmpty()) {
-                soundfieldKey = UUID.randomUUID().toString();
-            }
-
-            if (channelLayout != null) {
-                SoundfieldGroupInfo info = inputSoundfieldGroups.get(soundfieldKey);
-                if (info == null) {
-                    info = new SoundfieldGroupInfo();
-                    inputSoundfieldGroups.put(soundfieldKey, info);
-                }
-                info.addChannels(seqUuid, channelLayout);
-            }
-        }
     }
 
     private AudioMapType createAudioMap() throws InvalidAudioChannelAssignmentException {
@@ -242,7 +112,7 @@ public final class AudioMapGuesser {
     private AudioMapType processR482A() throws InvalidAudioChannelAssignmentException {
         AudioMapType audioMap = new AudioMapType();
 
-        List<SoundfieldGroupInfo> foundStereo = findInputForChannelGroup(getStereoLayout());
+        List<SoundfieldGroupInfo> foundStereo = findInputForChannelGroup(STEREO_LAYOUT);
 
         // use the first found stereo pair
         if (foundStereo.isEmpty()) {
@@ -259,7 +129,7 @@ public final class AudioMapGuesser {
     private AudioMapType processR1234B4C() throws InvalidAudioChannelAssignmentException {
         AudioMapType audioMap = new AudioMapType();
 
-        List<SoundfieldGroupInfo> foundStereo = findInputForChannelGroup(getStereoLayout());
+        List<SoundfieldGroupInfo> foundStereo = findInputForChannelGroup(STEREO_LAYOUT);
 
         // we expect one or two stereo
         if (foundStereo.isEmpty() || foundStereo.size() > 2) {
@@ -280,8 +150,8 @@ public final class AudioMapGuesser {
     private AudioMapType processR12316C() throws InvalidAudioChannelAssignmentException {
         AudioMapType audioMap = new AudioMapType();
 
-        List<SoundfieldGroupInfo> foundStereo = findInputForChannelGroup(getStereoLayout());
-        List<SoundfieldGroupInfo> found51 = findInputForChannelGroup(get51Layout());
+        List<SoundfieldGroupInfo> foundStereo = findInputForChannelGroup(STEREO_LAYOUT);
+        List<SoundfieldGroupInfo> found51 = findInputForChannelGroup(SURROUND_5_1_LAYOUT);
 
         // we expect one or two stereo and one 5.1
         if (foundStereo.isEmpty() || foundStereo.size() > 2) {
@@ -313,7 +183,7 @@ public final class AudioMapGuesser {
     private AudioMapType processR12316D() throws InvalidAudioChannelAssignmentException {
         AudioMapType audioMap = new AudioMapType();
 
-        List<SoundfieldGroupInfo> found51 = findInputForChannelGroup(get51Layout());
+        List<SoundfieldGroupInfo> found51 = findInputForChannelGroup(SURROUND_5_1_LAYOUT);
 
         // we expect exactly two 5.1 with different languages
         if (found51.size() != 2) {
@@ -342,7 +212,7 @@ public final class AudioMapGuesser {
     private AudioMapType processR12316F() throws InvalidAudioChannelAssignmentException {
         AudioMapType audioMap = new AudioMapType();
 
-        List<SoundfieldGroupInfo> foundStereo = findInputForChannelGroup(getStereoLayout());
+        List<SoundfieldGroupInfo> foundStereo = findInputForChannelGroup(STEREO_LAYOUT);
 
         // we expect exactly three stereo with different languages
         if (foundStereo.size() != 3) {
@@ -373,41 +243,6 @@ public final class AudioMapGuesser {
         addStereoSilence(audioMap, 15);
 
         return audioMap;
-    }
-
-    private List<SoundfieldGroupInfo> findInputForChannelGroup(FFmpegAudioChannels[] channelsGroup) {
-        List<SoundfieldGroupInfo> result = new ArrayList<>();
-        for (SoundfieldGroupInfo soundfieldGroupInfo : inputSoundfieldGroups.values()) {
-            Set<FFmpegAudioChannels> inputChannels = soundfieldGroupInfo.getChannelsMap().keySet();
-            Set<FFmpegAudioChannels> requiredChannels = new HashSet<>(Arrays.asList(channelsGroup));
-            if (!inputChannels.equals(requiredChannels)) {
-                continue;
-            }
-            result.add(soundfieldGroupInfo);
-        }
-        return result;
-    }
-
-    private String getLanguage(SoundfieldGroupInfo info) {
-        String lang = null;
-        for (ImmutablePair<SequenceUUID, Integer> seqInfos : info.getChannelsMap().values()) {
-            SequenceTemplateParameterContext seqContext = contextProvider.getSequenceContext();
-            ContextInfo contextInfo = new ContextInfoBuilder()
-                    .setSequenceType(SequenceType.AUDIO).setSequenceUuid(seqInfos.getLeft()).build();
-            if (!seqContext.hasSequenceParameter(SequenceContextParameters.LANGUAGE, contextInfo)) {
-                return null;
-            }
-            String nextLang = seqContext.getParameterValue(SequenceContextParameters.LANGUAGE, contextInfo);
-            if (nextLang == null) {
-                return null;
-            }
-            // all sequences from a soundfield group must have the same language!
-            if (lang != null && !lang.equals(nextLang)) {
-                return null;
-            }
-            lang = nextLang;
-        }
-        return lang;
     }
 
 }

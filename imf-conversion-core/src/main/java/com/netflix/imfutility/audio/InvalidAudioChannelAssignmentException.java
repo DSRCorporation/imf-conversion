@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -16,10 +16,10 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.dpp.audio;
+package com.netflix.imfutility.audio;
 
 /**
- * An exceptiuon thrown if audio map can not be generated from the essence descriptor.
+ * An exception thrown if audio map can not be generated from the essence descriptor.
  */
 public class InvalidAudioChannelAssignmentException extends Exception {
 

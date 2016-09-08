@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.audiomap;
+package com.netflix.imfutility.itunes.audio;
 
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.ImfUtilityTest;
@@ -29,7 +29,9 @@ import com.netflix.imfutility.generated.itunes.audiomap.AudioMapType;
 import com.netflix.imfutility.generated.itunes.audiomap.ChannelType;
 import com.netflix.imfutility.generated.itunes.audiomap.Option3Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option6Type;
-import com.netflix.imfutility.itunes.audiomap.AudioMapXmlProvider.AudioOption;
+import com.netflix.imfutility.itunes.audio.AudioMapXmlProvider.AudioOption;
+import com.netflix.imfutility.util.AudioUtils;
+import com.netflix.imfutility.util.FFmpegAudioChannels;
 import com.netflix.imfutility.util.TemplateParameterContextCreator;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.junit.Test;
@@ -42,14 +44,13 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.stream.Stream;
 
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.GEN_ADDITIONAL_SEQ_UUID;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.GEN_MAIN_SEQ_UUID;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.FC;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.FL;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.FR;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.LFE;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.SL;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.SR;
+import static com.netflix.imfutility.util.TemplateParameterContextCreator.getSequenceUuid;
 import static junit.framework.TestCase.assertEquals;
 
 /**
@@ -73,7 +74,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         String trackUuid = "urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711";
 
         /* EXECUTION */
-        AudioMapXmlProvider audioMapProvider = new AudioMapXmlProvider(
+        AudioMapXmlProvider audioMapProvider = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/valid-audiomap.xml"),
                 TemplateParameterContextCreator.createDefaultContextProvider());
 
@@ -108,62 +109,13 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
     }
 
     /**
-     * Checks that generated sample XML file is a correct audiomap.xml file.
-     *
-     * @throws Exception unexpected exception
-     */
-    @Test
-    public void sampleAudioMapCanBeGenerated() throws Exception {
-        /* PREPARATION */
-        File sampleFile = File.createTempFile("sample-audiomap", ".xml");
-        sampleFile.deleteOnExit();
-
-        AudioMapXmlProvider.generateSampleXml(sampleFile.getAbsolutePath());
-
-        /* EXECUTION */
-        AudioMapXmlProvider audioMapProvider = new AudioMapXmlProvider(
-                sampleFile,
-                TemplateParameterContextCreator.createDefaultContextProvider());
-
-        /* VALIDATION */
-        AudioMapType audioMap = audioMapProvider.getAudioMap();
-        Option3Type opt3 = audioMap.getMainAudio().getOption3();
-        // o3 t1
-        assertEquals(GEN_MAIN_SEQ_UUID, opt3.getTrack1().getL().getCPLVirtualTrackId());
-        assertEquals(1, opt3.getTrack1().getL().getCPLVirtualTrackChannel());
-        assertEquals(GEN_MAIN_SEQ_UUID, opt3.getTrack1().getR().getCPLVirtualTrackId());
-        assertEquals(2, opt3.getTrack1().getR().getCPLVirtualTrackChannel());
-        assertEquals(GEN_MAIN_SEQ_UUID, opt3.getTrack1().getC().getCPLVirtualTrackId());
-        assertEquals(3, opt3.getTrack1().getC().getCPLVirtualTrackChannel());
-        assertEquals(GEN_MAIN_SEQ_UUID, opt3.getTrack1().getLFE().getCPLVirtualTrackId());
-        assertEquals(4, opt3.getTrack1().getLFE().getCPLVirtualTrackChannel());
-        assertEquals(GEN_MAIN_SEQ_UUID, opt3.getTrack1().getLs().getCPLVirtualTrackId());
-        assertEquals(5, opt3.getTrack1().getLs().getCPLVirtualTrackChannel());
-        assertEquals(GEN_MAIN_SEQ_UUID, opt3.getTrack1().getRs().getCPLVirtualTrackId());
-        assertEquals(6, opt3.getTrack1().getRs().getCPLVirtualTrackChannel());
-        // o3 t2
-        assertEquals(GEN_MAIN_SEQ_UUID, opt3.getTrack2().getLt().getCPLVirtualTrackId());
-        assertEquals(1, opt3.getTrack2().getLt().getCPLVirtualTrackChannel());
-        assertEquals(GEN_MAIN_SEQ_UUID, opt3.getTrack2().getRt().getCPLVirtualTrackId());
-        assertEquals(2, opt3.getTrack2().getRt().getCPLVirtualTrackChannel());
-
-        Option6Type opt6 = audioMap.getAlternativeAudio().get(0).getOption6();
-        // o6 t1
-        assertEquals(GEN_ADDITIONAL_SEQ_UUID, opt6.getTrack1().getL().getCPLVirtualTrackId());
-        assertEquals(1, opt6.getTrack1().getL().getCPLVirtualTrackChannel());
-        assertEquals(GEN_ADDITIONAL_SEQ_UUID, opt6.getTrack1().getR().getCPLVirtualTrackId());
-        assertEquals(2, opt6.getTrack1().getR().getCPLVirtualTrackChannel());
-
-    }
-
-    /**
      * Invalid XML throws schema validation exception.
      *
      * @throws Exception unexpected exception
      */
     @Test(expected = XmlParsingException.class)
     public void invalidXmlAgainstXsdThrowException() throws Exception {
-        new AudioMapXmlProvider(getAudiomapXml("xml/audiomap/invalid-audiomap.xml"),
+        createAndInitProvider(getAudiomapXml("xml/audiomap/invalid-audiomap.xml"),
                 TemplateParameterContextCreator.createDefaultContextProvider());
     }
 
@@ -174,7 +126,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
      */
     @Test(expected = FileNotFoundException.class)
     public void parseInvalidFilePathThrowsException() throws Exception {
-        new AudioMapXmlProvider(new File("invalid-path"),
+        createAndInitProvider(new File("invalid-path"),
                 TemplateParameterContextCreator.createDefaultContextProvider());
     }
 
@@ -188,7 +140,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         /* PREPARATION */
 
         /* EXECUTION */
-        new AudioMapXmlProvider(
+        createAndInitProvider(
                 getAudiomapXml("xml/audiomap/1a-incomplete-audiomap.xml"),
                 TemplateParameterContextCreator.createDefaultContextProvider());
 
@@ -205,7 +157,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         /* PREPARATION */
 
         /* EXECUTION */
-        new AudioMapXmlProvider(
+        createAndInitProvider(
                 getAudiomapXml("xml/audiomap/2-incomplete-audiomap.xml"),
                 TemplateParameterContextCreator.createDefaultContextProvider());
 
@@ -222,7 +174,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         /* PREPARATION */
 
         /* EXECUTION */
-        new AudioMapXmlProvider(
+        createAndInitProvider(
                 getAudiomapXml("xml/audiomap/3-incomplete-audiomap.xml"),
                 TemplateParameterContextCreator.createDefaultContextProvider());
 
@@ -239,7 +191,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         /* PREPARATION */
 
         /* EXECUTION */
-        new AudioMapXmlProvider(
+        createAndInitProvider(
                 getAudiomapXml("xml/audiomap/4-incomplete-audiomap.xml"),
                 TemplateParameterContextCreator.createDefaultContextProvider());
 
@@ -256,7 +208,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         /* PREPARATION */
 
         /* EXECUTION */
-        new AudioMapXmlProvider(
+        createAndInitProvider(
                 getAudiomapXml("xml/audiomap/5-incomplete-audiomap.xml"),
                 TemplateParameterContextCreator.createDefaultContextProvider());
 
@@ -279,7 +231,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq4, 2));
 
         /* EXECUTION */
-        AudioOption mainAudio = new AudioMapXmlProvider(
+        AudioOption mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/1a-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -317,7 +269,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq4, 2));
 
         /* EXECUTION */
-        AudioOption mainAudio = new AudioMapXmlProvider(
+        AudioOption mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/2-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -355,7 +307,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq4, 2));
 
         /* EXECUTION */
-        AudioOption mainAudio = new AudioMapXmlProvider(
+        AudioOption mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/3-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -393,7 +345,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq4, 2));
 
         /* EXECUTION */
-        AudioOption mainAudio = new AudioMapXmlProvider(
+        AudioOption mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/4-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -431,7 +383,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq4, 2));
 
         /* EXECUTION */
-        AudioOption mainAudio = new AudioMapXmlProvider(
+        AudioOption mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/5-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -462,7 +414,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq4, 2));
 
         /* EXECUTION */
-        AudioOption mainAudio = new AudioMapXmlProvider(
+        AudioOption mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/6-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -488,7 +440,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq2, 2));
 
         /* EXECUTION */
-        AudioOption mainAudio = new AudioMapXmlProvider(
+        AudioOption mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/1a-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -522,7 +474,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq2, 2));
 
         /* EXECUTION */
-        AudioOption mainAudio = new AudioMapXmlProvider(
+        AudioOption mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/2-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -556,7 +508,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq2, 2));
 
         /* EXECUTION */
-        AudioOption mainAudio = new AudioMapXmlProvider(
+        AudioOption mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/3-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -590,7 +542,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq2, 2));
 
         /* EXECUTION */
-        AudioOption mainAudio = new AudioMapXmlProvider(
+        AudioOption mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/4-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -622,7 +574,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq1, 1));
 
         /* EXECUTION */
-        new AudioMapXmlProvider(
+        createAndInitProvider(
                 getAudiomapXml("xml/audiomap/1a-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -639,7 +591,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq1, 1));
 
         /* EXECUTION */
-        new AudioMapXmlProvider(
+        createAndInitProvider(
                 getAudiomapXml("xml/audiomap/2-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -656,7 +608,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq1, 4));
 
         /* EXECUTION */
-        new AudioMapXmlProvider(
+        createAndInitProvider(
                 getAudiomapXml("xml/audiomap/3-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -673,7 +625,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq1, 4));
 
         /* EXECUTION */
-        new AudioMapXmlProvider(
+        createAndInitProvider(
                 getAudiomapXml("xml/audiomap/4-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -690,7 +642,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq1, 1));
 
         /* EXECUTION */
-        AudioOption mainAudio = new AudioMapXmlProvider(
+        AudioOption mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/5-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -715,7 +667,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq1, 1));
 
         /* EXECUTION */
-        AudioOption mainAudio = new AudioMapXmlProvider(
+        AudioOption mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/6-empty-audiomap.xml"), contextProvider)
                 .getMainAudio();
 
@@ -747,7 +699,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd714", 2));
 
         /* EXECUTION */
-        String mainAudio = new AudioMapXmlProvider(
+        String mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/4s-4-2-2-2-m2-a6-audiomap.xml"), contextProvider)
                 .getMainAudioFileName();
 
@@ -773,7 +725,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd714", 2));
 
         /* EXECUTION */
-        int mainAudioTracks = new AudioMapXmlProvider(
+        int mainAudioTracks = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/4s-4-2-2-2-m2-a6-audiomap.xml"), contextProvider)
                 .getMainAudioTracks();
 
@@ -799,7 +751,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd714", 2));
 
         /* EXECUTION */
-        int additionalAudioCount = new AudioMapXmlProvider(
+        int additionalAudioCount = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/4s-4-2-2-2-m2-a6-audiomap.xml"), contextProvider)
                 .getAdditionalAudioCount();
 
@@ -825,7 +777,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd714", 2));
 
         /* EXECUTION */
-        ArrayList<Integer> additionalAudioTracks = new AudioMapXmlProvider(
+        ArrayList<Integer> additionalAudioTracks = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/4s-4-2-2-2-m2-a6-audiomap.xml"), contextProvider)
                 .getAdditionalAudioTracks();
 
@@ -852,7 +804,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd714", 2));
 
         /* EXECUTION */
-        ArrayList<String> panParameters = new AudioMapXmlProvider(
+        ArrayList<String> panParameters = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/4s-4-2-2-2-m2-a6-audiomap.xml"), contextProvider)
                 .getPanParameters();
 
@@ -888,7 +840,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd714", 2));
 
         /* EXECUTION */
-        ArrayList<String> additionalAudio = new AudioMapXmlProvider(
+        ArrayList<String> additionalAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/4s-4-2-2-2-m2-a6-audiomap.xml"), contextProvider)
                 .getAdditionalAudioFileNames();
 
@@ -914,7 +866,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd713", 4));
 
         /* EXECUTION */
-        String mainAudio = new AudioMapXmlProvider(
+        String mainAudio = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/3s-4-6-4-m3-a5-a6-a6-audiomap.xml"), contextProvider)
                 .getMainAudioFileName();
 
@@ -939,7 +891,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd713", 4));
 
         /* EXECUTION */
-        int mainAudioTracks = new AudioMapXmlProvider(
+        int mainAudioTracks = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/3s-4-6-4-m3-a5-a6-a6-audiomap.xml"), contextProvider)
                 .getMainAudioTracks();
 
@@ -964,7 +916,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd713", 4));
 
         /* EXECUTION */
-        int additionalAudioCount = new AudioMapXmlProvider(
+        int additionalAudioCount = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/3s-4-6-4-m3-a5-a6-a6-audiomap.xml"), contextProvider)
                 .getAdditionalAudioCount();
 
@@ -989,7 +941,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd713", 4));
 
         /* EXECUTION */
-        ArrayList<Integer> additionalAudioTracks = new AudioMapXmlProvider(
+        ArrayList<Integer> additionalAudioTracks = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/3s-4-6-4-m3-a5-a6-a6-audiomap.xml"), contextProvider)
                 .getAdditionalAudioTracks();
 
@@ -1017,7 +969,7 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels("urn:uuid:63b41d86-c5df-4169-b036-3a25024bd713", 4));
 
         /* EXECUTION */
-        ArrayList<String> panParameters = new AudioMapXmlProvider(
+        ArrayList<String> panParameters = createAndInitProvider(
                 getAudiomapXml("xml/audiomap/3s-4-6-4-m3-a5-a6-a6-audiomap.xml"), contextProvider)
                 .getPanParameters();
 
@@ -1055,17 +1007,17 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq3, 1));
 
         /* EXECUTION */
-        AudioMapType audioMap = new AudioMapXmlProvider(contextProvider).getAudioMap();
+        AudioMapXmlProvider provider = createAndInitProvider(contextProvider);
+        AudioOption mainAudio = provider.getMainAudio();
 
         /* VALIDATION */
-        assertEquals("en-US", audioMap.getMainAudio().getLocale());
-        assertEquals("main-audio.mov", audioMap.getMainAudio().getName());
+        assertEquals("en-US", mainAudio.getLocale());
+        assertEquals("main-audio.mov", mainAudio.getFileName());
 
-        Option6Type opt6 = audioMap.getMainAudio().getOption6();
-        assertChannelEquals(seq1, 1, opt6.getTrack1().getL());
-        assertChannelEquals(seq2, 1, opt6.getTrack1().getR());
+        assertChannelEquals(seq1, 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(seq2, 1, mainAudio.get(0).get(FR.name()));
 
-        assertEquals(0, audioMap.getAlternativeAudio().size());
+        assertEquals(0, provider.getAlternativesAudio().size());
     }
 
     /**
@@ -1082,17 +1034,17 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         prepareCplVirtualTracksWithChannels(contextProvider, trackChannels(seq1, 1));
 
         /* EXECUTION */
-        AudioMapType audioMap = new AudioMapXmlProvider(contextProvider).getAudioMap();
+        AudioMapXmlProvider provider = createAndInitProvider(contextProvider);
+        AudioOption mainAudio = provider.getMainAudio();
 
         /* VALIDATION */
-        assertEquals("en-US", audioMap.getMainAudio().getLocale());
-        assertEquals("main-audio.mov", audioMap.getMainAudio().getName());
+        assertEquals("en-US", mainAudio.getLocale());
+        assertEquals("main-audio.mov", mainAudio.getFileName());
 
-        Option6Type opt6 = audioMap.getMainAudio().getOption6();
-        assertChannelEquals(seq1, 1, opt6.getTrack1().getL());
-        assertChannelEquals(seq1, 1, opt6.getTrack1().getR());
+        assertChannelEquals(seq1, 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(seq1, 1, mainAudio.get(0).get(FR.name()));
 
-        assertEquals(0, audioMap.getAlternativeAudio().size());
+        assertEquals(0, provider.getAlternativesAudio().size());
     }
 
     /**
@@ -1116,23 +1068,23 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq4, 2));
 
         /* EXECUTION */
-        AudioMapType audioMap = new AudioMapXmlProvider(contextProvider).getAudioMap();
+        AudioMapXmlProvider provider = createAndInitProvider(contextProvider);
+        AudioOption mainAudio = provider.getMainAudio();
 
         /* VALIDATION */
-        assertEquals("en-US", audioMap.getMainAudio().getLocale());
-        assertEquals("main-audio.mov", audioMap.getMainAudio().getName());
+        assertEquals("en-US", mainAudio.getLocale());
+        assertEquals("main-audio.mov", mainAudio.getFileName());
 
-        Option3Type opt3 = audioMap.getMainAudio().getOption3();
-        assertChannelEquals(seq1, 1, opt3.getTrack1().getL());
-        assertChannelEquals(seq1, 2, opt3.getTrack1().getR());
-        assertChannelEquals(seq2, 1, opt3.getTrack1().getC());
-        assertChannelEquals(seq2, 2, opt3.getTrack1().getLFE());
-        assertChannelEquals(seq3, 1, opt3.getTrack1().getLs());
-        assertChannelEquals(seq3, 2, opt3.getTrack1().getRs());
-        assertChannelEquals(seq4, 1, opt3.getTrack2().getLt());
-        assertChannelEquals(seq4, 2, opt3.getTrack2().getRt());
+        assertChannelEquals(seq1, 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(seq1, 2, mainAudio.get(0).get(FR.name()));
+        assertChannelEquals(seq2, 1, mainAudio.get(0).get(FC.name()));
+        assertChannelEquals(seq2, 2, mainAudio.get(0).get(LFE.name()));
+        assertChannelEquals(seq3, 1, mainAudio.get(0).get(SL.name()));
+        assertChannelEquals(seq3, 2, mainAudio.get(0).get(SR.name()));
+        assertChannelEquals(seq4, 1, mainAudio.get(1).get(FL.name()));
+        assertChannelEquals(seq4, 2, mainAudio.get(1).get(FR.name()));
 
-        assertEquals(0, audioMap.getAlternativeAudio().size());
+        assertEquals(0, provider.getAlternativesAudio().size());
     }
 
     /**
@@ -1156,23 +1108,181 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
                 trackChannels(seq4, 1));
 
         /* EXECUTION */
-        AudioMapType audioMap = new AudioMapXmlProvider(contextProvider).getAudioMap();
+        AudioMapXmlProvider provider = createAndInitProvider(contextProvider);
+        AudioOption mainAudio = provider.getMainAudio();
 
         /* VALIDATION */
-        assertEquals("en-US", audioMap.getMainAudio().getLocale());
-        assertEquals("main-audio.mov", audioMap.getMainAudio().getName());
+        assertEquals("en-US", mainAudio.getLocale());
+        assertEquals("main-audio.mov", mainAudio.getFileName());
 
-        Option3Type opt3 = audioMap.getMainAudio().getOption3();
-        assertChannelEquals(seq1, 1, opt3.getTrack1().getL());
-        assertChannelEquals(seq1, 2, opt3.getTrack1().getR());
-        assertChannelEquals(seq2, 1, opt3.getTrack1().getC());
-        assertChannelEquals(seq2, 2, opt3.getTrack1().getLFE());
-        assertChannelEquals(seq3, 1, opt3.getTrack1().getLs());
-        assertChannelEquals(seq3, 2, opt3.getTrack1().getRs());
-        assertChannelEquals(seq1, 1, opt3.getTrack2().getLt());
-        assertChannelEquals(seq1, 2, opt3.getTrack2().getRt());
+        assertChannelEquals(seq1, 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(seq1, 2, mainAudio.get(0).get(FR.name()));
+        assertChannelEquals(seq2, 1, mainAudio.get(0).get(FC.name()));
+        assertChannelEquals(seq2, 2, mainAudio.get(0).get(LFE.name()));
+        assertChannelEquals(seq3, 1, mainAudio.get(0).get(SL.name()));
+        assertChannelEquals(seq3, 2, mainAudio.get(0).get(SR.name()));
+        assertChannelEquals(seq1, 1, mainAudio.get(1).get(FL.name()));
+        assertChannelEquals(seq1, 2, mainAudio.get(1).get(FR.name()));
 
-        assertEquals(0, audioMap.getAlternativeAudio().size());
+        assertEquals(0, provider.getAlternativesAudio().size());
+    }
+
+    @Test
+    public void emptySurroundOptionFromDescriptor() throws Exception {
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR},
+                        {FC},
+                        {FC},
+                        {FL, FR},
+                        {FL, FR, FC, LFE, SL, SR}
+                },
+                new String[]{"fr-CA", "en-US", "en-US", "fr-CA", "en-US"});
+
+        /* EXECUTION */
+        AudioOption mainAudio = createAndInitProvider(
+                getAudiomapXml("xml/audiomap/1a-empty-audiomap.xml"), contextProvider)
+                .getMainAudio();
+
+        /* VALIDATION */
+        assertEquals("main-audio.mov", mainAudio.getFileName());
+        assertEquals("en-US", mainAudio.getLocale());
+
+        assertEquals("Track count", 3, mainAudio.size());
+
+        assertChannelEquals(uuid(4), 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(uuid(4), 2, mainAudio.get(0).get(FR.name()));
+        assertChannelEquals(uuid(4), 3, mainAudio.get(0).get(FC.name()));
+        assertChannelEquals(uuid(4), 4, mainAudio.get(0).get(LFE.name()));
+        assertChannelEquals(uuid(4), 5, mainAudio.get(0).get(SL.name()));
+        assertChannelEquals(uuid(4), 6, mainAudio.get(0).get(SR.name()));
+
+        assertChannelEquals(uuid(4), 1, mainAudio.get(1).get(FL.name()));
+        assertChannelEquals(uuid(4), 2, mainAudio.get(2).get(FR.name()));
+    }
+
+    @Test
+    public void emptyStereoOptionGeneratedFromMonoFromDescriptor() throws Exception {
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR},
+                        {FC},
+                        {FC},
+                        {FL, FR},
+                        {FL, FR, FC, LFE, SL, SR}
+                },
+                new String[]{"fr-CA", "en-US", "en-US", "fr-CA", "en-US"});
+
+        /* EXECUTION */
+        AudioOption mainAudio = createAndInitProvider(
+                getAudiomapXml("xml/audiomap/5-empty-audiomap.xml"), contextProvider)
+                .getMainAudio();
+
+        /* VALIDATION */
+        assertEquals("main-audio.mov", mainAudio.getFileName());
+        assertEquals("en-US", mainAudio.getLocale());
+
+        assertEquals("Track count", 2, mainAudio.size());
+
+        // generated from first mono
+        assertChannelEquals(uuid(1), 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(uuid(1), 1, mainAudio.get(1).get(FR.name()));
+    }
+
+    @Test
+    public void emptySurroundOptionWithTwoAlternativesFromDescriptor() throws Exception {
+        /* PREPARATION */
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR},
+                        {FC},
+                        {FC},
+                        {FL, FR},
+                        {FL, FR, FC, LFE, SL, SR}
+                },
+                new String[]{"ja", "en-US", "en-US", "de", "en-GB"});
+
+        /* EXECUTION */
+        AudioMapXmlProvider provider = new AudioMapXmlProvider(
+                getAudiomapXml("xml/audiomap/3-6-5-audiomap.xml"), contextProvider);
+
+        // set for de option custom values to exclude this option from default channel mapping routine
+        Option6Type deOption = provider.getAudioMap().getAlternativeAudio().get(0).getOption6();
+        deOption.setTrack1(new Option6Type.Track1());
+        ChannelType deLeft = new ChannelType();
+        deLeft.setCPLVirtualTrackChannel(1);
+        deLeft.setCPLVirtualTrackId("urn:uuid:seq:audio:4");
+        ChannelType deRight = new ChannelType();
+        deRight.setCPLVirtualTrackChannel(2);
+        deRight.setCPLVirtualTrackId("urn:uuid:seq:audio:4");
+        deOption.getTrack1().setL(deLeft);
+        deOption.getTrack1().setR(deRight);
+
+        provider.initAudio();
+
+        AudioOption mainAudio = provider.getMainAudio();
+        AudioOption deAudio = provider.getAlternativesAudio().get(0);
+        AudioOption jaAudio = provider.getAlternativesAudio().get(1);
+
+        /* VALIDATION */
+
+        // main audio
+        assertEquals("main-audio.mov", mainAudio.getFileName());
+        assertEquals("en-US", mainAudio.getLocale());
+
+        assertEquals("Track count", 2, mainAudio.size());
+
+        // main audio defined by order (started from 2 sequence)
+        assertChannelEquals(uuid(1), 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(uuid(2), 1, mainAudio.get(0).get(FR.name()));
+        assertChannelEquals(uuid(3), 1, mainAudio.get(0).get(FC.name()));
+        assertChannelEquals(uuid(3), 2, mainAudio.get(0).get(LFE.name()));
+        assertChannelEquals(uuid(4), 1, mainAudio.get(0).get(SL.name()));
+        assertChannelEquals(uuid(4), 2, mainAudio.get(0).get(SR.name()));
+
+        assertChannelEquals(uuid(4), 3, mainAudio.get(1).get(FL.name()));
+        assertChannelEquals(uuid(4), 4, mainAudio.get(1).get(FR.name()));
+
+        // de audio
+        assertEquals("audio_DE.mov", deAudio.getFileName());
+        assertEquals("de", deAudio.getLocale());
+
+        assertEquals("Track count", 1, deAudio.size());
+
+        // de audio defined by audiomap
+        assertChannelEquals(uuid(4), 1, deAudio.get(0).get(FL.name()));
+        assertChannelEquals(uuid(4), 2, deAudio.get(0).get(FR.name()));
+
+        // ja audio
+        assertEquals("audio_JA.mov", jaAudio.getFileName());
+        assertEquals("ja", jaAudio.getLocale());
+
+        assertEquals("Track count", 2, jaAudio.size());
+
+        // de audio defined by essence descriptor (1st sequence)
+        assertChannelEquals(uuid(0), 1, jaAudio.get(0).get(FL.name()));
+        assertChannelEquals(uuid(0), 2, jaAudio.get(1).get(FR.name()));
+    }
+
+    @Test(expected = ConversionException.class)
+    public void emptySurroundOptionWithTwoAlternativesFromDescriptorConversionException() throws Exception {
+        /* PREPARATION */
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR},
+                        {FC},
+                        {FC},
+                        {FL, FR},
+                        {FL, FR}
+                },
+                new String[]{"ja", "en-US", "en-US", "de", "en-GB"});
+
+        /* EXECUTION */
+        AudioMapXmlProvider provider = new AudioMapXmlProvider(
+                getAudiomapXml("xml/audiomap/3-6-5-audiomap.xml"), contextProvider);
+
+        // can not pass initialization: main audio can't be defined by natural order of unused tracks (no enough channels)
+        provider.initAudio();
     }
 
     @Test
@@ -1184,11 +1294,11 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         prepareCplVirtualTracksWithChannels(contextProvider, trackChannels(seq1, 1));
 
         /* EXECUTION */
-        AudioMapXmlProvider provider = new AudioMapXmlProvider(contextProvider);
+        AudioMapXmlProvider provider = createAndInitProvider(contextProvider);
         provider.setLocale(Locale.CANADA_FRENCH);
 
         /* VALIDATION */
-        assertEquals("fr-CA", provider.getMainAudio().getLocale());
+        assertEquals("fr-CA", provider.getAudioMap().getMainAudio().getLocale());
     }
 
     private static File getAudiomapXml(String path) throws URISyntaxException {
@@ -1202,6 +1312,22 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
     private static void assertChannelEquals(String uuid, int chNumber, ChannelType actualCh) {
         assertEquals(uuid, actualCh.getCPLVirtualTrackId());
         assertEquals(chNumber, actualCh.getCPLVirtualTrackChannel());
+    }
+
+    private static AudioMapXmlProvider createAndInitProvider(File audiomapFile, TemplateParameterContextProvider contextProvider)
+            throws Exception {
+        AudioMapXmlProvider provider = new AudioMapXmlProvider(audiomapFile, contextProvider);
+        provider.initAudio();
+        return provider;
+    }
+
+    private static AudioMapXmlProvider createAndInitProvider(TemplateParameterContextProvider contextProvider)
+            throws Exception {
+        return createAndInitProvider(null, contextProvider);
+    }
+
+    private static String uuid(int seqNum) {
+        return getSequenceUuid(seqNum, SequenceType.AUDIO).getUuid();
     }
 
     @SafeVarargs

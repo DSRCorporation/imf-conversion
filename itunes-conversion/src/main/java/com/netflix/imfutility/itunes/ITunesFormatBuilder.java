@@ -39,8 +39,8 @@ import com.netflix.imfutility.itunes.asset.PosterAssetProcessor;
 import com.netflix.imfutility.itunes.asset.SourceAssetProcessor;
 import com.netflix.imfutility.itunes.asset.SubtitlesAssetProcessor;
 import com.netflix.imfutility.itunes.asset.TrailerAssetProcessor;
-import com.netflix.imfutility.itunes.audiomap.AudioMapXmlProvider;
-import com.netflix.imfutility.itunes.audiomap.AudioMapXmlProvider.AudioOption;
+import com.netflix.imfutility.itunes.audio.AudioMapXmlProvider;
+import com.netflix.imfutility.itunes.audio.AudioMapXmlProvider.AudioOption;
 import com.netflix.imfutility.itunes.chapters.ChaptersXmlProvider;
 import com.netflix.imfutility.itunes.destcontext.DestContextResolveStrategy;
 import com.netflix.imfutility.itunes.destcontext.InputDestContextResolveStrategy;
@@ -162,12 +162,9 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
     @Override
     protected void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException {
-        // load, parse and validate audiomap.xml (or generate default) and add audio parameters if audio exist
+        // load, parse and validate audiomap.xml (or generate default)  if audio exist
         if (contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO) > 0) {
-            initAudioMap();
-
-            buildAudiomapParameters();
-            buildSilenceExprParameters();
+            createAudioMapProvider();
         }
 
         if (metadataXmlProvider.getDescriptor().getPackageType() == ITunesPackageType.film) {
@@ -179,6 +176,14 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         }
 
         resolveLocales();
+
+        //  init provided or default audio values and add audio parameters to context
+        if (contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO) > 0) {
+            audioMapXmlProvider.initAudio();
+
+            buildAudiomapParameters();
+            buildSilenceExprParameters();
+        }
     }
 
     @Override
@@ -369,7 +374,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         metadataXmlProvider.updateVendorId(vendorId);
     }
 
-    private void initAudioMap() throws IOException, XmlParsingException {
+    private void createAudioMapProvider() throws IOException, XmlParsingException {
         File audiomapFile = iTunesInputParameters.getAudiomapFile();
 
         audioMapXmlProvider = new AudioMapXmlProvider(audiomapFile, contextProvider);

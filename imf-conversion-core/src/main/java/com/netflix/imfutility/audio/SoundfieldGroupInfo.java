@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.dpp.audio;
+package com.netflix.imfutility.audio;
 
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.util.FFmpegAudioChannels;
@@ -29,7 +29,7 @@ import java.util.Map;
  * A soundfield group as defined by an Essence Descriptor.
  * Maps each channel in a group to an appropriate channel in an audio sequence.
  */
-final class SoundfieldGroupInfo {
+public final class SoundfieldGroupInfo {
 
     private final Map<FFmpegAudioChannels, ImmutablePair<SequenceUUID, Integer>> channelsMap = new HashMap<>();
 
