@@ -95,7 +95,9 @@ Note 1:
 
 2. Get x264 Encoder [x264](http://www.videolan.org/developers/x264.html). 10-bit version must be used!
 
-3. Get BMX: raw2bmx application [BMX](https://sourceforge.net/projects/bmxlib/).
+3. Get BMX: bmx2raw and raw2bmx applications from tools directory. tools/bmx directory  contains proper [BMX tools](https://sourceforge.net/projects/bmxlib/)
+snapshots because latest BMX tools include MCA implementation and if we have incorect MXF audio file (without MCA
+label id property) mxf2raw exits with exception and does not extract audio data.
 
 4. Get ASDCP tool. Please build it from https://github.com/DSRCorporation/asdcplib-as02 repository.
 This is a fork from from http://www.cinecert.com/asdcplib/ which is enhanced to work properly with TTML wrapped in MXF.
@@ -113,6 +115,7 @@ There is a Windows distribution there which can be used out of the box on Window
             <tool id="ffmpeg">ffmpeg</tool>
             <tool id="ffprobe">ffprobe</tool>
             <tool id="bmx">raw2bmx</tool>
+            <tool id="mxf2raw">mxf2raw</tool>
             <tool id="x264">x264-10bit</tool>
             <tool id="asdcp-unwrap">as-02-unwrap</tool>
     </externalTools>
@@ -363,4 +366,3 @@ imf-conversion-utility dpp -c path-to/config.xml -m convert --imp path-to/imp --
         * The project fat jar (imf-validation.jar) is copied into the 'tools' folder within delivery.
 
   
-            
