@@ -19,7 +19,7 @@
 package com.netflix.imfutility.itunes;
 
 import com.netflix.imfutility.ConversionException;
-import com.netflix.imfutility.itunes.audiomap.AudioMapXmlProvider;
+import com.netflix.imfutility.itunes.audio.AudioMapXmlCreator;
 import com.netflix.imfutility.itunes.chapters.ChaptersXmlProvider;
 import com.netflix.imfutility.itunes.inputparameters.ITunesCmdLineArgs;
 import com.netflix.imfutility.itunes.inputparameters.ITunesDefaultTools;
@@ -82,7 +82,7 @@ public class ITunesFormatProcessor {
     private int processAudiomapMode(ITunesInputParameters inputParameters) {
         logger.info("Audiomap mode\n");
         logger.info("Generating a sample Audiomap.xml file {}", inputParameters.getCmdLineArgs().getOutput());
-        AudioMapXmlProvider.generateSampleXml(inputParameters.getCmdLineArgs().getOutput());
+        AudioMapXmlCreator.generateSampleXml(inputParameters.getCmdLineArgs().getOutput());
         logger.info("Generated a sample Audiomap.xml file: OK");
         return 0;
     }

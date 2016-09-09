@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -18,6 +18,7 @@
  */
 package com.netflix.imfutility.dpp.audio;
 
+import com.netflix.imfutility.audio.SoundfieldGroupInfo;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.dpp.audiomap.AudioMapType;
 import com.netflix.imfutility.generated.dpp.audiomap.EBUTrackType;
@@ -31,12 +32,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.File;
 
-import static com.netflix.imfutility.util.FFmpegAudioChannels.FC;
-import static com.netflix.imfutility.util.FFmpegAudioChannels.FL;
-import static com.netflix.imfutility.util.FFmpegAudioChannels.FR;
-import static com.netflix.imfutility.util.FFmpegAudioChannels.LFE;
-import static com.netflix.imfutility.util.FFmpegAudioChannels.SL;
-import static com.netflix.imfutility.util.FFmpegAudioChannels.SR;
+import static com.netflix.imfutility.audio.AudioConstants.STEREO_LAYOUT;
+import static com.netflix.imfutility.audio.AudioConstants.SURROUND_5_1_LAYOUT;
 
 /**
  * Helper methods related to creation of an Audio Map.
@@ -56,17 +53,8 @@ public final class AudioMapHelper {
         }
     }
 
-    public static FFmpegAudioChannels[] getStereoLayout() {
-        return new FFmpegAudioChannels[]{FL, FR};
-    }
-
-    public static FFmpegAudioChannels[] get51Layout() {
-        return new FFmpegAudioChannels[]{FL, FR, FC, LFE, SL, SR};
-    }
-
-
     public static void addStereo(AudioMapType audioMapType, int num, SoundfieldGroupInfo stereo) {
-        for (FFmpegAudioChannels channel : getStereoLayout()) {
+        for (FFmpegAudioChannels channel : STEREO_LAYOUT) {
             audioMapType.getEBUTrack().add(
                     createEbuTrack(num, stereo.getChannelsMap().get(channel)));
             num++;
@@ -74,14 +62,14 @@ public final class AudioMapHelper {
     }
 
     public static void addStereoSilence(AudioMapType audioMapType, int num) {
-        for (FFmpegAudioChannels channel : getStereoLayout()) {
+        for (FFmpegAudioChannels channel : STEREO_LAYOUT) {
             audioMapType.getEBUTrack().add(createSilenceEbuTrack(num));
             num++;
         }
     }
 
     public static void add51(AudioMapType audioMapType, int num, SoundfieldGroupInfo fiveOne) {
-        for (FFmpegAudioChannels channel : get51Layout()) {
+        for (FFmpegAudioChannels channel : SURROUND_5_1_LAYOUT) {
             audioMapType.getEBUTrack().add(
                     createEbuTrack(num, fiveOne.getChannelsMap().get(channel)));
             num++;
@@ -89,7 +77,7 @@ public final class AudioMapHelper {
     }
 
     public static void add51Silence(AudioMapType audioMapType, int num) {
-        for (FFmpegAudioChannels channel : get51Layout()) {
+        for (FFmpegAudioChannels channel : SURROUND_5_1_LAYOUT) {
             audioMapType.getEBUTrack().add(createSilenceEbuTrack(num));
             num++;
         }

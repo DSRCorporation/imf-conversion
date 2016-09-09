@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -16,15 +16,25 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.dpp.audio;
+package com.netflix.imfutility.audio;
+
+import com.netflix.imfutility.util.FFmpegAudioChannels;
+
+import static com.netflix.imfutility.util.FFmpegAudioChannels.FC;
+import static com.netflix.imfutility.util.FFmpegAudioChannels.FL;
+import static com.netflix.imfutility.util.FFmpegAudioChannels.FR;
+import static com.netflix.imfutility.util.FFmpegAudioChannels.LFE;
+import static com.netflix.imfutility.util.FFmpegAudioChannels.SL;
+import static com.netflix.imfutility.util.FFmpegAudioChannels.SR;
 
 /**
- * An exceptiuon thrown if audio map can not be generated from the essence descriptor.
+ * Common constants for audio managing.
  */
-public class InvalidAudioChannelAssignmentException extends Exception {
-
-    public InvalidAudioChannelAssignmentException(String message) {
-        super(message);
+public final class AudioConstants {
+    private AudioConstants() {
     }
 
+    public static final FFmpegAudioChannels[] STEREO_LAYOUT = new FFmpegAudioChannels[]{FL, FR};
+
+    public static final FFmpegAudioChannels[] SURROUND_5_1_LAYOUT = new FFmpegAudioChannels[]{FL, FR, FC, LFE, SL, SR};
 }

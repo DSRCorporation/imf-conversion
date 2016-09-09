@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.netflix.imfutility.itunes.audiomap;
+package com.netflix.imfutility.itunes.audio;
 
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
@@ -29,42 +29,34 @@ import com.netflix.imfutility.generated.itunes.audiomap.AlternativeAudioType;
 import com.netflix.imfutility.generated.itunes.audiomap.AudioMapType;
 import com.netflix.imfutility.generated.itunes.audiomap.ChannelType;
 import com.netflix.imfutility.generated.itunes.audiomap.MainAudioType;
-import com.netflix.imfutility.generated.itunes.audiomap.ObjectFactory;
 import com.netflix.imfutility.generated.itunes.audiomap.Option1AType;
 import com.netflix.imfutility.generated.itunes.audiomap.Option2Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option3Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option4Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option5Type;
 import com.netflix.imfutility.generated.itunes.audiomap.Option6Type;
+import com.netflix.imfutility.itunes.audio.ChannelsMapper.LayoutType;
 import com.netflix.imfutility.itunes.locale.LocaleHelper;
 import com.netflix.imfutility.itunes.xmlprovider.LocalizedXmlProvider;
 import com.netflix.imfutility.util.StreamUtil;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEFAULT_LOCALE;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.GEN_ADDITIONAL_SEQ_UUID;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.GEN_MAIN_SEQ_UUID;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.MONO_CHANNELS;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.STEREO_CHANNELS;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.SURROUND51_CHANNELS;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.SURROUND51_DOWNMIX_CHANNELS;
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.AUDIOMAP_PACKAGE;
 import static com.netflix.imfutility.itunes.ITunesConversionXsdConstants.AUDIOMAP_XML_SCHEME;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.FC;
@@ -113,29 +105,23 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
     }
 
     private static final String INTERMEDIATE_KEY_SEPARATOR = ":";
-
     /**
      * Logger.
      */
     private final Logger logger = LoggerFactory.getLogger(AudioMapXmlProvider.class);
-
     private final boolean customized;
     /**
      * Context provider.
      */
     private final TemplateParameterContextProvider contextProvider;
     /**
+     * Channel mapper used for default channel mapping (by order) or guessing channels layout by EssenceDescriptor.
+     */
+    private final ChannelsMapper channelMapper;
+    /**
      * Parsed AudioMapType from XML.
      */
     private final AudioMapType audioMap;
-    /**
-     * Main audio configuration.
-     */
-    private final AudioOption mainAudio;
-    /**
-     * Additional audio configurations if exist.
-     */
-    private final ArrayList<AudioOption> alternativesAudio;
     /**
      * CPL virtual tracks to channels number map.
      */
@@ -148,101 +134,17 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
      * channel number of "amerge" channel order.
      */
     private final ArrayList<String> sequencedTrackChannelNumbers;
-
-
     /**
-     * Generates a sample audiomap.xml file. Main audio Option3 and one additional track Option6.
-     *
-     * @param path a path to the output audiomap.xml file
+     * Main audio configuration.
      */
-    public static void generateSampleXml(String path) {
-        File file = new File(path);
-        JAXBContext jaxbContext;
-        try {
-            jaxbContext = JAXBContext.newInstance(AudioMapType.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            // Audiomap XML structure
-            AudioMapType audioMap = new AudioMapType();
-            audioMap.setMainAudio(new MainAudioType());
-            audioMap.getAlternativeAudio().add(new AlternativeAudioType());
-
-            MainAudioType mainAudio = audioMap.getMainAudio();
-            mainAudio.setLocale("en-US");
-            mainAudio.setName("main-audio.mov");
-            mainAudio.setOption3(new Option3Type());
-
-            Option3Type opt3 = mainAudio.getOption3();
-            opt3.setTrack1(new Option3Type.Track1());
-            opt3.setTrack2(new Option3Type.Track2());
-
-            Option3Type.Track1 t1 = opt3.getTrack1();
-            t1.setL(new ChannelType());
-            t1.setR(new ChannelType());
-            t1.setC(new ChannelType());
-            t1.setLFE(new ChannelType());
-            t1.setLs(new ChannelType());
-            t1.setRs(new ChannelType());
-
-            ChannelType l = t1.getL();
-            l.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            l.setCPLVirtualTrackChannel(1);
-            ChannelType r = t1.getR();
-            r.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            r.setCPLVirtualTrackChannel(2);
-            ChannelType c = t1.getC();
-            c.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            c.setCPLVirtualTrackChannel(3);
-            ChannelType lfe = t1.getLFE();
-            lfe.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            lfe.setCPLVirtualTrackChannel(4);
-            ChannelType ls = t1.getLs();
-            ls.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            ls.setCPLVirtualTrackChannel(5);
-            ChannelType rs = t1.getRs();
-            rs.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            rs.setCPLVirtualTrackChannel(6);
-
-            Option3Type.Track2 t2 = opt3.getTrack2();
-            t2.setLt(new ChannelType());
-            t2.setRt(new ChannelType());
-
-            ChannelType lt = t2.getLt();
-            lt.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            lt.setCPLVirtualTrackChannel(1);
-            ChannelType rt = t2.getRt();
-            rt.setCPLVirtualTrackId(GEN_MAIN_SEQ_UUID);
-            rt.setCPLVirtualTrackChannel(2);
-
-            AlternativeAudioType alt = audioMap.getAlternativeAudio().get(0);
-            alt.setLocale("de");
-            alt.setName("audio_DE.mov");
-            alt.setOption6(new Option6Type());
-
-            Option6Type opt6 = alt.getOption6();
-            opt6.setTrack1(new Option6Type.Track1());
-
-            Option6Type.Track1 t61 = opt6.getTrack1();
-            t61.setL(new ChannelType());
-            t61.setR(new ChannelType());
-
-            ChannelType l61 = t61.getL();
-            l61.setCPLVirtualTrackId(GEN_ADDITIONAL_SEQ_UUID);
-            l61.setCPLVirtualTrackChannel(1);
-            ChannelType r61 = t61.getR();
-            r61.setCPLVirtualTrackId(GEN_ADDITIONAL_SEQ_UUID);
-            r61.setCPLVirtualTrackChannel(2);
-
-            JAXBElement<AudioMapType> audioMapJaxb = new ObjectFactory().createAudiomap(audioMap);
-            jaxbMarshaller.marshal(audioMapJaxb, file);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private AudioOption mainAudio;
+    /**
+     * Additional audio configurations if exist.
+     */
+    private ArrayList<AudioOption> alternativesAudio;
 
     /**
-     * Constructor with default generated AudioMap.
+     * Constructor with default generated AudioMap on default language.
      *
      * @param contextProvider context provider
      * @throws FileNotFoundException if audioMapFile not found
@@ -250,18 +152,45 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
      */
     public AudioMapXmlProvider(TemplateParameterContextProvider contextProvider)
             throws FileNotFoundException, XmlParsingException {
-        this(null, contextProvider);
+        this(contextProvider, DEFAULT_LOCALE);
+    }
+
+    /**
+     * Constructor with default generated AudioMap.
+     *
+     * @param contextProvider context provider
+     * @param locale          locale of generated main audio
+     * @throws FileNotFoundException if audioMapFile not found
+     * @throws XmlParsingException   if audiomap.xml is not validated by schema
+     */
+    public AudioMapXmlProvider(TemplateParameterContextProvider contextProvider, String locale)
+            throws FileNotFoundException, XmlParsingException {
+        this(null, contextProvider, locale);
+    }
+
+    /**
+     * Constructor with default generated AudioMap.
+     *
+     * @param audiomapFile    audio map file
+     * @param contextProvider context provider
+     * @throws FileNotFoundException if audioMapFile not found
+     * @throws XmlParsingException   if audiomap.xml is not validated by schema
+     */
+    public AudioMapXmlProvider(File audiomapFile, TemplateParameterContextProvider contextProvider)
+            throws FileNotFoundException, XmlParsingException {
+        this(audiomapFile, contextProvider, DEFAULT_LOCALE);
     }
 
     /**
      * Constructor.
      *
-     * @param contextProvider context provider
      * @param audiomapFile    audio map file
+     * @param contextProvider context provider
+     * @param locale          locale of generated main audio
      * @throws FileNotFoundException if audioMapFile not found
      * @throws XmlParsingException   if audiomap.xml is not validated by schema
      */
-    public AudioMapXmlProvider(File audiomapFile, TemplateParameterContextProvider contextProvider)
+    public AudioMapXmlProvider(File audiomapFile, TemplateParameterContextProvider contextProvider, String locale)
             throws FileNotFoundException, XmlParsingException {
 
         this.customized = audiomapFile != null;
@@ -270,26 +199,45 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
         this.virtualTracksChannels = getVirtualTrackChannels();
         this.sequencedTrackChannelNumbers = getSequencedTrackChannelNumbers(this.virtualTracksChannels);
 
-        this.audioMap = customized ? loadAudioMapXml(audiomapFile) : generateDerfaultAudioMapXml();
+        this.channelMapper = new ChannelsMapper(contextProvider);
+
+        this.audioMap = customized ? loadAudioMapXml(audiomapFile) : generateDefaultAudioMap(locale);
 
         if (customized) {
             logger.info("AudioMap XML has been parsed successfully.");
         } else {
             logger.warn("No audiomap.xml specified as a command line argument. A default AudioMap was generated.");
         }
+    }
+
+    /**
+     * Creates audio track.
+     *
+     * @param channels track channels
+     * @return audio track
+     */
+    private static LinkedHashMap<String, ChannelType> createTrack(Channel... channels) {
+        return StreamUtil.createLinkedMap(channels);
+    }
+
+    /**
+     * Initialize main and alternative audios.
+     */
+    public void initAudio() {
+        channelMapper.mapChannels(getMapperLayoutOptions());
 
         this.mainAudio = getMainAudio(this.audioMap);
         this.alternativesAudio = getAlternativeAudios(this.audioMap);
     }
 
     @Override
-    public void setLocale(Locale locale) {
-        mainAudio.setLocale(LocaleHelper.toITunesLocale(locale));
+    public Locale getLocale() {
+        return LocaleHelper.fromITunesLocale(audioMap.getMainAudio().getLocale());
     }
 
     @Override
-    public Locale getLocale() {
-        return LocaleHelper.fromITunesLocale(mainAudio.getLocale());
+    public void setLocale(Locale locale) {
+        audioMap.getMainAudio().setLocale(LocaleHelper.toITunesLocale(locale));
     }
 
     public boolean isCustomized() {
@@ -505,41 +453,52 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
      *
      * @return audiomap.
      */
-    private AudioMapType generateDerfaultAudioMapXml() {
+    private AudioMapType generateDefaultAudioMap(String locale) {
         AudioMapType audioMap = new AudioMapType();
-        Object generatedOption = (sequencedTrackChannelNumbers.size() < 6) ? new Option6Type() : new Option3Type();
-        ArrayList<ChannelType> channels = createGeneratedChannels(generatedOption);
-
         audioMap.setMainAudio(new MainAudioType());
-        audioMap.getMainAudio().setLocale(DEFAULT_LOCALE);
+        audioMap.getMainAudio().setLocale(locale);
         audioMap.getMainAudio().setName("main-audio.mov");
-        if (generatedOption instanceof Option6Type) {
-            Option6Type opt6 = (Option6Type) generatedOption;
-            opt6.setTrack1(new Option6Type.Track1());
+        if (!fillDefaultAudioMapFromDescriptor(audioMap)) {
+            setAudioMapDefaultOptions(audioMap);
+        }
+        return audioMap;
+    }
 
-            opt6.getTrack1().setL(channels.get(0));
-            opt6.getTrack1().setR(channels.get(1));
+    private boolean fillDefaultAudioMapFromDescriptor(AudioMapType audioMap) {
+        String mainLang = audioMap.getMainAudio().getLocale();
+        List<Pair<SequenceUUID, Integer>> mainChannels = channelMapper.guessMainAudio(mainLang);
 
-            audioMap.getMainAudio().setOption6(opt6);
-        } else { // size is 8
-            Option3Type opt3 = (Option3Type) generatedOption;
-            opt3.setTrack1(new Option3Type.Track1());
-            opt3.setTrack2(new Option3Type.Track2());
-
-            opt3.getTrack1().setL(channels.get(0));
-            opt3.getTrack1().setR(channels.get(1));
-            opt3.getTrack1().setC(channels.get(2));
-            opt3.getTrack1().setLFE(channels.get(3));
-            opt3.getTrack1().setLs(channels.get(4));
-            opt3.getTrack1().setRs(channels.get(5));
-
-            opt3.getTrack2().setLt(channels.get(6));
-            opt3.getTrack2().setRt(channels.get(7));
-
-            audioMap.getMainAudio().setOption3(opt3);
+        if (mainChannels.isEmpty()) {
+            return false;
         }
 
-        return audioMap;
+        if (mainChannels.size() == 8) {
+            audioMap.getMainAudio().setOption3(createXmlOption3(mainChannels));
+        } else if (mainChannels.size() == 2) {
+            audioMap.getMainAudio().setOption6(createXmlOption6(mainChannels));
+        } else {
+            return false;
+        }
+
+        channelMapper.guessAlternatives(mainLang).entrySet().forEach(entry -> {
+            AlternativeAudioType audio = new AlternativeAudioType();
+            audio.setLocale(entry.getKey());
+            audio.setName(String.format("audio_%s.mov", entry.getKey().replace("-", "_").toUpperCase()));
+
+            audio.setOption6(createXmlOption6(entry.getValue()));
+
+            audioMap.getAlternativeAudio().add(audio);
+        });
+
+        return true;
+    }
+
+    private void setAudioMapDefaultOptions(AudioMapType audioMap) {
+        if (sequencedTrackChannelNumbers.size() < 6) {
+            audioMap.getMainAudio().setOption6(new Option6Type());
+        } else {
+            audioMap.getMainAudio().setOption3(new Option3Type());
+        }
     }
 
     /**
@@ -554,7 +513,7 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
 
         verifyOption(xmlOpt);
 
-        option = audioOptionfromXmlOption(xmlOpt);
+        option = audioOptionFromXmlOption(xmlOpt, audioMap.getMainAudio().getLocale(), true);
         option.setFileName(audioMap.getMainAudio().getName());
         option.setLocale(audioMap.getMainAudio().getLocale());
 
@@ -580,7 +539,7 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
 
             verifyOption(xmlOpt);
 
-            option = audioOptionfromXmlOption(xmlOpt);
+            option = audioOptionFromXmlOption(xmlOpt, altAudio.getLocale(), false);
             option.setFileName(altAudio.getName());
             option.setLocale(altAudio.getLocale());
 
@@ -588,6 +547,57 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
         });
 
         return options;
+    }
+
+    /**
+     * Gets mapper options that contains expected layout for all audiomap opts, which aren't linked to related track explicitly.
+     *
+     * @return list of all options that aren't linked to related tracks
+     */
+    private List<Pair<LayoutType, String>> getMapperLayoutOptions() {
+        List<Pair<LayoutType, String>> options = new ArrayList<>();
+
+        MainAudioType mainAudio = audioMap.getMainAudio();
+        Object mainOption = getXmlMainAudioOption(mainAudio);
+
+        verifyOption(mainOption);
+
+        if (isOptionEmpty(mainOption)) {
+            options.add(getMapperLayoutOption(mainOption, mainAudio.getLocale()));
+        }
+
+        audioMap.getAlternativeAudio().forEach(altAudio -> {
+            Object altOption = getXmlAlternativeAudioOption(altAudio);
+
+            verifyOption(altOption);
+
+            if (isOptionEmpty(altOption)) {
+                options.add(getMapperLayoutOption(altOption, altAudio.getLocale()));
+            }
+        });
+        return options;
+    }
+
+    /**
+     * Gets option that defines expected audio layout and language.
+     *
+     * @param xmlOpt xml option type
+     * @param lang   expected language of audio
+     * @return {@link Pair} of layout type and language
+     */
+    private Pair<LayoutType, String> getMapperLayoutOption(Object xmlOpt, String lang) {
+        LayoutType layout = null;
+        if (xmlOpt instanceof Option1AType
+                || xmlOpt instanceof Option2Type
+                || xmlOpt instanceof Option3Type
+                || xmlOpt instanceof Option4Type) {
+            layout = LayoutType.SURROUND;
+        } else if (xmlOpt instanceof Option5Type
+                || xmlOpt instanceof Option6Type) {
+            layout = LayoutType.STEREO;
+        }
+
+        return Pair.of(layout, lang);
     }
 
     /**
@@ -644,8 +654,8 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
      * @param xmlOpt xml option type
      * @return AudioOption
      */
-    private AudioOption audioOptionfromXmlOption(Object xmlOpt) {
-        return (isOptionEmpty(xmlOpt)) ? generateAudioOption(xmlOpt) : createAudioOption(xmlOpt);
+    private AudioOption audioOptionFromXmlOption(Object xmlOpt, String lang, boolean isMainAudio) {
+        return (isOptionEmpty(xmlOpt)) ? generateAudioOption(xmlOpt, lang, isMainAudio) : createAudioOption(xmlOpt);
     }
 
     /**
@@ -662,12 +672,31 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
     /**
      * Generates AudioOption when XML option type is empty.
      *
-     * @param xmlOpt xml option
+     * @param xmlOpt      xml option
+     * @param lang        expected language of audio
+     * @param isMainAudio defines whether option relates to main audio or alternative
      * @return AudioOption
      */
-    private AudioOption generateAudioOption(Object xmlOpt) {
+    private AudioOption generateAudioOption(Object xmlOpt, String lang, boolean isMainAudio) {
         AudioOption option = null;
-        ArrayList<ChannelType> channels = createGeneratedChannels(xmlOpt);
+
+        ArrayList<ChannelType> channels = channelMapper.getChannels(getMapperLayoutOption(xmlOpt, lang)).stream()
+                .map(pair -> {
+                    ChannelType channel = new ChannelType();
+                    channel.setCPLVirtualTrackId(pair.getLeft().getUuid());
+                    channel.setCPLVirtualTrackChannel(pair.getRight());
+                    return channel;
+                })
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        if (channels.isEmpty()) {
+            if (isMainAudio) {
+                throw new ConversionException("Main audio can't be processed. "
+                        + "Please check CPL or audiomap.xml, it may contain inappropriate layout or essence descriptors.");
+            } else {
+                logger.warn("Alternative audio for {} locale can't be processed.", lang);
+            }
+        }
 
         if (xmlOpt instanceof Option1AType) {
             option = createOption1A(channels.toArray(new ChannelType[0]));
@@ -686,6 +715,48 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
         }
 
         return option;
+    }
+
+
+    private Option3Type createXmlOption3(List<Pair<SequenceUUID, Integer>> channels) {
+        Option3Type option3 = new Option3Type();
+        option3.setTrack1(new Option3Type.Track1());
+        option3.setTrack2(new Option3Type.Track2());
+
+        option3.getTrack1().setL(createXmlChannel(channels.get(0)));
+        option3.getTrack1().setR(createXmlChannel(channels.get(1)));
+        option3.getTrack1().setC(createXmlChannel(channels.get(2)));
+        option3.getTrack1().setLFE(createXmlChannel(channels.get(3)));
+        option3.getTrack1().setLs(createXmlChannel(channels.get(4)));
+        option3.getTrack1().setRs(createXmlChannel(channels.get(5)));
+
+        option3.getTrack2().setLt(createXmlChannel(channels.get(6)));
+        option3.getTrack2().setRt(createXmlChannel(channels.get(7)));
+
+        return option3;
+    }
+
+    private Option6Type createXmlOption6(List<Pair<SequenceUUID, Integer>> channels) {
+        Option6Type option6 = new Option6Type();
+        option6.setTrack1(new Option6Type.Track1());
+
+        option6.getTrack1().setL(createXmlChannel(channels.get(0)));
+        option6.getTrack1().setR(createXmlChannel(channels.get(1)));
+
+        return option6;
+    }
+
+    /**
+     * Create xml channel info form input pair.
+     *
+     * @param pair
+     * @return xml ChannelType object
+     */
+    private ChannelType createXmlChannel(Pair<SequenceUUID, Integer> pair) {
+        ChannelType channel = new ChannelType();
+        channel.setCPLVirtualTrackId(pair.getLeft().getUuid());
+        channel.setCPLVirtualTrackChannel(pair.getRight());
+        return channel;
     }
 
     /**
@@ -902,69 +973,6 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
     }
 
     /**
-     * Creates channels array for given option and according to sequence channels.
-     *
-     * @param xmlOpt audio option
-     * @return channels array for given option and according to sequence channels
-     */
-    private ArrayList<ChannelType> createGeneratedChannels(Object xmlOpt) {
-        int activeChannels = getOptionActiveChannels(xmlOpt);
-        int totalChannels = sequencedTrackChannelNumbers.size();
-        int optionChannels = (totalChannels >= activeChannels) ? activeChannels
-                : (totalChannels >= 6) ? 6 : 1;
-
-        if (totalChannels < activeChannels
-                && !(totalChannels == MONO_CHANNELS && activeChannels == STEREO_CHANNELS)
-                && !(totalChannels >= SURROUND51_CHANNELS && activeChannels == SURROUND51_DOWNMIX_CHANNELS)) {
-            throw new ConversionException(
-                    "Default Option layout can not be generated: not enough channels in sequences.");
-        }
-
-        ArrayList<ChannelType> channels = sequencedTrackChannelNumbers.stream().limit(optionChannels)
-                .map((key) -> {
-                    SimpleEntry<String, Integer> splittedKey = splitIntermediateKey(key);
-
-                    ChannelType ch = new ChannelType();
-                    ch.setCPLVirtualTrackId(splittedKey.getKey());
-                    ch.setCPLVirtualTrackChannel(splittedKey.getValue() + 1);
-
-                    return ch;
-                }).collect(Collectors.toCollection(ArrayList::new));
-
-        // add the same channel again if channels layout is only mono
-        if (optionChannels == MONO_CHANNELS) {
-            channels.add(channels.get(0));
-        } else if (optionChannels == SURROUND51_CHANNELS) { // add Lt and Rt channels as L and R
-            channels.add(channels.get(0));
-            channels.add(channels.get(1));
-        }
-
-        return channels;
-    }
-
-    private int getOptionActiveChannels(Object xmlOpt) {
-        int activeChannels = 0;
-
-        if (xmlOpt instanceof Option1AType) {
-            activeChannels = SURROUND51_DOWNMIX_CHANNELS;
-        } else if (xmlOpt instanceof Option2Type) {
-            activeChannels = SURROUND51_DOWNMIX_CHANNELS;
-        } else if (xmlOpt instanceof Option3Type) {
-            activeChannels = SURROUND51_DOWNMIX_CHANNELS;
-        } else if (xmlOpt instanceof Option4Type) {
-            activeChannels = SURROUND51_DOWNMIX_CHANNELS;
-        } else if (xmlOpt instanceof Option5Type) {
-            activeChannels = STEREO_CHANNELS;
-        } else if (xmlOpt instanceof Option6Type) {
-            activeChannels = STEREO_CHANNELS;
-        } else {
-            // nothing
-        }
-
-        return activeChannels;
-    }
-
-    /**
      * Checks that Option does not contain any tracks.
      *
      * @param opt option
@@ -1064,15 +1072,5 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
         }
 
         return allTracks;
-    }
-
-    /**
-     * Creates audio track.
-     *
-     * @param channels track channels
-     * @return audio track
-     */
-    private static LinkedHashMap<String, ChannelType> createTrack(Channel... channels) {
-        return StreamUtil.createLinkedMap(channels);
     }
 }
