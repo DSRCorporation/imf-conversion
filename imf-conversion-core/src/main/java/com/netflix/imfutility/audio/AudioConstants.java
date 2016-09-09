@@ -34,8 +34,6 @@ public final class AudioConstants {
     private AudioConstants() {
     }
 
-    public static final FFmpegAudioChannels[] MONO_LAYOUT = new FFmpegAudioChannels[]{FC};
-
     public static final FFmpegAudioChannels[] STEREO_LAYOUT = new FFmpegAudioChannels[]{FL, FR};
 
     public static final FFmpegAudioChannels[] SURROUND_5_1_LAYOUT = new FFmpegAudioChannels[]{FL, FR, FC, LFE, SL, SR};

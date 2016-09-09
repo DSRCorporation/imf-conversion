@@ -28,6 +28,7 @@ import com.netflix.imfutility.conversion.templateParameter.context.TemplateParam
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
+import com.netflix.imfutility.itunes.locale.LocaleHelper;
 import com.netflix.imfutility.util.FFmpegAudioChannels;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -36,14 +37,14 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.netflix.imfutility.audio.AudioConstants.MONO_LAYOUT;
 import static com.netflix.imfutility.audio.AudioConstants.STEREO_LAYOUT;
 import static com.netflix.imfutility.audio.AudioConstants.SURROUND_5_1_LAYOUT;
+import static com.netflix.imfutility.itunes.audio.ChannelsMapper.LayoutType.STEREO;
+import static com.netflix.imfutility.itunes.audio.ChannelsMapper.LayoutType.SURROUND;
 
 /**
  * Maps channels in accordance with EssenceDescriptor or by order (if there are no descriptors associated with essence).
@@ -52,18 +53,31 @@ public final class ChannelsMapper extends SoundfieldGroupHelper {
 
     private final List<Pair<SequenceUUID, Integer>> channelsByOrder;
     Map<Pair<LayoutType, String>, List<Pair<SequenceUUID, Integer>>> resultChannels = new LinkedHashMap<>();
+    private boolean essenceLayoutValid;
 
     public ChannelsMapper(TemplateParameterContextProvider contextProvider) {
         super(contextProvider);
         this.channelsByOrder = new ArrayList<>();
+
+        prepareContext();
     }
 
     @Override
-    public void prepareContext() throws InvalidAudioChannelAssignmentException {
+    public void prepareContext() {
         prepareChannelsByOrder();
-        super.prepareContext();
+
+        try {
+            super.prepareContext();
+            essenceLayoutValid = true;
+        } catch (InvalidAudioChannelAssignmentException e) {
+            essenceLayoutValid = false;
+        }
+
     }
 
+    /**
+     * Prepare channels layout by order.
+     */
     private void prepareChannelsByOrder() {
         SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
 
@@ -82,14 +96,19 @@ public final class ChannelsMapper extends SoundfieldGroupHelper {
         }
     }
 
+    /**
+     * Map passed options in accordance with EssenceDescriptor or by order.
+     * If descriptor doesn't exist for definite option - it will be mapped by order.
+     *
+     * @param options options that contain definition of provided layout and language
+     */
     public void mapChannels(List<Pair<LayoutType, String>> options) {
-        List<Pair<LayoutType, String>> optionsByDescriptor = new ArrayList<>(options);
+        List<Pair<LayoutType, String>> optionsByDescriptor = new ArrayList<>();
         List<Pair<LayoutType, String>> optionsByOrder = new ArrayList<>();
 
-        try {
-            prepareContext();
-        } catch (InvalidAudioChannelAssignmentException e) {
-            optionsByDescriptor.clear();
+        if (essenceLayoutValid) {
+            optionsByDescriptor.addAll(options);
+        } else {
             optionsByOrder.addAll(options);
         }
 
@@ -117,8 +136,47 @@ public final class ChannelsMapper extends SoundfieldGroupHelper {
         });
     }
 
+    /**
+     * Gets channels associated with definite layout and language.
+     *
+     * @param option option
+     * @return list of channels
+     */
     public List<Pair<SequenceUUID, Integer>> getChannels(Pair<LayoutType, String> option) {
         return resultChannels.containsKey(option) ? resultChannels.get(option) : new ArrayList<>();
+    }
+
+    /**
+     * Gets channels from descriptor which can be associated for main audio with passed language.
+     * At first scan descriptors to find out surround layout, if there are no channels - scan for stereo layout.
+     * If channels can't be defined by descriptor return empty list.
+     *
+     * @param lang language
+     * @return list of channels
+     */
+    public List<Pair<SequenceUUID, Integer>> guessMainAudio(String lang) {
+        List<Pair<SequenceUUID, Integer>> surround = guessChannelsByEssenceDescriptor(SURROUND, lang);
+
+        if (surround.isEmpty()) {
+            return guessChannelsByEssenceDescriptor(STEREO, lang);
+        }
+
+        return surround;
+    }
+
+    /**
+     * Gets map of languages and its channels from descriptor which can be associated with alternative audios.
+     *
+     * @param mainLang language of main audio (excluded from scan)
+     * @return list of channels
+     */
+    public Map<String, List<Pair<SequenceUUID, Integer>>> guessAlternatives(String mainLang) {
+        List<SoundfieldGroupInfo> stereo = findInputForChannelGroup(STEREO_LAYOUT);
+
+        return stereo.stream()
+                .filter(g -> getLanguage(g) != null)
+                .filter(g -> !LocaleHelper.equalsByDefaultRegion(mainLang, getLanguage(g)))
+                .collect(Collectors.toMap(this::getLanguage, g -> getChannelsByLayout(STEREO_LAYOUT, g)));
     }
 
     private List<Pair<SequenceUUID, Integer>> guessChannelsByEssenceDescriptor(LayoutType layoutType, String lang) {
@@ -158,13 +216,6 @@ public final class ChannelsMapper extends SoundfieldGroupHelper {
         List<Pair<SequenceUUID, Integer>> stereo = guessChannelsByChannelsGroup(STEREO_LAYOUT, lang);
         if (!stereo.isEmpty()) {
             channels.addAll(stereo);
-        } else {
-            List<Pair<SequenceUUID, Integer>> mono = guessChannelsByChannelsGroup(MONO_LAYOUT, lang);
-            if (!mono.isEmpty()) {
-                // create Stereo use Mono as L and R
-                channels.addAll(mono);
-                channels.addAll(mono);
-            }
         }
 
         return channels;
@@ -173,7 +224,7 @@ public final class ChannelsMapper extends SoundfieldGroupHelper {
     private List<Pair<SequenceUUID, Integer>> guessChannelsByChannelsGroup(FFmpegAudioChannels[] channelsGroup, String lang) {
         return findInputForChannelGroup(channelsGroup).stream()
                 .filter(g -> !isGroupUsed(g))
-                .filter(g -> Objects.equals(lang, getLanguage(g)))
+                .filter(g -> LocaleHelper.equalsByDefaultRegion(lang, getLanguage(g)))
                 .findFirst()
                 .map(g -> getChannelsByLayout(channelsGroup, g))
                 .orElseGet(ArrayList::new);

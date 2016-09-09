@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.netflix.imfutility.itunes.audio.ChannelsMapper.LayoutType.STEREO;
 import static com.netflix.imfutility.itunes.audio.ChannelsMapper.LayoutType.SURROUND;
@@ -404,27 +405,6 @@ public class ChannelsMapperTest {
     }
 
     @Test
-    public void testStereoMono() throws Exception {
-        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
-                new FFmpegAudioChannels[][]{
-                        {FC},
-                        {FL, FR}
-                },
-                new String[]{"en", "fr"});
-
-        ChannelsMapper mapper = new ChannelsMapper(contextProvider);
-        mapper.mapChannels(createLayoutOptions(new LayoutType[]{STEREO}, new String[]{"en"}));
-
-        // defined by double mono channel with same language
-        List<Pair<SequenceUUID, Integer>> channels = mapper.getChannels(Pair.of(STEREO, "en"));
-
-        assertChannelEquals(channels.get(0), 0, 1);
-        assertChannelEquals(channels.get(1), 0, 1);
-
-        assertEquals(2, channels.size());
-    }
-
-    @Test
     public void testStereoDiffLang() throws Exception {
         TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
@@ -778,6 +758,150 @@ public class ChannelsMapperTest {
         assertEquals(8, channels.size());
 
         assertTrue(mapper.getChannels(Pair.of(STEREO, "en")).isEmpty());
+    }
+
+    @Test
+    public void testGuessSurroundMainAudio() throws Exception {
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR, FC, LFE, SL, SR},
+                        {FC},
+                        {FC},
+                        {FL, FR, FC, LFE, SL, SR}
+                },
+                new String[]{"fr", "en", "en", "en"});
+
+        ChannelsMapper mapper = new ChannelsMapper(contextProvider);
+
+        List<Pair<SequenceUUID, Integer>> channels = mapper.guessMainAudio("en");
+
+        assertChannelEquals(channels.get(0), 3, 1);
+        assertChannelEquals(channels.get(1), 3, 2);
+        assertChannelEquals(channels.get(2), 3, 3);
+        assertChannelEquals(channels.get(3), 3, 4);
+        assertChannelEquals(channels.get(4), 3, 5);
+        assertChannelEquals(channels.get(5), 3, 6);
+
+        assertChannelEquals(channels.get(6), 3, 1);
+        assertChannelEquals(channels.get(7), 3, 2);
+
+        assertEquals(8, channels.size());
+    }
+
+    @Test
+    public void testGuessStereoMainAudio() throws Exception {
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR},
+                        {FC},
+                        {FC},
+                        {FL, FR}
+                },
+                new String[]{"fr", "en", "en", "en"});
+
+        ChannelsMapper mapper = new ChannelsMapper(contextProvider);
+
+        List<Pair<SequenceUUID, Integer>> channels = mapper.guessMainAudio("fr");
+
+        assertChannelEquals(channels.get(0), 0, 1);
+        assertChannelEquals(channels.get(1), 0, 2);
+
+        assertEquals(2, channels.size());
+    }
+
+    @Test
+    public void testGuessNoMainAudio() throws Exception {
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR},
+                        {FC},
+                        {FL, FR, FC, LFE, SL, SR},
+                        {FC}
+                },
+                new String[]{"fr", "en", "en", "en"});
+
+        ChannelsMapper mapper = new ChannelsMapper(contextProvider);
+
+        assertTrue(mapper.guessMainAudio("es").isEmpty());
+    }
+
+    @Test
+    public void testGuessAlternativeAudios() throws Exception {
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR},
+                        {FL, FR},
+                        {FC},
+                        {FL, FR}
+                },
+                new String[]{"fr", "en", "en", "de"});
+
+        ChannelsMapper mapper = new ChannelsMapper(contextProvider);
+
+        Map<String, List<Pair<SequenceUUID, Integer>>> channelsMap = mapper.guessAlternatives("fr");
+
+
+        assertChannelEquals(channelsMap.get("en").get(0), 1, 1);
+        assertChannelEquals(channelsMap.get("en").get(1), 1, 2);
+
+        assertChannelEquals(channelsMap.get("de").get(0), 3, 1);
+        assertChannelEquals(channelsMap.get("de").get(1), 3, 2);
+
+        assertEquals(2, channelsMap.keySet().size());
+    }
+
+    @Test
+    public void testGuessNoAlternativeAudios() throws Exception {
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FC},
+                        {FL, FR},
+                        {FC},
+                        {FL, FR, FC, LFE, SL, SR}
+                },
+                new String[]{"fr", "en", "en", "de"});
+
+        ChannelsMapper mapper = new ChannelsMapper(contextProvider);
+
+        assertTrue(mapper.guessAlternatives("en").isEmpty());
+    }
+
+    @Test
+    public void testLanguageFoundByDefaultRegion() throws Exception {
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR, FC, LFE, SL, SR},
+                        {FL, FR},
+                        {FC},
+                        {FL, FR},
+                        {FL, FR, FC, LFE, SL, SR}
+                },
+                new String[]{"", "fr-CA", "en", "fr", "en-US"});
+
+        ChannelsMapper mapper = new ChannelsMapper(contextProvider);
+        mapper.mapChannels(createLayoutOptions(new LayoutType[]{SURROUND, STEREO}, new String[]{"en", "fr-FR"}));
+
+        List<Pair<SequenceUUID, Integer>> channels;
+        channels = mapper.getChannels(Pair.of(SURROUND, "en"));
+
+        assertChannelEquals(channels.get(0), 4, 1);
+        assertChannelEquals(channels.get(1), 4, 2);
+        assertChannelEquals(channels.get(2), 4, 3);
+        assertChannelEquals(channels.get(3), 4, 4);
+        assertChannelEquals(channels.get(4), 4, 5);
+        assertChannelEquals(channels.get(5), 4, 6);
+
+        assertChannelEquals(channels.get(6), 4, 1);
+        assertChannelEquals(channels.get(7), 4, 2);
+
+        assertEquals(8, channels.size());
+
+        channels = mapper.getChannels(Pair.of(STEREO, "fr-FR"));
+
+        assertChannelEquals(channels.get(0), 3, 1);
+        assertChannelEquals(channels.get(1), 3, 2);
+
+        assertEquals(2, channels.size());
     }
 
     private static void assertChannelEquals(Pair<SequenceUUID, Integer> channel, Integer audioSeqNum, Integer channelsNum) {

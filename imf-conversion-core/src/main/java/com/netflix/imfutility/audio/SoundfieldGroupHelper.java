@@ -63,6 +63,7 @@ public class SoundfieldGroupHelper {
     }
 
     private void prepareSoundfieldGroups() throws InvalidAudioChannelAssignmentException {
+        inputSoundfieldGroups.clear();
         for (SequenceUUID seqUuid : contextProvider.getSequenceContext().getUuids(SequenceType.AUDIO)) {
             // several sequences may belong to the same soundfield group
             StringBuilder soundfieldGroupIdKey = new StringBuilder();

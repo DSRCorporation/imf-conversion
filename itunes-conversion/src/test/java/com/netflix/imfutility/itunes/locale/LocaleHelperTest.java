@@ -23,6 +23,8 @@ import org.junit.Test;
 import java.util.Locale;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 
 /**
  * Tests that locale helper works correct.
@@ -56,4 +58,31 @@ public class LocaleHelperTest {
         assertEquals("en-GB", locale);
     }
 
+    @Test
+    public void testEnsureDefaultRegion() throws Exception {
+        Locale locale;
+
+        locale = LocaleHelper.ensureDefaultRegion("en");
+        assertEquals(Locale.US, locale);
+
+        // region already set - nothing to change
+        locale = LocaleHelper.ensureDefaultRegion("en-GB");
+        assertEquals(Locale.UK, locale);
+
+        // no default region has been defined - return locale as is
+        locale = LocaleHelper.ensureDefaultRegion("ru");
+        assertEquals(new Locale("ru"), locale);
+    }
+
+    @Test
+    public void testEqualsByDefaultRegion() throws Exception {
+        assertTrue(LocaleHelper.equalsByDefaultRegion("en", "en-US"));
+        assertTrue(LocaleHelper.equalsByDefaultRegion("fr-FR", "fr"));
+        assertTrue(LocaleHelper.equalsByDefaultRegion("en", "en"));
+        assertTrue(LocaleHelper.equalsByDefaultRegion("ru", "ru"));
+        assertTrue(LocaleHelper.equalsByDefaultRegion("en_US", "en-US"));
+
+        assertFalse(LocaleHelper.equalsByDefaultRegion("en-GB", "en"));
+        assertFalse(LocaleHelper.equalsByDefaultRegion("fr", "fr-CA"));
+    }
 }

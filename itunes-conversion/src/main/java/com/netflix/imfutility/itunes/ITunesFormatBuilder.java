@@ -162,9 +162,16 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
     @Override
     protected void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException {
+        resolveLocaleAfterMetadataInit();
+
         // load, parse and validate audiomap.xml (or generate default)  if audio exist
         if (contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO) > 0) {
-            createAudioMapProvider();
+            initAudioMap();
+
+            buildAudiomapParameters();
+            buildSilenceExprParameters();
+
+            resolveLocaleAfterAudiomapInit();
         }
 
         if (metadataXmlProvider.getDescriptor().getPackageType() == ITunesPackageType.film) {
@@ -173,16 +180,6 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
             if (iTunesInputParameters.getSubFiles() != null && !iTunesInputParameters.getSubFiles().isEmpty()) {
                 logger.info("Subtitles will not be processed for TV package type.");
             }
-        }
-
-        resolveLocales();
-
-        //  init provided or default audio values and add audio parameters to context
-        if (contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO) > 0) {
-            audioMapXmlProvider.initAudio();
-
-            buildAudiomapParameters();
-            buildSilenceExprParameters();
         }
     }
 
@@ -300,32 +297,8 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
     // Locales resolving
 
-    private void resolveLocales() {
-        boolean hasAudio = contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO) > 0;
-
-        //  get locale from audiomap or metadata
-        //  print warning (if both exist and differ)
-        if (hasAudio) {
-
-            if (metadataXmlProvider.isCustomized() && audioMapXmlProvider.isCustomized()) {
-                if (!Objects.equals(metadataXmlProvider.getLocale(), audioMapXmlProvider.getLocale())) {
-                    logger.warn("Locale set in metadata.xml doesn't match locale in audiomap.xml.");
-                }
-                return;
-            }
-
-            if (metadataXmlProvider.isCustomized()) {
-                audioMapXmlProvider.setLocale(metadataXmlProvider.getLocale());
-                return;
-            }
-
-            if (audioMapXmlProvider.isCustomized()) {
-                metadataXmlProvider.setLocale(audioMapXmlProvider.getLocale());
-                return;
-            }
-        }
-
-        if (!hasAudio && metadataXmlProvider.isCustomized()) {
+    private void resolveLocaleAfterMetadataInit() {
+        if (metadataXmlProvider.isCustomized()) {
             return;
         }
 
@@ -338,9 +311,22 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         LocaleValidator.validateLocale(locale);
 
         metadataXmlProvider.setLocale(LocaleHelper.fromITunesLocale(locale));
-        if (hasAudio) {
-            audioMapXmlProvider.setLocale(LocaleHelper.fromITunesLocale(locale));
+    }
+
+    private void resolveLocaleAfterAudiomapInit() {
+        if (!audioMapXmlProvider.isCustomized()) {
+            return;
         }
+
+        if (!metadataXmlProvider.isCustomized()) {
+            metadataXmlProvider.setLocale(audioMapXmlProvider.getLocale());
+            return;
+        }
+
+        if (!Objects.equals(metadataXmlProvider.getLocale(), audioMapXmlProvider.getLocale())) {
+            logger.warn("Locale set in metadata.xml doesn't match locale in audiomap.xml.");
+        }
+
     }
 
     private String resolveContextLocale() {
@@ -374,10 +360,12 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         metadataXmlProvider.updateVendorId(vendorId);
     }
 
-    private void createAudioMapProvider() throws IOException, XmlParsingException {
+    private void initAudioMap() throws IOException, XmlParsingException {
         File audiomapFile = iTunesInputParameters.getAudiomapFile();
 
-        audioMapXmlProvider = new AudioMapXmlProvider(audiomapFile, contextProvider);
+        audioMapXmlProvider = new AudioMapXmlProvider(audiomapFile, contextProvider,
+                LocaleHelper.toITunesLocale(metadataXmlProvider.getLocale()));
+        audioMapXmlProvider.initAudio();
     }
 
     //  Audio processing
