@@ -32,6 +32,11 @@ call .\chimera25-audiomap-metadata  "%~1\%Chimera25Dir%" %2 %3
 call .\chimera25-add-assets         "%~1\%Chimera25Dir%" %2 %3
 call .\chimera25-locale             "%~1\%Chimera25Dir%" %2 %3
 
+:: essence desc on audio
+call .\chimera25-essence-desc                    "%~1\%Chimera25Dir%" %2 %3
+call .\chimera25-essence-desc-audiomap-by-order  "%~1\%Chimera25Dir%" %2 %3
+call .\chimera25-essence-desc-audiomap-guess     "%~1\%Chimera25Dir%" %2 %3
+
 :: no audio/video/CC
 call .\chimera50-no-audio   "%~1\%Chimera50Dir%" %2 %3
 :: use only with switched off imf validation

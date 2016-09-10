@@ -540,10 +540,12 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
             verifyOption(xmlOpt);
 
             option = audioOptionFromXmlOption(xmlOpt, altAudio.getLocale(), false);
-            option.setFileName(altAudio.getName());
-            option.setLocale(altAudio.getLocale());
+            if (option != null) {
+                option.setFileName(altAudio.getName());
+                option.setLocale(altAudio.getLocale());
 
-            options.add(option);
+                options.add(option);
+            }
         });
 
         return options;
@@ -696,6 +698,7 @@ public class AudioMapXmlProvider implements LocalizedXmlProvider {
             } else {
                 logger.warn("Alternative audio for {} locale can't be processed.", lang);
             }
+            return null;
         }
 
         if (xmlOpt instanceof Option1AType) {

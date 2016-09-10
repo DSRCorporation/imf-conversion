@@ -31,6 +31,8 @@ import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.itunes.locale.LocaleHelper;
 import com.netflix.imfutility.util.FFmpegAudioChannels;
 import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,6 +53,8 @@ import static com.netflix.imfutility.itunes.audio.ChannelsMapper.LayoutType.SURR
  */
 public final class ChannelsMapper extends SoundfieldGroupHelper {
 
+    private final Logger logger = LoggerFactory.getLogger(ChannelsMapper.class);
+
     private final List<Pair<SequenceUUID, Integer>> channelsByOrder;
     Map<Pair<LayoutType, String>, List<Pair<SequenceUUID, Integer>>> resultChannels = new LinkedHashMap<>();
     private boolean essenceLayoutValid;
@@ -70,6 +74,7 @@ public final class ChannelsMapper extends SoundfieldGroupHelper {
             super.prepareContext();
             essenceLayoutValid = true;
         } catch (InvalidAudioChannelAssignmentException e) {
+            logger.warn("Layout form Essence descriptors set in CPL cannot properly defined. {}", e.getLocalizedMessage());
             essenceLayoutValid = false;
         }
 

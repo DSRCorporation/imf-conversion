@@ -59,7 +59,6 @@ import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
-import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -568,7 +567,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         File audio = new File(inputParameters.getWorkingDirFile(), audioOption.getFileName());
 
         new AudioAssetProcessor(metadataXmlProvider, itmspDir)
-                .setLocale(LocaleUtils.toLocale(audioOption.getLocale()))
+                .setLocale(LocaleHelper.fromITunesLocale(audioOption.getLocale()))
                 .process(audio);
     }
 
