@@ -74,6 +74,8 @@ The distribution includes
     * The current conversion job log file: _/logs/imf-utility.log_.
     * Previous conversion jobs log files: _/logs/archive_.
     * External tools log files: _{output-dir}/logs_.
+10. Validation
+    * To validate DPP metadata the official [Metadata Application](https://www.digitalproductionpartnership.co.uk/download/metadataappdownload/) tool can be used.
  
 Note 1:
 
@@ -349,6 +351,8 @@ imf-conversion-utility dpp -c path-to/config.xml -m convert --imp path-to/imp --
         * Calls IMF validation.
         * Contains the logic of parsing conversion.xml and executing external tools.
         * A base project for all plugins.
+    * __imf-essence-descriptors__
+        * An independent project that contains JAXB classes of IMF Essence schemas.
     * __dpp-conversion__
         * A plugin to perform conversion to BBC DPP format.
         * Depends on imf-conversion-core and dpp-conversion-input-xsd
