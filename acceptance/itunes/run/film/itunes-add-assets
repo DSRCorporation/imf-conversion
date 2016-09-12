@@ -61,4 +61,4 @@ if [ -z "$8" ]; then
     PROG="../../../../install/imf-conversion-utility/bin/imf-conversion-utility"
 fi
 
-"$PROG" itunes -c "../../../config.xml" -m convert --imp "$1" --cpl "$2" -w "$3" --vendor-id "$4" --poster "$5" --trailer "$6" --chapters "$7" -p film
+"$PROG" itunes -c "../../../config.xml" -m convert --imp "$1" --cpl "$2" -w "$3" --vendor-id "$4" --poster "$5" --trailer "$6" --chapters "$7" -l debug -p film

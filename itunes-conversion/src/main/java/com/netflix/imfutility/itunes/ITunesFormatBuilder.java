@@ -59,7 +59,7 @@ import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import com.netflix.imfutility.xsd.conversion.DestContextTypeMap;
 import com.netflix.imfutility.xsd.conversion.DestContextsTypeMap;
-import org.apache.commons.lang3.LocaleUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -70,6 +70,7 @@ import org.w3.ns.ttml.TtEltype;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.IntStream;
@@ -274,7 +275,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         destContext.addParameter(DEST_PARAM_AUDIO_SAMPLES_PER_FRAME, String.valueOf(samplesPerFrame));
     }
 
-    private void createItmspDir() {
+    private void createItmspDir() throws IOException {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         String itmspName = dynamicContext.getParameterValueAsString(DYNAMIC_PARAM_OUTPUT_ITMSP);
 
@@ -282,9 +283,13 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
         itmspDir = new File(contextProvider.getWorkingDir(), itmspName);
         logger.info("Itmsp output directory: {}", itmspDir);
-        if (!itmspDir.mkdir()) {
-            throw new ConversionException(String.format(
-                    "Couldn't create %s output directory!", itmspName));
+        if (Files.exists(itmspDir.toPath())) {
+            FileUtils.cleanDirectory(itmspDir);
+        } else {
+            if (!itmspDir.mkdir()) {
+                throw new ConversionException(String.format(
+                        "Couldn't create %s output directory!", itmspName));
+            }
         }
 
         logger.info("Created {} output directory: OK\n", itmspName);
@@ -568,7 +573,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         File audio = new File(inputParameters.getWorkingDirFile(), audioOption.getFileName());
 
         new AudioAssetProcessor(metadataXmlProvider, itmspDir)
-                .setLocale(LocaleUtils.toLocale(audioOption.getLocale()))
+                .setLocale(LocaleHelper.fromITunesLocale(audioOption.getLocale()))
                 .process(audio);
     }
 
