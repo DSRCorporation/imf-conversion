@@ -7,8 +7,9 @@ if [%2]==[] goto second-missing
 @echo on
 
 :: short versions
-.\film\chimera-all %1 "%~2\film" %3
-.\tv\chimera-all   %1 "%~2\tv" %3
+call .\film\chimera-all %1 "%~2\film" %3
+pushd %~dp0
+call .\tv\chimera-all   %1 "%~2\tv" %3
 
 
 @echo off
