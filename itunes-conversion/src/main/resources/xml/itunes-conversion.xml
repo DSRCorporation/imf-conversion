@@ -334,18 +334,18 @@
             </destContexts>
 
             <mediaInfoCommandVideo>%{tool.ffprobe} -select_streams v:0 -show_streams -noprivate -print_format xml=x=1
-                %{dynamic.mediaInfoInput}
+                "%{dynamic.mediaInfoInput}"
             </mediaInfoCommandVideo>
             <mediaInfoCommandAudio>%{tool.ffprobe} -select_streams a:0 -show_streams -noprivate -print_format xml=x=1
-                %{dynamic.mediaInfoInput}
+                "%{dynamic.mediaInfoInput}"
             </mediaInfoCommandAudio>
             <mediaInfoCommandSubtitle>%{tool.ffprobe} -select_streams d:0 -show_streams -noprivate -print_format xml=x=1
-                %{dynamic.mediaInfoInput}
+                "%{dynamic.mediaInfoInput}"
             </mediaInfoCommandSubtitle>
 
             <mediaInfoCommandOthers>
                 <mediaInfoCommand name="trailer">
-                    %{tool.ffprobe} -show_format -noprivate -print_format xml=x=1 %{dynamic.trailerMediaInfoInput}
+                    %{tool.ffprobe} -show_format -noprivate -print_format xml=x=1 "%{dynamic.trailerMediaInfoInput}"
                 </mediaInfoCommand>
             </mediaInfoCommandOthers>
 
@@ -389,7 +389,7 @@
                                         <execOnce name="decode_video">
                                             %{tool.ffmpeg} -y
                                             -ss %{resource.startTimeTC} -t %{resource.durationTC}
-                                            -i %{resource.essence}
+                                            -i "%{resource.essence}"
                                             -map 0:0 -an
                                             -vf scale=%{dest.width}:%{dest.height},fps=%{dest.frameRate}
                                             -pix_fmt yuv422p16le
@@ -423,10 +423,10 @@
                                     -vf %{dynamic.proresParams}
                                     -pix_fmt yuv422p10le
                                     -f mov
-                                    %{tmp.videoEncoded}
+                                    "%{tmp.videoEncoded}"
                                 </execOnce>
                                 <execOnce name="encode_video" if="%{dynamic.isOSX}">
-                                    %{tool.prenc} -f %{dynamic.proresParams} -o %{tmp.videoEncoded}
+                                    %{tool.prenc} -f %{dynamic.proresParams} -o "%{tmp.videoEncoded}"
                                 </execOnce>
                             </pipe>
                         </execEachSequence>
@@ -469,7 +469,7 @@
                                     </execOnce>
                                     <execEachSegment name="decode_audio">
                                         <execOnce name="decode_audio">
-                                            %{tool.ffmpeg} -f s%{resource.bits_per_sample}le -ar %{resource.sample_rate} -ac
+                                            %{tool.ffmpeg} -y -f s%{resource.bits_per_sample}le -ar %{resource.sample_rate} -ac
                                             %{seq.channels_num}
                                             -i %{seq.num}-%{segm.num}_a0.raw -vn -af aresample=%{dest.sampleRate}
                                             -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
@@ -477,7 +477,7 @@
                                     </execEachSegment>
                                 </cycle>
                                 <execOnce name="encode_audio">
-                                    %{tool.ffmpeg} -f s%{dest.bitsSample}le -ar %{dest.sampleRate} -ac %{seq.channels_num} -i - -vn -c:a
+                                    %{tool.ffmpeg} -y -f s%{dest.bitsSample}le -ar %{dest.sampleRate} -ac %{seq.channels_num} -i - -vn -c:a
                                     copy -f wav %{seq.num}-audio-encoded.wav
                                 </execOnce>
                             </pipe>
@@ -535,7 +535,7 @@
                         </for>
 
                         <execOnce name="audioMaping">
-                            %{tool.ffmpeg} %{dynamic.concatAudioInput} -filter_complex
+                            %{tool.ffmpeg} -y %{dynamic.concatAudioInput} -filter_complex
                             "%{dynamic.concatAudioMap}amerge,asplit=%{dynamic.audioSplitCount}%{dynamic.audioInLabels}%{dynamic.audioOutPanConfigurations}"
                             %{dynamic.mainAudioOutputMap} -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f mov
                             %{dynamic.mainAudio}
@@ -545,21 +545,38 @@
                     </if>
 
                     <!--
+                        compute [-map] parameters for proper audio muxing
+                    -->
+                    <if test="%{dynamic.hasAudio}">
+                        <dynamicParameter name="muxingAudioIndex" if="%{dynamic.hasAudioOnly}">
+                            0
+                        </dynamicParameter>
+                        <dynamicParameter name="muxingAudioIndex" if="%{dynamic.hasAudioAndVideo}">
+                            1
+                        </dynamicParameter>
+                        <for iterator="i" count="%{dynamic.mainAudioTracks}">
+                            <dynamicParameter name="muxingAudioMap" concat="true" concatWhitespace="true">
+                                -map %{dynamic.muxingAudioIndex}:a:%{i}
+                            </dynamicParameter>
+                        </for>
+                    </if>
+
+                    <!--
                         create output.mov from flatten encoded video and audio
                     -->
                     <execOnce name="muxing_mov" if="%{dynamic.hasAudioAndVideo}">
-                        %{tool.ffmpeg} -i %{tmp.videoEncoded} -i %{dynamic.mainAudio}
-                        -c:v copy -c:a copy
+                        %{tool.ffmpeg} -y -i %{tmp.videoEncoded} -i %{dynamic.mainAudio}
+                        -c:v copy -c:a copy -map 0:v:0 %{dynamic.muxingAudioMap}
                         %{dynamic.destSource}
                     </execOnce>
                     <execOnce name="muxing_mov_audio_only" if="%{dynamic.hasAudioOnly}">
-                        %{tool.ffmpeg} -i %{dynamic.mainAudio}
-                        -c:a copy
+                        %{tool.ffmpeg} -y -i %{dynamic.mainAudio}
+                        -c:a copy -map 0:v:0 %{dynamic.muxingAudioMap}
                         %{dynamic.destSource}
                     </execOnce>
                     <execOnce name="muxing_mov_video_only" if="%{dynamic.hasVideoOnly}">
-                        %{tool.ffmpeg} -i %{tmp.videoEncoded}
-                        -c:v copy
+                        %{tool.ffmpeg} -y -i %{tmp.videoEncoded}
+                        -c:v copy -map 0:v:0
                         %{dynamic.destSource}
                     </execOnce>
 
