@@ -2,7 +2,16 @@
 
 * IMF media conversion utility allows to handle flat file creation from a specified CPL within the IMF package.
 * Currently conversion to BBC DPP format only is supported ([DPP](https://www.digitalproductionpartnership.co.uk/), [BBC](http://dpp-assets.s3.amazonaws.com/wp-content/uploads/specs/bbc/TechnicalDeliveryStandardsBBC.pdf)).
- 
+
+## Contents
+* [Build](#build)
+* [JDK requirements](#jdk-requirements)
+* [Distribution](#distribution)
+* [Usage](#usage)
+    * [Conversion to DPP format](#conversion-to-dpp-format)
+    * [Conversion to iTunes format](#conversion-to-itunes-format)
+* [Project Structure](#project-structure)
+
 ## Build
 
 The project can be built very easily by using the included Gradle wrapper. Having downloaded the sources, simply invoke the following commands inside the folder containing the sources:
@@ -74,7 +83,9 @@ The distribution includes
     * The current conversion job log file: _/logs/imf-utility.log_.
     * Previous conversion jobs log files: _/logs/archive_.
     * External tools log files: _{output-dir}/logs_.
- 
+10. Validation
+    * To validate DPP metadata the official [Metadata Application](https://www.digitalproductionpartnership.co.uk/download/metadataappdownload/) tool can be used.
+
 Note 1:
 
  * DPP format requires special Program Layout as defined in Section 4.5 of [BBC](http://dpp-assets.s3.amazonaws.com/wp-content/uploads/specs/bbc/TechnicalDeliveryStandardsBBC.pdf).
@@ -95,7 +106,9 @@ Note 1:
 
 2. Get x264 Encoder [x264](http://www.videolan.org/developers/x264.html). 10-bit version must be used!
 
-3. Get BMX: bmx2raw and raw2bmx applications [BMX](https://sourceforge.net/projects/bmxlib/).
+3. Get BMX: bmx2raw and raw2bmx applications [BMX](https://sourceforge.net/projects/bmxlib/). But latest version include
+   MCA labeling property checks and do not unwrap some media files we ssuggest to use bmx-snapshot-20150603 snapshot
+   from official site or from tools/bmx.
 
 4. Get ASDCP tool. Please build it from https://github.com/DSRCorporation/asdcplib-as02 repository.
 This is a fork from from http://www.cinecert.com/asdcplib/ which is enhanced to work properly with TTML wrapped in MXF.
@@ -324,6 +337,136 @@ imf-conversion-utility dpp -c path-to/config.xml -m convert --imp path-to/imp --
        {output-directory}/logs
        ```
        
+### Conversion to iTunes format
+
+1. [Done Once] Prepare external tools used for conversion.
+2. [Done Once; edit when needed] Prepare config.xml.
+3. [Optional] Run Utility with appropriate command line arguments to generate metadata.xml to enter iTunes metadata values.
+    * itunes
+    * --mode [-m] metadata
+    * --output [-o] metadata.xml
+4. Enter required  metadata values manually ([Tunes Film Package](http://help.apple.com/itc/filmspec/) or [Tunes TV Package](https://help.apple.com/itc/tvspec/)) or specify custom 
+metadata.xml file. After conversion done metadata.xml of resulting iTunes package can be invalid (missing some required data) and will require manually changes.
+5. [Optional] Run Utility with appropriate command line arguments to generate audiomap.xml to map input audio tracks and channels to the output ones.
+    * itunes
+    * --mode [-m] audiomap
+    * --output [-o] audiomap.xml
+6. [Optional] Edit audiomap.xml to map input audio streams and channels. If audiomap will not be set then default
+   audiomap will be used basis on essence descriptions if exist or by natural order.
+7. Run conversion job:
+    * itunes
+    * --mode [-m] convert (may be omitted as it's a default mode)
+    * --config [-c] config.xml
+    * --metadata metadata.xml
+    * --audiomap audiomap.xml (optional)
+    * --imp path-to-imp-folder (optional: can be set in config.xml)
+    * --cpl CPL.xml (optional: can be set in config.xml)
+    * --working-dir [-w] path-to-output-folder (optional: can be set in config.xml)
+    * --vendor-id vendor identifier
+    * --package-type [-p] iTunes package type film (default) or tv (optional)
+    * --format [-f] video format (optional)
+    * --trailer trailer asset location (optional, processed only for "film" package type)
+    * --poster poster asset location (optional)
+    * --chapters chapters.xml location (optional, processed only for "film" package type)
+    * --cc a path to external closed captions (optional)
+    * –-sub a paths to external subtitles (optional, processed only for "film" package type) 
+    * --fallback-locale main locale for iTunes package (optional, will be used if CPL or metadata locale is not set)    
+8. An output iTines package is created under the specified output directory (-w) and is called _vindor-id.itmsp_.
+9. Logs:
+    * The current conversion job log file: _/logs/imf-utility.log_.
+    * Previous conversion jobs log files: _/logs/archive_.
+    * External tools log files: _{output-dir}/logs_.
+10. Validation
+    * To validate iTunes package against XML schema of metadata.xml official iTunes [Transporter](http://help.apple.com/itc/transporteruserguide/) tool can be used. Transporter can 
+    validate assets too but need corresponding iTunes Connect account credentials.
+ 
+Note 1:
+
+ * iTunes Package format requires special Audio Layout as defined in [iTunes Asset Guide](https://help.apple.com/itc/videoaudioassetguide/) for corresponding package type.
+ * Supported video formats can be found in wiki or documentation (docs/).
+
+#### Prepare external tools used for conversion
+
+The same tools as for [DPP tools](#prepare-external-tools-used-for-conversion).
+
+#### Prepare config.xml
+
+The same process as for [DPP config preparation](#prepare-config-xml).
+
+#### Generate metadata.xml
+
+* Metadata.xml is needed to enter the iTunes package metadata.
+* Metadata can be fixed in any time when iTunes package done according to correct values
+* The following command generates a sample metadata.xml
+    
+```
+imf-conversion-utility itunes -m metadata -o metadata.xml
+```
+
+#### Generate audiomap.xml
+
+* Audiomap.xml is used to map input IMF virtual audio tracks and channels to the output ones.
+* Please see [iTunes Asset Guide](http://help.apple.com/itc/videoaudioassetguide/) to set correct audio options.
+* If no audiomap.xml is specified, then default mapping will be used:
+     * If there is an Essence Descriptor in CPL.xml associated with each audio resource, and the Essence Descriptor defines the same 
+     same audio channel layout for each resource within a virtual track, then the audio mapping will be done according to the provided channel layout.
+     * If it's not possible to guess audio mapping as described above (from channel layout defined in Essence Descriptors),
+      then each input IMF virtual audio track/channel will be mapped to the output ones subsequently. In this case only
+      main audio track will be created.
+* The following command generates a sample audiomap.xml
+```
+   imf-conversion-utility itunes -m audiomap -o audiomap.xml
+```
+* _mainAudio_ defines a main audio track and support only the following channel layouts (options):
+    * Option1a
+    * Option2
+    * Option3
+    * Option4
+    * Option5
+    * Option6
+* _alternativeAudio_ defines alternative audio tracks. Only one track for each locale and supports only the following
+  channel layouts (options):
+    * Option5
+    * Option6
+* _CPLVirtualTrackId_ must point to a _\<TrackId\>_ attribute of a virtual track (audio sequence) within CPL.xml.
+* _CPLVirtualTrackChannel_ is a channel number (starting from 1) within a virtual track specified above.
+* An example below represents of mapping Option6 for main audio with channel layout from essence descriptor if exist or
+  by natural order and one an alternative track with the same Option6 but with directly specified channel mapping:
+    * VirtualTrack 1 (urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711) - Left ===> Audio track 1 - Left (L)
+    * VirtualTrack 1 (urn:uuid:63b41d86-c5df-4169-b036-3a25024bd711) - Right ===> Audio track 1- Right (R)
+    
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<audiomap xmlns="http://netflix.com/imf/itunes/audiomap">
+    <mainAudio locale="de-DE" name="main-audio.mov">
+        <Option6/>
+    </mainAudio>
+
+    <alternativeAudio locale="ja" name="audio_JA.mov">
+        <Option6>
+            <Track1>
+                <L>
+                    <CPLVirtualTrackId>urn:uuid:850bd841-5c4a-4b02-b853-5ce1afbb3629</CPLVirtualTrackId>
+                    <CPLVirtualTrackChannel>1</CPLVirtualTrackChannel>
+                </L>
+                <R>
+                    <CPLVirtualTrackId>urn:uuid:850bd841-5c4a-4b02-b853-5ce1afbb3629</CPLVirtualTrackId>
+                    <CPLVirtualTrackChannel>2</CPLVirtualTrackChannel>
+                </R>
+            </Track1>
+        </Option6>
+    </alternativeAudio>
+</audiomap>
+```
+
+#### Run Conversion Job
+
+The same process as for [DPP run conversion](#run-conversion-job) except that output is a iTunes store package with
+<vendor-id>.itmsp name.
+
+#### Output and Logs
+
+The same as for [DPP](output-and-logs).
        
 ## Project Structure
 
@@ -347,14 +490,32 @@ imf-conversion-utility dpp -c path-to/config.xml -m convert --imp path-to/imp --
         * Calls IMF validation.
         * Contains the logic of parsing conversion.xml and executing external tools.
         * A base project for all plugins.
+    * __imf-essence-descriptors__
+        * An independent project that contains JAXB classes of IMF Essence schemas.
     * __dpp-conversion__
         * A plugin to perform conversion to BBC DPP format.
         * Depends on imf-conversion-core and dpp-conversion-input-xsd
     * __dpp-conversion-input-xsd__
         * A plugin containing XSDs for DPP format input XML files (metadata.xml, audiomap.xml).
         * It's separated from _dpp_conversion_ as there are other projects that require DPP metadata.xml (for example, ttml-to-stl).
+    * __itunes-conversion__
+        * A plugin to perform conversion to iTunes Package format.
+        * Depends on imf-conversion-core, itunes-conversion-input-xsd, itunes-metadata-film and itunes-metadata-tv
+    * __itunes-conversion-input-xsd__
+        * A plugin containing XSDs for iTunes format input XML files (metadata.xml, audiomap.xml).
+    * __itunes-metadata-film__
+        * An independent project that contains JAXB classes of iTunes Film Package 5.2 XML schema.
+    * __itunes-metadata-tv__
+        * An independent project that contains JAXB classes of iTunes TV Package 5.2 XML schema.
+    * __ttml2itt__
+        * An independent project to perform TTML to iTunes iTT subtitle conversion.
+        * It's used as a default subtitle conversion tool by iTunes plugin.
+        * The project fat jar (ttml2itt.jar) is copied into the 'tools' folder within delivery.
+        * Depends on ttml-java
+    * __ttml-java__
+        * An independent project that contains JAXB classes of ttml-cr-ttaf1-20100223 TTML schemas.
     * __ttml-to-stl__
-       * An independent project to perform TTML to EBU STL caption conversion.
+        * An independent project to perform TTML to EBU STL caption conversion.
         * It's used as a default caption conversion tool by DPP plugin.
         * The project fat jar (ttml-to-stl.jar) is copied into the 'tools' folder within delivery.
     * __imf-validation__
