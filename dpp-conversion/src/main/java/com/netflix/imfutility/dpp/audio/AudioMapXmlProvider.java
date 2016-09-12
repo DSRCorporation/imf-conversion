@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -19,6 +19,7 @@
 package com.netflix.imfutility.dpp.audio;
 
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.audio.InvalidAudioChannelAssignmentException;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
@@ -116,8 +117,7 @@ public final class AudioMapXmlProvider {
     /**
      * Loads and validates audiomap.xml.
      *
-     * @param  audioMapFile auidomap.xml location
-     *
+     * @param audioMapFile auidomap.xml location
      * @return AudioMapType with loaded and mapped audiomap.xml
      * @throws XmlParsingException   an exception in case of audiomap.xml parsing error
      * @throws FileNotFoundException if the audioMapXml doesn't define an existing file.

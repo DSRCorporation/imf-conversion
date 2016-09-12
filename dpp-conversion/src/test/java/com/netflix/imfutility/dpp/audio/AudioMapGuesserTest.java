@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -19,22 +19,14 @@
 package com.netflix.imfutility.dpp.audio;
 
 import com.netflix.imfutility.ImfUtilityTest;
-import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
-import com.netflix.imfutility.conversion.templateParameter.context.ResourceTemplateParameterContext;
-import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
+import com.netflix.imfutility.audio.InvalidAudioChannelAssignmentException;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.ResourceContextParameters;
-import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
-import com.netflix.imfutility.cpl.uuid.ResourceUUID;
-import com.netflix.imfutility.cpl.uuid.SegmentUUID;
-import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.dpp.audiomap.AudioMapType;
+import com.netflix.imfutility.util.AudioUtils;
 import com.netflix.imfutility.util.FFmpegAudioChannels;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.EnumSet;
 
 import static com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type.EBU_R_123_16_C;
 import static com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type.EBU_R_123_16_D;
@@ -48,7 +40,6 @@ import static com.netflix.imfutility.util.FFmpegAudioChannels.FR;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.LFE;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.SL;
 import static com.netflix.imfutility.util.FFmpegAudioChannels.SR;
-import static com.netflix.imfutility.util.TemplateParameterContextCreator.createDefaultContextProviderWithCPLContext;
 import static com.netflix.imfutility.util.TemplateParameterContextCreator.getSequenceUuid;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
@@ -64,7 +55,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void check_noAudio() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(0,
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(0,
                 new FFmpegAudioChannels[][]{
                 });
 
@@ -72,76 +63,9 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
         assertNull(audioMap);
     }
 
-    @Test(expected = InvalidAudioChannelAssignmentException.class)
-    public void check_noChannelLayout() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(4,
-                new FFmpegAudioChannels[][]{
-                });
-
-        new AudioMapGuesser(contextProvider, EBU_R_123_16_C).checkCorrectChannelLayout();
-    }
-
-    @Test(expected = InvalidAudioChannelAssignmentException.class)
-    public void check_noChannelLayout_forAll() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(4,
-                new FFmpegAudioChannels[][]{
-                        {FL, FR, FC, LFE, SL, SR}
-                });
-
-        new AudioMapGuesser(contextProvider, EBU_R_123_16_C).checkCorrectChannelLayout();
-    }
-
-    @Test(expected = InvalidAudioChannelAssignmentException.class)
-    public void check_channelLayoutNotMatchChannelNum() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(4, 1, 1,
-                new FFmpegAudioChannels[][]{
-                        {FL, FR}, {FL, FR}, {FL, FR}, {FL, FR},
-                },
-                new String[]{},
-                new int[]{1, 1, 1, 1},
-                new String[]{}
-        );
-
-        new AudioMapGuesser(contextProvider, EBU_R_123_16_C).checkCorrectChannelLayout();
-    }
-
-
-    @Test
-    public void check_allResourcesEqualChannelLayout() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(2, 2, 2,
-                new FFmpegAudioChannels[][]{
-                        {FL, FR}, {FL, FR}, {FL, FR}, {FL, FR},
-                        {FL, FR, FC, LFE, SL, SR}, {FL, FR, FC, LFE, SL, SR}, {FL, FR, FC, LFE, SL, SR}, {FL, FR, FC, LFE, SL, SR}
-                });
-
-        new AudioMapGuesser(contextProvider, EBU_R_123_16_C).checkCorrectChannelLayout();
-    }
-
-    @Test(expected = InvalidAudioChannelAssignmentException.class)
-    public void check_allResourcesSwappedChannelLayout() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(2, 2, 2,
-                new FFmpegAudioChannels[][]{
-                        {FL, FR}, {FR, FL}, {FL, FR}, {FL, FR},
-                        {FL, FR, FC, LFE, SL, SR}, {SL, SR, FC, LFE, FL, FR}, {LFE, SL, SR, FL, FR, FC,}, {FC, FR, LFE, SL, SR}
-                });
-
-        new AudioMapGuesser(contextProvider, EBU_R_123_16_C).checkCorrectChannelLayout();
-    }
-
-    @Test(expected = InvalidAudioChannelAssignmentException.class)
-    public void check_allResourcesDifferentChannelLayout() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(2, 2, 2,
-                new FFmpegAudioChannels[][]{
-                        {FL, FR}, {FL}, {FL, FR}, {FL, FR},
-                        {FL, FR, FC, LFE, SL, SR}, {SL, SR, FC, LFE, FL, FR}, {LFE, SL, SR, FL, FR, FC,}, {FC}
-                });
-
-        new AudioMapGuesser(contextProvider, EBU_R_123_16_C).checkCorrectChannelLayout();
-    }
-
     @Test
     public void guess2A_oneStereo() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}
                 });
@@ -157,7 +81,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess2A_oneStereo_and_other() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FC}, {FL, FR, FC, LFE, SL, SR}, {FL, FR}
                 });
@@ -173,7 +97,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess2A_swapChannel() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FR, FL}
                 });
@@ -189,7 +113,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess2A_twoStereo() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FR, FL}
                 });
@@ -205,7 +129,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess2A_noStereo() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR, FC, LFE, SL, SR}
                 });
@@ -216,7 +140,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess4B_twoStereo() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FR, FL}
                 });
@@ -232,7 +156,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess4C_twoStereo() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FR, FL}
                 });
@@ -249,7 +173,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess4B_twoStereo_and_other() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FC}, {FL, FR, FC, LFE, SL, SR}, {FL, FR}, {FR, FL}
                 });
@@ -265,7 +189,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess4B_oneStereo() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FR, FL}
                 });
@@ -281,7 +205,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess4BC_noStereo() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR, FC, LFE, SL, SR}
                 });
@@ -291,7 +215,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess4BC_threeStereo() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FL, FR}, {FL, FR}
                 });
@@ -301,7 +225,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess16C_twoStereo_two51() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FL, FR}, {FL, FR, FC, LFE, SL, SR}, {FL, FR, FC, LFE, SL, SR}
                 });
@@ -333,7 +257,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess16C_twoStereo_two51_swapChannels() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {SL, SR, LFE, FC, FL, FR}, {FR, FL, SR, SL, FC, LFE}, {FL, FR}, {FR, FL}
                 });
@@ -365,7 +289,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess16C_oneStereo_one51() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FL, FR, FC, LFE, SL, SR}
                 });
@@ -396,7 +320,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess16C_twoStereo_one51() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FL, FR}, {FL, FR, FC, LFE, SL, SR}
                 });
@@ -427,7 +351,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess16C_oneStereo_two51() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FL, FR, FC, LFE, SL, SR}, {FL, FR, FC, LFE, SL, SR}
                 });
@@ -458,7 +382,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess16C_twoStereo_two51_and_other() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FC}, {FC, FL, FR},
                         {FL, FR}, {SL, SR}, {FL, FR},
@@ -492,7 +416,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16C_noStereo() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR, FC, LFE, SL, SR}, {FL, FR, FC, LFE, SL, SR}
                 });
@@ -502,7 +426,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16C_no51() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FL, FR}
                 });
@@ -512,7 +436,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess16D_two51_diffLang() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR, FC, LFE, SL, SR}, {FL, FR, FC, LFE, SL, SR}
                 },
@@ -546,7 +470,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16D_two51_sameLang() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR, FC, LFE, SL, SR}, {FL, FR, FC, LFE, SL, SR}
                 },
@@ -558,7 +482,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16D_two51_noLang() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR, FC, LFE, SL, SR}, {FL, FR, FC, LFE, SL, SR}
                 }
@@ -569,7 +493,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16D_two51_oneLang() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR, FC, LFE, SL, SR}, {FL, FR, FC, LFE, SL, SR}
                 },
@@ -581,7 +505,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16D_one51() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR, FC, LFE, SL, SR}
                 },
@@ -593,7 +517,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16D_three51() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR, FC, LFE, SL, SR}, {FL, FR, FC, LFE, SL, SR}, {FL, FR, FC, LFE, SL, SR}
                 },
@@ -605,7 +529,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess16F_threeStereo_diffLang() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FL, FR}, {FL, FR}
                 },
@@ -639,7 +563,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16F_threeStereo_sameLang_12() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FL, FR}, {FL, FR}
                 },
@@ -651,7 +575,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16F_threeStereo_sameLang_23() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FL, FR}, {FL, FR}
                 },
@@ -663,7 +587,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16F_threeStereo_sameLang_13() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FL, FR}, {FL, FR}
                 },
@@ -675,7 +599,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16F_twoStereo_diffLang() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FL, FR}
                 },
@@ -687,7 +611,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16F_fourStereo_diffLang() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FL, FR}, {FL, FR}, {FL, FR}
                 },
@@ -699,7 +623,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess16C_twoStereo_two51_multipleResources() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(4, 2, 2,
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(4, 2, 2,
                 new FFmpegAudioChannels[][]{
                         {FL, FR}, {FL, FR}, {FL, FR}, {FL, FR},
                         {FL, FR}, {FL, FR}, {FL, FR}, {FL, FR},
@@ -734,7 +658,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess16C_twoStereo_two51_soundfieldGroupsSingleChannel() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(16, 1, 1,
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(16, 1, 1,
                 new FFmpegAudioChannels[][]{
                         {FR}, {FL},
                         {FR}, {FL},
@@ -777,7 +701,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess16C_twoStereo_two51_soundfieldGroupsMultipleChannel() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(8, 1, 1,
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(8, 1, 1,
                 new FFmpegAudioChannels[][]{
                         {FR}, {FL},
                         {FR}, {FL},
@@ -820,7 +744,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test
     public void guess16C_twoStereo_two51_soundfieldGroupsWithEmpty() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(8, 1, 2,
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(8, 1, 2,
                 new FFmpegAudioChannels[][]{
                         {FR}, {FR}, {FL}, {FL},
                         {FR}, {FR}, {FL}, {FL},
@@ -863,7 +787,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16C_twoStereo_two51_noSoundfieldGroups() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(16, 1, 1,
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(16, 1, 1,
                 new FFmpegAudioChannels[][]{
                         {FR}, {FL},
                         {FR}, {FL},
@@ -880,7 +804,7 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
 
     @Test(expected = InvalidAudioChannelAssignmentException.class)
     public void guess16C_oneStereo_one51_invalidSoundfieldGroups() throws Exception {
-        TemplateParameterContextProvider contextProvider = createContext(8, 1, 1,
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(8, 1, 1,
                 new FFmpegAudioChannels[][]{
                         {FR}, {FL},
                         {FC}, {LFE}, {SL}, {SR}, {FL}, {FR}
@@ -893,114 +817,6 @@ public class AudioMapGuesserTest extends ImfUtilityTest {
         );
 
         new AudioMapGuesser(contextProvider, EBU_R_123_16_C).guessAudioMap();
-    }
-
-    private TemplateParameterContextProvider createContext(FFmpegAudioChannels[][] channelsForSeq)
-            throws Exception {
-        return createContext(channelsForSeq, null);
-    }
-
-    private TemplateParameterContextProvider createContext(FFmpegAudioChannels[][] channelsForSeq,
-                                                           String[] langs) throws Exception {
-        return createContext(channelsForSeq.length, channelsForSeq, langs);
-    }
-
-    private TemplateParameterContextProvider createContext(int audioSeqCount,
-                                                           FFmpegAudioChannels[][] channelsForSeq) throws Exception {
-        return createContext(audioSeqCount, channelsForSeq, null);
-    }
-
-    private TemplateParameterContextProvider createContext(int audioSeqCount, FFmpegAudioChannels[][] channelsForSeq,
-                                                           String[] langs) throws Exception {
-        return createContext(audioSeqCount, 1, 1, channelsForSeq, langs);
-    }
-
-    private TemplateParameterContextProvider createContext(int audioSeqCount, int segmCount, int resourceCount,
-                                                           FFmpegAudioChannels[][] channelsForSeq) throws Exception {
-        return createContext(audioSeqCount, segmCount, resourceCount, channelsForSeq, null);
-    }
-
-    private TemplateParameterContextProvider createContext(int audioSeqCount, int segmCount, int resourceCount,
-                                                           FFmpegAudioChannels[][] channelsForSeq,
-                                                           String[] langs) throws Exception {
-        return createContext(audioSeqCount, segmCount, resourceCount, channelsForSeq, null, langs);
-    }
-
-    private TemplateParameterContextProvider createContext(int audioSeqCount, int segmCount, int resourceCount,
-                                                           FFmpegAudioChannels[][] channelsForSeq,
-                                                           String[] soundfieldGroups,
-                                                           String[] langs) throws Exception {
-        return createContext(audioSeqCount, segmCount, resourceCount, channelsForSeq, soundfieldGroups, null, langs);
-    }
-
-    private TemplateParameterContextProvider createContext(int audioSeqCount, int segmCount, int resourceCount,
-                                                           FFmpegAudioChannels[][] channelsForSeq,
-                                                           String[] soundfieldGroups,
-                                                           int[] channelsNum,
-                                                           String[] langs) throws Exception {
-        TemplateParameterContextProvider contextProvider =
-                createDefaultContextProviderWithCPLContext(segmCount, audioSeqCount, resourceCount, EnumSet.of(SequenceType.AUDIO));
-        SequenceTemplateParameterContext sequenceContext = contextProvider.getSequenceContext();
-        ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
-
-        int i = 0;
-        int j = 0;
-        for (SequenceUUID seqUuid : sequenceContext.getUuids(SequenceType.AUDIO)) {
-            sequenceContext.addSequenceParameter(
-                    SequenceType.AUDIO, seqUuid,
-                    SequenceContextParameters.CHANNELS_NUM, String.valueOf(audioSeqCount));
-            if (langs != null && i < langs.length) {
-                sequenceContext.addSequenceParameter(
-                        SequenceType.AUDIO, seqUuid,
-                        SequenceContextParameters.LANGUAGE, langs[i]);
-            }
-
-            for (SegmentUUID segmUuid : contextProvider.getSegmentContext().getUuids()) {
-                for (ResourceUUID resUuid : contextProvider.getResourceContext()
-                        .getUuids(ResourceKey.create(segmUuid, seqUuid, SequenceType.AUDIO))) {
-                    if (channelsForSeq != null && j < channelsForSeq.length) {
-                        resourceContext.addResourceParameter(
-                                ResourceKey.create(segmUuid, seqUuid, SequenceType.AUDIO), resUuid,
-                                ResourceContextParameters.CHANNELS_LAYOUT,
-                                FFmpegAudioChannels.toChannelsLayoutString(channelsForSeq[j])
-                        );
-                        resourceContext.addResourceParameter(
-                                ResourceKey.create(segmUuid, seqUuid, SequenceType.AUDIO), resUuid,
-                                ResourceContextParameters.CHANNELS_NUM,
-                                String.valueOf(channelsForSeq[j].length)
-                        );
-                    }
-
-                    if (soundfieldGroups != null && j < soundfieldGroups.length) {
-                        resourceContext.addResourceParameter(
-                                ResourceKey.create(segmUuid, seqUuid, SequenceType.AUDIO), resUuid,
-                                ResourceContextParameters.SOUNDFIELD_GROUP_ID,
-                                soundfieldGroups[j]
-                        );
-                    }
-
-                    if (langs != null && i < langs.length) {
-                        resourceContext.addResourceParameter(
-                                ResourceKey.create(segmUuid, seqUuid, SequenceType.AUDIO), resUuid,
-                                ResourceContextParameters.LANG,
-                                langs[i]
-                        );
-                    }
-
-                    if (channelsNum != null && i < channelsNum.length) {
-                        resourceContext.addResourceParameter(
-                                ResourceKey.create(segmUuid, seqUuid, SequenceType.AUDIO), resUuid,
-                                ResourceContextParameters.CHANNELS_NUM,
-                                String.valueOf(channelsNum[i])
-                        );
-                    }
-                    j++;
-                }
-                i++;
-            }
-        }
-
-        return contextProvider;
     }
 
     private void checkAudioMapSize(AudioMapType audioMap, int trackCount) {
