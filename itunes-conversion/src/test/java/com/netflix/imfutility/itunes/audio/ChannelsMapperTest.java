@@ -760,6 +760,8 @@ public class ChannelsMapperTest {
         assertTrue(mapper.getChannels(Pair.of(STEREO, "en")).isEmpty());
     }
 
+    // Guess channels without prepare mapping
+
     @Test
     public void testGuessSurroundMainAudio() throws Exception {
         TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
@@ -866,6 +868,8 @@ public class ChannelsMapperTest {
         assertTrue(mapper.guessAlternatives("en").isEmpty());
     }
 
+    // Language equality
+
     @Test
     public void testLanguageFoundByDefaultRegion() throws Exception {
         TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
@@ -902,6 +906,22 @@ public class ChannelsMapperTest {
         assertChannelEquals(channels.get(1), 3, 2);
 
         assertEquals(2, channels.size());
+    }
+
+    @Test
+    public void testLanguageNotFoundByRegion() throws Exception {
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR},
+                        {FL, FR},
+                        {FC}
+                },
+                new String[]{"", "en-GB", "de"});
+
+        ChannelsMapper mapper = new ChannelsMapper(contextProvider);
+        mapper.mapChannels(createLayoutOptions(new LayoutType[]{SURROUND}, new String[]{"en"}));
+
+        assertTrue(mapper.getChannels(Pair.of(SURROUND, "en")).isEmpty());
     }
 
     private static void assertChannelEquals(Pair<SequenceUUID, Integer> channel, Integer audioSeqNum, Integer channelsNum) {

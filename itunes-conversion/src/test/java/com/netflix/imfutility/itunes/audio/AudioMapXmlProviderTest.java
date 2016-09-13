@@ -1165,7 +1165,102 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
     }
 
     @Test
-    public void emptyStereoOptionGeneratedByOrderFromDescriptor() throws Exception {
+    public void emptySurroundOptionWithStereoFromDescriptor() throws Exception {
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR},
+                        {FC},
+                        {FC},
+                        {FL, FR},
+                        {FL, FR, FC, LFE, SL, SR}
+                },
+                new String[]{"en-US", "en-US", "en-US", "fr-CA", "en-US"});
+
+        /* EXECUTION */
+        AudioOption mainAudio = createAndInitProvider(
+                getAudiomapXml("xml/audiomap/1a-empty-audiomap.xml"), contextProvider)
+                .getMainAudio();
+
+        /* VALIDATION */
+        assertEquals("main-audio.mov", mainAudio.getFileName());
+        assertEquals("en-US", mainAudio.getLocale());
+
+        assertEquals("Track count", 3, mainAudio.size());
+
+        assertChannelEquals(uuid(4), 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(uuid(4), 2, mainAudio.get(0).get(FR.name()));
+        assertChannelEquals(uuid(4), 3, mainAudio.get(0).get(FC.name()));
+        assertChannelEquals(uuid(4), 4, mainAudio.get(0).get(LFE.name()));
+        assertChannelEquals(uuid(4), 5, mainAudio.get(0).get(SL.name()));
+        assertChannelEquals(uuid(4), 6, mainAudio.get(0).get(SR.name()));
+
+        assertChannelEquals(uuid(0), 1, mainAudio.get(1).get(FL.name()));
+        assertChannelEquals(uuid(0), 2, mainAudio.get(2).get(FR.name()));
+    }
+
+    @Test
+    public void emptySurroundOptionByOrderFromDescriptor() throws Exception {
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR},
+                        {FC},
+                        {FC},
+                        {FL, FR},
+                        {FL, FR, FC, LFE, SL, SR}
+                },
+                new String[]{"en-US", "", "en-US", "", "fr-CA"});
+
+        /* EXECUTION */
+        AudioOption mainAudio = createAndInitProvider(
+                getAudiomapXml("xml/audiomap/1a-empty-audiomap.xml"), contextProvider)
+                .getMainAudio();
+
+        /* VALIDATION */
+        assertEquals("main-audio.mov", mainAudio.getFileName());
+        assertEquals("en-US", mainAudio.getLocale());
+
+        assertEquals("Track count", 3, mainAudio.size());
+
+        assertChannelEquals(uuid(0), 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(uuid(0), 2, mainAudio.get(0).get(FR.name()));
+        assertChannelEquals(uuid(1), 1, mainAudio.get(0).get(FC.name()));
+        assertChannelEquals(uuid(2), 1, mainAudio.get(0).get(LFE.name()));
+        assertChannelEquals(uuid(3), 1, mainAudio.get(0).get(SL.name()));
+        assertChannelEquals(uuid(3), 2, mainAudio.get(0).get(SR.name()));
+
+        assertChannelEquals(uuid(4), 1, mainAudio.get(1).get(FL.name()));
+        assertChannelEquals(uuid(4), 2, mainAudio.get(2).get(FR.name()));
+    }
+
+    @Test
+    public void emptyStereoOptionFromDescriptor() throws Exception {
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR},
+                        {FC},
+                        {FC},
+                        {FL, FR},
+                        {FL, FR}
+                },
+                new String[]{"fr-CA", "en-US", "", "en", "en-US"});
+
+        /* EXECUTION */
+        AudioOption mainAudio = createAndInitProvider(
+                getAudiomapXml("xml/audiomap/5-empty-audiomap.xml"), contextProvider)
+                .getMainAudio();
+
+        /* VALIDATION */
+        assertEquals("main-audio.mov", mainAudio.getFileName());
+        assertEquals("en-US", mainAudio.getLocale());
+
+        assertEquals("Track count", 2, mainAudio.size());
+
+        assertChannelEquals(uuid(3), 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(uuid(3), 2, mainAudio.get(1).get(FR.name()));
+    }
+
+    @Test
+    public void emptyStereoOptionByOrderFromDescriptor() throws Exception {
         TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
                 new FFmpegAudioChannels[][]{
                         {FL, FR},
@@ -1262,10 +1357,89 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
 
         assertEquals("Track count", 2, jaAudio.size());
 
+        // ja audio defined by essence descriptor (1st sequence)
+        assertChannelEquals(uuid(0), 1, jaAudio.get(0).get(FL.name()));
+        assertChannelEquals(uuid(0), 2, jaAudio.get(1).get(FR.name()));
+    }
+
+    @Test(expected = ConversionException.class)
+    public void emptySurroundOptionWithTwoAlternativesFromDescriptorConversionException() throws Exception {
+        /* PREPARATION */
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR},
+                        {FC},
+                        {FC},
+                        {FL, FR},
+                        {FL, FR}
+                },
+                new String[]{"ja", "en-US", "en-US", "de", "en-GB"});
+
+        /* EXECUTION */
+        AudioMapXmlProvider provider = new AudioMapXmlProvider(
+                getAudiomapXml("xml/audiomap/3-6-5-audiomap.xml"), contextProvider);
+
+        // can not pass initialization: main audio can't be defined by natural order of unused tracks (not enough channels)
+        provider.initAudio();
+    }
+
+    @Test
+    public void emptyStereoOptionWithTwoAlternativesFromDescriptor() throws Exception {
+        /* PREPARATION */
+        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
+                new FFmpegAudioChannels[][]{
+                        {FL, FR},
+                        {FC},
+                        {FC},
+                        {FL, FR},
+                        {FL, FR, FC, LFE, SL, SR}
+                },
+                new String[]{"ja", "en-US", "de", "en-US", "en-US"});
+
+        /* EXECUTION */
+        AudioMapXmlProvider provider = new AudioMapXmlProvider(
+                getAudiomapXml("xml/audiomap/5-6-5-audiomap.xml"), contextProvider);
+
+        provider.initAudio();
+
+        AudioOption mainAudio = provider.getMainAudio();
+        AudioOption deAudio = provider.getAlternativesAudio().get(0);
+        AudioOption jaAudio = provider.getAlternativesAudio().get(1);
+
+        /* VALIDATION */
+
+        // main audio
+        assertEquals("main-audio.mov", mainAudio.getFileName());
+        assertEquals("en-US", mainAudio.getLocale());
+
+        assertEquals("Track count", 2, mainAudio.size());
+
+        // main audio defined by essence descriptor
+        assertChannelEquals(uuid(3), 1, mainAudio.get(0).get(FL.name()));
+        assertChannelEquals(uuid(3), 2, mainAudio.get(1).get(FR.name()));
+
+        // de audio
+        assertEquals("audio_DE.mov", deAudio.getFileName());
+        assertEquals("de", deAudio.getLocale());
+
+        assertEquals("Track count", 1, deAudio.size());
+
+        // de audio defined by order
+        assertChannelEquals(uuid(1), 1, deAudio.get(0).get(FL.name()));
+        assertChannelEquals(uuid(2), 1, deAudio.get(0).get(FR.name()));
+
+        // ja audio
+        assertEquals("audio_JA.mov", jaAudio.getFileName());
+        assertEquals("ja", jaAudio.getLocale());
+
+        assertEquals("Track count", 2, jaAudio.size());
+
         // de audio defined by essence descriptor (1st sequence)
         assertChannelEquals(uuid(0), 1, jaAudio.get(0).get(FL.name()));
         assertChannelEquals(uuid(0), 2, jaAudio.get(1).get(FR.name()));
     }
+
+    // Default audiomap generation in accordance with essence descriptor
 
     @Test
     public void generateDefaultAudioMapWithSurroundFromDescriptor() throws Exception {
@@ -1365,27 +1539,6 @@ public class AudioMapXmlProviderTest extends ImfUtilityTest {
         // lightweight assertions
         assertEquals(2, provider.getMainAudio().stream().flatMap(i -> i.values().stream()).count());
         assertEquals(0, provider.getAdditionalAudioCount());
-    }
-
-    @Test(expected = ConversionException.class)
-    public void emptySurroundOptionWithTwoAlternativesFromDescriptorConversionException() throws Exception {
-        /* PREPARATION */
-        TemplateParameterContextProvider contextProvider = AudioUtils.createContext(
-                new FFmpegAudioChannels[][]{
-                        {FL, FR},
-                        {FC},
-                        {FC},
-                        {FL, FR},
-                        {FL, FR}
-                },
-                new String[]{"ja", "en-US", "en-US", "de", "en-GB"});
-
-        /* EXECUTION */
-        AudioMapXmlProvider provider = new AudioMapXmlProvider(
-                getAudiomapXml("xml/audiomap/3-6-5-audiomap.xml"), contextProvider);
-
-        // can not pass initialization: main audio can't be defined by natural order of unused tracks (no enough channels)
-        provider.initAudio();
     }
 
     @Test

@@ -53,7 +53,7 @@ call .\chimera29-sub-segments "%~1\%Chimera29Dir%" %2 %3
 call .\chimera23-default    "%~1\%Chimera23Dir%" %2 %3
 call .\chimera25-default    "%~1\%Chimera25Dir%" %2 %3
 call .\chimera50-default    "%~1\%Chimera50Dir%" %2 %3
-
+call .\chimera29-default    "%~1\%Chimera29Dir%" %2 %3
 @echo off
 exit /b 0
 
