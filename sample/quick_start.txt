@@ -14,9 +14,8 @@ Quick Start Guide:
     1.3. Get x264 Encoder (http://www.videolan.org/developers/x264.html).
          10-bit version must be used!
 
-    1.4. Get BMX: bmx2raw and raw2bmx applications [BMX](https://sourceforge.net/projects/bmxlib/). But latest version
-         include MCA labeling property checks and do not unwrap some media files we ssuggest to use bmx-snapshot-20150603
-         snapshot from official site or from tools/bmx.
+    1.4. Get BMX: bmx2raw and raw2bmx applications from tools/bmx directory that contains proper BMX snapshots
+    (https://sourceforge.net/projects/bmxlib/).
 
     1.5. Get ASDCP tool. Please build it from https://github.com/DSRCorporation/asdcplib-as02 repository.
          This is a fork from from http://www.cinecert.com/asdcplib/ which is enhanced to work properly with TTML wrapped in MXF.
@@ -26,7 +25,7 @@ Quick Start Guide:
 
 3. Build the source code (JDK-8 must be used!):
     ./gradlew clean build
-    
+
 4. Go to /build directory to find a distribution.
 
 5. Extract the distribution and go to 'imf-conversion-utility-1.0.0' folder.

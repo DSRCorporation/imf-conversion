@@ -85,7 +85,7 @@ The distribution includes
     * External tools log files: _{output-dir}/logs_.
 10. Validation
     * To validate DPP metadata the official [Metadata Application](https://www.digitalproductionpartnership.co.uk/download/metadataappdownload/) tool can be used.
-
+ 
 Note 1:
 
  * DPP format requires special Program Layout as defined in Section 4.5 of [BBC](http://dpp-assets.s3.amazonaws.com/wp-content/uploads/specs/bbc/TechnicalDeliveryStandardsBBC.pdf).
@@ -106,9 +106,9 @@ Note 1:
 
 2. Get x264 Encoder [x264](http://www.videolan.org/developers/x264.html). 10-bit version must be used!
 
-3. Get BMX: bmx2raw and raw2bmx applications [BMX](https://sourceforge.net/projects/bmxlib/). But latest version include
-   MCA labeling property checks and do not unwrap some media files we ssuggest to use bmx-snapshot-20150603 snapshot
-   from official site or from tools/bmx.
+3. Get BMX: bmx2raw and raw2bmx applications from tools directory. tools/bmx directory  contains proper [BMX tools](https://sourceforge.net/projects/bmxlib/)
+snapshots because latest BMX tools include MCA implementation and if we have incorect MXF audio file (without MCA
+label id property) mxf2raw exits with exception and does not extract audio data.
 
 4. Get ASDCP tool. Please build it from https://github.com/DSRCorporation/asdcplib-as02 repository.
 This is a fork from from http://www.cinecert.com/asdcplib/ which is enhanced to work properly with TTML wrapped in MXF.
@@ -525,4 +525,3 @@ The same as for [DPP](output-and-logs).
         * The project fat jar (imf-validation.jar) is copied into the 'tools' folder within delivery.
 
   
-            

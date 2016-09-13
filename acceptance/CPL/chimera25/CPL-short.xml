@@ -32,6 +32,7 @@
                             <Id>urn:uuid:ef11a2bb-0a2c-4a17-875c-38e3b0f8283e</Id>
                             <EditRate>25 1</EditRate>
                             <IntrinsicDuration>2400</IntrinsicDuration>
+                            <EntryPoint>1000</EntryPoint>
                             <SourceDuration>100</SourceDuration>
                             <SourceEncoding>urn:uuid:ac153e09-76ef-451e-b6cd-461d4c0aa484</SourceEncoding>
                             <TrackFileId>urn:uuid:446892a5-940e-4c91-8c62-2852fec48b2a</TrackFileId>
@@ -46,6 +47,7 @@
                             <Id>urn:uuid:e590caf1-4b3c-4a61-b039-98e007741ade</Id>
                             <EditRate>48000 1</EditRate>
                             <IntrinsicDuration>4608000</IntrinsicDuration>
+                            <EntryPoint>1920000</EntryPoint>
                             <SourceDuration>192000</SourceDuration>
                             <SourceEncoding>urn:uuid:b6c775c7-4950-4c0c-92b8-0032d6014abb</SourceEncoding>
                             <TrackFileId>urn:uuid:c23aae7e-fc10-46ad-a62d-b8ffec8dd32c</TrackFileId>
