@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<audiomap xmlns="http://netflix.com/imf/itunes/audiomap">
+    <mainAudio locale="en-US" name="main-audio.mov">
+        <Option5/>
+    </mainAudio>
+
+    <alternativeAudio locale="ja" name="audio_JA.mov">
+        <Option6/>
+    </alternativeAudio>
+
+    <alternativeAudio locale="de" name="audio_DE.mov">
+        <Option5/>
+    </alternativeAudio>
+
+</audiomap>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2016 Netflix, Inc.
+
+        This file is part of IMF Conversion Utility.
+
+        IMF Conversion Utility is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+
+        IMF Conversion Utility is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           targetNamespace="http://netflix.com/imf/itunes/chapters"
+           xmlns="http://netflix.com/imf/itunes/chapters"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- root element -->
+    <xs:element name="input_chapters" type="InputChapterList"/>
+
+    <xs:complexType name="InputChapterList">
+        <xs:sequence>
+            <xs:element name="timecode_format" type="xs:string"/>
+            <xs:element name="input_chapter" type="InputChapterItem" minOccurs="1" maxOccurs="99"/>
+        </xs:sequence>
+        <xs:attribute name="basedir" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="InputChapterItem">
+        <xs:sequence>
+            <xs:element name="start_time" type="FormattedTime"/>
+            <xs:element name="title" type="NonEmptyLocalizableTextElement"/>
+            <xs:element name="file_name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="NonEmptyLocalizableTextElement">
+        <xs:simpleContent>
+            <xs:extension base="NonEmptyString255">
+                <xs:attribute name="locale" type="Locale"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="NonEmptyString255">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="255"/>
+            <xs:pattern value=".*\S.*"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Locale">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[a-zA-Z]{2,3}(-[a-zA-Z]{4})?(-([0-9]{3}|[a-zA-Z]{2}))?"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="FormattedTime">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="\s*\d{1,2}:\d{2}:\d{2}((.\d{3})|([:;]\d{2}))?\s*"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

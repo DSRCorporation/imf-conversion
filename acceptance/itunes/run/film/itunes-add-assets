@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+function usage {
+    echo "Converts to iTunes format"
+    echo "1st argument - a path to IMP directory."
+    echo "2d argument - a path to CPL."
+    echo "3d argument - a path to the directory containing the output for the test packages."
+    echo "4th argument - a vendor identifier."
+    echo "5th argument - a path to poster."
+    echo "6th argument - a path to trailer."
+    echo "7th argument - a path to chapters.xml."
+    echo "8th argument - a path to imf-conversion-utility (if not set a default one will be used assuming that we're in the source root folder)."
+}
+
+
+if [ -z "$1" ]; then
+    echo "Missing argument: a path to IMP directory."
+    usage
+    exit 1
+fi
+
+if [ -z "$2" ]; then
+    echo "Missing argument: a path to CPL."
+    usage
+    exit 1
+fi
+
+if [ -z "$3" ]; then
+    echo "Missing argument: a path to the directory containing the output for the test packages."
+    usage
+    exit 1
+fi
+
+if [ -z "$4" ]; then
+    echo "Missing argument: a vendor identifier."
+    usage
+    exit 1
+fi
+
+if [ -z "$5" ]; then
+    echo "Missing argument: a path to poster."
+    usage
+    exit 1
+fi
+
+if [ -z "$6" ]; then
+    echo "Missing argument: a path to trailer."
+    usage
+    exit 1
+fi
+
+if [ -z "$7" ]; then
+    echo "Missing argument: a path to chapters.xml."
+    usage
+    exit 1
+fi
+
+cd "${BASH_SOURCE%/*}"
+PROG="$8"
+if [ -z "$8" ]; then
+    PROG="../../../../install/imf-conversion-utility/bin/imf-conversion-utility"
+fi
+
+"$PROG" itunes -c "../../../config.xml" -m convert --imp "$1" --cpl "$2" -w "$3" --vendor-id "$4" --poster "$5" --trailer "$6" --chapters "$7" -l debug -p film

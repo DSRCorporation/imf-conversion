@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  */
 public enum Format implements IFormat {
 
-    dpp("dpp");
+    dpp("dpp"), itunes("itunes");
 
     private final String name;
 

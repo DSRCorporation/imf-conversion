@@ -2,6 +2,9 @@ Quick Start Guide:
 
     Please see README.md for a full documentation.
 
+    Items below described DPP functionality but it is true for iTunes format just see hepl for format to obtain whole
+    set of command line options.
+
 1. Install external tools needed for conversion:
 
     1.1 JDK-8 must be used. JAVA_HOME must be set and 'java' must be in the PATH. 

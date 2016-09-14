@@ -78,9 +78,9 @@
                             <Id>urn:uuid:4422c9ed-6b53-4b67-bd27-5ce68c43e9ac</Id>
                             <EditRate>30000 1001</EditRate>
                             <IntrinsicDuration>55638</IntrinsicDuration>
-                            <SourceDuration>100</SourceDuration>
+                            <SourceDuration>600</SourceDuration>
                             <SourceEncoding>urn:uuid:12db7c06-40d2-4963-9039-53905a878acb</SourceEncoding>
-                            <TrackFileId>urn:uuid:d9fc05c4-bda9-4491-9f4e-853f38893f0e</TrackFileId>
+                            <TrackFileId>urn:uuid:e9fc05c4-bda9-4491-9f4e-853f38893f0e</TrackFileId>
                         </Resource>
                     </ResourceList>
                 </cc:HearingImpairedCaptionsSequence>
@@ -93,7 +93,7 @@
                             <Id>urn:uuid:4422c9ed-6b53-4b67-bd27-5ce68c43e9ac</Id>
                             <EditRate>30000 1001</EditRate>
                             <IntrinsicDuration>55638</IntrinsicDuration>
-                            <SourceDuration>100</SourceDuration>
+                            <SourceDuration>600</SourceDuration>
                             <SourceEncoding>urn:uuid:12db7c06-40d2-4963-9039-53905a878acb</SourceEncoding>
                             <TrackFileId>urn:uuid:d9fc05c4-bda9-4491-9f4e-853f38893f0e</TrackFileId>
                         </Resource>
@@ -108,9 +108,9 @@
                             <Id>urn:uuid:4422c9ed-6b53-4b67-bd27-5ce68c43e9ac</Id>
                             <EditRate>30000 1001</EditRate>
                             <IntrinsicDuration>55638</IntrinsicDuration>
-                            <SourceDuration>100</SourceDuration>
+                            <SourceDuration>600</SourceDuration>
                             <SourceEncoding>urn:uuid:12db7c06-40d2-4963-9039-53905a878acb</SourceEncoding>
-                            <TrackFileId>urn:uuid:d9fc05c4-bda9-4491-9f4e-853f38893f0e</TrackFileId>
+                            <TrackFileId>urn:uuid:e9fc05c4-bda9-4491-9f4e-853f38893f0e</TrackFileId>
                         </Resource>
                     </ResourceList>
                 </cc:CommentarySequence>
@@ -123,7 +123,7 @@
                             <Id>urn:uuid:4422c9ed-6b53-4b67-bd27-5ce68c43e9ac</Id>
                             <EditRate>30000 1001</EditRate>
                             <IntrinsicDuration>55638</IntrinsicDuration>
-                            <SourceDuration>100</SourceDuration>
+                            <SourceDuration>600</SourceDuration>
                             <SourceEncoding>urn:uuid:12db7c06-40d2-4963-9039-53905a878acb</SourceEncoding>
                             <TrackFileId>urn:uuid:d9fc05c4-bda9-4491-9f4e-853f38893f0e</TrackFileId>
                         </Resource>

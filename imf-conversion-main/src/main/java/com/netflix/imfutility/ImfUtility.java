@@ -23,7 +23,10 @@ import com.lexicalscope.jewel.cli.HelpRequestedException;
 import com.netflix.imfutility.dpp.DppFormatProcessor;
 import com.netflix.imfutility.dpp.inputparameters.DppCmdLineArgs;
 import com.netflix.imfutility.inputparameters.DppTools;
+import com.netflix.imfutility.inputparameters.ITunesTools;
 import com.netflix.imfutility.inputparameters.ImfUtilityCmdLineArgs;
+import com.netflix.imfutility.itunes.ITunesFormatProcessor;
+import com.netflix.imfutility.itunes.inputparameters.ITunesCmdLineArgs;
 import com.netflix.imfutility.util.ImfLogger;
 import com.netflix.imfutility.util.LogHelper;
 import org.slf4j.Logger;
@@ -65,6 +68,10 @@ public final class ImfUtility {
                     exitCode = new DppFormatProcessor(new DppTools()).process(parseArgs(DppCmdLineArgs.class, args));
                     System.exit(exitCode);
                     break;
+                case itunes:
+                    exitCode = new ITunesFormatProcessor(new ITunesTools()).process(parseArgs(ITunesCmdLineArgs.class, args));
+                    System.exit(exitCode);
+                    break;
                 default:
                     throw new ConversionException(String.format(
                             "Unsupported format '%s'. Supported formats: %s", args[0], Format.getSupportedFormats()));
@@ -85,6 +92,5 @@ public final class ImfUtility {
         LOGGER.debug("Parsed command line arguments: OK\n");
         return imfArgs;
     }
-
 
 }

@@ -74,5 +74,11 @@ schema/
 schema/
 generated/
 install/
+/.nb-gradle/
 imf-conversion-core/nbproject/
 imf-conversion-core/private/
+itunes-conversion-input-xsd/private/
+itunes-conversion/private/
+dpp-conversion-input-xsd/private/
+ttml2itt/private/
+ttml2itt/nbproject/

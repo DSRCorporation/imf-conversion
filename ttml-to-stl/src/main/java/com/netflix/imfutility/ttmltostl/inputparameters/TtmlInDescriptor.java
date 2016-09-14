@@ -16,7 +16,6 @@
  *     You should have received a copy of the GNU General Public License
  *     along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.netflix.imfutility.ttmltostl.inputparameters;
 
 /**

@@ -1,0 +1,50 @@
+<!--
+
+    Copyright (C) 2016 Netflix, Inc.
+
+        This file is part of IMF Conversion Utility.
+
+        IMF Conversion Utility is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+
+        IMF Conversion Utility is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with IMF Conversion Utility.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb"
+      xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      version="2.1">
+
+    <bindings schemaLocation="../xsd/CR-ttaf1-dfxp-20100223/ttaf1-dfxp-layout.xsd">
+
+        <!-- rename the "style" element -->
+        <bindings node="//xs:complexType[@name='region.eltype']">
+            <bindings node=".//xs:element[@ref='tt:style']">
+                <property name="styleRegion" />
+            </bindings>
+        </bindings>
+    </bindings>
+
+    <bindings schemaLocation="../xsd/CR-ttaf1-dfxp-20100223/ttaf1-dfxp-parameter-items.xsd">
+        <!-- rename the "value" attribute -->
+        <bindings node="//xs:attributeGroup[@name='feature.attlist']">
+            <bindings node=".//xs:attribute[@name='value']">
+                <property name="featureValue" />
+            </bindings>
+        </bindings>
+        <bindings node="//xs:attributeGroup[@name='extension.attlist']">
+            <bindings node=".//xs:attribute[@name='value']">
+                <property name="extensionValue" />
+            </bindings>
+        </bindings>
+    </bindings>
+
+</bindings>
