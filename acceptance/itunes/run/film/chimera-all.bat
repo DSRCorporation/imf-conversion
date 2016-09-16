@@ -19,7 +19,7 @@ call .\chimera25-formats      "%~1\%Chimera25Dir%" %2 %3
 
 :: 2016 namespace
 :: use only with switched off imf validation
-::call .\chimera25-2016-namespace     "%~1\%Chimera25Dir%" %2 %3
+call .\chimera25-2016-namespace     "%~1\%Chimera25Dir%" %2 %3
 
 :: CPLs with tricky segments
 call .\chimera25-segments                       "%~1\%Chimera25Dir%" %2 %3
@@ -37,11 +37,8 @@ call .\chimera25-essence-desc                    "%~1\%Chimera25Dir%" %2 %3
 call .\chimera25-essence-desc-audiomap-by-order  "%~1\%Chimera25Dir%" %2 %3
 call .\chimera25-essence-desc-audiomap-guess     "%~1\%Chimera25Dir%" %2 %3
 
-:: no audio/video/CC
+:: no audio
 call .\chimera50-no-audio   "%~1\%Chimera50Dir%" %2 %3
-:: use only with switched off imf validation
-::call .\chimera50-no-video   "%~1\%Chimera50Dir%" %2 %3
-::call .\chimera29-sub-no-audio-no-video "%~1\%Chimera29Dir%" %2 %3
 
 :: closed captions and subtitles
 call .\chimera25-cc         "%~1\%Chimera25Dir%" %2 %3
