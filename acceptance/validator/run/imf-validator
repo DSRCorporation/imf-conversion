@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+function usage {
+    echo "Converts to iTunes format"
+    echo "1st argument - a path to IMP directory."
+    echo "2nd argument - a path to working directory."
+}
+
+
+if [ -z "$1" ]; then
+    echo "Missing argument: a path to IMP directory."
+    usage
+    exit 1
+fi
+
+if [ -z "$2" ]; then
+    echo "Missing argument: a path to working directory."
+    usage
+    exit 1
+fi
+
+cd "${BASH_SOURCE%/*}"
+PROG="$3"
+if [ -z "$3" ]; then
+    PROG="../../../install/imf-conversion-utility/tools/imf-validation.jar"
+fi
+
+java -jar "$PROG" -i "$1" -d "$2"

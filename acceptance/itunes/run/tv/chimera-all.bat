@@ -19,7 +19,7 @@ call .\chimera25-formats      "%~1\%Chimera25Dir%" %2 %3
 
 :: 2016 namespace
 :: use only with switched off imf validation
-::call .\chimera25-2016-namespace     "%~1\%Chimera25Dir%" %2 %3
+call .\chimera25-2016-namespace     "%~1\%Chimera25Dir%" %2 %3
 
 :: CPLs with tricky segments
 call .\chimera25-segments                       "%~1\%Chimera25Dir%" %2 %3
@@ -32,18 +32,11 @@ call .\chimera25-audiomap-metadata  "%~1\%Chimera25Dir%" %2 %3
 call .\chimera25-add-assets         "%~1\%Chimera25Dir%" %2 %3
 call .\chimera25-locale             "%~1\%Chimera25Dir%" %2 %3
 
-:: no audio/video/CC
+:: no audio
 call .\chimera50-no-audio   "%~1\%Chimera50Dir%" %2 %3
-:: use only with switched off imf validation
-::call .\chimera50-no-video   "%~1\%Chimera50Dir%" %2 %3
 
 :: closed captions
 call .\chimera25-cc         "%~1\%Chimera25Dir%" %2 %3
-
-:: default as-is full CPLs for all test packages
-call .\chimera23-default    "%~1\%Chimera23Dir%" %2 %3
-call .\chimera25-default    "%~1\%Chimera25Dir%" %2 %3
-call .\chimera50-default    "%~1\%Chimera50Dir%" %2 %3
 
 @echo off
 exit /b 0

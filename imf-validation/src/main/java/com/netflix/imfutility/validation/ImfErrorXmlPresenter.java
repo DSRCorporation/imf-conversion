@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -28,17 +28,25 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 /**
  * Prints all errors in a simple XML form.
- *
  */
 public class ImfErrorXmlPresenter implements IImfErrorPresenter {
 
     @Override
-    public void printErrors(List<ErrorLogger.ErrorObject> errorObjs, String workingDir, String fileName) {
-        File file = new File(workingDir, fileName);
+    public void printErrors(List<ErrorLogger.ErrorObject> errorObjs, String workingDir, String fileName) throws IOException {
+        File dir = new File(workingDir);
+        if (!Files.exists(dir.toPath())) {
+            if (!dir.mkdir()) {
+                throw new IOException("Couldn't initialize working directory.");
+            }
+        }
+
+        File file = new File(dir, fileName);
         JAXBContext jaxbContext;
         try {
             jaxbContext = JAXBContext.newInstance(Errors.class);

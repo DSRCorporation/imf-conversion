@@ -49,6 +49,6 @@ fi
 
 echo ""
 echo STARTING $5
-"$PROG" dpp -c "../../config.xml" -m convert --imp "$1" --cpl "$2" -w "$3" --metadata "$4" -o "$5" -l debug
+"$PROG" dpp -c "../../config.xml" -m convert --imp "$1" --cpl "$2" -w "$3" --metadata "$4" -o "$5" -l debug -d
 echo FINISHED $5
 echo ""

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -77,5 +77,14 @@ public interface ImfUtilityCmdLineArgs {
             defaultValue = "info"
     )
     LogLevel getLogLevel();
+
+    @Option(
+            description =
+                    "Disable IMF package validation."
+                            + "\n\t\tIf flag not set validation will be provided in accordance with config.xml value.",
+            shortName = {"d"},
+            longName = {"disable-validation"}
+    )
+    boolean getDisableValidation();
 
 }

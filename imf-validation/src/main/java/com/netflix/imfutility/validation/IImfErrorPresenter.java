@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -20,6 +20,7 @@ package com.netflix.imfutility.validation;
 
 import com.netflix.imflibrary.utils.ErrorLogger;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -33,7 +34,8 @@ public interface IImfErrorPresenter {
      * @param errors     validation errors to be printed.
      * @param workingDir a working directory where a file with printed errors is created
      * @param fileName   a file name within working directory with printed errors
+     * @throws IOException
      */
-    void printErrors(List<ErrorLogger.ErrorObject> errors, String workingDir, String fileName);
+    void printErrors(List<ErrorLogger.ErrorObject> errors, String workingDir, String fileName) throws IOException;
 
 }

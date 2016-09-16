@@ -343,6 +343,9 @@ public abstract class AbstractFormatBuilder {
     protected abstract void doBuildDynamicContextPreCpl();
 
     private boolean isValidateImpAndCpl() {
+        if (inputParameters.getCmdLineArgs().getDisableValidation()) {
+            return false;
+        }
         if (configProvider == null) {
             return CoreConstants.DEFAULT_VALIDATE_IMF;
         }
@@ -364,7 +367,11 @@ public abstract class AbstractFormatBuilder {
                 throw new ConversionException("IMF package is not valid. Fatal errors found.");
             }
         } else {
-            logger.info("IMP and CPL validation is DISABLED in config.xml\n");
+            if (!inputParameters.getCmdLineArgs().getDisableValidation()) {
+                logger.info("IMP and CPL validation is DISABLED in config.xml\n");
+            } else {
+                logger.info("IMP and CPL validation is DISABLED by user\n");
+            }
         }
     }
 

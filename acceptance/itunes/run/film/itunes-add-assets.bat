@@ -12,7 +12,7 @@ SET PROG=%8
 if [%8]==[] SET PROG="..\..\..\..\install\imf-conversion-utility\bin\imf-conversion-utility"
 
 @echo on
-%PROG% itunes -c ..\..\..\config.xml -m convert --imp %1 --cpl %2 -w %3 --vendor-id %4 --poster %5 --trailer %6 --chapters %7 -l debug -p film
+%PROG% itunes -c ..\..\..\config.xml -m convert --imp %1 --cpl %2 -w %3 --vendor-id %4 --poster %5 --trailer %6 --chapters %7 -l debug -p film -d
 @echo off
 exit /b 0
 

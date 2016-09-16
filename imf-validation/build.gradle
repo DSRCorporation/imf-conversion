@@ -6,7 +6,7 @@ dependencies {
 }
 
 dependencies {
-    compile group: 'com.netflix.photon', name: 'Photon', version: '1.0.0'
+    compile group: 'com.netflix.photon', name: 'Photon', version: '2.0.3'
     compile group: 'com.lexicalscope.jewelcli', name: 'jewelcli', version: '0.8.9'
 }
 

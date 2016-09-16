@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+function usage {
+    echo "Convert all default test packages to DPP Format."
+    echo "1st argument - a path to the directory containing all default test packages."
+    echo "2d argument - a path to the directory containing the output for all test packages."
+    echo "3d argument - a path to imf-validation if not set a default one will be used assuming that we're in the source root folder)."
+}
+
+if [ -z "$1" ]; then
+    echo "Missing argument: a path to the directory containing all default test packages."
+    usage
+    exit 1
+fi
+
+if [ -z "$2" ]; then
+    echo "Missing argument: a path to the directory containing the output for all test packages."
+    usage
+    exit 1
+fi
+
+cd "${BASH_SOURCE%/*}"
+
+Chimera25Dir="Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV"
+Chimera23Dir="Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV"
+Chimera29Dir="Chimera29_FTR_C_EN_XG-NR_20_4K_20150624_OV"
+Chimera50Dir="Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV"
+
+# validation
+./imf-validator     "$1/$Chimera25Dir" "$2/Chimera25-validation";
+./imf-validator     "$1/$Chimera23Dir" "$2/Chimera23-validation";
+./imf-validator     "$1/$Chimera29Dir" "$2/Chimera29-validation";
+./imf-validator     "$1/$Chimera50Dir" "$2/Chimera50-validation";
+
