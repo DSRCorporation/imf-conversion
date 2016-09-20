@@ -59,19 +59,21 @@ import java.math.BigInteger;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_AS11_CORE_FILE;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_AS11_SEGM_FILE;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_EBU_AUDIO_TRACKS;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_EBU_LINEUP;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_LAST_ESSENCE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_LAST_FRAME_TC;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_METADATA_XML;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_OUTPUT_MXF;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PAN;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PROGRAMME_ID;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PROGRAMME_TITLE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_SLATE;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_TTML_TO_STL;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_UK_DPP_FILE;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_VALUE_OUTPUT_MXF;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_EBU_LINEUP;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_SLATE;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_LAST_ESSENCE;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_LAST_FRAME_TC;
 import static com.netflix.imfutility.dpp.DppConversionConstants.RESOURCE_EBU_LINEUP;
-import static com.netflix.imfutility.dpp.DppConversionConstants.UNPACKED_EBU_LINEUP;
 import static com.netflix.imfutility.dpp.DppConversionConstants.RESOURCE_SLATE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.UNPACKED_EBU_LINEUP;
 import static com.netflix.imfutility.dpp.DppConversionConstants.UNPACKED_SLATE;
 
 
@@ -160,8 +162,9 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         unpackResource(RESOURCE_EBU_LINEUP, UNPACKED_EBU_LINEUP);
         unpackResource(RESOURCE_SLATE, UNPACKED_SLATE);
 
-        contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_EBU_LINEUP, UNPACKED_EBU_LINEUP, true);
-        contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_SLATE, UNPACKED_SLATE, true);
+        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
+        dynamicContext.addParameter(DYNAMIC_PARAM_EBU_LINEUP, UNPACKED_EBU_LINEUP, true);
+        dynamicContext.addParameter(DYNAMIC_PARAM_SLATE, UNPACKED_SLATE, true);
     }
 
     private void unpackResource(String resource, String unpackedName) throws IOException {
@@ -195,8 +198,11 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         BigInteger lastFrameTimeEU = endTimeEU.subtract(BigInteger.ONE);
         String lastFrameTimeTC = ConversionHelper.editUnitToTimecode(lastFrameTimeEU, editRate);
 
-        contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_LAST_ESSENCE, essence);
-        contextProvider.getDynamicContext().addParameter(DYNAMIC_PARAM_LAST_FRAME_TC, lastFrameTimeTC);
+        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
+        dynamicContext.addParameter(DYNAMIC_PARAM_LAST_ESSENCE, essence);
+        dynamicContext.addParameter(DYNAMIC_PARAM_LAST_FRAME_TC, lastFrameTimeTC);
+        dynamicContext.addParameter(DYNAMIC_PARAM_PROGRAMME_ID, dppInputParameters.getCmdLineArgs().getProgrammeId());
+        dynamicContext.addParameter(DYNAMIC_PARAM_PROGRAMME_TITLE, dppInputParameters.getCmdLineArgs().getProgrammeTitle());
     }
 
     private ContextInfo getLastResourceContextInfo() {

@@ -75,52 +75,78 @@
                 <formatConfiguration name="main">
 
                     <!--
-                        1. decode each video segment and redirect output to encode's input
-                        => flatten encoded video
+                        extract last frame
                     -->
+                    <dynamicParameter name="last_frame_file" deleteOnExit="true">
+                        last_frame.png
+                    </dynamicParameter>
                     <execOnce name="extract_last_frame">
                         "%{tool.ffmpeg}"
                         -ss %{dynamic.last_frame_tc} -i %{dynamic.last_essence}
                         -vframes 1 -y
-                        last_frame.png
+                        %{dynamic.last_frame_file}
                     </execOnce>
-                    <dynamicParameter name="last_frame_file" deleteOnExit="true">
-                        last_frame.png
+
+                    <!--
+                        generate slate
+                    -->
+                    <dynamicParameter name="slate_file" deleteOnExit="true">
+                        slate.jpg
                     </dynamicParameter>
+
+                    <!--TODO: add font support for other platforms (not only Windows)-->
+                    <dynamicParameter name="font">
+                        fontfile='/Windows/Fonts/arial.ttf'
+                    </dynamicParameter>
+
+                    <execOnce name="generate_slate">
+                        "%{tool.ffmpeg}"
+                        -y -an -f lavfi
+                        -i color=c=black:s=%{dest.width}x%{dest.height}
+                        -vframes 1
+                        -vf
+                        "[in]drawtext=fontsize=45:fontcolor=white:%{dynamic.font}:text='%{dynamic.programmeId}':x=(w-tw)/2:y=(h-th)/4,drawtext=fontsize=60:fontcolor=white:%{dynamic.font}:text='%{dynamic.programmeTitle}':x=(w-tw)/2:y=(h-th)/2[out]"
+                        %{dynamic.slate_file}
+                    </execOnce>
+
+                    <!--
+                        1. decode each video segment and redirect output to encode's input
+                        => flatten encoded video
+                    -->
                     <execEachSequence type="video" name="encodeVideo">
                         <pipe>
                             <cycle>
                                 <!--20s-->
                                 <execOnce name="bars">
                                     "%{tool.ffmpeg}"
-                                      -an -f lavfi -i smptehdbars=s=%{dest.width}x%{dest.height}
-                                      -t 20 -r %{dest.frameRate}
-                                      -pix_fmt %{dest.pixelFormat} -f rawvideo -
+                                    -an -f lavfi -i smptehdbars=s=%{dest.width}x%{dest.height}
+                                    -t 20 -r %{dest.frameRate}
+                                    -pix_fmt %{dest.pixelFormat} -f rawvideo -
                                 </execOnce>
-                                <!--7s-->
-                                <execOnce name="black">
-                                    "%{tool.ffmpeg}"
-                                      -an -f lavfi -i color=c=black:s=%{dest.width}x%{dest.height}
-                                      -t 7
-                                      -r %{dest.frameRate}
-                                      -pix_fmt %{dest.pixelFormat} -f rawvideo -
-                                </execOnce>
-                                <!--6fr-->
+                                <!--7s 4fr-->
                                 <execOnce name="slate">
                                     "%{tool.ffmpeg}"
-                                    -loop 1 -i %{dynamic.slate}
-                                    -vframes 6
+                                    -loop 1 -i %{dynamic.slate_file}
+                                    -vframes 179
                                     -s %{dest.width}x%{dest.height}
+                                    -r %{dest.frameRate}
+                                    -pix_fmt %{dest.pixelFormat} -f rawvideo -
+                                </execOnce>
+                                <!--2fr-->
+                                <execOnce name="white">
+                                    "%{tool.ffmpeg}"
+                                    -an -f lavfi -i color=c=white:s=%{dest.width}x%{dest.height}
+                                    -vframes 2
                                     -r %{dest.frameRate}
                                     -pix_fmt %{dest.pixelFormat} -f rawvideo -
                                 </execOnce>
                                 <!--2s 19fr-->
                                 <execOnce name="black">
                                     "%{tool.ffmpeg}"
-                                      -an -f lavfi -i color=c=black:s=%{dest.width}x%{dest.height}
-                                      -vframes 69
-                                      -r %{dest.frameRate}
-                                      -pix_fmt %{dest.pixelFormat} -f rawvideo -
+                                    -an -f lavfi -i color=c=black:s=%{dest.width}x%{dest.height}
+                                    -vframes 69
+                                    -r %{dest.frameRate}
+                                    -pix_fmt %{dest.pixelFormat} -f rawvideo -
                                 </execOnce>
                                 <execEachSegment name="decode_video">
                                     <execOnce name="decode_video">
@@ -136,7 +162,8 @@
                                 <!--5s freeze-->
                                 <execOnce name="loop_last_frame">
                                     "%{tool.ffmpeg}"
-                                    -loop 1 -i last_frame.png
+                                    -loop 1
+                                    -i %{dynamic.last_frame_file}
                                     -t 5
                                     -vf
                                     "scale=iw*sar*min(%{dest.width}/(iw*sar)\,%{dest.height}/ih):ih*min(%{dest.width}/(iw*sar)\,%{dest.height}/ih),pad=%{dest.width}:%{dest.height}:(ow-iw)/2:(oh-ih)/2,fps=%{dest.frameRate}"
@@ -144,7 +171,8 @@
                                 </execOnce>
                             </cycle>
                             <execOnce name="encode_video">
-                                "%{tool.x264}" --input-res %{dest.width}x%{dest.height} --input-csp %{dest.chromaSubsampling} --input-depth %{dest.bitDepth} -
+                                "%{tool.x264}" --input-res %{dest.width}x%{dest.height} --input-csp %{dest.chromaSubsampling} --input-depth
+                                %{dest.bitDepth} -
                                 --colorprim %{dest.colorSpace} --transfer %{dest.colorSpace} --colormatrix %{dest.colorSpace} --tune psnr
                                 --fps %{dest.frameRate}/1 --interlaced --force-cfr --output-csp %{dest.chromaSubsampling}
                                 --avcintra-class %{dest.avcIntraClass} -o "%{tmp.videoEncoded}"
@@ -180,17 +208,17 @@
                                 <!--20s-->
                                 <execOnce name="tone">
                                     "%{tool.ffmpeg}"
-                                       -stream_loop 3 -i "%{dynamic.EBULineup}"
-                                       -vn -t 20
-                                       -af aresample=%{dest.sampleRate}
-                                       -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
+                                    -stream_loop 3 -i "%{dynamic.EBULineup}"
+                                    -vn -t 20
+                                    -af aresample=%{dest.sampleRate}
+                                    -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
                                 </execOnce>
-                                <!--10s (00:00:07:00 black + 00:00:00:06 slate + 00:00:02:19 black)-->
+                                <!--10s (00:00:07:04 slate + 00:00:00:02 white + 00:00:02:19 black)-->
                                 <execOnce name="silence">
                                     %{tool.ffmpeg}
-                                     -f lavfi -i anullsrc=cl=stereo:r=%{dest.sampleRate}
-                                     -vn -t 10
-                                     -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
+                                    -f lavfi -i anullsrc=cl=stereo:r=%{dest.sampleRate}
+                                    -vn -t 10
+                                    -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
                                 </execOnce>
                                 <execEachSegment name="decode_audio">
                                     <execOnce name="decode_audio">
@@ -236,7 +264,8 @@
                     <execOnce name="audioMaping" if="%{dynamic.hasAudio}">
                         "%{tool.ffmpeg}" -y %{dynamic.concatAudioInput} -filter_complex
                         "%{dynamic.concatAudioMap}amerge,pan=%{dynamic.panParameter}[aout]"
-                        -map "[aout]" -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f s%{dest.bitsSample}le "%{tmp.audioEncoded}"
+                        -map "[aout]" -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f s%{dest.bitsSample}le
+                        "%{tmp.audioEncoded}"
                     </execOnce>
 
                     <!--

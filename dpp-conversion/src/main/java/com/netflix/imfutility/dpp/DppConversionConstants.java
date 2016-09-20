@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -41,6 +41,8 @@ public final class DppConversionConstants {
     public static final String DYNAMIC_PARAM_SLATE = "slate";
     public static final String DYNAMIC_PARAM_LAST_ESSENCE = "last_essence";
     public static final String DYNAMIC_PARAM_LAST_FRAME_TC = "last_frame_tc";
+    public static final String DYNAMIC_PARAM_PROGRAMME_ID = "programmeId";
+    public static final String DYNAMIC_PARAM_PROGRAMME_TITLE = "programmeTitle";
 
     // 1.3 dynamic parameters default values:
     public static final String DYNAMIC_PARAM_VALUE_OUTPUT_MXF = "output";

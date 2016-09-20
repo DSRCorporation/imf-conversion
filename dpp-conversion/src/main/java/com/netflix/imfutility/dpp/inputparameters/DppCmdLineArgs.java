@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -52,7 +52,7 @@ public interface DppCmdLineArgs extends ImfUtilityCmdLineArgs {
     @Option(
             description =
                     "a path to audiomap.xml"
-                            + " ('audiomap' mode only).",
+                            + " ('convert' mode only).",
             longName = {"audiomap"},
             defaultToNull = true
     )
@@ -70,5 +70,23 @@ public interface DppCmdLineArgs extends ImfUtilityCmdLineArgs {
             defaultToNull = true
     )
     String getOutput();
+
+    @Option(
+            description =
+                    "a programme id"
+                            + " ('convert' mode only).",
+            longName = {"pid"},
+            defaultValue = "Programme Id"
+    )
+    String getProgrammeId();
+
+    @Option(
+            description =
+                    "a programme title"
+                            + " ('convert' mode only).",
+            longName = {"ptitle"},
+            defaultValue = "Programme Title"
+    )
+    String getProgrammeTitle();
 
 }
