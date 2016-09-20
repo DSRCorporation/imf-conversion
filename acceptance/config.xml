@@ -13,8 +13,9 @@
         <tool id="ffprobe">ffprobe</tool>
         <tool id="bmx">raw2bmx</tool>
         <tool id="mxf2raw">mxf2raw</tool>
-        <tool id="x264">x264</tool>
+        <tool id="x264">x264-10bit</tool>
         <tool id="as-02-unwrap">as-02-unwrap</tool>
+        <tool id="prenc">prenc</tool>
         <!--<tool id="java">java</tool>-->
         <!--<tool id="ttml-to-stl">ttml-to-stl.jar</tool>-->
         <!--<tool id="imf-validation">validation path</tool>-->

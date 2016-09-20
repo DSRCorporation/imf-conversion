@@ -18,7 +18,7 @@ buildscript {
 // 2. group and version for all projects
 subprojects {
     group = 'com.netflix.imfutility'
-    version = '1.0-beta'
+    version = '1.0-itunes-beta'
 }
 
 // 3. define groups of projects with common configuration
@@ -29,6 +29,7 @@ project.ext {
     // Java subprojects that generates Java clases from xsd (with jaxb plugin)
     xsdJavaSubprojectList = subprojects.findAll {
         it.name == 'dpp-conversion-input-xsd' ||
+                it.name == 'itunes-conversion-input-xsd' ||
                 it.name == 'imf-conversion-core' ||
                 it.name == 'imf-conversion-common'
     }
@@ -37,6 +38,7 @@ project.ext {
     // to create dependencies between tests in subprojects
     testArtifactsJavaSubprojectList = subprojects.findAll {
         it.name == 'dpp-conversion' ||
+                it.name == 'itunes-conversion' ||
                 it.name == 'imf-conversion-core'
     }
 
@@ -55,6 +57,9 @@ configure(project.javaSubprojectList) {
     repositories {
         mavenCentral()
         jcenter()
+        flatDir {
+            dirs '../ttml-java/dist', '../itunes-metadata-film/dist', '../itunes-metadata-tv/dist'
+        }
     }
 
     dependencies {
@@ -145,7 +150,7 @@ configure(project.xsdJavaSubprojectList) {
         xjc {
             taskClassname = "org.jvnet.jaxb2_commons.xjc.XJC2Task"
             // generatePackages must be specified in xjb bindings
-            args = ["-Xinheritance", "-Xannotate"]
+            args = ["-Xinheritance", "-Xannotate", "-Xsimplify"]
             destinationDir = "src/generated/java"
         }
     }
@@ -205,6 +210,10 @@ task copyDistr(type: Copy) {
 task copyInstall(type: Copy) {
     from 'imf-conversion-main/build/install'
     into 'install'
+}
+
+clean {
+    delete 'install'
 }
 
 copyDistr.dependsOn(subprojects.build)

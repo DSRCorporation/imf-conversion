@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://apple.com/itunes/importer" version="tv5.2">
+    <provider>Required Provider</provider>
+    <language>fr-CA</language>
+    <video>
+        <type>tv</type>
+        <subtype>episode</subtype>
+        <original_spoken_locale>en-US</original_spoken_locale>
+        <container_id>CONTAINER_001</container_id>
+        <container_position>1</container_position>
+        <vendor_id>000000000000</vendor_id>
+        <title>Required Title</title>
+        <studio_release_title>Required Title</studio_release_title>
+        <episode_production_number>101</episode_production_number>
+        <description>Required Description</description>
+        <release_date>2016-09-02</release_date>
+        <ratings>
+            <rating system="us-tv" code="TV-G"/>
+        </ratings>
+        <previews>
+            <preview timecode_format="qt_text" start_time="00:00:00" end_time="00:01:00" image_time="00:02:00"/>
+        </previews>
+        <products>
+            <product>
+                <territory>CA</territory>
+                <cleared_for_sale>false</cleared_for_sale>
+            </product>
+        </products>
+    </video>
+</package>

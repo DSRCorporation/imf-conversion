@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+
+function usage {
+    echo "Convert all default test packages to DPP Format."
+    echo "1st argument - a path to the directory containing all default test packages."
+    echo "2d argument - a path to the directory containing the output for all test packages."
+    echo "3d argument - a path to imf-conversion-utility (if not set a default one will be used assuming that we're in the source root folder)."
+}
+
+if [ -z "$1" ]; then
+    echo "Missing argument: a path to the directory containing all default test packages."
+    usage
+    exit 1
+fi
+
+if [ -z "$2" ]; then
+    echo "Missing argument: a path to the directory containing the output for all test packages."
+    usage
+    exit 1
+fi
+
+cd "${BASH_SOURCE%/*}"
+
+Chimera25Dir="Chimera25_FTR_C_EN_XG-NR_20_4K_20150608_OV"
+Chimera23Dir="Chimera23_FTR_C_EN_XG-NR_20_4K_20150603_OV"
+Chimera29Dir="Chimera29_FTR_C_EN_XG-NR_20_4K_20150624_OV"
+Chimera50Dir="Chimera50_FTR_C_EN_XG-NR_20_4K_20150622_OV"
+
+# short versions
+./chimera25-short       "$1/$Chimera25Dir" "$2" "$3";
+./chimera50-short       "$1/$Chimera50Dir" "$2" "$3";
+
+# formats
+./chimera25-formats     "$1/$Chimera25Dir" "$2" "$3";
+
+# 2016 namespace
+# use only with switched off imf validation
+./chimera25-2016-namespace    "$1/$Chimera25Dir" "$2" "$3";
+
+# CPLs with tricky segments
+./chimera25-segments                    "$1/$Chimera25Dir" "$2" "$3";
+./chimera25-segments-audio-essence-desc "$1/$Chimera25Dir" "$2" "$3";
+
+# custom audiomap, metadata, additional assets, fallback-locale
+./chimera25-audiomap            "$1/$Chimera25Dir" "$2" "$3";
+./chimera25-metadata            "$1/$Chimera25Dir" "$2" "$3";
+./chimera25-audiomap-metadata   "$1/$Chimera25Dir" "$2" "$3";
+./chimera25-add-assets          "$1/$Chimera25Dir" "$2" "$3";
+./chimera25-locale              "$1/$Chimera25Dir" "$2" "$3";
+
+# essence desc on audio
+./chimera25-essence-desc                    "$1/$Chimera25Dir" "$2" "$3";
+./chimera25-essence-desc-audiomap-by-order  "$1/$Chimera25Dir" "$2" "$3";
+./chimera25-essence-desc-audiomap-guess     "$1/$Chimera25Dir" "$2" "$3";
+
+# no audio
+./chimera50-no-audio    "$1/$Chimera50Dir" "$2" "$3";
+
+# closed captions and subtitles
+./chimera25-cc              "$1/$Chimera25Dir" "$2" "$3";
+./chimera29-sub             "$1/$Chimera29Dir" "$2" "$3";
+./chimera29-sub-ext         "$1/$Chimera29Dir" "$2" "$3";
+./chimera29-sub-segments    "$1/$Chimera29Dir" "$2" "$3";
+
+# default as-is full CPLs for all test packages
+./chimera23-default     "$1/$Chimera23Dir" "$2" "$3";
+./chimera25-default     "$1/$Chimera25Dir" "$2" "$3";
+./chimera50-default     "$1/$Chimera50Dir" "$2" "$3";
+./chimera29-default     "$1/$Chimera29Dir" "$2" "$3";

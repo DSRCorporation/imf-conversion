@@ -297,24 +297,6 @@ public final class TemplateParameterContextCreator {
         assertEquals(expectedValue, value);
     }
 
-    public static DestContextTypeMap createDestContextMap(String name,
-                                                          String width,
-                                                          String height,
-                                                          String frameRate,
-                                                          String interlaced,
-                                                          String duration) {
-        DestContextTypeMap contextMap = new DestContextTypeMap();
-        contextMap.setName(name);
-
-        putDestContextValue(WIDTH.getName(), width, contextMap);
-        putDestContextValue(HEIGHT.getName(), height, contextMap);
-        putDestContextValue(FRAME_RATE.getName(), frameRate, contextMap);
-        putDestContextValue(INTERLACED.getName(), interlaced, contextMap);
-        putDestContextValue(DURATION.getName(), duration, contextMap);
-
-        return contextMap;
-    }
-
     public static void initEmptyDestContext(TemplateParameterContextProvider contextProvider) {
         DestContextTypeMap map = new DestContextTypeMap();
         map.setName("test");

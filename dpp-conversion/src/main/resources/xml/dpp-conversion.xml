@@ -194,7 +194,7 @@
                                 </execOnce>
                                 <execEachSegment name="decode_audio">
                                     <execOnce name="decode_audio">
-                                        "%{tool.ffmpeg}" -f s%{resource.bits_per_sample}le -ar %{resource.sample_rate}
+                                        "%{tool.ffmpeg}" -y -f s%{resource.bits_per_sample}le -ar %{resource.sample_rate}
                                         -ac %{resource.channels_num}
                                         -i "%{dynamic.audio-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}}" -vn -af
                                         aresample=%{dest.sampleRate}
@@ -210,7 +210,7 @@
                                 </execOnce>
                             </cycle>
                             <execOnce name="encode_audio">
-                                "%{tool.ffmpeg}" -f s%{dest.bitsSample}le -ar %{dest.sampleRate} -ac %{seq.channels_num} -i - -vn -c:a
+                                "%{tool.ffmpeg}" -y -f s%{dest.bitsSample}le -ar %{dest.sampleRate} -ac %{seq.channels_num} -i - -vn -c:a
                                 copy -f wav %{seq.num}-audio-encoded.wav
                             </execOnce>
                         </pipe>
@@ -234,7 +234,7 @@
                         4. Remap audio in accordance with AudioMap.xml
                     -->
                     <execOnce name="audioMaping" if="%{dynamic.hasAudio}">
-                        "%{tool.ffmpeg}" %{dynamic.concatAudioInput} -filter_complex
+                        "%{tool.ffmpeg}" -y %{dynamic.concatAudioInput} -filter_complex
                         "%{dynamic.concatAudioMap}amerge,pan=%{dynamic.panParameter}[aout]"
                         -map "[aout]" -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f s%{dest.bitsSample}le "%{tmp.audioEncoded}"
                     </execOnce>
@@ -274,6 +274,7 @@
                         6. Extract each subtitle TTML segment from MXF
                     -->
                     <execEachSequence type="subtitle" name="extractSubtitleSegments">
+                        <dynamicParameter name="concatTTML"></dynamicParameter>
                         <execEachSegment name="extract_ttml">
                             <execOnce name="extract_ttml">
                                 "%{tool.as-02-unwrap}" "%{resource.essence}"
@@ -285,7 +286,6 @@
                                 %{seq.num}-%{segm.num}-%{resource.num}.xml
                             </dynamicParameter>
 
-                            <dynamicParameter name="concatTTML"></dynamicParameter>
                             <dynamicParameter name="concatTTML" concat="true" concatWhitespace="true">
                                 --ttml
                                 %{seq.num}-%{segm.num}-%{resource.num}.xml %{resource.offsetMS} %{resource.startTimeMS}
@@ -306,6 +306,7 @@
                 </formatConfiguration>
             </formatConfigurations>
         </format>
+
     </formats>
 </conversion>
 

@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://apple.com/itunes/importer" version="film5.2">
+    <provider>Paramount</provider>
+    <language>en-US</language>
+    <video>
+        <type>film</type>
+        <subtype>feature</subtype>
+        <vendor_id>09736156444</vendor_id>
+        <isan>0000-0000-03B6-0000-O-0000-0000-2</isan>
+        <upc>09736156444</upc>
+        <country>US</country>
+        <original_spoken_locale>en-US</original_spoken_locale>
+        <title>Forrest Gump</title>
+        <studio_release_title>Forrest Gump</studio_release_title>
+        <synopsis>&quot;Stupid is as stupid does,&quot; says Forrest Gump (played by Tom Hanks in an Oscar-winning performance) as he discusses his relative level of intelligence with a stranger while waiting for a bus. Despite his sub-normal IQ, Gump leads a truly charmed life, with a ringside seat for many of the most memorable events of the second half of the 20th century. Featured alongside Tom Hanks are Sally Field as Forrest's mother; Gary Sinise as his commanding officer in Vietnam; Mykelti Williamson as his ill-fated Army buddy who is familiar with every recipe that involves shrimp; and the special effects artists whose digital magic place Forrest amidst a remarkable array of historical events and people.</synopsis>
+        <locales>
+            <locale name="pt-BR">
+                <title>Forrest Gump, o Contador de Histórias (Legendado)</title>
+                <synopsis>(Legendado) &quot;A vida é como uma caixa de bombons. você nunca sabe o que vai encontrar.&quot; Forrest Gump é um triunfo cinematográfico que se tornou um fenômeno. Tom Hanks apresenta uma impressionante interpretação como Forrest, um homem comum cuja simplicidade e inocência vão influenciar uma geração. Vencedor de seis prêmios da Academia®, incluindo Melhor Filme, Melhor Diretor (Robert Zemeckis) e Melhor Ator (Tom Hanks).</synopsis>
+            </locale>
+            <locale name="fr-FR">
+                <title>Forrest Gump (VOST)</title>
+                <synopsis>&quot;La vie, c’est comme une boîte de chocolats…On ne sait jamais sur quoi on va tomber.&quot; Tom Hanks est merveilleux dans ce film culte qui a touché le coeur de milliers de spectateurs. Forrest Gump est le symbole d’une époque, un candide dans une Amérique qui a perdu son innocence. Ce film a remporté 6 Oscars® dont celui du meilleur film, du meilleur réalisateur (Robert Zemeckis) et du meilleur acteur (Tom Hanks).</synopsis>
+            </locale>
+            <locale name="fr-CA">
+                <title>Forrest Gump</title>
+                <synopsis>&quot;La vie, c’est comme une boîte de chocolats…On ne sait jamais sur quoi on va tomber.&quot; Tom Hanks est merveilleux dans ce film culte qui a touché le coeur de milliers de spectateurs. Forrest Gump est le symbole d’une époque, un candide dans une Amérique qui a perdu son innocence. Ce film a remporté 6 Oscars® dont celui du meilleur film, du meilleur réalisateur (Robert Zemeckis) et du meilleur acteur (Tom Hanks).</synopsis>
+            </locale>
+        </locales>
+        <production_company>Paramount Pictures</production_company>
+        <copyright_cline>1994 Paramount Pictures</copyright_cline>
+        <theatrical_release_date>2007-05-04</theatrical_release_date>
+        <regions>
+            <region>
+                <territory>BR</territory>
+                <copyright_cline>1994 Paramount Pictures</copyright_cline>
+                <theatrical_release_date>2007-06-04</theatrical_release_date>
+            </region>
+            <region>
+                <territory>FR</territory>
+                <copyright_cline>1994 Paramount Pictures</copyright_cline>
+                <theatrical_release_date>2007-06-04</theatrical_release_date>
+            </region>
+            <region>
+                <territory>CA</territory>
+                <copyright_cline>1994 Paramount Pictures</copyright_cline>
+                <theatrical_release_date>2007-06-04</theatrical_release_date>
+            </region>
+        </regions>
+        <genres>
+            <genre code="COMEDY-00"/>
+            <genre code="DRAMA-00"/>
+        </genres>
+        <ratings>
+            <!-- Note that when adding ratings, escape codes can be used. -->
+            <rating system="mpaa" reason="For drug content, some sensuality and war violence." code="PG-13"/>
+            <rating system="br-movies" reason="Drogas L[&#237;]citas; Sexo; Viol[&#234;]ncia." code="14"/>
+            <rating system="fr-cnc" code="-12"/>
+            <rating system="ca-chvrs" code="14A"/>
+        </ratings>
+        <cast>
+            <cast_member billing="top">
+                <display_name>Tom Hanks</display_name>
+                <apple_id>2672649</apple_id>
+                <description format="plain">Forrest Gump leads a truly charmed life as he journeys through key events of the second half of the 20th century. Entirely without trying. For his portrayal of Forrest Gump, Tom Hanks earned the Academy Award for Best Actor, Golden Globe for Best Actor in a Motion Picture Drama, the BAFTA award for Best Actor and many more awards around the world. The titular film and character are based on the Winston Groom novel - "Forrest Gump".</description>
+                <locales>
+                    <locale name="pt-BR">
+                        <display_name>Tom Hanks</display_name>
+                        <description format="plain">Forrest Gump leva uma vida verdadeiramente encantado como ele viaja através de eventos-chave da segunda metade do século 20. Totalmente sem tentar. Por sua interpretação de Forrest Gump, Tom Hanks ganhou o Oscar de Melhor Ator, o Globo de Ouro de Melhor Ator em Filme Dramático, o prêmio BAFTA de Melhor Ator e muitos mais prêmios em todo o mundo. O filme titular e caráter são baseados no romance de Winston Groom - "Forrest Gump".</description>
+                    </locale>
+                    <locale name="fr-FR">
+                        <display_name>Tom Hanks</display_name>
+                        <description format="plain">Forrest Gump mène une vie vraiment charmé comme il voyage à travers les événements clés de la seconde moitié du 20e siècle. Entièrement sans essayer. Pour son interprétation de Forrest Gump, Tom Hanks a obtenu l'Oscar du meilleur acteur, Golden Globe du meilleur acteur dans un film dramatique, le BAFTA du meilleur acteur et beaucoup plus de récompenses à travers le monde. Le film et le caractère titulaire sont basés sur le roman de Winston Groom - "Forrest Gump".</description>
+                    </locale>
+                    <locale name="fr-CA">
+                        <display_name>Tom Hanks</display_name>
+                        <description format="plain">Forrest Gump mène une vie vraiment charmé comme il voyage à travers les événements clés de la seconde moitié du 20e siècle. Entièrement sans essayer. Pour son interprétation de Forrest Gump, Tom Hanks a obtenu l'Oscar du meilleur acteur, Golden Globe du meilleur acteur dans un film dramatique, le BAFTA du meilleur acteur et beaucoup plus de récompenses à travers le monde. Le film et le caractère titulaire sont basés sur le roman de Winston Groom - "Forrest Gump".</description>
+                    </locale>
+                </locales>
+                <characters>
+                    <character>
+                        <reference_id>FORREST</reference_id>
+                        <character_name>Forrest Gump</character_name>
+                        <character_note>Protagonist</character_note>
+                        <character_image>
+                            <data_file>
+                                <file_name>hanks_as_forrest_gump.png</file_name>
+                                <size>2813243</size>
+                                <checksum type="md5">4ec1addb1f4d3617718b3ebd1ae9ec96</checksum>
+                            </data_file>
+                        </character_image>
+                        <locales>
+                            <locale name="pt-BR">
+                                <character_name>Forrest Gump</character_name>
+                                <character_note>Protagonista</character_note>
+                            </locale>
+                            <locale name="fr-FR">
+                                <character_name>Forrest Gump</character_name>
+                                <character_note>Protagoniste</character_note>
+                            </locale>
+                            <locale name="fr-CA">
+                                <character_name>Forrest Gump</character_name>
+                                <character_note>Protagoniste</character_note>
+                            </locale>
+                        </locales>
+                    </character>
+                    <!-- Additional character blocks here if needed for this cast member to handle cases where a cast member plays multiple characters in the film. -->
+                </characters>
+            </cast_member>
+            <!-- Additional cast members here -->
+        </cast>
+        <crew>
+            <crew_member billing="top">
+                <display_name>Robert Zemeckis</display_name>
+                <apple_id>274059420</apple_id>
+                <locales>
+                    <locale name="pt-BR">
+                        <display_name>Robert Zemeckis</display_name>
+                    </locale>
+                    <locale name="fr-FR">
+                        <display_name>Robert Zemeckis</display_name>
+                    </locale>
+                    <locale name="fr-CA">
+                        <display_name>Robert Zemeckis</display_name>
+                    </locale>
+                </locales>
+                <roles>
+                    <role>Director</role>
+                </roles>
+            </crew_member>
+            <crew_member billing="top">
+                <display_name>Claude Motta</display_name>
+                <locales>
+                    <locale name="pt-BR">
+                        <display_name>Claude Motta</display_name>
+                    </locale>
+                    <locale name="fr-FR">
+                        <display_name>Claude Motta</display_name>
+                    </locale>
+                    <locale name="fr-CA">
+                        <display_name>Claude Motta</display_name>
+                    </locale>
+                </locales>
+                <roles>
+                    <role locale="pt-BR" character_reference="FORREST">Dub Artist</role>
+                </roles>
+            </crew_member>
+            <!-- Additional crew members here -->
+        </crew>
+        <!-- English, Portuguese, and French Inline Chaptering -->
+        <chapters>
+            <timecode_format>24/999 1000/nonDrop</timecode_format>
+            <chapter>
+                <start_time>00:00:00:00</start_time>
+                <titles>
+                    <title locale="en-US">Forrest's Story Begins</title>
+                    <title locale="pt-BR">História Forrest começa</title>
+                    <title locale="fr-FR">L'Histoire de Forest Commence</title>
+                    <title locale="fr-CA">L'Histoire de Forest Commence</title>
+                </titles>
+                <!-- Chapter image can be provided in an artwork file or specified by a timecode. This chapter image is provided in an artwork file. -->
+                <artwork_file>
+                    <file_name>chapter01.jpg</file_name>
+                    <checksum type="md5">ed93d0f3224a353a4cc8d4175d645130</checksum>
+                    <size>6748922</size>
+                </artwork_file>
+            </chapter>
+            <chapter>
+                <start_time>00:07:45:23</start_time>
+                <titles>
+                    <title locale="en-US">Football at Alabama</title>
+                    <title locale="pt-BR">Futebol em Alabama</title>
+                    <title locale="fr-FR">Football en Alabama</title>
+                    <title locale="fr-CA">Football en Alabama</title>
+                </titles>
+                <!-- Chapter image can be provided in an artwork file or specified by a timecode. This chapter image is specified by a timecode. -->
+                <artwork_time>00:07:45:38</artwork_time>
+            </chapter>
+            <!-- Additional chapters here. -->
+        </chapters>
+        <accessibility_info>
+            <accessibility role="captions" available="false" reason_code="IN_US_NO_CAPTIONS"/>
+        </accessibility_info>
+        <!-- Assets -->
+        <assets>
+            <!-- Source Video -->
+            <asset type="full">
+                <data_file role="source">
+                    <locale name="en-US"/>
+                    <file_name>09736156444-source.mov</file_name>
+                    <size>2595225600</size>
+                    <checksum type="md5">2a793a8b46037fe8aa29dd739b49911a</checksum>
+                    <attribute name="crop.top">80</attribute>
+                    <attribute name="crop.bottom">80</attribute>
+                    <attribute name="crop.left">50</attribute>
+                    <attribute name="crop.right">50</attribute>
+                    <attribute name="image.textless_master">true</attribute>
+                    <!-- Territory Exclusion on the Audio Embedded in the Source Video -->
+                    <territory_exclusions role="audio">
+                        <territory>CA</territory>
+                    </territory_exclusions>
+                </data_file>
+                <!-- Dubbed Latin American Spanish Audio -->
+                <data_file role="audio">
+                    <locale name="es-419"/>
+                    <file_name>audio_ES_419.mov</file_name>
+                    <checksum type="md5">9df86c3e43e7b43ddeabb2ddfe4b8a42</checksum>
+                    <size>4916659</size>
+                    <!-- Territory Exclusions on the Spanish Audio -->
+                    <territory_exclusions>
+                        <territory>FR</territory>
+                        <territory>CA</territory>
+                    </territory_exclusions>
+                </data_file>
+                <!-- Dubbed French 5.1 Surround Audio -->
+                <data_file role="audio">
+                    <locale name="fr-FR"/>
+                    <file_name>audio_FR_FR.mov</file_name>
+                    <checksum type="md5">bdeea426ac79543b691a45507e9956c8</checksum>
+                    <size>5820197005</size>
+                </data_file>
+                <!-- Dubbed French 7.1 Surround Audio -->
+                <data_file role="audio.7_1">
+                    <locale name="fr-FR"/>
+                    <file_name>audio_71_FR_FR.mov</file_name>
+                    <checksum type="md5">a765a9fc88ac893ead51366fbeb04d82</checksum>
+                    <size>8730177839</size>
+                    <attribute name="audio.surround.force_5_1_downmix">false</attribute>
+                </data_file>
+                <!-- Dub Card Video Latin American Spanish and French -->
+                <data_file role="video.end.dub_credits">
+                    <locale name="es-419"/>
+                    <file_name>dub_card_ES419.mov</file_name>
+                    <size>16201736340</size>
+                    <checksum type="md5">c5f39f1af9f2d3de4e85c06dec751f92</checksum>
+                </data_file>
+                <data_file role="video.end.dub_credits">
+                    <locale name="fr-FR"/>
+                    <file_name>dub_card_FR.mov</file_name>
+                    <size>134071620361</size>
+                    <checksum type="md5">39f1af9f2d3dec5f4e85c06dec751f92</checksum>
+                </data_file>
+                <!-- Subtitles -->
+                <data_file role="subtitles">
+                    <locale name="da"/>
+                    <file_name>Subtitles_DA_DK.itt</file_name>
+                    <size>100259</size>
+                    <checksum type="md5">9df86c3e43e7b43ddeabb2ddfe4b8a42</checksum>
+                </data_file>
+                <data_file role="subtitles">
+                    <locale name="pt-BR"/>
+                    <file_name>Subtitles_PT_BR.itt</file_name>
+                    <size>88474</size>
+                    <checksum type="md5">c123e860384b8b954f169c9af0cbe4df</checksum>
+                    <!-- Territory Exclusions on the Brazil Subtitles -->
+                    <territory_exclusions>
+                        <territory_exclusion end_date="2013-02-02">FR</territory_exclusion>
+                        <territory>CA</territory>
+                    </territory_exclusions>
+                </data_file>
+                <data_file role="subtitles">
+                    <locale name="en-CA"/>
+                    <file_name>Subtitles_EN_CA.itt</file_name>
+                    <size>88634</size>
+                    <checksum type="md5">54f16038469c9af0cbc123e8b8b9e4df</checksum>
+                </data_file>
+                <!-- Additional Subtitles here-->
+                <!-- Begin SDH here-->
+                <data_file role="subtitles.hearing_impaired">
+                    <locale name="en-US"/>
+                    <file_name>Subtitles_SDH_english.itt</file_name>
+                    <size>109511</size>
+                    <checksum type="md5">5a793a8b46037fe8aa2bdd739b49911a</checksum>
+                </data_file>
+                <data_file role="subtitles.hearing_impaired">
+                    <locale name="es-419"/>
+                    <file_name>Subtitles_ES_419_SDH.itt</file_name>
+                    <size>100259</size>
+                    <checksum type="md5">9df86c3e43e7b43ddeabb2ddfe4b8a42</checksum>
+                </data_file>
+                <!-- Additional SDH here-->
+                <!-- Forced Subtitles -->
+                <data_file role="forced_subtitles">
+                    <locale name="fr-FR"/>
+                    <file_name>Subtitles_FR_FR_Forced.itt</file_name>
+                    <size>1800</size>
+                    <checksum type="md5">a02809135b44f74015f775b3fcfe4120</checksum>
+                </data_file>
+                <data_file role="forced_subtitles">
+                    <locale name="es-419"/>
+                    <file_name>Subtitles_ES_419_Forced.itt</file_name>
+                    <size>1738</size>
+                    <checksum type="md5">3dff0aa59b46b89e770f4614a70909f8</checksum>
+                </data_file>
+                <data_file role="forced_subtitles">
+                    <locale name="en-US"/>
+                    <file_name>Subtitles_EN_US_Forced.itt</file_name>
+                    <size>1738</size>
+                    <checksum type="md5">b89e770f461xa59b464a7b89e770f4610909f8</checksum>
+                </data_file>
+            </asset>
+            <!-- End Forced Subtitles-->
+            <!-- Required. World Trailer. Will be used for all territories where a territory-specific trailer has not been specified. -->
+            <asset type="preview">
+                <preview_image_time format="24/999 1000/nonDrop">00:00:57:02</preview_image_time>
+                <territories>
+                    <territory>WW</territory>
+                </territories>
+                <data_file role="source">
+                    <locale name="en-US"/>
+                    <file_name>09736156444-preview.mov</file_name>
+                    <size>9987212</size>
+                    <checksum type="md5">739b43b793a8b46037fe8aa29dd9911e</checksum>
+                    <attribute name="crop.top">80</attribute>
+                    <attribute name="crop.bottom">80</attribute>
+                    <attribute name="crop.left">50</attribute>
+                    <attribute name="crop.right">50</attribute>
+                </data_file>
+            </asset>
+            <!-- Optional. Brazilian Trailer. When supplied, this trailer will be used in Brazil instead of the World file. -->
+            <asset type="preview">
+                <territories>
+                    <territory>BR</territory>
+                </territories>
+                <data_file role="source">
+                    <locale name="pt-BR"/>
+                    <file_name>09736156444-BR-preview.mov</file_name>
+                    <size>9986311</size>
+                    <checksum type="md5">a8b46039b43b793a29dd9911e37fe8a7</checksum>
+                    <attribute name="crop.top">80</attribute>
+                    <attribute name="crop.bottom">80</attribute>
+                    <attribute name="crop.left">50</attribute>
+                    <attribute name="crop.right">50</attribute>
+                </data_file>
+            </asset>
+            <!-- Optional. French Trailer. When supplied, this trailer will be used in France instead of the World file. This trailer includes an alternate audio for Canadian English. -->
+            <asset type="preview">
+                <territories>
+                    <territory>FR</territory>
+                </territories>
+                <data_file role="source">
+                    <locale name="fr-FR"/>
+                    <file_name>09736156444-FR-preview.mov</file_name>
+                    <size>9787655</size>
+                    <checksum type="md5">603b43b7fe739798aed991a3a8b429d1</checksum>
+                    <attribute name="crop.top">80</attribute>
+                    <attribute name="crop.bottom">80</attribute>
+                    <attribute name="crop.left">50</attribute>
+                    <attribute name="crop.right">50</attribute>
+                </data_file>
+                <!-- Dubbed Canadian English 5.1 Surround Audio -->
+                <data_file role="audio">
+                    <locale name="en-CA"/>
+                    <file_name>audio_EN_CA.mov</file_name>
+                    <checksum type="md5">bdeea426ac79543b691a45507e9956c8</checksum>
+                    <size>5820197005</size>
+                </data_file>
+            </asset>
+            <!-- Optional. Canadian Trailer with a texted master. -->
+            <asset type="preview">
+                <territories>
+                    <territory>CA</territory>
+                </territories>
+                <data_file role="source">
+                    <locale name="fr-CA"/>
+                    <file_name>09736156444-CA-preview.mov</file_name>
+                    <size>163638669192</size>
+                    <checksum type="md5">f4ca6297d8ea96c9d50cdf9b81da8540</checksum>
+                    <attribute name="crop.top">142</attribute>
+                    <attribute name="crop.bottom">142</attribute>
+                    <attribute name="crop.left">6</attribute>
+                    <attribute name="crop.right">6</attribute>
+                    <attribute name="image.textless_master">false</attribute>
+                    <attribute name="image.burned_forced_narrative.locale">en-US</attribute>
+                    <attribute name="image.burned_subtitles.locale">en-US</attribute>
+                </data_file>
+            </asset>
+            <!-- Required. World Poster Art. Will be used for all territories where a territory-specific poster art has not been specified -->
+            <asset type="artwork">
+                <territories>
+                    <territory>WW</territory>
+                </territories>
+                <data_file>
+                    <locale name="en-US"/>
+                    <file_name>09736156444.lsr</file_name>
+                    <checksum type="md5">43e7dddfe4b8ab433ede429df86cabb2</checksum>
+                    <size>6591649</size>
+                </data_file>
+            </asset>
+            <!-- Optional. Brazilian Poster Art. When supplied, this poster art will be used in Brazil instead of the World file. -->
+            <asset type="artwork">
+                <territories>
+                    <territory>BR</territory>
+                </territories>
+                <data_file>
+                    <locale name="pt-BR"/>
+                    <file_name>09736156444_BR.jpg</file_name>
+                    <checksum type="md5">a429df86ce7ddeddfe4b8abb433e43b2</checksum>
+                    <size>6591458</size>
+                </data_file>
+            </asset>
+            <!-- Optional. French Poster Art. When supplied, this poster art will be used in France instead of the World file. -->
+            <asset type="artwork">
+                <territories>
+                    <territory>FR</territory>
+                </territories>
+                <data_file>
+                    <locale name="fr-FR"/>
+                    <file_name>09736156444_FR.jpg</file_name>
+                    <checksum type="md5">b433e43e7ddeddfe4b8a429df86cabb2</checksum>
+                    <size>6491589</size>
+                </data_file>
+            </asset>
+        </assets>
+        <!-- Defined previews -->
+        <previews>
+            <preview territory="US" timecode_format="qt_text" start_time="00:55:13.002" end_time="00:58:27.000" image_time="00:55:45.128"/>
+            <!-- Additional territories as needed -->
+        </previews>
+        <products>
+            <product>
+                <territory>US</territory>
+                <cleared_for_sale>true</cleared_for_sale>
+                <wholesale_price_tier>3</wholesale_price_tier>
+                <sales_start_date>2006-03-12</sales_start_date>
+                <cleared_for_vod>false</cleared_for_vod>
+            </product>
+            <product>
+                <territory>FR</territory>
+                <cleared_for_sale>true</cleared_for_sale>
+                <wholesale_price_tier>3</wholesale_price_tier>
+                <sales_start_date>2014-04-12</sales_start_date>
+                <cleared_for_vod>false</cleared_for_vod>
+            </product>
+            <product>
+                <territory>BR</territory>
+                <cleared_for_sale>true</cleared_for_sale>
+                <wholesale_price_tier>3</wholesale_price_tier>
+                <sales_start_date>2014-04-12</sales_start_date>
+                <cleared_for_vod>false</cleared_for_vod>
+            </product>
+            <product>
+                <territory>CA</territory>
+                <cleared_for_sale>true</cleared_for_sale>
+                <wholesale_price_tier>3</wholesale_price_tier>
+                <sales_start_date>2014-04-12</sales_start_date>
+                <cleared_for_vod>false</cleared_for_vod>
+            </product>
+            <!-- Additional territories as needed -->
+        </products>
+        <cue_sheet>
+            <cue>
+                <sequence_number>1</sequence_number>
+                <time>
+                    <start_timecode>00:00:27</start_timecode>
+                    <duration>00:02:39</duration>
+                </time>
+                <title>I'm Forrest…Forrest Gump</title>
+                <artists>
+                    <artist>
+                        <artist_name>Alan Silvestri</artist_name>
+                        <apple_id>611137</apple_id>
+                        <roles>
+                            <role>Composer</role>
+                            <role>Producer</role>
+                        </roles>
+                    </artist>
+                </artists>
+                <isrc>USSM19913841</isrc>
+                <iswc>T-070.267.022-1</iswc>
+                <copyright_cline>1994 Sony Music Entertainment Inc.</copyright_cline>
+                <copyright_pline>1994 Sony Music Entertainment Inc.</copyright_pline>
+                <usage>Signature</usage>
+            </cue>
+            <cue>
+                <sequence_number>2</sequence_number>
+                <time>
+                    <start_timecode>00:02:66</start_timecode>
+                    <duration>00:00:57</duration>
+                </time>
+                <title>You're No Different</title>
+                <artists>
+                    <artist>
+                        <artist_name>Alan Silvestri</artist_name>
+                        <apple_id>611137</apple_id>
+                        <roles>
+                            <role>Composer</role>
+                        </roles>
+                    </artist>
+                </artists>
+                <isrc>USSM19913842</isrc>
+                <iswc>T-070.282.409-6</iswc>
+                <copyright_cline>1994 Sony Music Entertainment Inc.</copyright_cline>
+                <copyright_pline>1994 Sony Music Entertainment Inc.</copyright_pline>
+                <usage>Background</usage>
+            </cue>
+            <!-- Additional musical pieces here -->
+        </cue_sheet>
+    </video>
+</package>

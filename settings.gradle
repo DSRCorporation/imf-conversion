@@ -7,6 +7,10 @@ include 'dpp-conversion-input-xsd'
 include 'imf-validation'
 include 'ttml-to-stl'
 include 'imf-essence-descriptors'
+include 'itunes-conversion'
+include 'itunes-conversion-input-xsd'
+include 'ttml2itt'
+include 'ttml2scc'
 
 project(":imf-conversion-main").name = "imf-conversion-utility"
 

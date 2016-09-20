@@ -4,6 +4,7 @@ description = "IMF conversion main entry point"
 // 2. dependencies
 dependencies {
     compile project(':dpp-conversion')
+    compile project(':itunes-conversion')
 }
 
 // 3. create a distribution
@@ -16,12 +17,16 @@ mainClassName = "com.netflix.imfutility.ImfUtility"
 task copyDefaultTools(type: Copy) {
     from '../imf-validation/build/libs'
     from '../ttml-to-stl/build/libs'
+    from '../ttml2itt/build/libs'
+    from '../ttml2scc/build/libs'
     into "${buildDir}/tools"
 }
 
 evaluationDependsOn(':imf-validation')
 evaluationDependsOn(':ttml-to-stl')
-copyDefaultTools.dependsOn(':imf-validation:assemble', ':ttml-to-stl:assemble')
+evaluationDependsOn(':ttml2itt')
+evaluationDependsOn(':ttml2scc')
+copyDefaultTools.dependsOn(':imf-validation:assemble', ':ttml-to-stl:assemble', ':ttml2itt:assemble', ':ttml2scc:assemble')
 classes.dependsOn(copyDefaultTools)
 
 // 5. customize distribution:
