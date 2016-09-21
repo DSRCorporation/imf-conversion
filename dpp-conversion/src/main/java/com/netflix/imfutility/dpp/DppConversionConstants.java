@@ -37,12 +37,15 @@ public final class DppConversionConstants {
     public static final String DYNAMIC_PARAM_OUTPUT_MXF = "output";
     public static final String DYNAMIC_PARAM_TTML_TO_STL = "ttml-to-stl";
     public static final String DYNAMIC_PARAM_METADATA_XML = "metadataXml";
-    public static final String DYNAMIC_PARAM_EBU_LINEUP = "EBULineup";
-    public static final String DYNAMIC_PARAM_SLATE = "slate";
     public static final String DYNAMIC_PARAM_LAST_ESSENCE = "last_essence";
     public static final String DYNAMIC_PARAM_LAST_FRAME_TC = "last_frame_tc";
-    public static final String DYNAMIC_PARAM_PROGRAMME_ID = "programmeId";
-    public static final String DYNAMIC_PARAM_PROGRAMME_TITLE = "programmeTitle";
+    public static final String DYNAMIC_PARAM_STEREO_LINEUP = "stereoLineup";
+    public static final String DYNAMIC_PARAM_SURROUND_LINEUP = "surroundLineup";
+    public static final String DYNAMIC_PARAM_HAS_SURROUND = "hasSurround";
+    public static final String DYNAMIC_PARAM_PRODUCTION_NUMBER = "productionNumber";
+    public static final String DYNAMIC_PARAM_SERIES_TITLE = "seriesTitle";
+    public static final String DYNAMIC_PARAM_EPISODE_TITLE = "episodeTitle";
+    public static final String DYNAMIC_PARAM_WATERSHED_VERSION = "watershedVersion";
 
     // 1.3 dynamic parameters default values:
     public static final String DYNAMIC_PARAM_VALUE_OUTPUT_MXF = "output";
@@ -57,20 +60,9 @@ public final class DppConversionConstants {
     public static final String XSLT2_TRANSFORMER_IMPLEMENTATION = "net.sf.saxon.TransformerFactoryImpl";
     public static final String BMX_FRAMEWORK_PARAM = "framework";
 
-
-/* 4. config.xml */
-
-    public static final String TTML_TO_STL_TOOL = "ttml-to-stl";
-
-/* 5. layout */
-
-    public static final String RESOURCE_EBU_LINEUP = "sample/Stereo_Programmes_1kHz_EBU_Lineup.wav";
-    public static final String UNPACKED_EBU_LINEUP = "Stereo_Programmes_1kHz_EBU_Lineup.wav";
-    public static final String RESOURCE_SLATE = "sample/slate.png";
-    public static final String UNPACKED_SLATE = "slate.png";
+    public static final String RESOURCE_STEREO_LINEUP = "sample/Stereo_Programmes_1kHz_EBU_Lineup.wav";
+    public static final String RESOURCE_SURROUND_LINEUP = "sample/Surround_Programmes_BLITS_-18dBFS.wav";
 
     private DppConversionConstants() {
-
     }
-
 }

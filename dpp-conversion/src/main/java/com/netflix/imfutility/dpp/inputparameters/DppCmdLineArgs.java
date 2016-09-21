@@ -73,20 +73,11 @@ public interface DppCmdLineArgs extends ImfUtilityCmdLineArgs {
 
     @Option(
             description =
-                    "a programme id"
+                    "a pre/post watershed version"
                             + " ('convert' mode only).",
-            longName = {"pid"},
-            defaultValue = "Programme Id"
+            longName = {"watershed"},
+            defaultValue = "Watershed version"
     )
-    String getProgrammeId();
-
-    @Option(
-            description =
-                    "a programme title"
-                            + " ('convert' mode only).",
-            longName = {"ptitle"},
-            defaultValue = "Programme Title"
-    )
-    String getProgrammeTitle();
+    String getWatershedVersion();
 
 }

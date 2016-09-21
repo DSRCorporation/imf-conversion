@@ -273,7 +273,7 @@ public final class AudioMapXmlProvider {
         return trackId + ":" + channelNumber.toString();
     }
 
-    private Integer getChannelCountToMap() {
+    public Integer getChannelCountToMap() {
         //Count mapped audio channels
         Integer mappedChannelCount = audioMap.getEBUTrack().size();
 

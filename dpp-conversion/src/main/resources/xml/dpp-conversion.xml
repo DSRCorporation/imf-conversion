@@ -37,6 +37,8 @@
             <tmpContext>
                 <param id="videoEncoded" deleteOnExit="true">output.x264</param>
                 <param id="audioEncoded" deleteOnExit="true">output.pcm</param>
+                <param id="audioMerged" deleteOnExit="true">merged_output.wav</param>
+                <param id="toneMerged" deleteOnExit="true">merged_tone.wav</param>
                 <param id="mediaInfoOutput" deleteOnExit="true">mediaInfo.xml</param>
             </tmpContext>
 
@@ -94,9 +96,15 @@
                         slate.jpg
                     </dynamicParameter>
 
-                    <!--TODO: add font support for other platforms (not only Windows)-->
                     <dynamicParameter name="font">
-                        fontfile='/Windows/Fonts/arial.ttf'
+                        fontfile='/Windows/Fonts/arial.ttf':fontcolor=white:fontsize=45
+                    </dynamicParameter>
+
+                    <dynamicParameter name="slate_text_filter">
+                        drawtext=%{dynamic.font}:text='%{dynamic.productionNumber}':x=(w-tw)/2:y=h-80,
+                        drawtext=%{dynamic.font}:text='%{dynamic.seriesTitle}':x=(w-tw)/2:y=(h-th)/4,
+                        drawtext=%{dynamic.font}:text='%{dynamic.episodeTitle}':x=(w-tw)/2:y=(h-th)/2,
+                        drawtext=%{dynamic.font}:text='%{dynamic.watershedVersion}':x=(w-tw)/2:y=80
                     </dynamicParameter>
 
                     <execOnce name="generate_slate">
@@ -105,12 +113,12 @@
                         -i color=c=black:s=%{dest.width}x%{dest.height}
                         -vframes 1
                         -vf
-                        "[in]drawtext=fontsize=45:fontcolor=white:%{dynamic.font}:text='%{dynamic.programmeId}':x=(w-tw)/2:y=(h-th)/4,drawtext=fontsize=60:fontcolor=white:%{dynamic.font}:text='%{dynamic.programmeTitle}':x=(w-tw)/2:y=(h-th)/2[out]"
+                        "[in]%{dynamic.slate_text_filter}[out]"
                         %{dynamic.slate_file}
                     </execOnce>
 
                     <!--
-                        1. decode each video segment and redirect output to encode's input
+                        decode each video segment and redirect output to encode's input
                         => flatten encoded video
                     -->
                     <execEachSequence type="video" name="encodeVideo">
@@ -180,96 +188,172 @@
                         </pipe>
                     </execEachSequence>
 
-                    <!--
-                        2. Extract each audio segment from MXF due to FFMPEG mxf reading issue
-                    -->
-                    <execEachSequence type="audio" name="extractAudioSegments">
-                        <execEachSegment name="extract_audio">
-                            <execOnce name="extract_audio">
-                                "%{tool.mxf2raw}" -p "%{seq.num}-%{segm.num}-%{resource.num}" --start
-                                %{resource.startTimeFrameEU}
-                                --dur %{resource.durationFrameEU} "%{resource.essence}"
-                            </execOnce>
-                            <!-- to delete intermediate files at the end -->
-                            <dynamicParameter name="audio-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}"
-                                              deleteOnExit="true">
-                                %{seq.num}-%{segm.num}-%{resource.num}_a0.raw
-                            </dynamicParameter>
-                        </execEachSegment>
-                    </execEachSequence>
+                    <if test="%{dynamic.hasAudio}">
+                        <!--
+                            Extract each audio segment from MXF due to FFMPEG mxf reading issue
+                        -->
+                        <execEachSequence type="audio" name="extractAudioSegments">
+                            <execEachSegment name="extract_audio">
+                                <execOnce name="extract_audio">
+                                    "%{tool.mxf2raw}" -p "%{seq.num}-%{segm.num}-%{resource.num}" --start
+                                    %{resource.startTimeFrameEU}
+                                    --dur %{resource.durationFrameEU} "%{resource.essence}"
+                                </execOnce>
+                                <!-- to delete intermediate files at the end -->
+                                <dynamicParameter name="audio-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}"
+                                                  deleteOnExit="true">
+                                    %{seq.num}-%{segm.num}-%{resource.num}_a0.raw
+                                </dynamicParameter>
+                            </execEachSegment>
+                        </execEachSequence>
 
-                    <!--
-                        3. decode each audio segment and redirect output to encode's input
-                           => flatten encoded audio
-                    -->
-                    <execEachSequence type="audio" name="encodeAudio">
-                        <pipe>
-                            <cycle>
-                                <!--20s-->
-                                <execOnce name="tone">
-                                    "%{tool.ffmpeg}"
-                                    -stream_loop 3 -i "%{dynamic.EBULineup}"
-                                    -vn -t 20
-                                    -af aresample=%{dest.sampleRate}
-                                    -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
-                                </execOnce>
-                                <!--10s (00:00:07:04 slate + 00:00:00:02 white + 00:00:02:19 black)-->
-                                <execOnce name="silence">
-                                    %{tool.ffmpeg}
-                                    -f lavfi -i anullsrc=cl=stereo:r=%{dest.sampleRate}
-                                    -vn -t 10
-                                    -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
-                                </execOnce>
-                                <execEachSegment name="decode_audio">
-                                    <execOnce name="decode_audio">
-                                        "%{tool.ffmpeg}" -y -f s%{resource.bits_per_sample}le -ar %{resource.sample_rate}
-                                        -ac %{resource.channels_num}
-                                        -i "%{dynamic.audio-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}}" -vn -af
-                                        aresample=%{dest.sampleRate}
+                        <!--
+                            decode each audio segment and redirect output to encode's input
+                               => flatten encoded audio
+                        -->
+                        <execEachSequence type="audio" name="encodeAudio">
+                            <pipe>
+                                <cycle>
+                                    <!--10s (00:00:07:04 slate + 00:00:00:02 white + 00:00:02:19 black)-->
+                                    <execOnce name="silence">
+                                        %{tool.ffmpeg} -y -vn
+                                        -f lavfi -i anullsrc=cl=stereo:r=%{dest.sampleRate}
+                                        -t 10
                                         -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
                                     </execOnce>
-                                </execEachSegment>
-                                <!--5s-->
-                                <execOnce name="silence">
-                                    %{tool.ffmpeg}
-                                    -f lavfi -i anullsrc=cl=stereo:r=%{dest.sampleRate}
-                                    -vn -t 5
-                                    -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
+                                    <execEachSegment name="decode_audio">
+                                        <execOnce name="decode_audio">
+                                            "%{tool.ffmpeg}" -y -f s%{resource.bits_per_sample}le -ar %{resource.sample_rate}
+                                            -ac %{resource.channels_num}
+                                            -i "%{dynamic.audio-segment-tmp-%{seq.num}-%{segm.num}-%{resource.num}}" -vn -af
+                                            aresample=%{dest.sampleRate}
+                                            -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
+                                        </execOnce>
+                                    </execEachSegment>
+                                    <!--5s-->
+                                    <execOnce name="silence">
+                                        %{tool.ffmpeg}
+                                        -f lavfi -i anullsrc=cl=stereo:r=%{dest.sampleRate}
+                                        -vn -t 5
+                                        -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
+                                    </execOnce>
+                                </cycle>
+                                <execOnce name="encode_audio">
+                                    "%{tool.ffmpeg}" -y -f s%{dest.bitsSample}le -ar %{dest.sampleRate} -ac %{seq.channels_num} -i - -vn
+                                    -c:a
+                                    copy -f wav %{seq.num}-audio-encoded.wav
                                 </execOnce>
-                            </cycle>
-                            <execOnce name="encode_audio">
-                                "%{tool.ffmpeg}" -y -f s%{dest.bitsSample}le -ar %{dest.sampleRate} -ac %{seq.channels_num} -i - -vn -c:a
-                                copy -f wav %{seq.num}-audio-encoded.wav
+                            </pipe>
+                            <dynamicParameter name="concatAudioInput" concat="true" concatWhitespace="true">
+                                -i "%{seq.num}-audio-encoded.wav"
+                            </dynamicParameter>
+                            <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false">[%{seq.num}:a]
+                            </dynamicParameter>
+                            <!-- to delete intermediate files at the end -->
+                            <dynamicParameter name="audio-virtual-track-wav-%{seq.num}" deleteOnExit="true">
+                                %{seq.num}-audio-encoded.wav
+                            </dynamicParameter>
+                        </execEachSequence>
+
+                        <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
+                        <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false"
+                                          if="%{dynamic.singleAudio}">[0:a]
+                        </dynamicParameter>
+
+                        <!--
+                            Remap audio in accordance with AudioMap.xml
+                        -->
+                        <execOnce name="audioMaping" if="%{dynamic.hasAudio}">
+                            "%{tool.ffmpeg}" -y
+                            %{dynamic.concatAudioInput}
+                            -filter_complex "%{dynamic.concatAudioMap}amerge,pan=%{dynamic.panParameter}[aout]" -map "[aout]"
+                            -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f wav
+                            "%{tmp.audioMerged}"
+                        </execOnce>
+
+                        <!--
+                            generate lineup tone and silence
+                        -->
+
+                        <dynamicParameter name="stereoTone" deleteOnExit="true">
+                            stereo-tone.wav
+                        </dynamicParameter>
+                        <dynamicParameter name="stereoSilence" deleteOnExit="true">
+                            stereo-silence.wav
+                        </dynamicParameter>
+                        <execOnce name="stereo_tone">
+                            "%{tool.ffmpeg}" -y -vn
+                            -stream_loop 3 -i "%{dynamic.stereoLineup}"
+                            -t 20
+                            -acodec pcm_s%{dest.bitsSample}le -f wav
+                            %{dynamic.stereoTone}
+                        </execOnce>
+                        <execOnce name="stereo_silence_tone">
+                            %{tool.ffmpeg} -y -vn
+                            -f lavfi -i anullsrc=cl=stereo:r=%{dest.sampleRate}
+                            -t 20
+                            -af aresample=%{dest.sampleRate}
+                            -acodec pcm_s%{dest.bitsSample}le -f wav
+                            %{dynamic.stereoSilence}
+                        </execOnce>
+                        <dynamicParameter name="toneAudioInput" concat="true" concatWhitespace="true">
+                            -i %{dynamic.stereoTone} -i %{dynamic.stereoSilence}
+                        </dynamicParameter>
+                        <dynamicParameter name="toneAudioMap" concat="true" concatWhitespace="false">
+                            [0:a:0][1:a:0]
+                        </dynamicParameter>
+
+                        <if test="%{dynamic.hasSurround}">
+
+                            <dynamicParameter name="surroundTone" deleteOnExit="true">
+                                surround-tone.wav
+                            </dynamicParameter>
+                            <dynamicParameter name="surroundSilence" deleteOnExit="true">
+                                surround-silence.wav
+                            </dynamicParameter>
+
+                            <execOnce name="surround_tone">
+                                "%{tool.ffmpeg}"
+                                -stream_loop -1 -i "%{dynamic.surroundLineup}"
+                                -vn -t 20
+                                -af aresample=%{dest.sampleRate}
+                                -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le
+                                %{dynamic.surroundTone}
                             </execOnce>
-                        </pipe>
-                        <dynamicParameter name="concatAudioInput" concat="true" concatWhitespace="true">
-                            -i "%{seq.num}-audio-encoded.wav"
-                        </dynamicParameter>
-                        <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false">[%{seq.num}:a]
-                        </dynamicParameter>
-                        <!-- to delete intermediate files at the end -->
-                        <dynamicParameter name="audio-virtual-track-wav-%{seq.num}" deleteOnExit="true">
-                            %{seq.num}-audio-encoded.wav
-                        </dynamicParameter>
-                    </execEachSequence>
+                            <execOnce name="surround_silence_tone">
+                                %{tool.ffmpeg} -y -vn
+                                -f lavfi -i anullsrc=cl=5.1:r=%{dest.sampleRate}
+                                -t 20
+                                -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le
+                                %{dynamic.surroundSilence}
+                            </execOnce>
+                            <dynamicParameter name="toneAudioInput" concat="true" concatWhitespace="true">
+                                -i %{dynamic.surroundTone} -i %{dynamic.surroundSilence}
+                            </dynamicParameter>
+                            <dynamicParameter name="toneAudioMap" concat="true" concatWhitespace="false">
+                                [2:a:0][3:a:0]
+                            </dynamicParameter>
+                        </if>
 
-                    <!-- [0:a] is a simple workaround to allow amerge with a single file. It is omitted at pan stage -->
-                    <dynamicParameter name="concatAudioMap" concat="true" concatWhitespace="false"
-                                      if="%{dynamic.singleAudio}">[0:a]
-                    </dynamicParameter>
+                        <execOnce name="toneMaping">
+                            "%{tool.ffmpeg}" -y -vn
+                            %{dynamic.toneAudioInput}
+                            -filter_complex "%{dynamic.toneAudioMap}amerge[aout]" -map "[aout]"
+                            -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f wav
+                            "%{tmp.toneMerged}"
+                        </execOnce>
+
+                        <execOnce name="toneConcatWithMainAudio">
+                            "%{tool.ffmpeg}" -y -vn
+                            -i %{tmp.toneMerged} -i %{tmp.audioMerged}
+                            -filter_complex "[0:0][1:0]concat=n=2:v=0:a=1[a]" -map "[a]"
+                            -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f s%{dest.bitsSample}le
+                            "%{tmp.audioEncoded}"
+                        </execOnce>
+                    </if>
 
                     <!--
-                        4. Remap audio in accordance with AudioMap.xml
-                    -->
-                    <execOnce name="audioMaping" if="%{dynamic.hasAudio}">
-                        "%{tool.ffmpeg}" -y %{dynamic.concatAudioInput} -filter_complex
-                        "%{dynamic.concatAudioMap}amerge,pan=%{dynamic.panParameter}[aout]"
-                        -map "[aout]" -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f s%{dest.bitsSample}le
-                        "%{tmp.audioEncoded}"
-                    </execOnce>
-
-                    <!--
-                        5. create output .mxf from flatten encoded video and audio
+                        create output .mxf from flatten encoded video and audio
                     -->
                     <execOnce name="muxing_mxf_audio_video" if="%{dynamic.hasAudioAndVideo}">
                         "%{tool.bmx}" -t as11op1a -o "%{dynamic.output}.mxf"
@@ -300,7 +384,7 @@
                     </execOnce>
 
                     <!--
-                        6. Extract each subtitle TTML segment from MXF
+                        Extract each subtitle TTML segment from MXF
                     -->
                     <execEachSequence type="subtitle" name="extractSubtitleSegments">
                         <dynamicParameter name="concatTTML"></dynamicParameter>

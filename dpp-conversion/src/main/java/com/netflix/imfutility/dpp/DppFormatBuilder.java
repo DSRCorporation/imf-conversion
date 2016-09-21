@@ -21,6 +21,7 @@ package com.netflix.imfutility.dpp;
 import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceKey;
 import com.netflix.imfutility.conversion.templateParameter.context.ResourceTemplateParameterContext;
@@ -37,6 +38,7 @@ import com.netflix.imfutility.dpp.metadata.MetadataXmlProvider;
 import com.netflix.imfutility.dpp.metadata.MetadataXmlProvider.DMFramework;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.dpp.metadata.AudioTrackLayoutDmAs11Type;
+import com.netflix.imfutility.generated.dpp.metadata.EditorialType;
 import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.util.CplHelper;
@@ -55,26 +57,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.util.Collection;
 
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_AS11_CORE_FILE;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_AS11_SEGM_FILE;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_EBU_AUDIO_TRACKS;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_EBU_LINEUP;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_EPISODE_TITLE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_HAS_SURROUND;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_LAST_ESSENCE;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_LAST_FRAME_TC;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_METADATA_XML;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_OUTPUT_MXF;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PAN;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PROGRAMME_ID;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PROGRAMME_TITLE;
-import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_SLATE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PRODUCTION_NUMBER;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_SERIES_TITLE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_STEREO_LINEUP;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_SURROUND_LINEUP;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_TTML_TO_STL;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_UK_DPP_FILE;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_VALUE_OUTPUT_MXF;
-import static com.netflix.imfutility.dpp.DppConversionConstants.RESOURCE_EBU_LINEUP;
-import static com.netflix.imfutility.dpp.DppConversionConstants.RESOURCE_SLATE;
-import static com.netflix.imfutility.dpp.DppConversionConstants.UNPACKED_EBU_LINEUP;
-import static com.netflix.imfutility.dpp.DppConversionConstants.UNPACKED_SLATE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_WATERSHED_VERSION;
+import static com.netflix.imfutility.dpp.DppConversionConstants.RESOURCE_STEREO_LINEUP;
+import static com.netflix.imfutility.dpp.DppConversionConstants.RESOURCE_SURROUND_LINEUP;
 
 
 /**
@@ -140,6 +144,8 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         // 3. fill audio map parameters
         dynamicContext.addParameter(DYNAMIC_PARAM_PAN, audioMapXmlProvider.getPanParameter());
 
+        dynamicContext.addParameter(DYNAMIC_PARAM_HAS_SURROUND, Boolean.toString(audioMapXmlProvider.getChannelCountToMap() > 4));
+
         // 4. fill ebuAudioTracks parameter
         Integer audioTracksNum = audioMapXmlProvider.getEBUAudioTracks();
         dynamicContext.addParameter(DYNAMIC_PARAM_EBU_AUDIO_TRACKS, String.valueOf(audioTracksNum));
@@ -154,20 +160,25 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
                 metadataXmlProvider.getBmxDppParameterFile(DMFramework.AS11Segmentation).getAbsolutePath(), true);
 
         // 6. prepare for creating layout
-        unpackLayoutResources();
         buildLayoutParameters();
     }
 
-    private void unpackLayoutResources() throws IOException {
-        unpackResource(RESOURCE_EBU_LINEUP, UNPACKED_EBU_LINEUP);
-        unpackResource(RESOURCE_SLATE, UNPACKED_SLATE);
-
-        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
-        dynamicContext.addParameter(DYNAMIC_PARAM_EBU_LINEUP, UNPACKED_EBU_LINEUP, true);
-        dynamicContext.addParameter(DYNAMIC_PARAM_SLATE, UNPACKED_SLATE, true);
+    private void buildLayoutParameters() {
+        buildLineupSampleParameters();
+        buildLastFrameLayoutParameters();
+        buildSlateLayoutParameters();
     }
 
-    private void unpackResource(String resource, String unpackedName) throws IOException {
+    private void buildLineupSampleParameters() {
+        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
+
+        unpackResource(RESOURCE_STEREO_LINEUP, DYNAMIC_PARAM_STEREO_LINEUP + ".wav");
+        dynamicContext.addParameter(DYNAMIC_PARAM_STEREO_LINEUP, DYNAMIC_PARAM_STEREO_LINEUP + ".wav");
+        unpackResource(RESOURCE_SURROUND_LINEUP, DYNAMIC_PARAM_SURROUND_LINEUP + ".wav");
+        dynamicContext.addParameter(DYNAMIC_PARAM_SURROUND_LINEUP, DYNAMIC_PARAM_SURROUND_LINEUP + ".wav");
+    }
+
+    private void unpackResource(String resource, String unpackedName) {
         File outputFile = new File(contextProvider.getWorkingDir(), unpackedName);
 
         try (
@@ -180,13 +191,16 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
             while ((read = inputStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void buildLayoutParameters() {
+    private void buildLastFrameLayoutParameters() {
+        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         ResourceTemplateParameterContext resourceContext = contextProvider.getResourceContext();
-        ContextInfo lastResourceContextInfo = getLastResourceContextInfo();
 
+        ContextInfo lastResourceContextInfo = getLastResourceContextInfo();
 
         String essence = resourceContext
                 .getParameterValue(ResourceContextParameters.ESSENCE, lastResourceContextInfo);
@@ -198,29 +212,35 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         BigInteger lastFrameTimeEU = endTimeEU.subtract(BigInteger.ONE);
         String lastFrameTimeTC = ConversionHelper.editUnitToTimecode(lastFrameTimeEU, editRate);
 
-        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         dynamicContext.addParameter(DYNAMIC_PARAM_LAST_ESSENCE, essence);
         dynamicContext.addParameter(DYNAMIC_PARAM_LAST_FRAME_TC, lastFrameTimeTC);
-        dynamicContext.addParameter(DYNAMIC_PARAM_PROGRAMME_ID, dppInputParameters.getCmdLineArgs().getProgrammeId());
-        dynamicContext.addParameter(DYNAMIC_PARAM_PROGRAMME_TITLE, dppInputParameters.getCmdLineArgs().getProgrammeTitle());
     }
 
-    private ContextInfo getLastResourceContextInfo() {
-        Object[] segmentUUIDs = contextProvider.getSegmentContext().getUuids().toArray();
-        SegmentUUID lastSegmentUUID = (SegmentUUID) segmentUUIDs[segmentUUIDs.length - 1];
+    private void buildSlateLayoutParameters() {
+        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
+        EditorialType editorial = metadataXmlProvider.getDpp().getEditorial();
 
-        SequenceUUID videoSequenceUUID = (SequenceUUID)
-                contextProvider.getSequenceContext().getUuids(SequenceType.VIDEO).toArray()[0];
+        dynamicContext.addParameter(DYNAMIC_PARAM_PRODUCTION_NUMBER, editorial.getProductionNumber());
+        dynamicContext.addParameter(DYNAMIC_PARAM_SERIES_TITLE, editorial.getSeriesTitle());
+        dynamicContext.addParameter(DYNAMIC_PARAM_EPISODE_TITLE, editorial.getEpisodeTitleNumber());
+        dynamicContext.addParameter(DYNAMIC_PARAM_WATERSHED_VERSION, dppInputParameters.getCmdLineArgs().getWatershedVersion());
+    }
+
+
+    private ContextInfo getLastResourceContextInfo() {
+        SegmentUUID lastSegmentUUID = getLast(contextProvider.getSegmentContext().getUuids());
+        SequenceUUID videoSequenceUUID = getFirst(contextProvider.getSequenceContext().getUuids(SequenceType.VIDEO));
 
         ResourceKey resourceKey = ResourceKey.create(lastSegmentUUID, videoSequenceUUID, SequenceType.VIDEO);
 
-        Object[] resourceUUIDs = contextProvider.getResourceContext().getUuids(resourceKey).toArray();
-        ResourceUUID lastResourceUUID = (ResourceUUID) resourceUUIDs[resourceUUIDs.length - 1];
+        ResourceUUID lastResourceUUID = getLast(contextProvider.getResourceContext().getUuids(resourceKey));
 
-        ContextInfo lastResourceContextInfo = new ContextInfo(
-                lastSegmentUUID, videoSequenceUUID, SequenceType.VIDEO, lastResourceUUID);
-
-        return lastResourceContextInfo;
+        return new ContextInfoBuilder()
+                .setSequenceType(SequenceType.VIDEO)
+                .setSequenceUuid(videoSequenceUUID)
+                .setSegmentUuid(lastSegmentUUID)
+                .setResourceUuid(lastResourceUUID)
+                .build();
     }
 
     @Override
@@ -294,5 +314,15 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
                         new File(inputParameters.getWorkingDirFile(), fileName).getAbsoluteFile());
             }
         }
+    }
+
+    private static <T> T getFirst(Collection<T> collection) {
+        Object[] array = collection.toArray();
+        return (T) array[0];
+    }
+
+    private static <T> T getLast(Collection<T> collection) {
+        Object[] array = collection.toArray();
+        return (T) array[array.length - 1];
     }
 }
