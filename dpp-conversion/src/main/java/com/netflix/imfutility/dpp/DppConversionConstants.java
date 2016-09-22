@@ -42,6 +42,7 @@ public final class DppConversionConstants {
     public static final String DYNAMIC_PARAM_STEREO_LINEUP = "stereoLineup";
     public static final String DYNAMIC_PARAM_SURROUND_LINEUP = "surroundLineup";
     public static final String DYNAMIC_PARAM_HAS_SURROUND = "hasSurround";
+    public static final String DYNAMIC_PARAM_SLATE_FONT = "slateFont";
     public static final String DYNAMIC_PARAM_PRODUCTION_NUMBER = "productionNumber";
     public static final String DYNAMIC_PARAM_SERIES_TITLE = "seriesTitle";
     public static final String DYNAMIC_PARAM_EPISODE_TITLE = "episodeTitle";
@@ -62,6 +63,7 @@ public final class DppConversionConstants {
 
     public static final String RESOURCE_STEREO_LINEUP = "sample/Stereo_Programmes_1kHz_EBU_Lineup.wav";
     public static final String RESOURCE_SURROUND_LINEUP = "sample/Surround_Programmes_BLITS_-18dBFS.wav";
+    public static final String RESOURCE_SLATE_FONT = "font/FreeSans.ttf";
 
     private DppConversionConstants() {
     }

@@ -71,12 +71,14 @@ import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_OU
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PAN;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PRODUCTION_NUMBER;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_SERIES_TITLE;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_SLATE_FONT;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_STEREO_LINEUP;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_SURROUND_LINEUP;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_TTML_TO_STL;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_UK_DPP_FILE;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_VALUE_OUTPUT_MXF;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_WATERSHED_VERSION;
+import static com.netflix.imfutility.dpp.DppConversionConstants.RESOURCE_SLATE_FONT;
 import static com.netflix.imfutility.dpp.DppConversionConstants.RESOURCE_STEREO_LINEUP;
 import static com.netflix.imfutility.dpp.DppConversionConstants.RESOURCE_SURROUND_LINEUP;
 
@@ -173,9 +175,11 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
 
         unpackResource(RESOURCE_STEREO_LINEUP, DYNAMIC_PARAM_STEREO_LINEUP + ".wav");
-        dynamicContext.addParameter(DYNAMIC_PARAM_STEREO_LINEUP, DYNAMIC_PARAM_STEREO_LINEUP + ".wav");
+        dynamicContext.addParameter(DYNAMIC_PARAM_STEREO_LINEUP, DYNAMIC_PARAM_STEREO_LINEUP + ".wav", true);
         unpackResource(RESOURCE_SURROUND_LINEUP, DYNAMIC_PARAM_SURROUND_LINEUP + ".wav");
-        dynamicContext.addParameter(DYNAMIC_PARAM_SURROUND_LINEUP, DYNAMIC_PARAM_SURROUND_LINEUP + ".wav");
+        dynamicContext.addParameter(DYNAMIC_PARAM_SURROUND_LINEUP, DYNAMIC_PARAM_SURROUND_LINEUP + ".wav", true);
+        unpackResource(RESOURCE_SLATE_FONT, DYNAMIC_PARAM_SLATE_FONT + ".tff");
+        dynamicContext.addParameter(DYNAMIC_PARAM_SLATE_FONT, DYNAMIC_PARAM_SLATE_FONT + ".tff", true);
     }
 
     private void unpackResource(String resource, String unpackedName) {

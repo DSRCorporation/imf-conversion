@@ -97,14 +97,14 @@
                     </dynamicParameter>
 
                     <dynamicParameter name="font">
-                        fontfile='/Windows/Fonts/arial.ttf':fontcolor=white:fontsize=45
+                        fontfile=%{dynamic.slateFont}:fontcolor=white:fontsize=45
                     </dynamicParameter>
 
                     <dynamicParameter name="slate_text_filter">
-                        drawtext=%{dynamic.font}:text='%{dynamic.productionNumber}':x=(w-tw)/2:y=h-80,
-                        drawtext=%{dynamic.font}:text='%{dynamic.seriesTitle}':x=(w-tw)/2:y=(h-th)/4,
+                        drawtext=%{dynamic.font}:text='%{dynamic.productionNumber}':x=(w-tw)/2:y=80,
+                        drawtext=%{dynamic.font}:text='%{dynamic.seriesTitle}':x=(w-tw)/2:y=(h-th)/3,
                         drawtext=%{dynamic.font}:text='%{dynamic.episodeTitle}':x=(w-tw)/2:y=(h-th)/2,
-                        drawtext=%{dynamic.font}:text='%{dynamic.watershedVersion}':x=(w-tw)/2:y=80
+                        drawtext=%{dynamic.font}:text='%{dynamic.watershedVersion}':x=(w-tw)/2:y=2*(h-th)/3
                     </dynamicParameter>
 
                     <execOnce name="generate_slate">
@@ -302,6 +302,7 @@
                         <dynamicParameter name="toneAudioMap" concat="true" concatWhitespace="false">
                             [0:a:0][1:a:0]
                         </dynamicParameter>
+                        <dynamicParameter name="toneAudioCount" add="2"/>
 
                         <if test="%{dynamic.hasSurround}">
 
@@ -314,17 +315,17 @@
 
                             <execOnce name="surround_tone">
                                 "%{tool.ffmpeg}"
-                                -stream_loop -1 -i "%{dynamic.surroundLineup}"
+                                -stream_loop 3 -i "%{dynamic.surroundLineup}"
                                 -vn -t 20
                                 -af aresample=%{dest.sampleRate}
-                                -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le
+                                -acodec pcm_s%{dest.bitsSample}le -f wav
                                 %{dynamic.surroundTone}
                             </execOnce>
                             <execOnce name="surround_silence_tone">
                                 %{tool.ffmpeg} -y -vn
                                 -f lavfi -i anullsrc=cl=5.1:r=%{dest.sampleRate}
                                 -t 20
-                                -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le
+                                -acodec pcm_s%{dest.bitsSample}le -f wav
                                 %{dynamic.surroundSilence}
                             </execOnce>
                             <dynamicParameter name="toneAudioInput" concat="true" concatWhitespace="true">
@@ -333,12 +334,13 @@
                             <dynamicParameter name="toneAudioMap" concat="true" concatWhitespace="false">
                                 [2:a:0][3:a:0]
                             </dynamicParameter>
+                            <dynamicParameter name="toneAudioCount" add="2"/>
                         </if>
 
                         <execOnce name="toneMaping">
                             "%{tool.ffmpeg}" -y -vn
                             %{dynamic.toneAudioInput}
-                            -filter_complex "%{dynamic.toneAudioMap}amerge[aout]" -map "[aout]"
+                            -filter_complex "%{dynamic.toneAudioMap}amerge=inputs=%{dynamic.toneAudioCount}[aout]" -map "[aout]"
                             -acodec pcm_s%{dest.bitsSample}le -ar %{dest.sampleRate} -f wav
                             "%{tmp.toneMerged}"
                         </execOnce>

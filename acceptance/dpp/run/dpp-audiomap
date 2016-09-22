@@ -54,4 +54,4 @@ if [ -z "$7" ]; then
     PROG="../../../install/imf-conversion-utility/bin/imf-conversion-utility"
 fi
 
-"$PROG" dpp -c "../../config.xml" -m convert --imp "$1" --cpl "$2" -w "$3" --metadata "$4" -o "$5" --audiomap "$6"
+"$PROG" dpp -c "../../config.xml" -m convert --imp "$1" --cpl "$2" -w "$3" --metadata "$4" -o "$5" --audiomap "$6" -l debug
