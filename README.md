@@ -387,7 +387,18 @@ Note 1:
 
 #### Prepare external tools used for conversion
 
-The same tools as for [DPP tools](#prepare-external-tools-used-for-conversion).
+iTunes version of the utility on OS X used native Apple ProRes encoder that provided by PrEnc utility that can be found
+at [GitHub PrEnc pero](https://github.com/DSRCorporation/prores-encoder-mac). Download PrEnc
+[sources](https://github.com/DSRCorporation/prores-encoder-mac/archive/master.zip) and follow installation instructions
+from README.md:
+    * open the Terminal application
+    * download sources ```$ wget https://github.com/DSRCorporation/prores-encoder-mac/archive/master.zip```
+    * unzip the archive ```$ unzip master.zip```
+    * change dir to unpacked source directory ```$ cd prores-encoder-mac-master```
+    * run make command ```$ make RELEASE=1```
+    * install ```sudo make install```
+
+Other tools installation is the same tools as for [DPP tools](#prepare-external-tools-used-for-conversion).
 
 #### Prepare config.xml
 
