@@ -73,6 +73,7 @@ Please see [README](README.md) for a full documentation.
         ```
         
         >Please note, required Java version is 8 or higher.
+        
         If you already have Java prior to version 8 - remove it before installation by typing command:
         ```
         $ brew cask uninstall --force java
@@ -102,6 +103,7 @@ Please see [README](README.md) for a full documentation.
         ```
         
         >Please note, IMF Utility requires 10-bit version.
+        
         If you already have other version of x264 - remove it before installation by typing command:
         ```
         $ brew uninstall x264
@@ -285,7 +287,7 @@ Example below shows a possible usage of IMF Utility to make a simple conversion 
 
 3.  Edit _sample/dpp_metadata.xml_ if needed.
 
-    Either enter correct duration for `PartDuration` and `TotalProgrammeDuration` fields, or use `00:00:00:00`).
+    Either enter correct duration for `PartDuration` and `TotalProgrammeDuration` fields, or use `00:00:00:00`.
     >Please note that all timestamps are in SMPTE timecode format (_hh:mm:ss:ff_), where _ff_ is in range [0,24] for 25 fps.
     >Please see [README](README.md) for a full description of _metadata.xml_.
 
