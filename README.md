@@ -1,7 +1,7 @@
 # IMF Conversion Utility
 
 * IMF media conversion utility allows to handle flat file creation from a specified CPL within the IMF package.
-* Currently conversion to BBC DPP format only is supported ([DPP](https://www.digitalproductionpartnership.co.uk/), [BBC](http://dpp-assets.s3.amazonaws.com/wp-content/uploads/specs/bbc/TechnicalDeliveryStandardsBBC.pdf)).
+* Please find Mac OS X installation and usage notes in [Getting Started OS X Guide](getting_started_osx.md).
 
 ## Contents
 * [Build](#build)
