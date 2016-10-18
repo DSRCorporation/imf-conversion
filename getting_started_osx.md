@@ -2,7 +2,7 @@
 
 Please see [README](README.md) for a full documentation.
 
-NOTE: Lines started with `$` represent commands need to be ran from console (terminal).
+>NOTE: Lines started with `$` represent commands need to be ran from console (terminal).
 
 ## Contents
 * [Installation](#installation)
@@ -30,7 +30,7 @@ NOTE: Lines started with `$` represent commands need to be ran from console (ter
     *   Click "Clone or Download" 
     *   Choose "Download ZIP" to download package
     
-    Please ensure that selected branch is `master`.
+    >Please ensure that selected branch is `master`.
 
     Find downloaded source in your _Downloads_ directory:
     ```
@@ -41,16 +41,17 @@ NOTE: Lines started with `$` represent commands need to be ran from console (ter
     $ unzip imf-conversion-{version}.zip
     ```
     
-    Please note, you can either copy or move downloaded sources to specified path for further installation.
+    >Please note, you can either copy or move downloaded sources to specified path for further installation.
 
 2.  Get external tools needed for further installation.
 
     *   Install Xcode.
+        
         Install latest Xcode from App Store.
-            
-        Please note, Xcode version 7.3 or higher is required.
+        >Please note, Xcode version 7.3 or higher is required.
 
     *   Install Homebrew package manager.
+    
         Run the following command to install brew:
         ```
         $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -65,12 +66,13 @@ NOTE: Lines started with `$` represent commands need to be ran from console (ter
 3.  Build and install external tools needed for conversion.
 
     *   Install Java.
+    
         Run the following command to install latest JDK:
         ```
         $ brew cask install java
         ```
         
-        Please note, required Java version is 8 or higher.
+        >Please note, required Java version is 8 or higher.
         If you already have Java prior to version 8 - remove it before installation by typing command:
         ```
         $ brew cask uninstall --force java
@@ -82,20 +84,24 @@ NOTE: Lines started with `$` represent commands need to be ran from console (ter
         Then see output for details, second number of printed version must be greater than or equals 8.
 
     *   Install [FFMPEG](https://ffmpeg.org/).
+    
         IMF Utility uses ffmpeg and ffprobe tools for video/audio conversion.
+        
         Run the following command to install ffmpeg tools:
         ```
         $ brew install ffmpeg
         ```
     
     *   Install [x264](http://www.videolan.org/developers/x264.html) encoder.
+    
         x264 encoder is used for DPP video encoding.
+        
         Run the following command to install x264:
         ```
         $ brew install x264 --with-10-bit
         ```
         
-        Please note, IMF Utility requires 10-bit version.
+        >Please note, IMF Utility requires 10-bit version.
         If you already have other version of x264 - remove it before installation by typing command:
         ```
         $ brew uninstall x264
@@ -107,6 +113,7 @@ NOTE: Lines started with `$` represent commands need to be ran from console (ter
         Then see output for details, value associated with `--bit-depth` must be equal to 10.
 
     *   Build and install [Prenc](https://github.com/DSRCorporation/prores-encoder-mac/blob/master/README.md) encoder.
+    
         Prenc is a tool providing native ProRes 422HQ encoding support on Mac.
         
         To download the source:
@@ -135,17 +142,20 @@ NOTE: Lines started with `$` represent commands need to be ran from console (ter
         ```
         
     *   Install [ASDCP](http://www.cinecert.com/asdcplib) tools.
+    
         IMF Utility requires as-02-unwrap tool only built from [specified repository](https://github.com/DSRCorporation/asdcplib-as02).
         This is a fork from [ASDCP lib](http://www.cinecert.com/asdcplib/) which is enhanced to work properly with TTML wrapped in MXF.
 
         ASDCP needs OpenSSL and Expat parser to be installed.
         
         *   Install OpenSSL.
+        
             Run the following command to install openssl:
             ```
             $ brew install openssl
             ```
         *   Install expat parser.
+        
             Run the following command to install expat:
             ```
             $ brew install expat
@@ -161,7 +171,6 @@ NOTE: Lines started with `$` represent commands need to be ran from console (ter
         ```
         $ cd /Users/{username}/Downloads/
         ```
-
         If you download archive - extract its contents before next step:
         ```
         $ unzip asdcplib-as02-master.zip
@@ -179,20 +188,24 @@ NOTE: Lines started with `$` represent commands need to be ran from console (ter
         ```
         
     *   Install [BMX lib](https://sourceforge.net/projects/bmxlib/) tools.
+    
         IMF Utility uses raw2bmx and mxf2raw tools built from [proper snapshot](https://github.com/DSRCorporation/imf-conversion/tree/master/tools/bmx) provided with the utility.
 
         BMX needs uriparser and pkg-config to be installed.
         
         *   Install uriparser.
+        
             Run the following command to install parser:
             ```
             $ brew install uriparser
             ```
         *   Install package config tool.
+        
             Run the following command to install pkg-config:
             ```
             $ brew install pkg-config
             ```
+            
         Go to directory with imf-conversion provided tools:
         ```
         $ cd {imf-conversion-source}/tools/
@@ -205,6 +218,7 @@ NOTE: Lines started with `$` represent commands need to be ran from console (ter
         Build libs on which BMX depends.
         
         *   Build libMXF
+        
             Go to directory with libMXF sources:
             ```
             $ cd {bmx-snapshot-extracted}/libMXF
@@ -216,6 +230,7 @@ NOTE: Lines started with `$` represent commands need to be ran from console (ter
             $ make install
             ```
         *   Build libMXF++
+        
             Go to directory with libMXF++ sources:
             ```
             $ cd {bmx-snapshot-extracted}/libMXF++
@@ -256,7 +271,7 @@ NOTE: Lines started with `$` represent commands need to be ran from console (ter
 ### DPP usage
 
 Example below shows a possible usage of IMF Utility to make a simple conversion into DPP format.
-Please see [README](README.md) to find a complete list of available options and facilities.
+>Please see [README](README.md) to find a complete list of available options and facilities.
 
 1.  Go to directory with installed utility:
     ```
@@ -264,13 +279,15 @@ Please see [README](README.md) to find a complete list of available options and 
     ```
     
 2.  Edit _sample/config.xml_ if needed.
+
     It can be used as is, if all external tools installed at step 1 are added to the `PATH`.
-    Please see [README](README.md) for a full description of _config.xml_.
+    >Please see [README](README.md) for a full description of _config.xml_.
 
 3.  Edit _sample/dpp_metadata.xml_ if needed.
+
     Either enter correct duration for `PartDuration` and `TotalProgrammeDuration` fields, or use `00:00:00:00`).
-    Please note that all timestamps are in SMPTE timecode format (_hh:mm:ss:ff_), where _ff_ is in range [0,24] for 25 fps.
-    Please see [README](README.md) for a full description of _metadata.xml_.
+    >Please note that all timestamps are in SMPTE timecode format (_hh:mm:ss:ff_), where _ff_ is in range [0,24] for 25 fps.
+    >Please see [README](README.md) for a full description of _metadata.xml_.
 
     A sample _metadata.xml_ can be created by running the following command:
     ```
@@ -278,7 +295,7 @@ Please see [README](README.md) to find a complete list of available options and 
     ```
     
 4.  Edit _sample/dpp_audiomap.xml_ if needed.
-    Please see [README](README.md) for a full description of _audiomap.xml_.
+    >Please see [README](README.md) for a full description of _audiomap.xml_.
 
     A sample _audiomap.xml_ can be created by running the following command:
     ```
@@ -294,7 +311,7 @@ Please see [README](README.md) to find a complete list of available options and 
     $ bin/imf-conversion-utility dpp -c sample/config.xml --metadata sample/dpp_metadata.xml --audiomap sample/dpp_audiomap.xml -o {output-name} --imp {path-to/imp} --cpl {cpl-name} -w {output-dir}
     ```
     
-    Please note, than `-w`, `--imp` and `--cpl` values can be set in _config.xml_ instead, `--cpl` path can be either absolute or relative to `--imp`.
+    >Please note, than `-w`, `--imp` and `--cpl` values can be set in _config.xml_ instead, `--cpl` path can be either absolute or relative to `--imp`.
 
 6.  An output flat files are created under the specified `-w` directory and called '_{output-dir}/{output-name}.mxf_' and '_{output-dir}/{output-name}.stl_'.
 
@@ -306,7 +323,7 @@ Please see [README](README.md) to find a complete list of available options and 
 ### iTunes usage
 
 Example below shows a possible usage of IMF Utility to make a simple conversion into iTunes format.
-Please see [README](README.md) to find a complete list of available options and facilities.
+>Please see [README](README.md) to find a complete list of available options and facilities.
 
 1.  Go to directory with installed utility:
     ```
@@ -314,15 +331,16 @@ Please see [README](README.md) to find a complete list of available options and 
     ```
 
 2.  Edit _sample/config.xml_ if needed.
+
     Sample _config.xml_ doesn't contain path to Prenc tool needed for iTunes conversion, so please specify it manually by adding line
     ```xml
         <tool id="prenc">prenc </tool>
     ```
     in `<externalTools>` section of _config.xml_.
-    Please see [README](README.md) for a full description of _config.xml_.
+    >Please see [README](README.md) for a full description of _config.xml_.
 
 3.  Generate and edit _metadata.xml_ if needed.
-    Please see [README](README.md) for a full description of _metadata.xml_.
+    >Please see [README](README.md) for a full description of _metadata.xml_.
 
     A sample _metadata.xml_ can be created by running the following command:
     ```
@@ -335,7 +353,7 @@ Please see [README](README.md) to find a complete list of available options and 
     ```
 
 4.  Generate and edit _audiomap.xml_ if needed.
-    Please see [README](README.md) for a full description of _audiomap.xml_.
+    >Please see [README](README.md) for a full description of _audiomap.xml_.
     
     A sample _audiomap.xml_ can be created by running the following command:
     ```
@@ -364,7 +382,7 @@ Please see [README](README.md) to find a complete list of available options and 
     $ bin/imf-conversion-utility itunes -c sample/config.xml --vendor-id {vendor-id} -p tv --imp {path-to/imp} --cpl {cpl} -w {output-dir}
     ```
     
-    Please note, than `-w`, `--imp` and `--cpl` values can be set in _config.xml_ instead, `--cpl` path can be either absolute or relative to `--imp`.
+    >Please note, than `-w`, `--imp` and `--cpl` values can be set in _config.xml_ instead, `--cpl` path can be either absolute or relative to `--imp`.
     
 6.  An output iTunes package is created under the specified `-w` directory and called '_{output-dir}/{vendor-id}.itmsp_'.
 
