@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -18,21 +18,25 @@
  */
 package com.netflix.subtitles.ttml;
 
-import static com.netflix.subtitles.TtmlConverterConstants.STYLE_FIELD;
 import com.netflix.subtitles.util.PBuilder;
-import static com.netflix.subtitles.util.TtmlTestUtils.createStyle;
-import static com.netflix.subtitles.util.TtmlTestUtils.getPBegin;
-import static com.netflix.subtitles.util.TtmlTestUtils.getPEnd;
-import static com.netflix.subtitles.util.TtmlTestUtils.p;
-import java.lang.reflect.Field;
-import java.util.stream.Collectors;
-import static org.junit.Assert.assertEquals;
+import org.apache.commons.math3.fraction.BigFraction;
 import org.junit.Test;
 import org.w3.ns.ttml.BodyEltype;
 import org.w3.ns.ttml.DivEltype;
 import org.w3.ns.ttml.HeadEltype;
 import org.w3.ns.ttml.StylingEltype;
 import org.w3.ns.ttml.TtEltype;
+
+import java.lang.reflect.Field;
+import java.math.BigInteger;
+import java.util.stream.Collectors;
+
+import static com.netflix.subtitles.TtmlConverterConstants.STYLE_FIELD;
+import static com.netflix.subtitles.util.TtmlTestUtils.createStyle;
+import static com.netflix.subtitles.util.TtmlTestUtils.getPBegin;
+import static com.netflix.subtitles.util.TtmlTestUtils.getPEnd;
+import static com.netflix.subtitles.util.TtmlTestUtils.p;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests TTML utilities methods: reduce document by time, style mover and etc.
@@ -54,15 +58,15 @@ public class TtmlUtilsTest {
         DivEltype div1 = body.getDiv().get(0);
         div1.getBlockClass().add(new PBuilder().withBegin("01:00:05:00").withEnd("01:00:10:00").build());
         div1.getBlockClass().add(new PBuilder().withBegin("01:00:13:00").withEnd("01:00:17:00").withDur("5s").build());
-        div1.getBlockClass().add(new PBuilder().withBegin("01:00:18:00").withEnd("01:00:25:00").withDur("6s").build());
+        div1.getBlockClass().add(new PBuilder().withBegin("01:00:18:14").withEnd("01:00:25:00").withDur("6s").build());
 
         DivEltype div2 = body.getDiv().get(1);
         div2.getBlockClass().add(new PBuilder().withBegin("01:00:07:00").withDur("1s").build());
-        div2.getBlockClass().add(new PBuilder().withBegin("01:00:21:00").withEnd("01:00:26:00").build());
+        div2.getBlockClass().add(new PBuilder().withBegin("01:00:21:10").withEnd("01:00:26:00").build());
         div2.getBlockClass().add(new PBuilder().withBegin("01:00:30:00").withEnd("01:00:58:00"));
 
         /* EXECUTION */
-        TtmlUtils.reduceAccordingSegment(tt, 0, 8000, 23000);
+        TtmlUtils.reduceAccordingSegment(tt, 0, 8000, 23000, new BigFraction(24000).divide(1001));
 
         /* VALIDATION */
         assertEquals(null, tt.getBody().getBegin());
@@ -80,14 +84,18 @@ public class TtmlUtilsTest {
         assertEquals("00:00:02:00", getPEnd(div1.getBlockClass().get(0)));
         assertEquals("00:00:05:00", getPBegin(div1.getBlockClass().get(1)));
         assertEquals("00:00:09:00", getPEnd(div1.getBlockClass().get(1)));
-        assertEquals("00:00:10:00", getPBegin(div1.getBlockClass().get(2)));
+        assertEquals("00:00:10:11", getPBegin(div1.getBlockClass().get(2)));
         assertEquals("00:00:15:00", getPEnd(div1.getBlockClass().get(2)));
 
         assertEquals(2, div2.getBlockClass().size());
         assertEquals("00:00:00:00", getPBegin(div2.getBlockClass().get(0)));
         assertEquals("00:00:00:00", getPEnd(div2.getBlockClass().get(0)));
-        assertEquals("00:00:13:00", getPBegin(div2.getBlockClass().get(1)));
+        assertEquals("00:00:13:07", getPBegin(div2.getBlockClass().get(1)));
         assertEquals("00:00:15:00", getPEnd(div2.getBlockClass().get(1)));
+
+
+        assertEquals(new BigInteger("24"), tt.getFrameRate());
+        assertEquals("1000 1001", tt.getFrameRateMultiplier());
     }
 
     @Test

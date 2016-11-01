@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -19,8 +19,10 @@
 package com.netflix.subtitles.cli;
 
 import com.netflix.subtitles.exception.ParseException;
-import static org.junit.Assert.assertEquals;
+import org.apache.commons.math3.fraction.BigFraction;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Command line parser test class.
@@ -52,9 +54,21 @@ public class TtmlConverterCmdLineParserTest {
     }
 
     @Test
+    public void frameRateOptionParsedCorrectly() {
+        /* PREPARATION */
+        String[] args = new String[]{"-t", "test", "-o", "testFile", "-f", "24000/1001"};
+
+        /* EXECUTION */
+        TtmlConverterCmdLineParams params = new TtmlConverterCmdLineParser().parse(args);
+
+        /* VALIDATION */
+        assertEquals("Frame rate option", new BigFraction(24000).divide(1001), params.getFrameRate());
+    }
+
+    @Test
     public void ttmlOptionParsedCorrectly() {
         /* PREPARATION */
-        String[] args = new String[]{"-t", "test", "0", "200", "45", "-o", "testFile"};
+        String[] args = new String[]{"-t", "test", "0", "200", "45", "-o", "testFile", "-f", "24000/1001"};
 
         /* EXECUTION */
         TtmlConverterCmdLineParams params = new TtmlConverterCmdLineParser().parse(args);
@@ -126,6 +140,28 @@ public class TtmlConverterCmdLineParserTest {
     public void outputFileOptionIsNotSetThenThrowException() {
         /* PREPARATION */
         String[] args = new String[]{"-t", "test"};
+
+        /* EXECUTION */
+        new TtmlConverterCmdLineParser().parse(args);
+
+        /* VALIDATION */
+    }
+
+    @Test(expected = ParseException.class)
+    public void frameRateOptionWithoutArgThrowException() {
+        /* PREPARATION */
+        String[] args = new String[]{"-t", "test", "-o", "test", "-f"};
+
+        /* EXECUTION */
+        new TtmlConverterCmdLineParser().parse(args);
+
+        /* VALIDATION */
+    }
+
+    @Test(expected = ParseException.class)
+    public void frameRateOptionFailParseThrowException() {
+        /* PREPARATION */
+        String[] args = new String[]{"-t", "test", "-o", "test", "-f", "24000\\1001"};
 
         /* EXECUTION */
         new TtmlConverterCmdLineParser().parse(args);

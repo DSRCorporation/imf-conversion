@@ -614,7 +614,7 @@
                             </dynamicParameter>
 
                             <execOnce name="convert_ttml_to_itt">
-                                %{dynamic.ttml-to-itt} %{dynamic.concatTtml} -o %{dynamic.itt-%{seq.num}}
+                                %{dynamic.ttml-to-itt} %{dynamic.concatTtml} -o %{dynamic.itt-%{seq.num}} -f %{dest.frameRate}
                             </execOnce>
 
                         </execEachSequence>
@@ -628,7 +628,7 @@
                             </dynamicParameter>
 
                             <dynamicParameter name="ttmlToIttParams">
-                                -t %{dynamic.ttml-%{i}} -o %{dynamic.itt-%{i}}
+                                -t %{dynamic.ttml-%{i}} -o %{dynamic.itt-%{i}} -f %{dest.frameRate}
                             </dynamicParameter>
 
                             <execOnce name="convert_ttml_to_itt">
