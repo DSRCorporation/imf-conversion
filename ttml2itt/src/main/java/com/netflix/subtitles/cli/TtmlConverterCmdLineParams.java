@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -18,6 +18,8 @@
  */
 package com.netflix.subtitles.cli;
 
+import org.apache.commons.math3.fraction.BigFraction;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,7 @@ import java.util.List;
  */
 public final class TtmlConverterCmdLineParams {
     private String outputFile = null;
+    private BigFraction frameRate = null;
     private final List<TtmlOption> ttmlOptions = new ArrayList<>();
 
     public String getOutputFile() {
@@ -34,6 +37,14 @@ public final class TtmlConverterCmdLineParams {
 
     public void setOutputFile(String outputFile) {
         this.outputFile = outputFile;
+    }
+
+    public BigFraction getFrameRate() {
+        return frameRate;
+    }
+
+    public void setFrameRate(BigFraction frameRate) {
+        this.frameRate = frameRate;
     }
 
     public List<TtmlOption> getTtmlOptions() {

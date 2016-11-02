@@ -21,12 +21,6 @@ package com.netflix.subtitles;
 import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
-import static com.netflix.subtitles.TtmlConverterConstants.NEW_STYLE_ID_PARAMETER;
-import static com.netflix.subtitles.TtmlConverterConstants.OLD_STYLE_ID_PARAMETER;
-import static com.netflix.subtitles.TtmlConverterConstants.REPLACE_STYLE_ID_TRANSFORMATION;
-import static com.netflix.subtitles.TtmlConverterConstants.TTML_PACKAGES;
-import static com.netflix.subtitles.TtmlConverterConstants.TTML_SCHEMA;
-import static com.netflix.subtitles.TtmlConverterConstants.TTML_TO_ITT_TRANSFORMATION;
 import com.netflix.subtitles.cli.TtmlConverterCmdLineParams;
 import com.netflix.subtitles.cli.TtmlConverterCmdLineParser;
 import com.netflix.subtitles.cli.TtmlOption;
@@ -34,6 +28,16 @@ import com.netflix.subtitles.exception.ParseException;
 import com.netflix.subtitles.ttml.TtmlParagraphResolver;
 import com.netflix.subtitles.ttml.TtmlTimeConverter;
 import com.netflix.subtitles.ttml.TtmlUtils;
+import org.w3.ns.ttml.DivEltype;
+import org.w3.ns.ttml.ObjectFactory;
+import org.w3.ns.ttml.PEltype;
+import org.w3.ns.ttml.StyleEltype;
+import org.w3.ns.ttml.TtEltype;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
@@ -46,15 +50,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import org.w3.ns.ttml.DivEltype;
-import org.w3.ns.ttml.ObjectFactory;
-import org.w3.ns.ttml.PEltype;
-import org.w3.ns.ttml.StyleEltype;
-import org.w3.ns.ttml.TtEltype;
+
+import static com.netflix.subtitles.TtmlConverterConstants.NEW_STYLE_ID_PARAMETER;
+import static com.netflix.subtitles.TtmlConverterConstants.OLD_STYLE_ID_PARAMETER;
+import static com.netflix.subtitles.TtmlConverterConstants.REPLACE_STYLE_ID_TRANSFORMATION;
+import static com.netflix.subtitles.TtmlConverterConstants.TTML_PACKAGES;
+import static com.netflix.subtitles.TtmlConverterConstants.TTML_SCHEMA;
+import static com.netflix.subtitles.TtmlConverterConstants.TTML_TO_ITT_TRANSFORMATION;
 
 /**
  * Validates TTML against iTT specification and converts to iTT format in simple cases.
@@ -156,7 +158,6 @@ public final class TtmlConverter {
      * Constructor.
      *
      * @param params parsed command line parameters
-     *
      * @throws ParseException
      */
     public TtmlConverter(TtmlConverterCmdLineParams params) throws ParseException {
@@ -174,7 +175,7 @@ public final class TtmlConverter {
                 throw new ParseException(e);
             }
 
-            TtmlUtils.reduceAccordingSegment(tt, o.getOffsetMS(), o.getStartMS(), o.getEndMS());
+            TtmlUtils.reduceAccordingSegment(tt, o.getOffsetMS(), o.getStartMS(), o.getEndMS(), params.getFrameRate());
             TtmlUtils.moveStyleRefToP(tt);
             return tt;
         }).collect(Collectors.toList());
@@ -211,20 +212,20 @@ public final class TtmlConverter {
         // merge styles
         List<StyleEltype> stylesList = mergedItt.getHead().getStyling().getStyle();
         convertedItts.stream().skip(1).forEachOrdered((itt) -> {
-                    itt.getHead().getStyling().getStyle().stream().forEachOrdered((st) -> {
-                        styleRefMap.put(itt, new HashMap<>());
-                        if (isStyleInList(st, stylesList)) {
-                            return;
-                        }
+            itt.getHead().getStyling().getStyle().stream().forEachOrdered((st) -> {
+                styleRefMap.put(itt, new HashMap<>());
+                if (isStyleInList(st, stylesList)) {
+                    return;
+                }
 
-                        // change style id if already exists
-                        String newId = createStyleId(st.getId());
-                        styleRefMap.get(itt).put(st.getId(), newId);
-                        st.setId(newId);
+                // change style id if already exists
+                String newId = createStyleId(st.getId());
+                styleRefMap.get(itt).put(st.getId(), newId);
+                st.setId(newId);
 
-                        // add to main style list
-                        stylesList.add(st);
-                    });
+                // add to main style list
+                stylesList.add(st);
+            });
         });
         // fix style references
         for (int i = 1; i < convertedItts.size(); i++) {
@@ -299,6 +300,7 @@ public final class TtmlConverter {
 
     /**
      * Gets converted itt documents. For test purposes.
+     *
      * @return converted itt documents
      */
     List<TtEltype> getConvertedItts() {
