@@ -84,15 +84,6 @@ Please see [README](README.md) for a full documentation.
         ```
         Then see output for details, second number of printed version must be greater than or equals 8.
 
-    *   Install [FFMPEG](https://ffmpeg.org/).
-    
-        IMF Utility uses ffmpeg and ffprobe tools for video/audio conversion.
-        
-        Run the following command to install ffmpeg tools:
-        ```
-        $ brew install ffmpeg
-        ```
-    
     *   Install [x264](http://www.videolan.org/developers/x264.html) encoder.
     
         x264 encoder is used for DPP video encoding.
@@ -113,6 +104,15 @@ Please see [README](README.md) for a full documentation.
         $ x264 --version
         ```
         Then see output for details, value associated with `--bit-depth` must be equal to 10.
+        
+    *   Install [FFMPEG](https://ffmpeg.org/).
+    
+        IMF Utility uses ffmpeg and ffprobe tools for video/audio conversion.
+        
+        Run the following command to install ffmpeg tools:
+        ```
+        $ brew install ffmpeg
+        ```
 
     *   Build and install [Prenc](https://github.com/DSRCorporation/prores-encoder-mac/blob/master/README.md) encoder.
     
