@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -20,15 +20,14 @@ package com.netflix.subtitles.ttml;
 
 import com.netflix.imfutility.resources.ResourceHelper;
 import com.netflix.imfutility.util.ConversionHelper;
-import static com.netflix.subtitles.TtmlConverterConstants.STYLE_FIELD;
-import static com.netflix.subtitles.TtmlConverterConstants.TTML_PACKAGES;
-import static com.netflix.subtitles.TtmlConverterConstants.XSLT2_TRANSFORMER_IMPLEMENTATION;
 import com.netflix.subtitles.exception.ConvertException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import org.apache.commons.math3.fraction.BigFraction;
+import org.w3.ns.ttml.BodyEltype;
+import org.w3.ns.ttml.DivEltype;
+import org.w3.ns.ttml.ObjectFactory;
+import org.w3.ns.ttml.PEltype;
+import org.w3.ns.ttml.TtEltype;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -39,11 +38,16 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
-import org.w3.ns.ttml.BodyEltype;
-import org.w3.ns.ttml.DivEltype;
-import org.w3.ns.ttml.ObjectFactory;
-import org.w3.ns.ttml.PEltype;
-import org.w3.ns.ttml.TtEltype;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.math.BigInteger;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import static com.netflix.subtitles.TtmlConverterConstants.STYLE_FIELD;
+import static com.netflix.subtitles.TtmlConverterConstants.TTML_PACKAGES;
+import static com.netflix.subtitles.TtmlConverterConstants.XSLT2_TRANSFORMER_IMPLEMENTATION;
 
 /**
  * Incapsulate time reduce functionality for timed texts objects.
@@ -58,13 +62,15 @@ public final class TtmlUtils {
      * <p></p>
      * region, span and set &lt;timeExpression&gt; will be ignored. Nested div elements are not supported too.
      *
-     * @param tt root timed object that will be reduced by times
-     * @param offsetMS virtual track time offset in millis
-     * @param startMS ttml content start time in millis
-     * @param endMS ttml content end time in millis
+     * @param tt        root timed object that will be reduced by times
+     * @param offsetMS  virtual track time offset in millis
+     * @param startMS   ttml content start time in millis
+     * @param endMS     ttml content end time in millis
+     * @param frameRate ttml new frame rate. If specified, timeExpressions will be normalized according new value.
      */
-    public static void reduceAccordingSegment(TtEltype tt, long offsetMS, long startMS, long endMS) {
+    public static void reduceAccordingSegment(TtEltype tt, long offsetMS, long startMS, long endMS, BigFraction frameRate) {
         TtmlTimeConverter ttConverter = new TtmlTimeConverter(tt);
+
         long totalBegin = ttConverter.parseTimeExpression(tt.getBody().getBegin());
 
         // remove body timeExpressions
@@ -108,13 +114,28 @@ public final class TtmlUtils {
                 }
 
                 // set p timeExpression according to a virtual track times
-                p.setBegin(ConversionHelper.msToSmpteTimecode(offsetMS + pBegin - startMS, ttConverter.getUnitsInSec()));
-                p.setEnd(ConversionHelper.msToSmpteTimecode(offsetMS + pEnd - startMS, ttConverter.getUnitsInSec()));
+                p.setBegin(ConversionHelper.msToSmpteTimecode(offsetMS + pBegin - startMS,
+                        frameRate == null ? ttConverter.getUnitsInSec() : frameRate));
+                p.setEnd(ConversionHelper.msToSmpteTimecode(offsetMS + pEnd - startMS,
+                        frameRate == null ? ttConverter.getUnitsInSec() : frameRate));
                 p.setDur(null);
             }
 
             if (div.getBlockClass().isEmpty()) {
                 divIt.remove();
+            }
+        }
+
+        // update ttml values according to new frame rate
+        if (frameRate != null) {
+            frameRate = frameRate.reduce();
+            if (frameRate.getDenominatorAsInt() == 1) {
+                tt.setFrameRate(frameRate.getNumerator());
+                tt.setFrameRateMultiplier("1 1");
+            } else {
+                BigInteger ttFrameRate = frameRate.getNumerator().divide(new BigInteger("1000"));
+                tt.setFrameRate(ttFrameRate);
+                tt.setFrameRateMultiplier("1000" + " " + frameRate.getDenominatorAsInt());
             }
         }
     }
@@ -182,7 +203,7 @@ public final class TtmlUtils {
     /**
      * Does TTML document transformation to another TTML document.
      *
-     * @param tt source TTML document root element
+     * @param tt          source TTML document root element
      * @param transformer transformer
      * @return TTML document after transformation
      */
@@ -225,8 +246,8 @@ public final class TtmlUtils {
      * time.
      *
      * @param begin begin point of a temporal interval
-     * @param end ending point of a temporal interval
-     * @param dur duration of a temporal interval
+     * @param end   ending point of a temporal interval
+     * @param dur   duration of a temporal interval
      * @return correct value of ending point of a temporal interval
      */
     private static long getEnd(TtmlTimeConverter ttConverter, String begin, String end, String dur) {

@@ -1,7 +1,7 @@
 # IMF Conversion Utility
 
 * IMF media conversion utility allows to handle flat file creation from a specified CPL within the IMF package.
-* Currently conversion to BBC DPP format only is supported ([DPP](https://www.digitalproductionpartnership.co.uk/), [BBC](http://dpp-assets.s3.amazonaws.com/wp-content/uploads/specs/bbc/TechnicalDeliveryStandardsBBC.pdf)).
+* Please find Mac OS X installation and usage notes in [Getting Started OS X Guide](getting_started_osx.md).
 
 ## Contents
 * [Build](#build)
@@ -387,7 +387,35 @@ Note 1:
 
 #### Prepare external tools used for conversion
 
-The same tools as for [DPP tools](#prepare-external-tools-used-for-conversion).
+iTunes version of the utility on OS X used native Apple ProRes encoder that provided by PrEnc utility that can be found at [GitHub PrEnc pero](https://github.com/DSRCorporation/prores-encoder-mac). Download PrEnc [sources](https://github.com/DSRCorporation/prores-encoder-mac/archive/master.zip) and follow installation instructions from README.md:
+ * open the Terminal application
+ * download sources
+ 
+ ```
+ $ wget https://github.com/DSRCorporation/prores-encoder-mac/archive/master.zip
+ ```
+ * unzip the archive
+ 
+ ```
+ $ unzip master.zip
+ ```
+ * change dir to unpacked source directory
+ 
+ ```
+ $ cd prores-encoder-mac-master
+ ```
+ * run make command
+ 
+ ```
+ $ make RELEASE=1
+ ```
+ * install
+ 
+ ```
+ sudo make install
+ ```
+
+Other tools installation is the same tools as for [DPP tools](#prepare-external-tools-used-for-conversion).
 
 #### Prepare config.xml
 

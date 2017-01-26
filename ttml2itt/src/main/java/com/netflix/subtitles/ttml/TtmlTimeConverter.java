@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -18,10 +18,11 @@
  */
 package com.netflix.subtitles.ttml;
 
-import java.util.Objects;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.w3.ns.ttml.TtEltype;
 import org.w3.ns.ttml_datatype.DropMode;
+
+import java.util.Objects;
 
 /**
  * Includes ttml timeExpression manipulation functions.
@@ -54,7 +55,7 @@ public final class TtmlTimeConverter {
         tickRate = (tt.getTickRate() == null) ? 1 : tt.getTickRate().intValue();
         subFrameRate = (tt.getSubFrameRate() == null) ? 1 : tt.getSubFrameRate().intValue();
 
-        // TOTO: currently supported only nonDrop, later shoul be used from tt.getDropMode()
+        // TODO: currently supported only nonDrop, later should be used from tt.getDropMode()
         dropMode = DropMode.NON_DROP;
     }
 

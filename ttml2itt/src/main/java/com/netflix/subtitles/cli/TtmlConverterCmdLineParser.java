@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Netflix, Inc.
  *
  *     This file is part of IMF Conversion Utility.
@@ -18,25 +18,30 @@
  */
 package com.netflix.subtitles.cli;
 
+import com.netflix.imfutility.exception.ConversionHelperException;
+import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.subtitles.exception.ParseException;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.math3.fraction.BigFraction;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Defines and parses all command line parameters for converter.
  */
 public final class TtmlConverterCmdLineParser {
     private final Options options = new Options();
-    private Option ttml;
     private Option help;
+    private Option ttml;
     private Option out;
+    private Option frameRate;
 
     public TtmlConverterCmdLineParser() {
         help = new Option("h", "help", false, "Print this message");
@@ -58,10 +63,14 @@ public final class TtmlConverterCmdLineParser {
                 .hasArg()
                 .argName("outputFile")
                 .build();
+        frameRate = Option.builder("f")
+                .longOpt("frameRate")
+                .desc("Frame rate of result iTT file")
+                .hasArg()
+                .argName("frameRate")
+                .build();
 
-        Stream.of(help, ttml, out).forEach((o) -> {
-            options.addOption(o);
-        });
+        Stream.of(help, ttml, out, frameRate).forEach(options::addOption);
     }
 
     /**
@@ -69,7 +78,6 @@ public final class TtmlConverterCmdLineParser {
      *
      * @param args cli arguments
      * @return parsed parameters object
-     *
      * @throws ParseException
      */
     public TtmlConverterCmdLineParams parse(String[] args) throws ParseException {
@@ -98,6 +106,11 @@ public final class TtmlConverterCmdLineParser {
             params.setOutputFile(line.getOptionValue(out.getOpt()));
         } else {
             throw new ParseException("Output file option must be provided.");
+        }
+
+        // frameRate
+        if (line.hasOption(frameRate.getOpt())) {
+            params.setFrameRate(parseFrameRate(line.getOptionValue(frameRate.getOpt())));
         }
 
         // ttml
@@ -132,6 +145,14 @@ public final class TtmlConverterCmdLineParser {
             return Integer.parseInt(option.getValue(optionIndex));
         } catch (NumberFormatException e) {
             throw new ParseException(parameterName + " in --ttml must be an integer");
+        }
+    }
+
+    private BigFraction parseFrameRate(String frameRate) {
+        try {
+            return ConversionHelper.parseEditRate(frameRate);
+        } catch (ConversionHelperException e) {
+            throw new ParseException("Value of -f(--frameRate) option must be correct frame rate in format numerator/[denominator])");
         }
     }
 }

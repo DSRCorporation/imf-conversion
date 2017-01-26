@@ -1,4 +1,4 @@
-Quick Start Guide:
+DPP format Quick Start Guide:
 
     Please see README.md for a full documentation.
 
@@ -33,14 +33,14 @@ Quick Start Guide:
 6. [Optional] Edit sample/config.xml if needed. It can be used as is, if all external tools installed at step 1 are added to the PATH.
    Please see README for a full description of config.xml.
 
-7. Edit sample/metadata.xml if needed (either enter correct duration for PartDuration and TotalProgrammeDuration fields, or use 00:00:00:00).
+7. Edit sample/dpp_metadata.xml if needed (either enter correct duration for PartDuration and TotalProgrammeDuration fields, or use 00:00:00:00).
    Please note that all timestamps are in SMPTE timecode format (hh:mm:ss:ff), where ff is in range [0,24] for 25 fps.
    Please see README for a full description of metadata.xml.
    A sample metadata.xml can be created by running the following command:
 
         bin/imf-conversion-utility dpp -m metadata -o metadata.xml
 
-8. [Optional] Edit sample/audiomap.xml if needed.
+8. [Optional] Edit sample/dpp_audiomap.xml if needed.
    Please see README for a full description of audiomap.xml.
    A sample audiomap.xml can be created by running the following command:
 
@@ -48,11 +48,11 @@ Quick Start Guide:
      
 9. Run conversion by executing the following command:
 
-        bin/imf-conversion-utility dpp -c sample/config.xml --metadata sample/metadata.xml -o outputName --imp path-to/imp --cpl CPL-name.xml -w path-to-output-folder
+        bin/imf-conversion-utility dpp -c sample/config.xml --metadata sample/dpp_metadata.xml -o outputName --imp path-to/imp --cpl CPL-name.xml -w path-to-output-folder
 
    if audiomap must be used, then run
 
-        bin/imf-conversion-utility dpp -c sample/config.xml --metadata sample/metadata.xml --audiomap sample/audiomap.xml -o outputName --imp path-to/imp --cpl CPL-name.xml -w path-to-output-folder
+        bin/imf-conversion-utility dpp -c sample/config.xml --metadata sample/dpp_metadata.xml --audiomap sample/dpp_audiomap.xml -o outputName --imp path-to/imp --cpl CPL-name.xml -w path-to-output-folder
 
    Please note, than -w, --imp and --cpl values can be set in config.xml instead.
     
