@@ -239,6 +239,13 @@ public class MediaInfoContextBuilderTest {
                 .setSequenceUuid(getSequenceUuid(1, SequenceType.AUDIO))
                 .build();
         assertEquals("2", sequenceContext.getParameterValue(SequenceContextParameters.CHANNELS_NUM, contextInfo));
+
+        // first video track
+        contextInfo = new ContextInfoBuilder()
+                .setSequenceType(SequenceType.VIDEO)
+                .setSequenceUuid(getSequenceUuid(0, SequenceType.VIDEO))
+                .build();
+        assertEquals("50/1", sequenceContext.getParameterValue(SequenceContextParameters.FRAME_RATE, contextInfo));
     }
 
     @Test
@@ -323,7 +330,7 @@ public class MediaInfoContextBuilderTest {
                 assertEquals("1920", resourceContext.getParameterValue(ResourceContextParameters.WIDTH, contextInfo));
                 assertEquals("1080", resourceContext.getParameterValue(ResourceContextParameters.HEIGHT, contextInfo));
                 assertEquals("8", resourceContext.getParameterValue(ResourceContextParameters.BIT_DEPTH, contextInfo));
-                assertEquals("30 1", resourceContext.getParameterValue(ResourceContextParameters.FRAME_RATE, contextInfo));
+                assertEquals("50 1", resourceContext.getParameterValue(ResourceContextParameters.FRAME_RATE, contextInfo));
                 assertEquals("yuv420p10le", resourceContext.getParameterValue(ResourceContextParameters.PIXEL_FORMAT, contextInfo));
             }
         }

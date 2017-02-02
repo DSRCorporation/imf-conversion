@@ -79,7 +79,7 @@ public interface ITunesCmdLineArgs extends ImfUtilityCmdLineArgs {
                     + " ('convert' and 'metadata' modes).",
             shortName = {"p"},
             longName = {"package-type"},
-            defaultValue = "film"
+            defaultToNull = true
     )
     ITunesPackageType getPackageType();
 

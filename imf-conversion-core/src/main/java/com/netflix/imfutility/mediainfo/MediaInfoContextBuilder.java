@@ -38,9 +38,11 @@ import com.netflix.imfutility.generated.conversion.MediaInfoCommandType;
 import com.netflix.imfutility.generated.conversion.SequenceType;
 import com.netflix.imfutility.generated.mediainfo.FfprobeType;
 import com.netflix.imfutility.generated.mediainfo.StreamType;
+import com.netflix.imfutility.util.ConversionHelper;
 import com.netflix.imfutility.xml.XmlParser;
 import com.netflix.imfutility.xml.XmlParsingException;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.math3.fraction.BigFraction;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -147,6 +149,17 @@ public class MediaInfoContextBuilder {
                             seqType, seqUuid,
                             SequenceContextParameters.CHANNELS_NUM,
                             prevVirtualTrack.getParameters().get(ResourceContextParameters.CHANNELS_NUM));
+                }
+
+                // we assume all resources within an video sequence have the same fps
+                if (seqType == SequenceType.VIDEO && prevVirtualTrack.getParameters().containsKey(ResourceContextParameters.FRAME_RATE)) {
+
+                    BigFraction frameRate = ConversionHelper.parseEditRate(prevVirtualTrack.getParameters()
+                            .get(ResourceContextParameters.FRAME_RATE));
+                    sequenceContext.addSequenceParameter(
+                            seqType, seqUuid,
+                            SequenceContextParameters.FRAME_RATE,
+                            ConversionHelper.toREditRate(frameRate));
                 }
             }
         }
@@ -264,6 +277,13 @@ public class MediaInfoContextBuilder {
                 nextVirtualTrackInfo.getParameters().get(ResourceContextParameters.CHANNELS_NUM))) {
             throw new ConversionException(
                     "All audio resource tracks within an audio sequence (virtual track) must have the same number of channels!");
+        }
+
+        if (!Objects.equals(
+                prevVirtualTrackInfo.getParameters().get(ResourceContextParameters.FRAME_RATE),
+                nextVirtualTrackInfo.getParameters().get(ResourceContextParameters.FRAME_RATE))) {
+            throw new ConversionException(
+                    "All video resource tracks within an video sequence (virtual track) must have the same fps!");
         }
     }
 

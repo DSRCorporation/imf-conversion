@@ -44,6 +44,7 @@
                 <!-- audio params -->
                 <param name="sampleRate">48000</param>
                 <param name="bitsSample">24</param>
+                <param name="blackFrameDur">0.1</param>
             </defaultDestContext>
 
             <destContexts>
@@ -378,12 +379,11 @@
                                 <cycle>
                                     <execOnce name="generate_black_frame">
                                         %{tool.ffmpeg} -y
-                                        -f lavfi
-                                        -i color=c=black:s=%{dest.width}x%{dest.height}:r=%{dest.frameRate}:d=1
-                                        -ss 00:00:00 -vframes 1
-                                        -pix_fmt yuv422p16le
-                                        -f rawvideo
-                                        -
+                                         -f lavfi
+                                         -i color=c=black:s=%{dest.width}x%{dest.height}:r=%{seq.frame_rate}:d=%{dest.blackFrameDur}
+                                         -pix_fmt yuv422p16le
+                                         -f rawvideo
+                                         -
                                     </execOnce>
                                     <execEachSegment name="decode_video">
                                         <execOnce name="decode_video">
@@ -391,7 +391,7 @@
                                             -ss %{resource.startTimeTC} -t %{resource.durationTC}
                                             -i "%{resource.essence}"
                                             -map 0:0 -an
-                                            -vf scale=%{dest.width}:%{dest.height},fps=%{dest.frameRate}
+                                            -vf scale=%{dest.width}:%{dest.height}
                                             -pix_fmt yuv422p16le
                                             -f rawvideo
                                             -
@@ -399,23 +399,22 @@
                                     </execEachSegment>
                                     <execOnce name="generate_black_frame">
                                         %{tool.ffmpeg} -y
-                                        -f lavfi
-                                        -i color=c=black:s=%{dest.width}x%{dest.height}:r=%{dest.frameRate}:d=1
-                                        -ss 00:00:00 -vframes %{dest.endBlackFrameCount}
-                                        -pix_fmt yuv422p16le
-                                        -f rawvideo
-                                        -
+                                         -f lavfi
+                                         -i color=c=black:s=%{dest.width}x%{dest.height}:r=%{seq.frame_rate}:d=%{dest.blackFrameDur}
+                                         -pix_fmt yuv422p16le
+                                         -f rawvideo
+                                         -
                                     </execOnce>
                                 </cycle>
                                 <!--
                                     includes Linux/Windows and OS X command line to encode with ProRes encoder
                                     Linux/Windows -> ffmpeg, OS X -> prenc (uses native/system ProRes codec on OS X)
-                                -->
+                                  -->
                                 <execOnce name="encode_video" unless="%{dynamic.isOSX}">
                                     %{tool.ffmpeg} -y
                                     -f rawvideo
                                     -pix_fmt yuv422p16le
-                                    -s:v %{dest.width}:%{dest.height} -r %{dest.frameRate}
+                                    -s:v %{dest.width}:%{dest.height} -r %{seq.frame_rate}
                                     -i -
                                     -c:v prores_ks
                                     -profile:v 3
@@ -462,8 +461,7 @@
                                     <execOnce name="generate_silence">
                                         %{tool.ffmpeg} -y
                                         -f lavfi
-                                        -i aevalsrc=%{dynamic.silenceExpr%{seq.num}}:s=%{dest.sampleRate}:n=%{dest.samplesPerFrame}
-                                        -aframes 1
+                                        -i aevalsrc=%{dynamic.silenceExpr%{seq.num}}:s=%{dest.sampleRate}:d=%{dest.blackFrameDur}
                                         -f s%{dest.bitsSample}le
                                         -
                                     </execOnce>
@@ -475,6 +473,13 @@
                                             -acodec pcm_s%{dest.bitsSample}le -f s%{dest.bitsSample}le -
                                         </execOnce>
                                     </execEachSegment>
+                                    <execOnce name="generate_silence">
+                                        %{tool.ffmpeg} -y
+                                        -f lavfi
+                                        -i aevalsrc=%{dynamic.silenceExpr%{seq.num}}:s=%{dest.sampleRate}:d=%{dest.blackFrameDur}
+                                        -f s%{dest.bitsSample}le
+                                        -
+                                    </execOnce>
                                 </cycle>
                                 <execOnce name="encode_audio">
                                     %{tool.ffmpeg} -y -f s%{dest.bitsSample}le -ar %{dest.sampleRate} -ac %{seq.channels_num} -i - -vn -c:a

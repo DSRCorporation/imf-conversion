@@ -91,7 +91,6 @@ public class ITunesCmdLineArgumentsTest {
         ITunesCmdLineArgs cmdLineArgs = CliFactory.parseArguments(ITunesCmdLineArgs.class, args);
 
         assertEquals(ITunesMode.convert, cmdLineArgs.getMode());
-        assertEquals(ITunesPackageType.film, cmdLineArgs.getPackageType());
     }
 
     @Test(expected = ArgumentValidationException.class)

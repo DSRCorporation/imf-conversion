@@ -77,8 +77,7 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
         if (interlaced == null
                 || width == null
                 || height == null
-                || frameRate == null
-                || packageType == null) {
+                || frameRate == null) {
             throw new ConversionException(
                     "Format can't be defined. Source video characteristics must be set.");
         }

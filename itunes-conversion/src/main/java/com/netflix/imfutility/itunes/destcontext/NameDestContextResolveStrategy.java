@@ -47,6 +47,6 @@ public class NameDestContextResolveStrategy implements DestContextResolveStrateg
                 .map(Entry::getValue)
                 .filter(new DestContextPackageTypeFilter(packageType))
                 .orElseThrow(() -> new ConversionException(String.format(
-                        "Format %s can't be defined for %s package type.", name, packageType)));
+                        "Format %s can't be defined for %s package type.", name, packageType != null ? packageType : "any")));
     }
 }
