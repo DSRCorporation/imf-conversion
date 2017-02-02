@@ -98,9 +98,9 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
 
     private Comparator<DestContextMapWrapper> comparator() {
         return Comparator
-                .comparing(this::getFrameRate)
-                .thenComparingInt(this::getWidth)
-                .thenComparingInt(this::getHeight);
+                .comparingInt(this::getWidth)
+                .thenComparingInt(this::getHeight)
+                .thenComparing(this::getFrameRate);
     }
 
     private boolean checkWidth(DestContextMapWrapper wrapper) {

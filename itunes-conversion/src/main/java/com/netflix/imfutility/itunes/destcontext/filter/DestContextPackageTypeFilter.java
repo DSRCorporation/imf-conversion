@@ -39,6 +39,10 @@ public class DestContextPackageTypeFilter implements Predicate<DestContextTypeMa
 
     @Override
     public boolean test(DestContextTypeMap destContextTypeMap) {
+        if (packageType == null) {
+            return true;
+        }
+
         DestContextMapWrapper wrapper = new DestContextMapWrapper(destContextTypeMap);
 
         ITunesPackageType packageType = ITunesPackageType.fromName(wrapper.getValue(DEST_PARAM_VIDEO_SPECIFIED_FOR));
