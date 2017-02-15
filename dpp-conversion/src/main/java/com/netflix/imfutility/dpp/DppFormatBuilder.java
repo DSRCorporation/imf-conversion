@@ -20,9 +20,12 @@ package com.netflix.imfutility.dpp;
 
 import com.netflix.imfutility.AbstractFormatBuilder;
 import com.netflix.imfutility.ConversionException;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfo;
+import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.dpp.audio.AudioMapXmlProvider;
 import com.netflix.imfutility.dpp.inputparameters.DppInputParameters;
@@ -51,6 +54,7 @@ import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_EB
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_METADATA_XML;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_OUTPUT_MXF;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_PAN;
+import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_SAME_FPS;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_TTML_TO_STL;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_UK_DPP_FILE;
 import static com.netflix.imfutility.dpp.DppConversionConstants.DYNAMIC_PARAM_VALUE_OUTPUT_MXF;
@@ -131,6 +135,7 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
         dynamicContext.addParameter(DYNAMIC_PARAM_AS11_SEGM_FILE,
                 metadataXmlProvider.getBmxDppParameterFile(DMFramework.AS11Segmentation).getAbsolutePath(), true);
 
+        resolveSameFpsParameter();
     }
 
     @Override
@@ -185,6 +190,28 @@ public class DppFormatBuilder extends AbstractFormatBuilder {
             }
         }
         return result;
+    }
+
+    private void resolveSameFpsParameter() {
+        ContextInfo contextInfo = new ContextInfoBuilder()
+                .setSequenceType(SequenceType.VIDEO)
+                .setSequenceUuid(getVideoSequenceUUID())
+                .build();
+
+        BigFraction seqFrameRate = ConversionHelper.parseEditRate(contextProvider.getSequenceContext().getParameterValue(
+                SequenceContextParameters.FRAME_RATE,
+                contextInfo));
+        BigFraction destFrameRate = ConversionHelper.parseEditRate(contextProvider.getDestContext().getParameterValue(
+                DestContextParameters.FRAME_RATE));
+
+        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
+        dynamicContext.addParameter(DYNAMIC_PARAM_SAME_FPS, Boolean.toString(seqFrameRate.equals(destFrameRate)));
+    }
+
+    private SequenceUUID getVideoSequenceUUID() {
+        return contextProvider.getSequenceContext().getUuids(SequenceType.VIDEO).stream()
+                .findFirst()
+                .orElseThrow(() -> new ConversionException("Source must have at least one video sequence"));
     }
 
     @Override

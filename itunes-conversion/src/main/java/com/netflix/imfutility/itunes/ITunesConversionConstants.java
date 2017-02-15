@@ -39,6 +39,7 @@ public final class ITunesConversionConstants {
     public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
     public static final String DYNAMIC_PARAM_DEST_SOURCE = "destSource";
     public static final String DYNAMIC_PARAM_IS_OSX = "isOSX";
+    public static final String DYNAMIC_PARAM_SAME_FPS = "sameFps";
 
     // trailer dynamic parameters:
     public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT = "trailerMediaInfoInput";

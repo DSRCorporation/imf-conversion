@@ -332,6 +332,7 @@
                     <param name="dar">4/3</param>
                     <param name="specifiedFor">film</param>
                 </destContext>
+
             </destContexts>
 
             <mediaInfoCommandVideo>%{tool.ffprobe} -select_streams v:0 -show_streams -noprivate -print_format xml=x=1
@@ -379,10 +380,10 @@
                                 <cycle>
                                     <execOnce name="generate_black_frame">
                                         %{tool.ffmpeg} -y
-                                         -f lavfi
-                                         -i color=c=black:s=%{dest.width}x%{dest.height}:r=%{seq.frame_rate}:d=%{dest.blackFrameDur}
-                                         -pix_fmt yuv422p16le
-                                         -f rawvideo
+                                        -f lavfi
+                                        -i color=c=black:s=%{dest.width}x%{dest.height}:r=%{seq.frame_rate}:d=%{dest.blackFrameDur}
+                                        -pix_fmt yuv422p16le
+                                        -f rawvideo
                                          -
                                     </execOnce>
                                     <execEachSegment name="decode_video">
@@ -399,26 +400,40 @@
                                     </execEachSegment>
                                     <execOnce name="generate_black_frame">
                                         %{tool.ffmpeg} -y
-                                         -f lavfi
-                                         -i color=c=black:s=%{dest.width}x%{dest.height}:r=%{seq.frame_rate}:d=%{dest.blackFrameDur}
-                                         -pix_fmt yuv422p16le
-                                         -f rawvideo
-                                         -
+                                        -f lavfi
+                                        -i color=c=black:s=%{dest.width}x%{dest.height}:r=%{seq.frame_rate}:d=%{dest.blackFrameDur}
+                                        -pix_fmt yuv422p16le
+                                        -f rawvideo
+                                        -
                                     </execOnce>
                                 </cycle>
+
+                                <execOnce name="change_fps" unless="%{dynamic.sameFps}">
+                                    %{tool.ffmpeg} -y
+                                    -f rawvideo
+                                    -pixel_format yuv422p16le
+                                    -video_size %{dest.width}x%{dest.height}
+                                    -framerate %{seq.frame_rate}
+                                    -i -
+                                    -vf fps=%{dest.frameRate}
+                                    -pix_fmt yuv422p16le
+                                    -f rawvideo
+                                    -
+                                </execOnce>
+
                                 <!--
                                     includes Linux/Windows and OS X command line to encode with ProRes encoder
                                     Linux/Windows -> ffmpeg, OS X -> prenc (uses native/system ProRes codec on OS X)
-                                  -->
+                                -->
                                 <execOnce name="encode_video" unless="%{dynamic.isOSX}">
                                     %{tool.ffmpeg} -y
                                     -f rawvideo
-                                    -pix_fmt yuv422p16le
-                                    -s:v %{dest.width}:%{dest.height} -r %{seq.frame_rate}
+                                    -pixel_format yuv422p16le
+                                    -video_size %{dest.width}x%{dest.height}
+                                    -framerate %{dest.frameRate}
                                     -i -
                                     -c:v prores_ks
                                     -profile:v 3
-                                    -vendor apl0
                                     -vf %{dynamic.proresParams}
                                     -pix_fmt yuv422p10le
                                     -f mov
@@ -428,6 +443,7 @@
                                     %{tool.prenc} -f %{dynamic.proresParams} -o "%{tmp.videoEncoded}"
                                 </execOnce>
                             </pipe>
+
                         </execEachSequence>
 
                     </if>
@@ -460,10 +476,10 @@
                                 <cycle>
                                     <execOnce name="generate_silence">
                                         %{tool.ffmpeg} -y
-                                        -f lavfi
-                                        -i aevalsrc=%{dynamic.silenceExpr%{seq.num}}:s=%{dest.sampleRate}:d=%{dest.blackFrameDur}
-                                        -f s%{dest.bitsSample}le
-                                        -
+                                            -f lavfi
+                                            -i aevalsrc=%{dynamic.silenceExpr%{seq.num}}:s=%{dest.sampleRate}:d=%{dest.blackFrameDur}
+                                            -f s%{dest.bitsSample}le
+                                            -
                                     </execOnce>
                                     <execEachSegment name="decode_audio">
                                         <execOnce name="decode_audio">
@@ -475,10 +491,10 @@
                                     </execEachSegment>
                                     <execOnce name="generate_silence">
                                         %{tool.ffmpeg} -y
-                                        -f lavfi
-                                        -i aevalsrc=%{dynamic.silenceExpr%{seq.num}}:s=%{dest.sampleRate}:d=%{dest.blackFrameDur}
-                                        -f s%{dest.bitsSample}le
-                                        -
+                                           -f lavfi
+                                           -i aevalsrc=%{dynamic.silenceExpr%{seq.num}}:s=%{dest.sampleRate}:d=%{dest.blackFrameDur}
+                                           -f s%{dest.bitsSample}le
+                                           -
                                     </execOnce>
                                 </cycle>
                                 <execOnce name="encode_audio">

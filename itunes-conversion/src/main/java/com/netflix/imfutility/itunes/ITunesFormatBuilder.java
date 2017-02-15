@@ -26,6 +26,7 @@ import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.DestTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
@@ -94,6 +95,7 @@ import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PA
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_DEST_SOURCE;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_IS_OSX;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_OUTPUT_ITMSP;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_SAME_FPS;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_SUBTITLE_IS_CPL_SUB;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_SUBTITLE_IS_INPUT_PARAM_SUB;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_SUBTITLE_ITT_PREFIX;
@@ -183,6 +185,8 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
                 logger.info("Subtitles will not be processed for TV package type.");
             }
         }
+
+        resolveSameFpsParameter();
     }
 
     @Override
@@ -280,6 +284,28 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     private void setOSParameters() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         dynamicContext.addParameter(DYNAMIC_PARAM_IS_OSX, Boolean.toString(SystemUtils.IS_OS_MAC_OSX));
+    }
+
+    private void resolveSameFpsParameter() {
+        ContextInfo contextInfo = new ContextInfoBuilder()
+                .setSequenceType(SequenceType.VIDEO)
+                .setSequenceUuid(getVideoSequenceUUID())
+                .build();
+
+        BigFraction seqFrameRate = ConversionHelper.parseEditRate(contextProvider.getSequenceContext().getParameterValue(
+                SequenceContextParameters.FRAME_RATE,
+                contextInfo));
+        BigFraction destFrameRate = ConversionHelper.parseEditRate(contextProvider.getDestContext().getParameterValue(
+                DestContextParameters.FRAME_RATE));
+
+        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
+        dynamicContext.addParameter(DYNAMIC_PARAM_SAME_FPS, Boolean.toString(seqFrameRate.equals(destFrameRate)));
+    }
+
+    private SequenceUUID getVideoSequenceUUID() {
+        return contextProvider.getSequenceContext().getUuids(SequenceType.VIDEO).stream()
+                .findFirst()
+                .orElseThrow(() -> new ConversionException("Source must have at least one video sequence"));
     }
 
     // Locales resolving

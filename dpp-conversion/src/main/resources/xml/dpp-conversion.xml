@@ -88,12 +88,25 @@
                                         -t %{resource.durationTC} -an
                                         -i "%{resource.essence}" -map 0:0
                                         -vf
-                                        "scale=iw*sar*min(%{dest.width}/(iw*sar)\,%{dest.height}/ih):ih*min(%{dest.width}/(iw*sar)\,%{dest.height}/ih),pad=%{dest.width}:%{dest.height}:(ow-iw)/2:(oh-ih)/2,fps=%{dest.frameRate}"
+                                        "scale=iw*sar*min(%{dest.width}/(iw*sar)\,%{dest.height}/ih):ih*min(%{dest.width}/(iw*sar)\,%{dest.height}/ih),pad=%{dest.width}:%{dest.height}:(ow-iw)/2:(oh-ih)/2"
                                         -pix_fmt %{dest.pixelFormat} -f rawvideo -
                                     </execOnce>
                                 </execEachSegment>
-
                             </cycle>
+
+                            <execOnce name="change_fps" unless="%{dynamic.sameFps}">
+                                %{tool.ffmpeg} -y
+                                -f rawvideo
+                                -pixel_format %{dest.pixelFormat}
+                                -video_size %{dest.width}x%{dest.height}
+                                -framerate %{seq.frame_rate}
+                                -i -
+                                -vf fps=%{dest.frameRate}
+                                -pix_fmt %{dest.pixelFormat}
+                                -f rawvideo
+                                -
+                            </execOnce>
+
                             <execOnce name="encode_video">
                                 "%{tool.x264}" --input-res %{dest.width}x%{dest.height} --input-csp %{dest.chromaSubsampling} --input-depth %{dest.bitDepth} -
                                 --colorprim %{dest.colorSpace} --transfer %{dest.colorSpace} --colormatrix %{dest.colorSpace} --tune psnr
