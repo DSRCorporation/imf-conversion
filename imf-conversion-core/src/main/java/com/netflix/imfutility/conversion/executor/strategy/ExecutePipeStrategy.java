@@ -23,6 +23,7 @@ import com.netflix.imfutility.conversion.executor.OutputRedirect;
 import com.netflix.imfutility.conversion.executor.ProcessStarter;
 import com.netflix.imfutility.conversion.templateParameter.context.TemplateParameterContextProvider;
 import com.netflix.imfutility.util.ImfLogger;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Execute all operations in a pipeline.
@@ -60,6 +63,8 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
 
     private static final Logger LOGGER = new ImfLogger(LoggerFactory.getLogger(ExecutePipeStrategy.class));
 
+    private final Set<ImmutablePair<ExternalProcess, ExternalProcess>> startedPipes = new HashSet<>();
+
     public ExecutePipeStrategy(TemplateParameterContextProvider contextProvider, ProcessStarter processStarter) {
         super(contextProvider, processStarter);
     }
@@ -69,6 +74,7 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
 
         List<ExternalProcess> tailProcesses = new ArrayList<>();
 
+        startedPipes.clear();
         try {
             // 1. start all tailing operation
             startTailProcesses(actualOperations, tailProcesses);
@@ -82,6 +88,7 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
         } finally {
             // 3. close all tail processes.
             tailProcesses.forEach(ExternalProcess::finishClose);
+            startedPipes.clear();
         }
     }
 
@@ -136,13 +143,20 @@ public class ExecutePipeStrategy extends AbstractExecuteStrategy {
             p1 = pipeline.get(i);
             if (i + 1 < pipeline.size()) {
                 p2 = pipeline.get(i + 1);
-                new Thread(new Piper(p1, p2)).start();
+                startPiper(p1, p2);
             }
         }
 
         // 2. Wait for the first process in chain
         ExternalProcess firstProcess = pipeline.get(0);
         firstProcess.finishWaitFor();
+    }
+
+    private void startPiper(ExternalProcess p1, ExternalProcess p2) {
+        if (!startedPipes.contains(ImmutablePair.of(p1, p2))) {
+            new Thread(new Piper(p1, p2)).start();
+            startedPipes.add(ImmutablePair.of(p1, p2));
+        }
     }
 
     protected PipeOperationInfo skipPipeOperations(PipeOperationInfo operations) {

@@ -33,7 +33,9 @@ public enum SequenceContextParameters {
     LANGUAGE("language"),
 
     // we assume that all resources within audio sequence has the same number of channels
-    CHANNELS_NUM("channels_num");
+    CHANNELS_NUM("channels_num"),
+    // we assume that all resources within video sequence has the same fps
+    FRAME_RATE("frame_rate");
 
     private final String name;
 

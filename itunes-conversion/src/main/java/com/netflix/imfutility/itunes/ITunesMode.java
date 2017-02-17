@@ -21,9 +21,10 @@ package com.netflix.imfutility.itunes;
 
 /**
  * Supported iTunes modes: conversion to iTunes format; generation of a sample metadata.xml (input for conversion);
- * generation of a sample audiomap.xml (input for conversion), generation of a sample chapters.xml (input for conversion).
+ * generation of a sample audiomap.xml (input for conversion), generation of a sample chapters.xml (input for conversion);
+ * printing supported iTunes destination video formats.
  */
 public enum ITunesMode {
 
-    convert, metadata, audiomap, chapters;
+    convert, metadata, audiomap, chapters, formats;
 }

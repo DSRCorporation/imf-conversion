@@ -39,6 +39,7 @@ public final class ITunesConversionConstants {
     public static final String DYNAMIC_PARAM_VENDOR_ID = "vendorId";
     public static final String DYNAMIC_PARAM_DEST_SOURCE = "destSource";
     public static final String DYNAMIC_PARAM_IS_OSX = "isOSX";
+    public static final String DYNAMIC_PARAM_SAME_FPS = "sameFps";
 
     // trailer dynamic parameters:
     public static final String DYNAMIC_PARAM_TRAILER_MEDIAINFO_INPUT = "trailerMediaInfoInput";
@@ -48,9 +49,7 @@ public final class ITunesConversionConstants {
     // video dest parameters:
     public static final String DEST_PARAM_VIDEO_IFRAME_RATE = "iFrameRate";
     public static final String DEST_PARAM_VIDEO_IS_DAR_SPECIFIED = "isDarSpecified";
-    public static final String DEST_PARAM_VIDEO_END_BLACK_FRAME_COUNT = "endBlackFrameCount";
     public static final String DEST_PARAM_VIDEO_SPECIFIED_FOR = "specifiedFor";
-    public static final String DEST_PARAM_AUDIO_SAMPLES_PER_FRAME = "samplesPerFrame";
 
     // AudioMap constants
     public static final String GEN_MAIN_SEQ_UUID = "urn:uuid:38d52c00-68d3-4056-8858-28eeaf3238d3";

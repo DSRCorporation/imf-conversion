@@ -92,6 +92,12 @@ public class VideoDestContextResolveStrategyTest {
                 .setFrameRate(new BigFraction(30))
                 .setInterlaced(true);
         assertEquals("sdtvntsc480i2997", resolveStrategy.resolveContext(map).getName());
+
+        resolveStrategy.setWidth(1281)
+                .setHeight(720)
+                .setFrameRate(new BigFraction(60000).divide(1001))
+                .setInterlaced(true);
+        assertEquals("hd720i23976", resolveStrategy.resolveContext(map).getName());
     }
 
     @Test(expected = ConversionException.class)

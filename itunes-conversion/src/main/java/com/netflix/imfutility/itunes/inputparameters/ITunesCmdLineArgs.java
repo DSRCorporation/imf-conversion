@@ -37,7 +37,8 @@ public interface ITunesCmdLineArgs extends ImfUtilityCmdLineArgs {
                             + "\n\t\t\t'convert' mode performs conversion to iTunes format. "
                             + "\n\t\t\t'metadata' mode generates an empty metadata.xml. "
                             + "\n\t\t\t'audiomap' mode generates a default audiomap.xml. "
-                            + "\n\t\t\t'chapters' mode generates a default chapters.xml.",
+                            + "\n\t\t\t'chapters' mode generates a default chapters.xml."
+                            + "\n\t\t\t'formats'  mode prints supported destination video formats.",
             shortName = {"m"},
             longName = {"mode"},
             defaultValue = "convert"
@@ -79,7 +80,7 @@ public interface ITunesCmdLineArgs extends ImfUtilityCmdLineArgs {
                     + " ('convert' and 'metadata' modes).",
             shortName = {"p"},
             longName = {"package-type"},
-            defaultValue = "film"
+            defaultToNull = true
     )
     ITunesPackageType getPackageType();
 

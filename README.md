@@ -383,7 +383,12 @@ metadata.xml file. After conversion done metadata.xml of resulting iTunes packag
 Note 1:
 
  * iTunes Package format requires special Audio Layout as defined in [iTunes Asset Guide](https://help.apple.com/itc/videoaudioassetguide/) for corresponding package type.
- * Supported video formats can be found in wiki or documentation (docs/).
+ * To print all supported iTunes destination video formats run command with appropriate arguments:
+     * itunes
+     * --mode [-m] formats
+     ```
+     imf-conversion-utility itunes -m formats
+     ```
 
 #### Prepare external tools used for conversion
 

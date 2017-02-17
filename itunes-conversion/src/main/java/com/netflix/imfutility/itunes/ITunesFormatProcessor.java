@@ -21,6 +21,7 @@ package com.netflix.imfutility.itunes;
 import com.netflix.imfutility.ConversionException;
 import com.netflix.imfutility.itunes.audio.AudioMapXmlCreator;
 import com.netflix.imfutility.itunes.chapters.ChaptersXmlProvider;
+import com.netflix.imfutility.itunes.destcontext.DestFormatPrinter;
 import com.netflix.imfutility.itunes.inputparameters.ITunesCmdLineArgs;
 import com.netflix.imfutility.itunes.inputparameters.ITunesDefaultTools;
 import com.netflix.imfutility.itunes.inputparameters.ITunesInputParameters;
@@ -65,6 +66,8 @@ public class ITunesFormatProcessor {
                 return processAudiomapMode(inputParameters);
             case chapters:
                 return processChaptersMode(inputParameters);
+            case formats:
+                return processFormatsMode(inputParameters);
             default: // nothing
         }
 
@@ -92,6 +95,14 @@ public class ITunesFormatProcessor {
         logger.info("Generating a sample Chapters.xml file {}", inputParameters.getCmdLineArgs().getOutput());
         ChaptersXmlProvider.generateSampleXml(inputParameters.getCmdLineArgs().getOutput());
         logger.info("Generated a sample Chapters.xml file: OK");
+        return 0;
+    }
+
+    private int processFormatsMode(ITunesInputParameters inputParameters) {
+        logger.info("Formats mode\n");
+        logger.info("Printing supported destination video formats info");
+        new DestFormatPrinter(inputParameters).printFormats();
+        logger.info("Printed supported destination video formats info: OK");
         return 0;
     }
 

@@ -26,6 +26,7 @@ import com.netflix.imfutility.conversion.templateParameter.ContextInfoBuilder;
 import com.netflix.imfutility.conversion.templateParameter.context.DestTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.DynamicTemplateParameterContext;
 import com.netflix.imfutility.conversion.templateParameter.context.SequenceTemplateParameterContext;
+import com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters;
 import com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters;
 import com.netflix.imfutility.cpl.uuid.SequenceUUID;
 import com.netflix.imfutility.generated.conversion.SequenceType;
@@ -79,13 +80,11 @@ import static com.netflix.imfutility.conversion.templateParameter.context.parame
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.DAR;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.FRAME_RATE;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.INTERLACED;
-import static com.netflix.imfutility.conversion.templateParameter.context.parameters.DestContextParameters.SAMPLE_RATE;
 import static com.netflix.imfutility.conversion.templateParameter.context.parameters.SequenceContextParameters.LANGUAGE;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEFAULT_LOCALE;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_AUDIO_SAMPLES_PER_FRAME;
-import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_END_BLACK_FRAME_COUNT;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_IFRAME_RATE;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_IS_DAR_SPECIFIED;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DEST_PARAM_VIDEO_SPECIFIED_FOR;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_ADDITIONAL_AUDIO_COUNT;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_ADDITIONAL_AUDIO_PREFIX;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_ADDITIONAL_AUDIO_TRACKS_PREFIX;
@@ -96,6 +95,7 @@ import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PA
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_DEST_SOURCE;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_IS_OSX;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_OUTPUT_ITMSP;
+import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_SAME_FPS;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_SUBTITLE_IS_CPL_SUB;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_SUBTITLE_IS_INPUT_PARAM_SUB;
 import static com.netflix.imfutility.itunes.ITunesConversionConstants.DYNAMIC_PARAM_SUBTITLE_ITT_PREFIX;
@@ -135,9 +135,6 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     protected void doBuildDynamicContextPreCpl() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
 
-        // load, parse and validate metadata.xml (or generate default)
-        initMetadata();
-
         //  fill ttml-to-itt tool parameter
         dynamicContext.addParameter(DYNAMIC_PARAM_TTML_TO_ITT, iTunesInputParameters.getTtmlToIttTool());
 
@@ -163,7 +160,13 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
 
     @Override
     protected void doBuildDynamicContextPostCpl() throws IOException, XmlParsingException {
+        // load, parse and validate metadata.xml (or generate default)
+        initMetadata();
         resolveLocaleAfterMetadataInit();
+
+        if (resolvePackageType() == ITunesPackageType.tv) {
+            new DurationChecker(contextProvider).checkDuration(destContextMap);
+        }
 
         // load, parse and validate audiomap.xml (or generate default)  if audio exist
         if (contextProvider.getSequenceContext().getSequenceCount(SequenceType.AUDIO) > 0) {
@@ -182,6 +185,8 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
                 logger.info("Subtitles will not be processed for TV package type.");
             }
         }
+
+        resolveSameFpsParameter();
     }
 
     @Override
@@ -219,7 +224,7 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
         logger.info("Resolving destination format...");
 
         String format = iTunesInputParameters.getCmdLineArgs().getFormat();
-        ITunesPackageType packageType = metadataXmlProvider.getDescriptor().getPackageType();
+        ITunesPackageType packageType = iTunesInputParameters.getCmdLineArgs().getPackageType();
 
         DestContextResolveStrategy resolveStrategy = format != null
                 ? new NameDestContextResolveStrategy(format, packageType)
@@ -231,10 +236,6 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
                 : "source video");
         logger.info("Destination format: {}", destContextMap.getName());
         logger.info("Resolved destination format: OK\n");
-
-        if (packageType == ITunesPackageType.tv) {
-            new DurationChecker(contextProvider).checkDuration(destContextMap);
-        }
 
         return destContextMap;
     }
@@ -258,21 +259,6 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
             iFrameRate = iFrameRate.multiply(2);
         }
         destContext.addParameter(DEST_PARAM_VIDEO_IFRAME_RATE, ConversionHelper.toREditRate(iFrameRate));
-
-        // set end black frame count
-        // for ffmpeg count = 1 (if progressive), count = 2 (if interlace)
-        // for prenc count = 1 always
-        int count = 1;
-        if (!SystemUtils.IS_OS_MAC_OSX) {
-            count = Boolean.valueOf(interlaced) ? 2 : 1;
-        }
-        destContext.addParameter(DEST_PARAM_VIDEO_END_BLACK_FRAME_COUNT, String.valueOf(count));
-
-        // set samplesPerFrame (for silence generation)
-        BigFraction sampleRate = ConversionHelper.parseEditRate(destContext.getParameterValue(SAMPLE_RATE));
-        BigFraction frameRate = ConversionHelper.parseEditRate(destContext.getParameterValue(FRAME_RATE));
-        Long samplesPerFrame = sampleRate.divide(frameRate).longValue();
-        destContext.addParameter(DEST_PARAM_AUDIO_SAMPLES_PER_FRAME, String.valueOf(samplesPerFrame));
     }
 
     private void createItmspDir() throws IOException {
@@ -298,6 +284,28 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     private void setOSParameters() {
         DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
         dynamicContext.addParameter(DYNAMIC_PARAM_IS_OSX, Boolean.toString(SystemUtils.IS_OS_MAC_OSX));
+    }
+
+    private void resolveSameFpsParameter() {
+        ContextInfo contextInfo = new ContextInfoBuilder()
+                .setSequenceType(SequenceType.VIDEO)
+                .setSequenceUuid(getVideoSequenceUUID())
+                .build();
+
+        BigFraction seqFrameRate = ConversionHelper.parseEditRate(contextProvider.getSequenceContext().getParameterValue(
+                SequenceContextParameters.FRAME_RATE,
+                contextInfo));
+        BigFraction destFrameRate = ConversionHelper.parseEditRate(contextProvider.getDestContext().getParameterValue(
+                DestContextParameters.FRAME_RATE));
+
+        DynamicTemplateParameterContext dynamicContext = contextProvider.getDynamicContext();
+        dynamicContext.addParameter(DYNAMIC_PARAM_SAME_FPS, Boolean.toString(seqFrameRate.equals(destFrameRate)));
+    }
+
+    private SequenceUUID getVideoSequenceUUID() {
+        return contextProvider.getSequenceContext().getUuids(SequenceType.VIDEO).stream()
+                .findFirst()
+                .orElseThrow(() -> new ConversionException("Source must have at least one video sequence"));
     }
 
     // Locales resolving
@@ -355,14 +363,23 @@ public class ITunesFormatBuilder extends AbstractFormatBuilder {
     private void initMetadata() {
         File metadataFile = iTunesInputParameters.getMetadataFile();
         String vendorId = iTunesInputParameters.getCmdLineArgs().getVendorId();
-        ITunesPackageType packageType = iTunesInputParameters.getCmdLineArgs().getPackageType();
 
         try {
-            metadataXmlProvider = MetadataXmlProviderFactory.createProvider(metadataFile, packageType);
+            metadataXmlProvider = MetadataXmlProviderFactory.createProvider(metadataFile, resolvePackageType());
         } catch (XmlParsingException | IOException e) {
             throw new RuntimeException(e);
         }
         metadataXmlProvider.updateVendorId(vendorId);
+    }
+
+    private ITunesPackageType resolvePackageType() {
+        ITunesPackageType packageType = iTunesInputParameters.getCmdLineArgs().getPackageType();
+
+        if (packageType == null) {
+            packageType = ITunesPackageType.fromName(contextProvider.getDestContext().getParameterValue(DEST_PARAM_VIDEO_SPECIFIED_FOR));
+        }
+
+        return packageType != null ? packageType : ITunesPackageType.film;
     }
 
     private void initAudioMap() throws IOException, XmlParsingException {

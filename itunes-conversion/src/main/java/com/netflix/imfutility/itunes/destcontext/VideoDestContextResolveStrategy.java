@@ -77,8 +77,7 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
         if (interlaced == null
                 || width == null
                 || height == null
-                || frameRate == null
-                || packageType == null) {
+                || frameRate == null) {
             throw new ConversionException(
                     "Format can't be defined. Source video characteristics must be set.");
         }
@@ -99,9 +98,9 @@ public class VideoDestContextResolveStrategy implements DestContextResolveStrate
 
     private Comparator<DestContextMapWrapper> comparator() {
         return Comparator
-                .comparing(this::getFrameRate)
-                .thenComparingInt(this::getWidth)
-                .thenComparingInt(this::getHeight);
+                .comparingInt(this::getWidth)
+                .thenComparingInt(this::getHeight)
+                .thenComparing(this::getFrameRate);
     }
 
     private boolean checkWidth(DestContextMapWrapper wrapper) {
